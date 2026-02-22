@@ -1,0 +1,402 @@
+<div class="admin-notifications-container">
+    <!-- ========================================
+       LEVEL 1: INTELLIGENCE HEADER
+       ======================================== -->
+    <div class="intelligence-header">
+        <!-- System Status Indicator -->
+        <div class="system-status" [class.healthy]="systemHealthy()" [class.unhealthy]="!systemHealthy()">
+            <div class="status-dot"></div>
+            <span class="status-text">{{ systemHealthy() ? ('admin.notifications.allSystemsOperational' | translate) :
+                ('admin.notifications.issuesDetected' | translate) }}</span>
+        </div>
+
+        <!-- Severity Count Buttons -->
+        <div class="severity-counts">
+            <button class="count-button critical" [class.active]="filterSeverity() === 'critical'"
+                (click)="setSeverityFilter(filterSeverity() === 'critical' ? null : 'critical')"
+                [matTooltip]="'admin.notifications.critical' | translate">
+                <mat-icon>error</mat-icon>
+                <span class="count">{{ counts().critical }}</span>
+                <span class="label">{{ 'admin.notifications.critical' | translate }}</span>
+            </button>
+
+            <button class="count-button warning" [class.active]="filterSeverity() === 'warning'"
+                (click)="setSeverityFilter(filterSeverity() === 'warning' ? null : 'warning')"
+                [matTooltip]="'admin.notifications.warning' | translate">
+                <mat-icon>warning</mat-icon>
+                <span class="count">{{ counts().warning }}</span>
+                <span class="label">{{ 'admin.notifications.warning' | translate }}</span>
+            </button>
+
+            <button class="count-button info" [class.active]="filterSeverity() === 'info'"
+                (click)="setSeverityFilter(filterSeverity() === 'info' ? null : 'info')"
+                [matTooltip]="'admin.notifications.info' | translate">
+                <mat-icon>info</mat-icon>
+                <span class="count">{{ counts().info }}</span>
+                <span class="label">{{ 'admin.notifications.info' | translate }}</span>
+            </button>
+
+            <button class="count-button success" [class.active]="filterSeverity() === 'success'"
+                (click)="setSeverityFilter(filterSeverity() === 'success' ? null : 'success')"
+                [matTooltip]="'admin.notifications.success' | translate">
+                <mat-icon>check_circle</mat-icon>
+                <span class="count">{{ counts().success }}</span>
+                <span class="label">{{ 'admin.notifications.success' | translate }}</span>
+            </button>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+            <button mat-stroked-button class="action-btn" (click)="bulkAcknowledge()"
+                [disabled]="counts().newCount === 0" [matTooltip]="'admin.notifications.markAllRead' | translate">
+                <mat-icon>done_all</mat-icon>
+                <span>{{ 'admin.notifications.markAllRead' | translate }}</span>
+            </button>
+
+            <button mat-stroked-button class="action-btn" (click)="exportAudit()"
+                [matTooltip]="'export.button.label' | translate">
+                <mat-icon>download</mat-icon>
+                <span>{{ 'export.button.label' | translate }}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================
+       LEVEL 2: SMART FILTERS (Collapsed Default)
+       ======================================== -->
+    <div class="filters-section">
+        <button class="filters-toggle" (click)="toggleFilters()">
+            <mat-icon>{{ filtersExpanded() ? 'expand_less' : 'tune' }}</mat-icon>
+            <span>{{ filtersExpanded() ? ('common.hide' | translate) : ('common.filter' | translate) }}</span>
+            <span class="active-count" *ngIf="filterSeverity() || filterDomain() || filterStatus() || filterSearch()">
+                {{ 'common.activeFilters' | translate }}
+            </span>
+        </button>
+
+        <div class="filters-panel" [class.expanded]="filtersExpanded()">
+            <div class="filters-grid">
+                <!-- Domain Filter -->
+                <div class="filter-group">
+                    <label>{{ 'admin.notifications.filterByType' | translate }}</label>
+                    <mat-form-field appearance="outline" class="filter-field">
+                        <mat-select [value]="filterDomain()" (selectionChange)="setDomainFilter($event.value)"
+                            [placeholder]="'admin.notifications.allTypes' | translate">
+                            <mat-option [value]="null">{{ 'admin.notifications.allTypes' | translate }}</mat-option>
+                            <mat-option *ngFor="let d of domains" [value]="d.value">
+                                <mat-icon>{{ d.icon }}</mat-icon>
+                                {{ d.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="filter-group">
+                    <label>{{ 'admin.notifications.filterByStatus' | translate }}</label>
+                    <mat-form-field appearance="outline" class="filter-field">
+                        <mat-select [value]="filterStatus()" (selectionChange)="setStatusFilter($event.value)"
+                            [placeholder]="'admin.notifications.allStatuses' | translate">
+                            <mat-option [value]="null">{{ 'admin.notifications.allStatuses' | translate }}</mat-option>
+                            <mat-option value="new">{{ 'common.active' | translate }}</mat-option>
+                            <mat-option value="acknowledged">{{ 'common.ok' | translate }}</mat-option>
+                            <mat-option value="resolved">{{ 'common.success' | translate }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- Date From -->
+                <div class="filter-group">
+                    <label>{{ 'common.date' | translate }}</label>
+                    <mat-form-field appearance="outline" class="filter-field">
+                        <input matInput [matDatepicker]="fromPicker" [ngModel]="filterDateFrom()"
+                            (ngModelChange)="filterDateFrom.set($event); loadNotifications()">
+                        <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #fromPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <!-- Date To -->
+                <div class="filter-group">
+                    <label>{{ 'common.date' | translate }}</label>
+                    <mat-form-field appearance="outline" class="filter-field">
+                        <input matInput [matDatepicker]="toPicker" [ngModel]="filterDateTo()"
+                            (ngModelChange)="filterDateTo.set($event); loadNotifications()">
+                        <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #toPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <!-- Search -->
+                <div class="filter-group search-group">
+                    <label>{{ 'common.search' | translate }}</label>
+                    <mat-form-field appearance="outline" class="filter-field">
+                        <mat-icon matPrefix>search</mat-icon>
+                        <input matInput [ngModel]="filterSearch()" (ngModelChange)="filterSearch.set($event)"
+                            (keyup.enter)="onSearchChange()" [placeholder]="'admin.notifications.search' | translate">
+                        <button mat-icon-button matSuffix *ngIf="filterSearch()"
+                            (click)="filterSearch.set(''); onSearchChange()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button mat-stroked-button (click)="clearFilters()">
+                    <mat-icon>clear_all</mat-icon>
+                    {{ 'admin.notifications.clearFilters' | translate }}
+                </button>
+                <button mat-flat-button color="primary" (click)="loadNotifications()">
+                    <mat-icon>refresh</mat-icon>
+                    {{ 'admin.notifications.refresh' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+       LEVEL 3: NOTIFICATION STREAM
+       ======================================== -->
+    <div class="notification-stream">
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="isLoading()">
+            <mat-spinner diameter="48"></mat-spinner>
+            <p>{{ 'common.loading' | translate }}</p>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!isLoading() && filteredNotifications().length === 0">
+            <mat-icon>notifications_none</mat-icon>
+            <h3>{{ 'admin.notifications.noNotifications' | translate }}</h3>
+            <p>{{ 'admin.notifications.noNotificationsDesc' | translate }}</p>
+        </div>
+
+        <!-- Pinned Critical Section -->
+        <div class="pinned-section" *ngIf="pinnedCritical().length > 0 && !filterSeverity()">
+            <div class="section-header">
+                <mat-icon>push_pin</mat-icon>
+                <span>{{ 'admin.notifications.critical' | translate }}</span>
+            </div>
+            <div class="notification-card pinned" *ngFor="let n of pinnedCritical()" [attr.data-severity]="n.severity"
+                (click)="openDetails(n)">
+                <div class="card-accent"></div>
+                <div class="card-icon">
+                    <mat-icon>{{ getSeverityIcon(n.severity) }}</mat-icon>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h4>{{ n.title }}</h4>
+                        <span class="card-time">{{ formatTime(n.created_at) }}</span>
+                    </div>
+                    <p class="card-message" *ngIf="n.message">{{ n.message }}</p>
+                    <div class="card-meta">
+                        <span class="domain-chip">
+                            <mat-icon>{{ getDomainIcon(n.domain) }}</mat-icon>
+                            {{ n.domain }}
+                        </span>
+                        <span class="status-chip" [attr.data-status]="n.status">
+                            {{ getStatusLabel(n.status) }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button mat-icon-button (click)="acknowledge(n, $event)" *ngIf="n.status === 'new'"
+                        [matTooltip]="'admin.notifications.markAllRead' | translate">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="resolve(n, $event)" *ngIf="n.status !== 'resolved'"
+                        [matTooltip]="'common.success' | translate">
+                        <mat-icon>done_all</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Stream -->
+        <div class="timeline-stream" *ngIf="!isLoading() && filteredNotifications().length > 0">
+            <div class="timeline-line"></div>
+
+            <div class="notification-item" *ngFor="let n of filteredNotifications(); let i = index"
+                [attr.data-severity]="n.severity" [class.new]="n.status === 'new'" (click)="openDetails(n)">
+
+                <!-- Timeline Marker -->
+                <div class="timeline-marker">
+                    <div class="marker-dot" [attr.data-severity]="n.severity">
+                        <mat-icon>{{ getSeverityIcon(n.severity) }}</mat-icon>
+                    </div>
+                </div>
+
+                <!-- Notification Card -->
+                <div class="notification-card">
+                    <div class="card-accent"></div>
+
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h4>{{ n.title }}</h4>
+                            <div class="card-time-status">
+                                <span class="time">{{ formatTime(n.created_at) }}</span>
+                                <span class="status-badge" [attr.data-status]="n.status">
+                                    {{ getStatusLabel(n.status) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <p class="card-message" *ngIf="n.message">{{ n.message }}</p>
+
+                        <div class="card-chips">
+                            <span class="chip domain-chip">
+                                <mat-icon>{{ getDomainIcon(n.domain) }}</mat-icon>
+                                {{ n.domain }}
+                            </span>
+                            <span class="chip context-chip" *ngIf="n.context?.farmName">
+                                <mat-icon>agriculture</mat-icon>
+                                {{ n.context?.farmName }}
+                            </span>
+                            <span class="chip context-chip" *ngIf="n.context?.deviceName">
+                                <mat-icon>memory</mat-icon>
+                                {{ n.context?.deviceName }}
+                            </span>
+                            <span class="chip context-chip" *ngIf="n.context?.userName">
+                                <mat-icon>person</mat-icon>
+                                {{ n.context?.userName }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button mat-icon-button (click)="acknowledge(n, $event)" *ngIf="n.status === 'new'"
+                            [matTooltip]="'admin.notifications.markAllRead' | translate">
+                            <mat-icon>check</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="resolve(n, $event)" *ngIf="n.status !== 'resolved'"
+                            [matTooltip]="'common.success' | translate">
+                            <mat-icon>done_all</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="openDetails(n); $event.stopPropagation()"
+                            [matTooltip]="'common.viewDetails' | translate">
+                            <mat-icon>chevron_right</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More -->
+        <div class="load-more" *ngIf="hasMore() && !isLoading()">
+            <button mat-stroked-button (click)="loadMoreNotifications()">
+                {{ 'admin.notifications.loadMore' | translate }}
+            </button>
+            <span class="count-info">{{ 'admin.notifications.showing' | translate: { current:
+                filteredNotifications().length, total: total() } }}</span>
+        </div>
+    </div>
+
+    <!-- ========================================
+       LEVEL 4: DETAILS DRAWER
+       ======================================== -->
+    <div class="details-drawer-backdrop" [class.open]="drawerOpen()" (click)="closeDrawer()"></div>
+
+    <div class="details-drawer" [class.open]="drawerOpen()">
+        <ng-container *ngIf="selectedNotification() as n">
+            <!-- Drawer Header -->
+            <div class="drawer-header" [attr.data-severity]="n.severity">
+                <div class="drawer-title">
+                    <mat-icon>{{ getSeverityIcon(n.severity) }}</mat-icon>
+                    <h3>{{ n.title }}</h3>
+                </div>
+                <button mat-icon-button (click)="closeDrawer()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+
+            <!-- Drawer Content -->
+            <div class="drawer-content">
+                <!-- Status & Time -->
+                <div class="detail-section">
+                    <div class="detail-row">
+                        <span class="label">{{ 'common.status' | translate }}</span>
+                        <span class="value status-badge" [attr.data-status]="n.status">
+                            {{ getStatusLabel(n.status) }}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">{{ 'common.created' | translate }}</span>
+                        <span class="value">{{ formatFullDate(n.created_at) }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="n.acknowledged_at">
+                        <span class="label">{{ 'admin.notifications.markAllRead' | translate }}</span>
+                        <span class="value">{{ formatFullDate(n.acknowledged_at) }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="n.resolved_at">
+                        <span class="label">{{ 'admin.notifications.success' | translate }}</span>
+                        <span class="value">{{ formatFullDate(n.resolved_at) }}</span>
+                    </div>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <!-- Message -->
+                <div class="detail-section" *ngIf="n.message">
+                    <h4>{{ 'admin.logs.details.message' | translate }}</h4>
+                    <p class="message-text">{{ n.message }}</p>
+                </div>
+
+                <!-- Context Info -->
+                <div class="detail-section" *ngIf="n.context">
+                    <h4>{{ 'admin.logs.tabs.relatedObjects' | translate }}</h4>
+                    <div class="context-links">
+                        <a class="context-link" *ngIf="n.context.farmId"
+                            (click)="navigateToEntity('farm', n.context.farmId)">
+                            <mat-icon>agriculture</mat-icon>
+                            {{ n.context.farmName || n.context.farmId }}
+                        </a>
+                        <a class="context-link" *ngIf="n.context.deviceId"
+                            (click)="navigateToEntity('device', n.context.deviceId)">
+                            <mat-icon>memory</mat-icon>
+                            {{ n.context.deviceName || n.context.deviceId }}
+                        </a>
+                        <a class="context-link" *ngIf="n.context.userId"
+                            (click)="navigateToEntity('user', n.context.userId)">
+                            <mat-icon>person</mat-icon>
+                            {{ n.context.userName || n.context.userId }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Suggested Actions -->
+                <div class="detail-section" *ngIf="n.context?.suggestedActions?.length">
+                    <h4>{{ 'admin.overview.quickActions.title' | translate }}</h4>
+                    <ul class="suggested-actions">
+                        <li *ngFor="let action of n.context?.suggestedActions || []">
+                            <mat-icon>lightbulb</mat-icon>
+                            {{ action }}
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Raw Payload (collapsible) -->
+                <div class="detail-section raw-section" *ngIf="n.context">
+                    <details>
+                        <summary>
+                            <mat-icon>code</mat-icon>
+                            {{ 'admin.logs.tabs.rawJson' | translate }}
+                        </summary>
+                        <pre>{{ n.context | json }}</pre>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Drawer Actions -->
+            <div class="drawer-actions">
+                <button mat-stroked-button (click)="acknowledge(n)" *ngIf="n.status === 'new'">
+                    <mat-icon>check</mat-icon>
+                    {{ 'admin.notifications.markAllRead' | translate }}
+                </button>
+                <button mat-flat-button color="primary" (click)="resolve(n)" *ngIf="n.status !== 'resolved'">
+                    <mat-icon>done_all</mat-icon>
+                    {{ 'common.success' | translate }}
+                </button>
+            </div>
+        </ng-container>
+    </div>
+</div>

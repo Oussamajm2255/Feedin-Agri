@@ -1,0 +1,71 @@
+<div class="confirm-dialog">
+  <div class="dialog-header">
+    <div class="dialog-icon-wrapper">
+      <div class="icon-background">
+        <mat-icon class="dialog-icon">person_pin</mat-icon>
+      </div>
+    </div>
+    <h2 mat-dialog-title class="dialog-title">
+      {{ 'admin.users.dialog.impersonate.title' | translate }}
+    </h2>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <p class="dialog-message">
+      {{ 'admin.users.dialog.impersonate.message' | translate }}
+    </p>
+    
+    <div class="user-info-card">
+      <div class="user-avatar">
+        <mat-icon>account_circle</mat-icon>
+      </div>
+      <div class="user-details">
+        <strong class="user-name">{{ data.userName }}</strong>
+        <span class="user-email">{{ data.userEmail }}</span>
+      </div>
+    </div>
+    
+    <div class="warning-box">
+      <mat-icon class="warning-icon">warning</mat-icon>
+      <p class="warning-text">
+        {{ 'admin.users.dialog.impersonate.warning' | translate }}
+      </p>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" class="cancel-btn">
+      <mat-icon>close</mat-icon>
+      <span>{{ 'common.cancel' | translate }}</span>
+    </button>
+    <button mat-raised-button color="primary" (click)="onConfirm()" class="confirm-btn">
+      <mat-icon>person_pin</mat-icon>
+      <span>{{ 'admin.users.dialog.impersonate.confirm' | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

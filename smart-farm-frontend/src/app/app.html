@@ -1,0 +1,22 @@
+<!-- Beautiful Loading Screen -->
+<app-smart-loading-screen [isLoading]="isLoading" [message]="'Growing your smart network…'">
+</app-smart-loading-screen>
+
+<!-- Global Alerts Component - Glassmorphic Design -->
+<app-alerts></app-alerts>
+
+<!-- FARMER DASHBOARD LAYOUT (with header/footer) -->
+<div class="app-container" *ngIf="!isAdminRoute">
+  <app-header *ngIf="isAuthenticated() && !isPendingRoute"></app-header>
+
+  <main class="main-content" [class.with-header]="isAuthenticated() && !isPendingRoute">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer *ngIf="isAuthenticated()"></app-footer>
+</div>
+
+<!-- ADMIN DASHBOARD LAYOUT (no header/footer - uses admin-shell) -->
+<div class="admin-container" *ngIf="isAdminRoute">
+  <router-outlet></router-outlet>
+</div>

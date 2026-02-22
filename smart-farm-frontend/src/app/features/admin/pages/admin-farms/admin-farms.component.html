@@ -1,0 +1,612 @@
+<div class="admin-farms-page" [class.dark-theme]="isDarkTheme()">
+  <!-- Premium Page Header with Glass Effect -->
+  <header class="page-header glass-header">
+    <div class="header-gradient-overlay"></div>
+    <div class="header-content">
+      <div class="header-left">
+        <div class="title-row">
+          <div class="title-icon-wrapper">
+            <mat-icon class="title-icon">agriculture</mat-icon>
+            <div class="icon-pulse"></div>
+          </div>
+          <div class="title-text">
+            <h1 class="page-title" @fadeInUp>
+              Farm Management
+              <span class="title-badge" @scaleIn>
+                <mat-icon>verified</mat-icon>
+                {{ totalFarms() }}
+              </span>
+            </h1>
+            <p class="page-subtitle" @fadeInUp>Manage and monitor all farms across your agricultural network</p>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions" @fadeInUp>
+        <app-export-button title="Farm Management Report" sectionName="Farms"
+          subtitle="All farms in your agricultural network" filename="farms_export" [columns]="exportColumns"
+          [data]="farms()" [disabled]="loading()">
+        </app-export-button>
+
+        <button mat-flat-button class="btn-primary premium-btn" (click)="openCreateDialog()">
+          <mat-icon>add_circle</mat-icon>
+          <span>New Farm</span>
+          <div class="btn-shine"></div>
+        </button>
+        <button mat-icon-button class="btn-icon-action" (click)="loadFarms()" matTooltip="Refresh Data">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Row (Matching Admin Devices) -->
+    <div class="kpi-row" @fadeInUp>
+      @if (loading()) {
+      @for (i of [1,2,3,4]; track i) {
+      <div class="kpi-card skeleton-card shimmer"></div>
+      }
+      } @else {
+      @for (kpi of kpiCards(); track kpi.label) {
+      <div class="kpi-card" [class]="kpi.performanceClass || 'perf-neutral'" [matTooltip]="kpi.subtitle || ''"
+        matTooltipPosition="above">
+        <div class="kpi-icon-wrapper">
+          <div class="kpi-icon" [class]="'icon-' + kpi.icon">
+            <mat-icon>{{ kpi.icon }}</mat-icon>
+          </div>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ kpi.value | number }}</div>
+          <div class="kpi-label">{{ kpi.label }}</div>
+          <div *ngIf="kpi.subtitle" class="kpi-subtitle">{{ kpi.subtitle }}</div>
+
+          <!-- Trend Indicator -->
+          <div *ngIf="kpi.trend !== undefined" class="kpi-trend-arrow" [class]="kpi.trendColor || 'neutral'">
+            <span class="trend-arrow-symbol">{{ kpi.trendArrow }}</span>
+            <span class="trend-value">{{ kpi.trend | number:'1.0-1' }}%</span>
+          </div>
+        </div>
+      </div>
+      }
+      }
+    </div>
+  </header>
+
+  <!-- Page Content Area -->
+  <main class="page-content" [class.loading]="loading()">
+    <!-- Premium Filters Panel -->
+    @if (showFilters()) {
+    <section class="filters-panel glass-panel" @slideDown>
+      <div class="filters-header">
+        <div class="filters-title">
+          <mat-icon>filter_list</mat-icon>
+          <span>Filters</span>
+          @if (searchQuery || statusFilter) {
+          <span class="active-filters-badge">{{ getActiveFiltersCount() }}</span>
+          }
+        </div>
+        <button mat-icon-button class="close-filters-btn" (click)="toggleFilters()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="filters-content">
+        <!-- Search Field -->
+        <div class="filter-group search-group">
+          <mat-form-field appearance="outline" class="search-field modern-field">
+            <mat-label>Search Farms</mat-label>
+            <mat-icon matPrefix class="search-icon">search</mat-icon>
+            <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+              placeholder="Name, owner, location..." autocomplete="off">
+            @if (searchQuery) {
+            <button mat-icon-button matSuffix (click)="searchQuery = ''; onSearchChange()">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Status Filter Chips -->
+        <div class="filter-group status-group">
+          <label class="filter-label">
+            <mat-icon class="label-icon">toggle_on</mat-icon>
+            <span>Status</span>
+          </label>
+          <div class="filter-chips">
+            <button mat-stroked-button class="filter-chip" [class.active]="statusFilter === ''"
+              (click)="statusFilter = ''; applyFilters()">
+              <mat-icon>apps</mat-icon>
+              <span>All</span>
+            </button>
+            <button mat-stroked-button class="filter-chip chip-active" [class.active]="statusFilter === 'active'"
+              (click)="statusFilter = 'active'; applyFilters()">
+              <span class="status-dot active"></span>
+              <span>Active</span>
+            </button>
+            <button mat-stroked-button class="filter-chip chip-inactive" [class.active]="statusFilter === 'inactive'"
+              (click)="statusFilter = 'inactive'; applyFilters()">
+              <span class="status-dot inactive"></span>
+              <span>Inactive</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sort By -->
+        <div class="filter-group sort-group">
+          <mat-form-field appearance="outline" class="sort-field modern-field">
+            <mat-label>Sort By</mat-label>
+            <mat-icon matPrefix>sort</mat-icon>
+            <mat-select [(ngModel)]="sortBy" (ngModelChange)="applyFilters()">
+              <mat-option value="name">
+                <mat-icon>sort_by_alpha</mat-icon>
+                Name
+              </mat-option>
+              <mat-option value="created">
+                <mat-icon>schedule</mat-icon>
+                Created Date
+              </mat-option>
+              <mat-option value="devices">
+                <mat-icon>devices</mat-icon>
+                Device Count
+              </mat-option>
+              <mat-option value="area">
+                <mat-icon>square_foot</mat-icon>
+                Area
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Clear Filters -->
+        @if (searchQuery || statusFilter || sortBy !== 'name') {
+        <button mat-stroked-button class="clear-filters-btn" (click)="clearFilters()">
+          <mat-icon>filter_list_off</mat-icon>
+          <span>Clear All</span>
+        </button>
+        }
+      </div>
+    </section>
+    }
+
+    <!-- View Controls Bar -->
+    <section class="view-controls-bar glass-panel" @fadeInUp>
+      <div class="controls-left">
+        <!-- View Mode Toggle -->
+        <div class="view-toggle">
+          <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'table'"
+            (click)="setViewMode('table')" matTooltip="Table View">
+            <mat-icon>table_rows</mat-icon>
+          </button>
+          <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')"
+            matTooltip="Grid View">
+            <mat-icon>grid_view</mat-icon>
+          </button>
+          <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'map'" (click)="setViewMode('map')"
+            matTooltip="Map View">
+            <mat-icon>map</mat-icon>
+          </button>
+        </div>
+
+        <!-- Results Count -->
+        <div class="results-count">
+          <mat-icon>agriculture</mat-icon>
+          <span>{{ farms().length }} of {{ totalFarms() }} farms</span>
+        </div>
+      </div>
+
+      <div class="controls-right">
+        <!-- Filter Toggle -->
+        <button mat-stroked-button class="filter-toggle-btn" [class.active]="showFilters()" (click)="toggleFilters()">
+          <mat-icon>tune</mat-icon>
+          <span>Filters</span>
+          @if (searchQuery || statusFilter) {
+          <span class="filter-count-badge">{{ getActiveFiltersCount() }}</span>
+          }
+        </button>
+
+        <!-- Bulk Actions -->
+        @if (selectedFarms().length > 0) {
+        <div class="bulk-actions" @fadeIn>
+          <span class="selected-count">
+            <mat-icon>check_circle</mat-icon>
+            {{ selectedFarms().length }} selected
+          </span>
+          <div class="bulk-buttons">
+            <button mat-stroked-button class="bulk-btn activate" (click)="bulkActivate()"
+              matTooltip="Activate Selected">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-stroked-button class="bulk-btn deactivate" (click)="bulkDeactivate()"
+              matTooltip="Deactivate Selected">
+              <mat-icon>pause_circle</mat-icon>
+            </button>
+            <button mat-stroked-button class="bulk-btn delete" (click)="bulkDelete()" matTooltip="Delete Selected">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="loading-state" @fadeIn>
+      <div class="loading-animation">
+        <div class="loading-spinner">
+          <mat-spinner diameter="48" strokeWidth="4"></mat-spinner>
+        </div>
+        <div class="loading-text">
+          <span class="loading-title">Loading farms...</span>
+          <span class="loading-subtitle">Please wait while we fetch your data</span>
+        </div>
+      </div>
+      <!-- Skeleton Cards -->
+      <div class="skeleton-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="skeleton-card shimmer">
+          <div class="skeleton-header"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error() && !loading()) {
+    <div class="error-state" @fadeIn>
+      <div class="error-content">
+        <div class="error-icon-wrapper">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+        </div>
+        <h3 class="error-title">Failed to Load Farms</h3>
+        <p class="error-message">{{ error() }}</p>
+        <button mat-flat-button class="btn-primary retry-btn" (click)="loadFarms()">
+          <mat-icon>refresh</mat-icon>
+          <span>Try Again</span>
+        </button>
+      </div>
+    </div>
+    }
+
+    <!-- Table View -->
+    @if (!loading() && !error() && viewMode() === 'table') {
+    <section class="table-view" @fadeIn>
+      <div class="table-card glass-panel">
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="farms()" class="farms-table modern-table">
+            <!-- Select Column -->
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="select-column">
+                <mat-checkbox [checked]="allFarmsSelected()" [indeterminate]="someFarmsSelected()"
+                  (change)="toggleAllFarms($event)" class="header-checkbox" color="primary">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let farm" class="select-column">
+                <mat-checkbox [checked]="isFarmSelected(farm)" (change)="toggleFarmSelection(farm, $event)"
+                  (click)="stopEventPropagation($event)" color="primary">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Farm Name Column -->
+            <ng-container matColumnDef="farm_name">
+              <th mat-header-cell *matHeaderCellDef>Farm</th>
+              <td mat-cell *matCellDef="let farm">
+                <div class="farm-cell" (click)="viewFarmDetails(farm, $event)">
+                  <div class="farm-avatar">
+                    <mat-icon>agriculture</mat-icon>
+                  </div>
+                  <div class="farm-info">
+                    <span class="farm-name">{{ farm.farm_name }}</span>
+                    <span class="farm-id">ID: {{ farm.farm_id }}</span>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Owner Column -->
+            <ng-container matColumnDef="owner">
+              <th mat-header-cell *matHeaderCellDef>Owner</th>
+              <td mat-cell *matCellDef="let farm">
+                <div class="owner-cell">
+                  <div class="owner-avatar">
+                    <mat-icon>person</mat-icon>
+                  </div>
+                  <span class="owner-name">{{ farm.owner_name || 'Unknown' }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Location Column -->
+            <ng-container matColumnDef="location">
+              <th mat-header-cell *matHeaderCellDef>Location</th>
+              <td mat-cell *matCellDef="let farm">
+                <div class="location-cell" (click)="focusFarmOnMap(farm, $event)">
+                  <mat-icon class="location-icon">place</mat-icon>
+                  @if (farm.location?.lat && farm.location?.lng) {
+                  <span class="coordinates">{{ farm.location.lat.toFixed(4) }}, {{ farm.location.lng.toFixed(4)
+                    }}</span>
+                  } @else {
+                  <span class="no-location">Not set</span>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Area Column -->
+            <ng-container matColumnDef="area">
+              <th mat-header-cell *matHeaderCellDef>Area</th>
+              <td mat-cell *matCellDef="let farm">
+                <div class="area-cell">
+                  <mat-icon>crop_landscape</mat-icon>
+                  <span class="area-value">{{ farm.area_hectares || 0 }}</span>
+                  <span class="area-unit">ha</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Devices Column -->
+            <ng-container matColumnDef="devices">
+              <th mat-header-cell *matHeaderCellDef>Devices</th>
+              <td mat-cell *matCellDef="let farm">
+                <div class="devices-cell" (click)="viewFarmDevices(farm)">
+                  <span class="device-badge" [class.has-devices]="farm.device_count > 0">
+                    <mat-icon>devices</mat-icon>
+                    <span>{{ farm.device_count || 0 }}</span>
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let farm">
+                <span class="status-chip" [attr.data-status]="farm.status">
+                  <span class="status-dot"></span>
+                  <span class="status-text">{{ farm.status }}</span>
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Created At Column -->
+            <ng-container matColumnDef="created_at">
+              <th mat-header-cell *matHeaderCellDef>Created</th>
+              <td mat-cell *matCellDef="let farm">
+                <span class="date-cell">{{ formatDate(farm.created_at) }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+              <td mat-cell *matCellDef="let farm" class="actions-cell">
+                <div class="action-buttons">
+                  <button mat-icon-button class="action-btn view" (click)="viewFarmDetails(farm, $event)"
+                    matTooltip="View Details">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn edit" (click)="editFarm(farm, $event)" matTooltip="Edit">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn toggle" (click)="toggleFarmStatus(farm)"
+                    [matTooltip]="farm.status === 'active' ? 'Deactivate' : 'Activate'">
+                    <mat-icon>{{ farm.status === 'active' ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn delete" (click)="deleteFarm(farm)" matTooltip="Delete">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-data-row"
+              [class.selected]="isFarmSelected(row)" [class.clickable]="true"></tr>
+          </table>
+        </div>
+
+        <!-- Paginator -->
+        <mat-paginator [length]="totalFarms()" [pageSize]="pageSize()" [pageIndex]="pageIndex()"
+          [pageSizeOptions]="[10, 25, 50, 100]" (page)="onPageChange($event)" showFirstLastButtons
+          class="modern-paginator">
+        </mat-paginator>
+      </div>
+    </section>
+    }
+
+    <!-- Grid View -->
+    @if (!loading() && !error() && viewMode() === 'grid') {
+    <section class="grid-view" @fadeIn>
+      <div class="farms-grid">
+        @for (farm of farms(); track farm.farm_id; let i = $index) {
+        <article class="farm-card glass-card" [class.selected]="isFarmSelected(farm)"
+          [style.animation-delay]="(i * 50) + 'ms'" @staggerFadeIn>
+          <!-- Card Selection -->
+          <mat-checkbox class="card-select" [checked]="isFarmSelected(farm)"
+            (change)="toggleFarmSelection(farm, $event)" (click)="stopEventPropagation($event)" color="primary">
+          </mat-checkbox>
+
+          <!-- Card Status Badge -->
+          <span class="card-status-badge" [attr.data-status]="farm.status">
+            {{ farm.status }}
+          </span>
+
+          <!-- Card Header -->
+          <div class="card-header" (click)="viewFarmDetails(farm, $event)">
+            <div class="farm-avatar-large">
+              <mat-icon>agriculture</mat-icon>
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="farm-title-section">
+              <h3 class="farm-title">{{ farm.farm_name }}</h3>
+              <p class="farm-subtitle">ID: {{ farm.farm_id }}</p>
+            </div>
+          </div>
+
+          <!-- Card Stats -->
+          <div class="card-stats">
+            <div class="stat-item">
+              <mat-icon>crop_landscape</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ farm.area_hectares || 0 }}</span>
+                <span class="stat-label">ha</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>devices</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ farm.device_count || 0 }}</span>
+                <span class="stat-label">devices</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>person</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value" [title]="farm.owner_name || 'Unknown'">{{ farm.owner_name || 'Unknown'
+                  }}</span>
+                <span class="stat-label">owner</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="card-actions">
+            <button mat-icon-button class="card-action-btn view" (click)="viewFarmDetails(farm, $event)"
+              matTooltip="View Details">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button class="card-action-btn edit" (click)="editFarm(farm, $event)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="card-action-btn toggle" (click)="toggleFarmStatus(farm)"
+              [matTooltip]="farm.status === 'active' ? 'Deactivate' : 'Activate'">
+              <mat-icon>{{ farm.status === 'active' ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+            </button>
+            <button mat-icon-button class="card-action-btn delete" (click)="deleteFarm(farm)" matTooltip="Delete">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </article>
+        }
+      </div>
+    </section>
+    }
+
+    <!-- Map View -->
+    @if (!loading() && !error() && viewMode() === 'map') {
+    <section class="map-view" @fadeIn>
+      <div class="map-container">
+        <div id="farms-map" class="farms-map"></div>
+
+        <!-- Map Legend -->
+        <div class="map-legend">
+          <h4 class="legend-title">
+            <mat-icon>info</mat-icon>
+            Legend
+          </h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <span class="legend-marker active"></span>
+              <span>Active Farms</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-marker inactive"></span>
+              <span>Inactive Farms</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map Controls -->
+        <div class="map-fab-controls">
+          <button mat-mini-fab class="map-fab" (click)="refreshMap()" matTooltip="Refresh Map">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button mat-mini-fab class="map-fab primary" (click)="fitMapToFarms()" matTooltip="Fit to All Farms">
+            <mat-icon>fit_screen</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Map Sidebar -->
+      <aside class="map-sidebar glass-panel">
+        <div class="sidebar-header">
+          <h3>
+            <mat-icon>list</mat-icon>
+            Farms List
+          </h3>
+          <span class="farm-count-badge">{{ farms().length }}</span>
+        </div>
+        <div class="sidebar-content">
+          @for (farm of farms(); track farm.farm_id) {
+          <div class="sidebar-farm-item" [class.active]="selectedMapFarm()?.farm_id === farm.farm_id"
+            (click)="focusFarmOnMap(farm, $event)">
+            <div class="farm-item-header">
+              <div class="farm-item-icon">
+                <mat-icon>agriculture</mat-icon>
+              </div>
+              <div class="farm-item-info">
+                <strong class="farm-item-name">{{ farm.farm_name }}</strong>
+                <span class="farm-item-status" [attr.data-status]="farm.status">{{ farm.status }}</span>
+              </div>
+            </div>
+            <div class="farm-item-meta">
+              <span class="meta-item">
+                <mat-icon>person</mat-icon>
+                {{ farm.owner_name || 'Unknown' }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>devices</mat-icon>
+                {{ farm.device_count || 0 }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>crop_landscape</mat-icon>
+                {{ farm.area_hectares || 0 }} ha
+              </span>
+            </div>
+          </div>
+          }
+        </div>
+      </aside>
+    </section>
+    }
+
+    <!-- Empty State -->
+    @if (!loading() && !error() && farms().length === 0) {
+    <div class="empty-state" @fadeIn>
+      <div class="empty-content">
+        <div class="empty-icon-wrapper">
+          <mat-icon class="empty-icon">agriculture</mat-icon>
+          <div class="empty-icon-rings">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+          </div>
+        </div>
+        <h3 class="empty-title">No Farms Found</h3>
+        <p class="empty-message">
+          @if (searchQuery || statusFilter) {
+          No farms match your current filters. Try adjusting your search criteria.
+          } @else {
+          Get started by creating your first farm to begin managing your agricultural network.
+          }
+        </p>
+        <div class="empty-actions">
+          @if (searchQuery || statusFilter) {
+          <button mat-stroked-button (click)="clearFilters()">
+            <mat-icon>filter_list_off</mat-icon>
+            <span>Clear Filters</span>
+          </button>
+          }
+          <button mat-flat-button class="btn-primary" (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+            <span>Create Your First Farm</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </main>
+</div>

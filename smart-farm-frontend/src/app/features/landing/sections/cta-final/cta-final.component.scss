@@ -1,0 +1,287 @@
+/* =============================================
+   SECTION — APPEL À L'ACTION FINAL
+   Clean centered | Subtle gradient background
+   ============================================= */
+
+.cta-final-section {
+    position: relative;
+    padding: 10rem 2rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 600px;
+    background: url('/assets/landing/images/serres verticales connectées.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.5) 100%);
+        z-index: 0;
+    }
+}
+
+.cta-final-container {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+// ================================
+// CONTENT
+// ================================
+.cta-final-content {
+    text-align: center;
+}
+
+// Visual accent
+.cta-visual {
+    margin-bottom: 2.5rem;
+}
+
+.cta-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 50%;
+    color: var(--primary-green);
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.1);
+    animation: gentleFloat 4s ease-in-out infinite;
+
+    svg {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+@keyframes gentleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+// Title
+.cta-final-title {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text-primary) 30%, var(--primary-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+// Text
+.cta-final-text {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// ================================
+// ACTIONS
+// ================================
+.cta-actions {
+    margin-bottom: 1.5rem;
+}
+
+.cta-primary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.125rem 2.5rem;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green, #059669) 100%);
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 8px 24px rgba(16, 185, 129, 0.25),
+        0 2px 6px rgba(0, 0, 0, 0.08);
+
+    .btn-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 14px 36px rgba(16, 185, 129, 0.35),
+            0 4px 10px rgba(0, 0, 0, 0.1);
+
+        .btn-icon-wrapper {
+            transform: translateX(6px);
+        }
+    }
+
+    &:active {
+        transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--primary-green);
+        outline-offset: 4px;
+    }
+}
+
+// RTL Support for Button Icon
+:host-context([dir="rtl"]) {
+    .cta-primary-btn {
+        .btn-icon-wrapper {
+            transform: scaleX(-1); // Flip icon horizontally
+        }
+
+        &:hover .btn-icon-wrapper {
+            transform: scaleX(-1) translateX(-6px); // Move in the correct visual direction
+        }
+    }
+}
+
+// Secondary link
+.cta-secondary {
+    margin-top: 0.5rem;
+}
+
+.cta-secondary-link {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    border-bottom: 1px solid transparent;
+
+    &:hover {
+        color: var(--primary-green);
+        border-bottom-color: var(--primary-green);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--primary-green);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+}
+
+// Tertiary link (contact)
+.cta-tertiary {
+    margin-top: 0.75rem;
+}
+
+.cta-tertiary-link {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+
+    &:hover {
+        opacity: 1;
+        color: var(--text-primary);
+    }
+}
+
+// ================================
+// BACKGROUND
+// ================================
+.cta-final-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 50% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+    z-index: 0;
+    pointer-events: none;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+        opacity: 0.03;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+    }
+}
+
+// ================================
+// DARK THEME
+// ================================
+:host-context(body.dark-theme) {
+    .cta-final-section {
+        &::before {
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.5) 100%);
+        }
+    }
+
+    .cta-primary-btn {
+        box-shadow:
+            0 8px 24px rgba(16, 185, 129, 0.3),
+            0 2px 6px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            box-shadow:
+                0 14px 36px rgba(16, 185, 129, 0.35),
+                0 4px 10px rgba(0, 0, 0, 0.25);
+        }
+    }
+}
+
+// ================================
+// RESPONSIVE
+// ================================
+@media (max-width: 480px) {
+    .cta-final-section {
+        padding: 5rem 1.25rem;
+        min-height: auto;
+    }
+
+    .cta-primary-btn {
+        width: 100%;
+        padding: 1rem 2rem;
+    }
+}
+
+// ================================
+// REDUCED MOTION
+// ================================
+@media (prefers-reduced-motion: reduce) {
+    .cta-icon {
+        animation: none;
+    }
+
+    .cta-primary-btn {
+        transition: none;
+    }
+}

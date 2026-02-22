@@ -1,0 +1,118 @@
+<main class="landing-page" [class.scrolled]="isScrolled()">
+    <!-- Floating Navigation -->
+    <nav class="floating-nav" [class.visible]="isScrolled()">
+        <div class="nav-container">
+            <div class="nav-links" [class.mobile-open]="floatingMenuOpen()">
+                <a class="nav-link" [class.active]="activeSection() === 'about-section'"
+                    (click)="scrollTo('about-section'); closeFloatingMenu()">{{ 'landing.nav.about' | translate }}</a>
+                <a class="nav-link" [class.active]="activeSection() === 'valeur-section'"
+                    (click)="scrollTo('valeur-section'); closeFloatingMenu()">{{ 'landing.nav.value' | translate }}</a>
+                <a class="nav-link" [class.active]="activeSection() === 'etapes-section'"
+                    (click)="scrollTo('etapes-section'); closeFloatingMenu()">{{ 'landing.nav.howItWorks' | translate
+                    }}</a>
+                <a class="nav-link" [class.active]="activeSection() === 'agriculteurs-section'"
+                    (click)="scrollTo('agriculteurs-section'); closeFloatingMenu()">{{ 'landing.nav.farmers' | translate
+                    }}</a>
+                <a class="nav-link" [class.active]="activeSection() === 'impact-agriculture-section'"
+                    (click)="scrollTo('impact-agriculture-section'); closeFloatingMenu()">{{ 'landing.nav.impact' |
+                    translate }}</a>
+                <a class="nav-link" [class.active]="activeSection() === 'confiance-section'"
+                    (click)="scrollTo('confiance-section'); closeFloatingMenu()">{{ 'landing.nav.trust' | translate
+                    }}</a>
+
+                <!-- Mobile-only auth buttons inside slide-out -->
+                <div class="floating-mobile-auth">
+                    <button class="nav-button secondary" (click)="navigateTo('/login'); closeFloatingMenu()">
+                        {{ 'landing.nav.haveAccount' | translate }}
+                    </button>
+                    <button class="nav-button primary" (click)="navigateTo('/register'); closeFloatingMenu()">
+                        {{ 'landing.nav.requestAccess' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="nav-cta">
+                <app-language-switcher></app-language-switcher>
+
+                <button class="nav-icon-btn" (click)="toggleTheme()"
+                    [attr.aria-label]="theme() === 'dark' ? ('landing.nav.switchLight' | translate) : ('landing.nav.switchDark' | translate)">
+                    <svg *ngIf="theme() === 'dark'" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg *ngIf="theme() === 'light'" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <button class="nav-button secondary desktop-only" (click)="navigateTo('/login')">
+                    {{ 'landing.nav.haveAccount' | translate }}
+                </button>
+                <button class="nav-button primary desktop-only" (click)="navigateTo('/register')">
+                    {{ 'landing.nav.requestAccess' | translate }}
+                </button>
+
+                <!-- Mobile hamburger -->
+                <button class="floating-hamburger" (click)="toggleFloatingMenu()" aria-label="Menu"
+                    [class.active]="floatingMenuOpen()">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile overlay -->
+        <div class="floating-mobile-overlay" [class.active]="floatingMenuOpen()" (click)="closeFloatingMenu()"></div>
+    </nav>
+
+    <!-- ============================
+         PAGE SECTIONS — Narrative Flow
+         ============================ -->
+
+    <!-- 1. Hero -->
+    <app-hero-section id="hero-section" [activeSection]="activeSection()" />
+
+    <!-- 2. À propos de Feedin -->
+    <app-a-propos id="about-section" />
+
+    <!-- 3. Ce que Feedin apporte à l'agriculture -->
+    <app-valeur-agricole id="valeur-section" />
+
+    <!-- 4. Comment Feedin fonctionne -->
+    <app-comment-ca-marche id="etapes-section" />
+
+    <!-- 5. Conçu pour les vrais agriculteurs -->
+    <app-pour-agriculteurs id="agriculteurs-section" />
+
+    <!-- 6. Impact sur l'agriculture -->
+    <app-impact-agriculture id="impact-agriculture-section" />
+
+    <!-- 7. Confiance, sécurité et fiabilité -->
+    <app-confiance id="confiance-section" />
+
+    <!-- 8. Appel à l'action final -->
+    <app-cta-final id="cta-final-section" />
+
+    <!-- SHARED FOOTER -->
+    <app-footer></app-footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" [class.visible]="isScrolled()" (click)="scrollToTop()" aria-label="Retour en haut">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
+</main>

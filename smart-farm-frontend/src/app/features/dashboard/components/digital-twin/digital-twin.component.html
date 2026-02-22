@@ -1,0 +1,142 @@
+<div class="digital-twin-container">
+  <div class="digital-twin-title">
+    <h3>Smart Greenhouse Digital Twin</h3>
+  </div>
+  
+  <div class="digital-twin-content">
+    <div class="greenhouse-wrapper">
+      <div class="digital-twin-image">
+        <img [src]="greenhouseImage()" alt="Greenhouse" class="greenhouse-image" />
+      
+      <!-- Actuator Icons -->
+      <div *ngIf="actuatorPositions()" class="actuators-overlay">
+        <!-- Fan -->
+        <div 
+          *ngIf="actuatorPositions()?.fan"
+          [ngStyle]="getActuatorStyle('fan')"
+          class="actuator-wrapper"
+          [matTooltip]="getActuatorTooltip('fan')"
+          matTooltipPosition="above"
+        >
+          <img 
+            [src]="getActuatorIcon('fan')"
+            alt="Fan"
+            class="actuator-icon"
+          />
+           <div class="actuator-reading-badge" 
+                *ngIf="getActuatorReading('fan')"
+                [ngClass]="getReadingStatusClass(getActuatorReading('fan'))">
+             <mat-icon class="reading-arrow" *ngIf="getReadingArrowIcon(getActuatorReading('fan'))">
+               {{ getReadingArrowIcon(getActuatorReading('fan')) }}
+             </mat-icon>
+             <span class="reading-value">{{ getReadingDisplay(getActuatorReading('fan')) }}</span>
+           </div>
+        </div>
+        
+        <!-- Roof -->
+        <div 
+          *ngIf="actuatorPositions()?.roof"
+          [ngStyle]="getActuatorStyle('roof')"
+          class="actuator-wrapper"
+          [matTooltip]="getActuatorTooltip('roof')"
+          matTooltipPosition="above"
+        >
+          <img 
+            [src]="getActuatorIcon('roof')"
+            alt="Roof"
+            class="actuator-icon"
+          />
+           <div class="actuator-reading-badge" 
+                *ngIf="getActuatorReading('roof')"
+                [ngClass]="getReadingStatusClass(getActuatorReading('roof'))">
+             <mat-icon class="reading-arrow" *ngIf="getReadingArrowIcon(getActuatorReading('roof'))">
+               {{ getReadingArrowIcon(getActuatorReading('roof')) }}
+             </mat-icon>
+             <span class="reading-value">{{ getReadingDisplay(getActuatorReading('roof')) }}</span>
+           </div>
+        </div>
+        
+        <!-- Light -->
+        <div 
+          *ngIf="actuatorPositions()?.light"
+          [ngStyle]="getActuatorStyle('light')"
+          class="actuator-wrapper actuator-wrapper-light"
+          [matTooltip]="getActuatorTooltip('light')"
+          matTooltipPosition="above"
+        >
+          <img 
+            [src]="getActuatorIcon('light')"
+            alt="Light"
+            class="actuator-icon actuator-icon-light"
+          />
+           <div class="actuator-reading-badge" 
+                *ngIf="getActuatorReading('light')"
+                [ngClass]="getReadingStatusClass(getActuatorReading('light'))">
+             <mat-icon class="reading-arrow" *ngIf="getReadingArrowIcon(getActuatorReading('light'))">
+               {{ getReadingArrowIcon(getActuatorReading('light')) }}
+             </mat-icon>
+             <span class="reading-value">{{ getReadingDisplay(getActuatorReading('light')) }}</span>
+           </div>
+        </div>
+        
+        <!-- Humidifier -->
+        <div 
+          *ngIf="actuatorPositions()?.humidifier"
+          [ngStyle]="getActuatorStyle('humidifier')"
+          class="actuator-wrapper"
+          [matTooltip]="getActuatorTooltip('humidifier')"
+          matTooltipPosition="above"
+        >
+          <img 
+            [src]="getActuatorIcon('humidifier')"
+            alt="Humidifier"
+            class="actuator-icon"
+          />
+           <div class="actuator-reading-badge" 
+                *ngIf="getActuatorReading('humidifier')"
+                [ngClass]="getReadingStatusClass(getActuatorReading('humidifier'))">
+             <mat-icon class="reading-arrow" *ngIf="getReadingArrowIcon(getActuatorReading('humidifier'))">
+               {{ getReadingArrowIcon(getActuatorReading('humidifier')) }}
+             </mat-icon>
+             <span class="reading-value">{{ getReadingDisplay(getActuatorReading('humidifier')) }}</span>
+           </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Actuator Status Legend -->
+    <div class="actuator-legend">
+      <!-- Status Indicator Legend -->
+      <div class="status-legend">
+        <div class="status-legend-title">Status Indicators</div>
+        <div class="status-legend-items">
+          <div class="status-legend-item">
+            <div class="status-indicator-dot status-on"></div>
+            <span class="status-legend-label">ON</span>
+          </div>
+          <div class="status-legend-item">
+            <div class="status-indicator-dot status-off"></div>
+            <span class="status-legend-label">OFF</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Actuator List -->
+      <div class="actuator-list">
+        <div class="legend-item" *ngFor="let type of actuatorTypes">
+          <img 
+            [src]="getActuatorIcon(type)" 
+            [alt]="type"
+            class="legend-icon"
+          />
+          <span class="legend-label">{{ type | titlecase }}</span>
+          <span class="legend-status" [class.on]="getActuatorState(type)?.isOn" [class.off]="!getActuatorState(type)?.isOn">
+            {{ getActuatorState(type)?.isOn ? 'ON' : 'OFF' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,120 @@
+<header class="admin-header" [class.rtl]="isRTL()" [class.right-drawer-open]="rightDrawerOpen()">
+  <div class="header-container">
+    <!-- Left Section: Hamburger + Breadcrumbs -->
+    <div class="header-left">
+      <!-- Hamburger Menu (Mobile/Tablet - shown via CSS on screens < 1024px) -->
+      <button mat-icon-button class="hamburger-btn" (click)="onToggleSidebar()" aria-label="Toggle sidebar">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <!-- Breadcrumbs (Hidden on mobile via CSS, shown on tablet+) -->
+      <nav class="breadcrumbs" *ngIf="!isMobile">
+        <ol class="breadcrumb-list">
+          <li *ngFor="let crumb of breadcrumbs; let last = last" class="breadcrumb-item" [class.active]="last">
+            <a *ngIf="!last && crumb.route" (click)="navigateTo(crumb.route)" class="breadcrumb-link">
+              {{ crumb.label }}
+            </a>
+            <span *ngIf="last" class="breadcrumb-current">{{ crumb.label }}</span>
+            <mat-icon *ngIf="!last" class="breadcrumb-separator">chevron_right</mat-icon>
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Center Section: Search Bar (Desktop) -->
+    <div class="header-center" *ngIf="!isMobile">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input type="text" class="search-input" [placeholder]="'admin.header.searchPlaceholder' | translate"
+          [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" />
+        <button *ngIf="searchQuery" mat-icon-button class="clear-search-btn" (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Section: Actions + User Menu -->
+    <div class="header-right">
+      <!-- Search Icon (Mobile) -->
+      <button *ngIf="isMobile" mat-icon-button class="action-btn" aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+
+      <!-- Notifications -->
+      <button mat-icon-button class="action-btn" (click)="openNotifications()" aria-label="Notifications"
+        [matBadge]="notificationCount" matBadgeColor="warn" [matBadgeHidden]="notificationCount === 0">
+        <mat-icon>notifications</mat-icon>
+      </button>
+
+      <!-- Theme Toggle -->
+      <button mat-icon-button class="action-btn" (click)="onToggleTheme()"
+        [attr.aria-label]="isDarkTheme ? ('common.switchToLightMode' | translate) : ('common.switchToDarkMode' | translate)"
+        [matTooltip]="isDarkTheme ? ('common.switchToLightMode' | translate) : ('common.switchToDarkMode' | translate)"
+        matTooltipPosition="below">
+        <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <!-- Language Switcher -->
+      <div class="language-switcher">
+        <app-custom-dropdown [title]="'language.select' | translate" [headerIcon]="'language'"
+          [items]="languageDropdownItems" [selectedItemId]="getSelectedLanguageId()"
+          (itemSelected)="onLanguageItemSelected($event)">
+          <div slot="trigger" class="action-btn" role="button" [attr.aria-label]="'language.switch' | translate"
+            [attr.title]="'language.switch' | translate" [matTooltip]="'language.switch' | translate"
+            matTooltipPosition="below" [style.border]="getActionButtonBorder()">
+            <svg class="action-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802" />
+            </svg>
+            <span class="sr-only">{{ 'language.switch' | translate }}</span>
+          </div>
+        </app-custom-dropdown>
+      </div>
+
+      <!-- User Menu -->
+      <button mat-button class="user-menu-btn" [matMenuTriggerFor]="userMenu" aria-label="User menu">
+        <div class="user-avatar">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <!-- User name shown on large screens via CSS (min-width: 1200px) -->
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+
+      <!-- User Menu Dropdown -->
+      <mat-menu #userMenu="matMenu" class="user-dropdown-menu">
+        <div class="user-menu-header">
+          <div class="user-info">
+            <div class="user-avatar-large">
+              <mat-icon>admin_panel_settings</mat-icon>
+            </div>
+            <div class="user-details">
+              <div class="user-name-large">{{ currentUser?.name || 'Admin User' }}</div>
+              <div class="user-email">{{ currentUser?.email || 'admin@feedin.com' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item (click)="goToProfile()">
+          <mat-icon>person</mat-icon>
+          <span>{{ 'navigation.profile' | translate }}</span>
+        </button>
+
+        <button mat-menu-item (click)="goToSettings()">
+          <mat-icon>settings</mat-icon>
+          <span>{{ 'navigation.settings' | translate }}</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item (click)="logout()" class="logout-item">
+          <mat-icon>logout</mat-icon>
+          <span>{{ 'navigation.logout' | translate }}</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</header>

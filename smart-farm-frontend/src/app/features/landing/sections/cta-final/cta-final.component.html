@@ -1,0 +1,68 @@
+<!-- =============================================
+     SECTION — APPEL À L'ACTION FINAL
+     Calm conversion | Centered + Single button
+     ============================================= -->
+
+<section class="cta-final-section" id="cta-final-section" [attr.aria-label]="'landing.ctaFinal.title' | translate">
+    <div class="cta-final-container">
+
+        <div class="cta-final-content" appScrollReveal="scale">
+
+            <!-- Visual accent -->
+            <div class="cta-visual" aria-hidden="true">
+                <span class="cta-icon">
+                    <!-- Seedling Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                        <path d="M2 21c0-3.18 2.2-6 3-9" />
+                    </svg>
+                </span>
+            </div>
+
+            <!-- Headline -->
+            <h2 class="cta-final-title">
+                {{ 'landing.ctaFinal.title' | translate }}
+            </h2>
+
+            <!-- One sentence -->
+            <p class="cta-final-text">
+                {{ 'landing.ctaFinal.text' | translate }}
+            </p>
+
+            <!-- Primary Action -->
+            <div class="cta-actions">
+                <a class="cta-primary-btn" href="/register" (click)="$event.preventDefault(); onGetStarted()"
+                    role="button">
+                    <span class="btn-text">{{ 'landing.ctaFinal.btnPrimary' | translate }}</span>
+                    <span class="btn-icon-wrapper">
+                        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Secondary: see how it works -->
+            <p class="cta-secondary">
+                <a href="#etapes-section" class="cta-secondary-link" (click)="$event.preventDefault(); scrollToHow()">
+                    {{ 'landing.ctaFinal.secondaryLink' | translate }}
+                </a>
+            </p>
+
+            <!-- Tertiary: contact -->
+            <p class="cta-tertiary">
+                <a href="mailto:contact@feedin.io" class="cta-tertiary-link">
+                    {{ 'landing.ctaFinal.tertiaryLink' | translate }}
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="cta-final-bg" aria-hidden="true"></div>
+</section>

@@ -1,0 +1,1089 @@
+<div class="sensor-analytics-page">
+    <!-- ═══════════════════════════════════════════════════════════════════════
+       ANALYTICS HEADER
+       ═══════════════════════════════════════════════════════════════════════ -->
+    <header class="analytics-header">
+        <div class="header-left">
+            <div class="title-section">
+                <h1 class="page-title">
+                    <mat-icon class="title-icon">insights</mat-icon>
+                    {{ 'sensorAnalytics.title' | translate }}
+                </h1>
+                <p class="page-subtitle">{{ isAdmin() ? ('sensorAnalytics.subtitleAdmin' | translate)
+                    : ('sensorAnalytics.subtitleFarmer' | translate) }}</p>
+            </div>
+
+            <!-- Active Filters Badges -->
+            @if (activeFilterCount() > 0) {
+            <div class="active-filters-strip">
+                @if (selectedFarmIds().length) {
+                <span class="filter-badge farm-badge">
+                    <mat-icon>agriculture</mat-icon>
+                    {{ selectedFarmIds().length }} {{ 'sensorAnalytics.filters.farm' | translate }}{{
+                    selectedFarmIds().length > 1 ? ('sensorAnalytics.filters.plural' | translate) : '' }}
+                    <button mat-icon-button class="badge-clear" (click)="selectedFarmIds.set([])">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </span>
+                }
+                @if (isAdmin() && selectedFarmerIds().length) {
+                <span class="filter-badge farmer-badge">
+                    <mat-icon>person</mat-icon>
+                    {{ selectedFarmerIds().length }} {{ 'sensorAnalytics.filters.farmer' | translate }}{{
+                    selectedFarmerIds().length > 1 ? ('sensorAnalytics.filters.plural' | translate) : '' }}
+                    <button mat-icon-button class="badge-clear" (click)="selectedFarmerIds.set([])">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </span>
+                }
+                @if (selectedSensorTypes().length) {
+                <span class="filter-badge type-badge">
+                    <mat-icon>sensors</mat-icon>
+                    {{ selectedSensorTypes().length }} {{ 'sensorAnalytics.filters.type' | translate }}{{
+                    selectedSensorTypes().length > 1 ? ('sensorAnalytics.filters.plural' | translate) : '' }}
+                    <button mat-icon-button class="badge-clear" (click)="selectedSensorTypes.set([])">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </span>
+                }
+                @if (showAnomaliesOnly()) {
+                <span class="filter-badge anomaly-badge">
+                    <mat-icon>warning</mat-icon>
+                    {{ 'sensorAnalytics.filters.anomaliesOnly' | translate }}
+                    <button mat-icon-button class="badge-clear" (click)="showAnomaliesOnly.set(false)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </span>
+                }
+                <button mat-button class="clear-all-btn" (click)="clearAllFilters()">
+                    <mat-icon>clear_all</mat-icon> {{ 'sensorAnalytics.filters.clearAll' | translate }}
+                </button>
+            </div>
+            }
+        </div>
+
+        <div class="header-actions">
+            <!-- Live Mode Toggle -->
+            <div class="live-toggle" [class.active]="liveMode()">
+                <div class="live-indicator" [class.live]="liveMode()"></div>
+                <button mat-button [class.active]="liveMode()" (click)="toggleLiveMode()"
+                    [matTooltip]="liveMode() ? ('sensorAnalytics.liveMode.stop' | translate) : ('sensorAnalytics.liveMode.start' | translate)">
+                    <mat-icon>{{ liveMode() ? 'pause_circle' : 'play_circle' }}</mat-icon>
+                    {{ 'sensorAnalytics.liveMode.label' | translate }}
+                </button>
+            </div>
+
+            <!-- Date Range Selector -->
+            <mat-form-field appearance="outline" class="date-range-selector">
+                <mat-label>
+                    <mat-icon class="filter-icon">date_range</mat-icon>
+                    {{ 'sensorAnalytics.period' | translate }}
+                </mat-label>
+                <mat-select [value]="datePreset()" (selectionChange)="onDatePresetChange($event.value)">
+                    <mat-option value="today">
+                        <mat-icon>today</mat-icon> {{ 'sensorAnalytics.datePresets.today' | translate }}
+                    </mat-option>
+                    <mat-option value="7days">
+                        <mat-icon>view_week</mat-icon> {{ 'sensorAnalytics.datePresets.last7Days' | translate }}
+                    </mat-option>
+                    <mat-option value="30days">
+                        <mat-icon>calendar_month</mat-icon> {{ 'sensorAnalytics.datePresets.last30Days' | translate }}
+                    </mat-option>
+                    <mat-option value="90days">
+                        <mat-icon>date_range</mat-icon> {{ 'sensorAnalytics.datePresets.last90Days' | translate }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Refresh -->
+            <button mat-icon-button class="refresh-btn" (click)="refreshData()" [disabled]="isRefreshing()"
+                [matTooltip]="'common.refresh' | translate">
+                <mat-icon [class.spinning]="isRefreshing()">refresh</mat-icon>
+            </button>
+
+            <!-- Export Button -->
+            <app-export-button [title]="'sensorAnalytics.exportTitle' | translate"
+                [sectionName]="'sensorAnalytics.exportSection' | translate"
+                [subtitle]="isAdmin() ? ('sensorAnalytics.exportSubtitleAdmin' | translate) : ('sensorAnalytics.exportSubtitleFarmer' | translate)"
+                filename="sensor_analytics" [columns]="exportColumns" [data]="exportData()">
+            </app-export-button>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+       FILTER BAR
+       ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="filter-bar">
+        <!-- Search -->
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <mat-label>{{ 'sensorAnalytics.search.label' | translate }}</mat-label>
+            <input matInput [formControl]="searchControl"
+                [placeholder]="'sensorAnalytics.search.placeholder' | translate" />
+            @if (searchControl.value) {
+            <button matSuffix mat-icon-button (click)="searchControl.setValue('')">
+                <mat-icon>close</mat-icon>
+            </button>
+            }
+        </mat-form-field>
+
+        <!-- Farm Multi-select -->
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>
+                <mat-icon class="filter-icon">agriculture</mat-icon> {{ 'sensorAnalytics.filters.farm' | translate }}
+            </mat-label>
+            <mat-select multiple [value]="selectedFarmIds()" (selectionChange)="onFarmFilterChange($event.value)">
+                @for (farm of farms(); track farm.farm_id) {
+                <mat-option [value]="farm.farm_id">{{ farm.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Farmer Multi-select (Admin only) -->
+        @if (isAdmin()) {
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>
+                <mat-icon class="filter-icon">person</mat-icon> {{ 'sensorAnalytics.filters.farmer' | translate }}
+            </mat-label>
+            <mat-select multiple [value]="selectedFarmerIds()" (selectionChange)="onFarmerFilterChange($event.value)">
+                @for (farmer of availableFarmers(); track farmer.user_id) {
+                <mat-option [value]="farmer.user_id">{{ farmer.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        }
+
+        <!-- Sensor Type -->
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>
+                <mat-icon class="filter-icon">sensors</mat-icon> {{ 'sensorAnalytics.filters.sensorType' | translate }}
+            </mat-label>
+            <mat-select multiple [value]="selectedSensorTypes()" (selectionChange)="onSensorTypeChange($event.value)">
+                @for (type of availableSensorTypes(); track type) {
+                <mat-option [value]="type">
+                    <mat-icon>{{ getSensorTypeIcon(type) }}</mat-icon>
+                    {{ type }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Anomalies Toggle -->
+        <button mat-stroked-button class="anomaly-toggle" [class.active]="showAnomaliesOnly()"
+            (click)="toggleAnomaliesOnly()" [matTooltip]="'sensorAnalytics.filters.anomaliesOnlyTooltip' | translate">
+            <mat-icon>warning</mat-icon>
+            {{ 'sensorAnalytics.filters.anomalies' | translate }}
+            @if (anomalyRecords().length > 0) {
+            <span class="anomaly-count">{{ anomalyRecords().length }}</span>
+            }
+        </button>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+       SKELETON LOADING STATE
+       ═══════════════════════════════════════════════════════════════════════ -->
+    @if (isLoading()) {
+    <div class="skeleton-loading">
+        <!-- Skeleton KPI Row -->
+        <div class="skeleton-kpi-row">
+            @for (i of [1,2,3,4,5]; track i) {
+            <div class="skeleton-kpi-card shimmer">
+                <div class="skeleton-kpi-icon"></div>
+                <div class="skeleton-kpi-body">
+                    <div class="skeleton-line lg"></div>
+                    <div class="skeleton-line sm"></div>
+                    <div class="skeleton-line xs"></div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Skeleton Tab Bar -->
+        <div class="skeleton-tab-bar shimmer">
+            <div class="skeleton-tab active-placeholder"></div>
+            <div class="skeleton-tab"></div>
+            <div class="skeleton-tab"></div>
+            <div class="skeleton-tab"></div>
+        </div>
+
+        <!-- Skeleton Content Grid -->
+        <div class="skeleton-content-grid">
+            <!-- Chart Card 1 -->
+            <div class="skeleton-card large shimmer">
+                <div class="skeleton-card-header">
+                    <div class="skeleton-line md" style="width: 40%"></div>
+                    <div class="skeleton-line xs" style="width: 20%"></div>
+                </div>
+                <div class="skeleton-chart-area">
+                    <div class="skeleton-chart-line" style="height:60%"></div>
+                    <div class="skeleton-chart-line" style="height:80%"></div>
+                    <div class="skeleton-chart-line" style="height:45%"></div>
+                    <div class="skeleton-chart-line" style="height:70%"></div>
+                    <div class="skeleton-chart-line" style="height:55%"></div>
+                    <div class="skeleton-chart-line" style="height:90%"></div>
+                    <div class="skeleton-chart-line" style="height:65%"></div>
+                    <div class="skeleton-chart-line" style="height:50%"></div>
+                </div>
+            </div>
+            <!-- Chart Card 2 (Donut) -->
+            <div class="skeleton-card small shimmer">
+                <div class="skeleton-card-header">
+                    <div class="skeleton-line md" style="width: 55%"></div>
+                </div>
+                <div class="skeleton-donut-area">
+                    <div class="skeleton-donut"></div>
+                    <div class="skeleton-donut-legend">
+                        <div class="skeleton-legend-item"><span class="skeleton-dot"></span>
+                            <div class="skeleton-line sm"></div>
+                        </div>
+                        <div class="skeleton-legend-item"><span class="skeleton-dot"></span>
+                            <div class="skeleton-line sm"></div>
+                        </div>
+                        <div class="skeleton-legend-item"><span class="skeleton-dot"></span>
+                            <div class="skeleton-line sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skeleton Table -->
+        <div class="skeleton-table-card shimmer">
+            <div class="skeleton-card-header">
+                <div class="skeleton-line md" style="width: 30%"></div>
+            </div>
+            <div class="skeleton-table-body">
+                <!-- Header row -->
+                <div class="skeleton-table-row header">
+                    <div class="skeleton-cell" style="width:20%"></div>
+                    <div class="skeleton-cell" style="width:15%"></div>
+                    <div class="skeleton-cell" style="width:15%"></div>
+                    <div class="skeleton-cell" style="width:20%"></div>
+                    <div class="skeleton-cell" style="width:10%"></div>
+                    <div class="skeleton-cell" style="width:10%"></div>
+                </div>
+                @for (row of [1,2,3,4,5]; track row) {
+                <div class="skeleton-table-row" [style.animation-delay]="(row * 0.08) + 's'">
+                    <div class="skeleton-cell" style="width:20%"></div>
+                    <div class="skeleton-cell" style="width:15%"></div>
+                    <div class="skeleton-cell" style="width:15%"></div>
+                    <div class="skeleton-cell" style="width:20%"></div>
+                    <div class="skeleton-cell badge" style="width:10%"></div>
+                    <div class="skeleton-cell" style="width:10%"></div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+       KPI ROW
+       ═══════════════════════════════════════════════════════════════════════ -->
+    @if (!isLoading()) {
+    <section class="kpi-row">
+        @for (kpi of kpiCards(); track trackByKpi($index, kpi)) {
+        <div class="kpi-card" [class]="kpi.performanceClass">
+            <div class="kpi-icon-wrapper">
+                <div class="kpi-icon">
+                    <mat-icon>{{ kpi.icon }}</mat-icon>
+                </div>
+            </div>
+            <div class="kpi-content">
+                <div class="kpi-value">{{ kpi.value }}</div>
+                <div class="kpi-label">{{ kpi.label }}</div>
+                <div class="kpi-subtitle">{{ kpi.subtitle }}</div>
+            </div>
+            @if (kpi.trend !== null) {
+            <div class="kpi-trend" [class]="kpi.trendColor">
+                <span class="trend-arrow">{{ kpi.trendArrow }}</span>
+            </div>
+            }
+        </div>
+        }
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <nav class="tab-navigation">
+        <button class="tab-btn" [class.active]="activeTab() === 'overview'" (click)="onTabChange('overview')">
+            <mat-icon>dashboard</mat-icon>
+            <span>{{ 'sensorAnalytics.tabs.overview' | translate }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'readings'" (click)="onTabChange('readings')">
+            <mat-icon>table_chart</mat-icon>
+            <span>{{ 'sensorAnalytics.tabs.readings' | translate }}</span>
+            <span class="tab-count">{{ filteredSensors().length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'comparison'" (click)="onTabChange('comparison')">
+            <mat-icon>compare_arrows</mat-icon>
+            <span>{{ 'sensorAnalytics.tabs.comparison' | translate }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'health'" (click)="onTabChange('health')">
+            <mat-icon>monitor_heart</mat-icon>
+            <span>{{ 'sensorAnalytics.tabs.health' | translate }}</span>
+            @if (anomalyRecords().length > 0) {
+            <span class="tab-badge danger">{{ anomalyRecords().length }}</span>
+            }
+        </button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB: OVERVIEW
+         ═══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'overview') {
+    <section class="tab-content overview-tab">
+        <div class="overview-grid">
+            <!-- Sensor Readings Trend Chart (Admin Only) -->
+            @if (isAdmin()) {
+            <div class="card chart-card trend-chart-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>trending_up</mat-icon>
+                        {{ 'sensorAnalytics.overview.activityTrend' | translate }}
+                    </h3>
+                    <span class="card-subtitle">{{ 'sensorAnalytics.overview.activityTrendSubtitle' | translate
+                        }}</span>
+                </div>
+                <div class="card-body">
+                    @if (overviewTrends()) {
+                    <div class="chart-wrapper large">
+                        <canvas baseChart [data]="trendChartData()" [type]="lineChartType" [options]="lineChartOptions">
+                        </canvas>
+                    </div>
+                    } @else {
+                    <div class="empty-chart-state">
+                        <mat-icon>show_chart</mat-icon>
+                        <p>{{ 'sensorAnalytics.overview.trendLoading' | translate }}</p>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- Health Distribution -->
+            <div class="card chart-card health-donut-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>donut_large</mat-icon>
+                        {{ 'sensorAnalytics.overview.healthDistribution' | translate }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (filteredSensors().length > 0) {
+                    <div class="chart-wrapper medium">
+                        <canvas baseChart [data]="healthDistributionData()" [type]="healthChartType"
+                            [options]="healthChartOptions">
+                        </canvas>
+                    </div>
+                    <div class="health-summary">
+                        <div class="health-stat">
+                            <span class="dot normal"></span>
+                            <span>{{ 'sensorAnalytics.health.normal' | translate }}: {{ filteredSensors().length -
+                                anomalyRecords().length }}</span>
+                        </div>
+                        <div class="health-stat">
+                            <span class="dot warning"></span>
+                            <span>{{ 'sensorAnalytics.health.warning' | translate }}: {{ anomalyRecords().length
+                                }}</span>
+                        </div>
+                    </div>
+                    } @else {
+                    <div class="empty-chart-state">
+                        <mat-icon>pie_chart</mat-icon>
+                        <p>{{ 'sensorAnalytics.overview.noSensorData' | translate }}</p>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Recent Anomalies -->
+            <div class="card anomaly-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>report_problem</mat-icon>
+                        {{ 'sensorAnalytics.overview.recentAnomalies' | translate }}
+                    </h3>
+                    @if (anomalyRecords().length > 0) {
+                    <span class="badge danger">{{ anomalyRecords().length }}</span>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (anomalyRecords().length === 0) {
+                    <div class="empty-state success">
+                        <mat-icon>check_circle</mat-icon>
+                        <p>{{ 'sensorAnalytics.overview.allNormal' | translate }}</p>
+                        <small>{{ 'sensorAnalytics.overview.noAnomalies' | translate }}</small>
+                    </div>
+                    } @else {
+                    <div class="anomaly-list">
+                        @for (anomaly of anomalyRecords().slice(0, 8); track trackByAnomaly($index, anomaly)) {
+                        <div class="anomaly-item" [class]="anomaly.severity"
+                            (click)="openSensorDrawer(anomaly.sensorId)">
+                            <div class="anomaly-severity">
+                                <mat-icon>{{ anomaly.severity === 'critical' ? 'error' : 'warning' }}</mat-icon>
+                            </div>
+                            <div class="anomaly-info">
+                                <div class="anomaly-title">
+                                    {{ anomaly.sensorType }} — {{ anomaly.farmName }}
+                                </div>
+                                <div class="anomaly-detail">
+                                    {{ 'sensorAnalytics.anomaly.value' | translate }}: <strong>{{ anomaly.value
+                                        }}</strong> · {{ 'sensorAnalytics.anomaly.threshold' | translate }}: {{
+                                    anomaly.threshold }}
+                                </div>
+                                <div class="anomaly-meta">
+                                    <mat-icon>schedule</mat-icon>
+                                    {{ anomaly.timestamp | date:'short' }}
+                                    <span class="separator">•</span>
+                                    {{ anomaly.deviceName }}
+                                </div>
+                            </div>
+                            <mat-icon class="anomaly-arrow">chevron_right</mat-icon>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Top Farms Quick View -->
+            <div class="card top-farms-quick">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>leaderboard</mat-icon>
+                        {{ 'sensorAnalytics.overview.farmsBySensorCount' | translate }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (farmComparisons().length === 0) {
+                    <div class="empty-state">
+                        <mat-icon>agriculture</mat-icon>
+                        <p>{{ 'sensorAnalytics.overview.noFarmData' | translate }}</p>
+                    </div>
+                    } @else {
+                    <div class="farm-ranking-list">
+                        @for (farm of farmComparisons().slice(0, 6); track farm.farmId; let i = $index) {
+                        <div class="farm-rank-item" [class.top-rank]="i < 3">
+                            <div class="rank-number">{{ i + 1 }}</div>
+                            <div class="rank-info">
+                                <div class="rank-farm">{{ farm.farmName }}</div>
+                                <div class="rank-meta">
+                                    @if (isAdmin()) { {{ farm.ownerName }} · }{{ farm.sensorCount }} {{
+                                    'sensorAnalytics.filters.sensorType' | translate }}
+                                </div>
+                            </div>
+                            <div class="rank-health">
+                                <div class="health-bar-bg">
+                                    <div class="health-bar-fill" [style.width.%]="farm.healthScore"
+                                        [style.backgroundColor]="getHealthColor(farm.healthScore)">
+                                    </div>
+                                </div>
+                                <span class="health-label" [style.color]="getHealthColor(farm.healthScore)">
+                                    {{ farm.healthScore }}%
+                                </span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB: SENSOR READINGS
+         ═══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'readings') {
+    <section class="tab-content readings-tab">
+        <!-- Group Controls -->
+        <div class="group-controls">
+            <div class="group-info">
+                <mat-icon>account_tree</mat-icon>
+                <span>{{ sensorGroups().length }} {{ 'sensorAnalytics.readings.farm' | translate }}{{
+                    sensorGroups().length !== 1 ? ('sensorAnalytics.filters.plural' | translate) : '' }} ·
+                    {{ filteredSensors().length }} {{ 'sensorAnalytics.readings.sensor' | translate }}{{
+                    filteredSensors().length !== 1 ? ('sensorAnalytics.filters.plural' | translate) : '' }}</span>
+            </div>
+            <div class="group-actions">
+                <button mat-button (click)="expandAllFarms()"
+                    [matTooltip]="'sensorAnalytics.readings.expandAll' | translate">
+                    <mat-icon>unfold_more</mat-icon> {{ 'sensorAnalytics.readings.expandAll' | translate }}
+                </button>
+                <button mat-button (click)="collapseAllFarms()"
+                    [matTooltip]="'sensorAnalytics.readings.collapseAll' | translate">
+                    <mat-icon>unfold_less</mat-icon> {{ 'sensorAnalytics.readings.collapseAll' | translate }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Sensor Groups -->
+        @if (sensorGroups().length === 0) {
+        <div class="empty-state-large">
+            <mat-icon>sensors_off</mat-icon>
+            <h3>{{ 'sensorAnalytics.readings.noSensors' | translate }}</h3>
+            <p>{{ 'sensorAnalytics.readings.noSensorsDesc' | translate }}</p>
+            <button mat-stroked-button (click)="clearAllFilters()">
+                <mat-icon>filter_list_off</mat-icon> {{ 'sensorAnalytics.filters.clearAll' | translate }}
+            </button>
+        </div>
+        }
+
+        @for (group of sensorGroups(); track trackByFarmId($index, group)) {
+        <div class="sensor-group" [class.expanded]="group.isExpanded">
+            <!-- Group Header -->
+            <div class="group-header" (click)="toggleFarmExpansion(group.farmId)">
+                <div class="group-expand-icon">
+                    <mat-icon>{{ group.isExpanded ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                </div>
+                <div class="group-icon">
+                    <mat-icon>agriculture</mat-icon>
+                </div>
+                <div class="group-title">
+                    <h3>{{ group.farmName }}</h3>
+                    @if (isAdmin()) {
+                    <span class="group-owner">
+                        <mat-icon>person</mat-icon> {{ group.ownerName }}
+                    </span>
+                    }
+                </div>
+                <div class="group-stats">
+                    <div class="stat-chip">
+                        <mat-icon>sensors</mat-icon>
+                        {{ group.sensorCount }}
+                    </div>
+                    <div class="stat-chip online">
+                        <mat-icon>check_circle</mat-icon>
+                        {{ group.onlineSensors }}
+                    </div>
+                    @if (group.sensorCount - group.onlineSensors > 0) {
+                    <div class="stat-chip offline">
+                        <mat-icon>error_outline</mat-icon>
+                        {{ group.sensorCount - group.onlineSensors }}
+                    </div>
+                    }
+                    <div class="health-indicator"
+                        [matTooltip]="getHealthLabel(group.avgHealth) + ' · ' + group.avgHealth + '%'">
+                        <div class="health-ring" [style.borderColor]="getHealthColor(group.avgHealth)">
+                            <span [style.color]="getHealthColor(group.avgHealth)">{{ group.avgHealth }}%</span>
+                        </div>
+                    </div>
+                </div>
+                @if (group.latestReading) {
+                <div class="group-last-reading">
+                    <mat-icon>schedule</mat-icon>
+                    {{ group.latestReading | date:'short' }}
+                </div>
+                }
+            </div>
+
+            <!-- Sensor Table (Collapsible) -->
+            @if (group.isExpanded) {
+            <div class="group-body">
+                <div class="sensor-table-wrapper">
+                    <table class="sensor-table">
+                        <thead>
+                            <tr>
+                                <th class="col-sensor">{{ 'sensorAnalytics.table.sensor' | translate }}</th>
+                                <th class="col-type">{{ 'sensorAnalytics.table.type' | translate }}</th>
+                                <th class="col-device">{{ 'sensorAnalytics.table.device' | translate }}</th>
+                                <th class="col-latest">{{ 'sensorAnalytics.table.latestValue' | translate }}</th>
+                                <th class="col-avg">{{ 'sensorAnalytics.table.average' | translate }}</th>
+                                <th class="col-min">{{ 'sensorAnalytics.table.min' | translate }}</th>
+                                <th class="col-max">{{ 'sensorAnalytics.table.max' | translate }}</th>
+                                <th class="col-readings">{{ 'sensorAnalytics.table.readings' | translate }}</th>
+                                <th class="col-status">{{ 'sensorAnalytics.table.status' | translate }}</th>
+                                <th class="col-last-seen">{{ 'sensorAnalytics.table.lastReading' | translate }}</th>
+                                <th class="col-actions"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (sensor of group.sensors; track trackBySensorId($index, sensor)) {
+                            <tr class="sensor-row" [class]="'status-' + sensor.status"
+                                (click)="openSensorDrawer(sensor.sensor_id)">
+                                <td class="col-sensor">
+                                    <div class="sensor-id-cell">
+                                        <mat-icon class="sensor-type-icon"
+                                            [style.color]="getStatusColor(sensor.status || 'normal')">
+                                            {{ getSensorTypeIcon(sensor.type) }}
+                                        </mat-icon>
+                                        <span class="sensor-id">{{ sensor.sensor_id }}</span>
+                                    </div>
+                                </td>
+                                <td class="col-type">
+                                    <span class="type-badge">{{ sensor.type }}</span>
+                                </td>
+                                <td class="col-device">{{ sensor.deviceName }}</td>
+                                <td class="col-latest">
+                                    @if (sensor.latestValue !== undefined) {
+                                    <span class="value-display" [class]="sensor.status">
+                                        {{ sensor.latestValue | number:'1.0-2' }}
+                                        <small>{{ sensor.unit }}</small>
+                                    </span>
+                                    } @else {
+                                    <span class="no-data">—</span>
+                                    }
+                                </td>
+                                <td class="col-avg">
+                                    {{ sensor.averageValue | number:'1.0-2' }}
+                                    <small>{{ sensor.unit }}</small>
+                                </td>
+                                <td class="col-min">{{ sensor.minValue | number:'1.0-2' }}</td>
+                                <td class="col-max">{{ sensor.maxValue | number:'1.0-2' }}</td>
+                                <td class="col-readings">
+                                    <span class="reading-count">{{ sensor.readingCount }}</span>
+                                </td>
+                                <td class="col-status">
+                                    <span class="status-badge" [class]="sensor.status">
+                                        <span class="status-dot"></span>
+                                        {{ sensor.status }}
+                                    </span>
+                                </td>
+                                <td class="col-last-seen">
+                                    @if (sensor.latestTimestamp) {
+                                    {{ sensor.latestTimestamp | date:'short' }}
+                                    } @else {
+                                    <span class="no-data">{{ 'common.never' | translate }}</span>
+                                    }
+                                </td>
+                                <td class="col-actions">
+                                    <button mat-icon-button class="row-action-btn"
+                                        [matTooltip]="'common.details' | translate"
+                                        (click)="openSensorDrawer(sensor.sensor_id); $event.stopPropagation()">
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            }
+        </div>
+        }
+    </section>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB: FARM COMPARISON
+         ═══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'comparison') {
+    <section class="tab-content comparison-tab">
+        <div class="comparison-grid">
+            <!-- Bar Chart -->
+            <div class="card chart-card comparison-chart-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>bar_chart</mat-icon>
+                        {{ 'sensorAnalytics.comparison.title' | translate }}
+                    </h3>
+                    <span class="card-subtitle">{{ 'sensorAnalytics.comparison.subtitle' | translate }}</span>
+                </div>
+                <div class="card-body">
+                    @if (farmComparisons().length > 0) {
+                    <div class="chart-wrapper large">
+                        <canvas baseChart [data]="farmComparisonChartData()" [type]="barChartType"
+                            [options]="barChartOptions">
+                        </canvas>
+                    </div>
+                    } @else {
+                    <div class="empty-chart-state">
+                        <mat-icon>bar_chart</mat-icon>
+                        <p>{{ 'sensorAnalytics.comparison.noData' | translate }}</p>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="card comparison-table-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>table_view</mat-icon>
+                        {{ 'sensorAnalytics.comparison.performanceTable' | translate }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (farmComparisons().length > 0) {
+                    <div class="comparison-table-wrapper">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'sensorAnalytics.comparison.farm' | translate }}</th>
+                                    @if (isAdmin()) { <th>{{ 'sensorAnalytics.comparison.owner' | translate }}</th> }
+                                    <th>{{ 'sensorAnalytics.comparison.sensors' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.comparison.readings' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.comparison.avgValue' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.comparison.alerts' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.comparison.health' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.comparison.uptime' | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (farm of farmComparisons(); track farm.farmId) {
+                                <tr>
+                                    <td class="farm-name-cell">
+                                        <mat-icon>agriculture</mat-icon>
+                                        {{ farm.farmName }}
+                                    </td>
+                                    @if (isAdmin()) { <td>{{ farm.ownerName }}</td> }
+                                    <td>{{ farm.sensorCount }}</td>
+                                    <td>{{ farm.readingCount | number }}</td>
+                                    <td>{{ farm.avgReadingValue | number:'1.0-2' }}</td>
+                                    <td>
+                                        @if (farm.alertCount > 0) {
+                                        <span class="alert-count">{{ farm.alertCount }}</span>
+                                        } @else {
+                                        <span class="no-alerts">0</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="health-cell">
+                                            <div class="mini-health-bar">
+                                                <div class="mini-health-fill" [style.width.%]="farm.healthScore"
+                                                    [style.backgroundColor]="getHealthColor(farm.healthScore)">
+                                                </div>
+                                            </div>
+                                            <span [style.color]="getHealthColor(farm.healthScore)">
+                                                {{ farm.healthScore }}%
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="uptime-badge" [class.good]="farm.uptimePercent >= 80"
+                                            [class.poor]="farm.uptimePercent < 50">
+                                            {{ farm.uptimePercent }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    } @else {
+                    <div class="empty-state">
+                        <mat-icon>compare_arrows</mat-icon>
+                        <p>{{ 'sensorAnalytics.comparison.noFarms' | translate }}</p>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB: SENSOR HEALTH
+         ═══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'health') {
+    <section class="tab-content health-tab">
+        <div class="health-grid">
+            <!-- Health Overview Cards -->
+            <div class="health-overview-row">
+                <div class="health-overview-card normal">
+                    <mat-icon>check_circle</mat-icon>
+                    <div class="hoc-value">{{ countByStatus('normal') }}</div>
+                    <div class="hoc-label">{{ 'sensorAnalytics.health.normal' | translate }}</div>
+                </div>
+                <div class="health-overview-card warning">
+                    <mat-icon>warning</mat-icon>
+                    <div class="hoc-value">{{ countByStatus('warning') }}</div>
+                    <div class="hoc-label">{{ 'sensorAnalytics.health.warning' | translate }}</div>
+                </div>
+                <div class="health-overview-card critical">
+                    <mat-icon>error</mat-icon>
+                    <div class="hoc-value">{{ countByStatus('critical') }}</div>
+                    <div class="hoc-label">{{ 'sensorAnalytics.health.critical' | translate }}</div>
+                </div>
+                <div class="health-overview-card offline">
+                    <mat-icon>sensors_off</mat-icon>
+                    <div class="hoc-value">{{ countByStatus('offline') }}</div>
+                    <div class="hoc-label">{{ 'sensorAnalytics.health.offline' | translate }}</div>
+                </div>
+            </div>
+
+            <!-- Health Distribution Chart -->
+            <div class="card chart-card health-chart-full">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>pie_chart</mat-icon>
+                        {{ 'sensorAnalytics.health.distributionTitle' | translate }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-wrapper medium">
+                        <canvas baseChart [data]="healthDistributionData()" [type]="healthChartType"
+                            [options]="healthChartOptions">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anomaly Detail Table -->
+            <div class="card anomaly-detail-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <mat-icon>report_problem</mat-icon>
+                        {{ 'sensorAnalytics.health.anomalyAuditLog' | translate }}
+                    </h3>
+                    @if (anomalyRecords().length > 0) {
+                    <span class="badge danger">{{ anomalyRecords().length }}</span>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (anomalyRecords().length === 0) {
+                    <div class="empty-state success">
+                        <mat-icon>verified</mat-icon>
+                        <h3>{{ 'sensorAnalytics.health.systemHealthy' | translate }}</h3>
+                        <p>{{ 'sensorAnalytics.health.allNormalThresholds' | translate }}</p>
+                    </div>
+                    } @else {
+                    <div class="anomaly-table-wrapper">
+                        <table class="anomaly-full-table">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'sensorAnalytics.anomaly.severity' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.sensorId' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.type' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.farm' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.device' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.value' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.threshold' | translate }}</th>
+                                    <th>{{ 'sensorAnalytics.anomaly.detected' | translate }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (anomaly of anomalyRecords(); track trackByAnomaly($index, anomaly)) {
+                                <tr [class]="anomaly.severity" (click)="openSensorDrawer(anomaly.sensorId)">
+                                    <td>
+                                        <span class="severity-badge" [class]="anomaly.severity">
+                                            <mat-icon>{{ anomaly.severity === 'critical' ? 'error' : 'warning'
+                                                }}</mat-icon>
+                                            {{ anomaly.severity }}
+                                        </span>
+                                    </td>
+                                    <td>{{ anomaly.sensorId }}</td>
+                                    <td>{{ anomaly.sensorType }}</td>
+                                    <td>{{ anomaly.farmName }}</td>
+                                    <td>{{ anomaly.deviceName }}</td>
+                                    <td class="value-cell">{{ anomaly.value | number:'1.0-2' }}</td>
+                                    <td class="threshold-cell">{{ anomaly.threshold | number:'1.0-2' }}</td>
+                                    <td>{{ anomaly.timestamp | date:'short' }}</td>
+                                    <td>
+                                        <button mat-icon-button
+                                            [matTooltip]="'sensorAnalytics.drawer.viewSensor' | translate"
+                                            (click)="openSensorDrawer(anomaly.sensorId); $event.stopPropagation()">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    }
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+       SENSOR DETAIL DRAWER
+       ═══════════════════════════════════════════════════════════════════════ -->
+    @if (isDrawerOpen()) {
+    <div class="drawer-backdrop" (click)="closeSensorDrawer()"></div>
+    <aside class="sensor-drawer" [class.open]="isDrawerOpen()">
+        <div class="drawer-header">
+            <div class="drawer-title-section">
+                <h2 class="drawer-title">{{ 'sensorAnalytics.drawer.title' | translate }}</h2>
+                @if (selectedSensorDetail()) {
+                <span class="drawer-subtitle">{{ selectedSensorDetail()!.sensor_id }}</span>
+                }
+            </div>
+            <button mat-icon-button (click)="closeSensorDrawer()" class="drawer-close-btn">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        @if (selectedSensorDetail(); as sensor) {
+        <div class="drawer-body">
+            <!-- Sensor Info -->
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">
+                    <mat-icon>info</mat-icon> {{ 'sensorAnalytics.drawer.generalInfo' | translate }}
+                </h4>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">{{ 'sensorAnalytics.drawer.type' | translate }}</span>
+                        <span class="info-value">
+                            <mat-icon>{{ getSensorTypeIcon(sensor.type) }}</mat-icon>
+                            {{ sensor.type }}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">{{ 'sensorAnalytics.drawer.unit' | translate }}</span>
+                        <span class="info-value">{{ sensor.unit }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">{{ 'sensorAnalytics.drawer.farm' | translate }}</span>
+                        <span class="info-value">{{ sensor.farmName }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">{{ 'sensorAnalytics.drawer.device' | translate }}</span>
+                        <span class="info-value">{{ sensor.deviceName }}</span>
+                    </div>
+                    @if (isAdmin()) {
+                    <div class="info-item">
+                        <span class="info-label">{{ 'sensorAnalytics.drawer.owner' | translate }}</span>
+                        <span class="info-value">{{ sensor.ownerName }}</span>
+                    </div>
+                    }
+                    <div class="info-item">
+                        <span class="info-label">{{ 'sensorAnalytics.drawer.location' | translate }}</span>
+                        <span class="info-value">{{ sensor.location || ('crops.common.noLocation' | translate) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">
+                    <mat-icon>speed</mat-icon> {{ 'sensorAnalytics.drawer.statusHealth' | translate }}
+                </h4>
+                <div class="status-summary">
+                    <div class="status-large" [class]="sensor.status">
+                        <span class="status-dot-large"></span>
+                        <span class="status-text">{{ sensor.status }}</span>
+                    </div>
+                    <div class="health-score-large">
+                        <div class="health-ring-large" [style.borderColor]="getHealthColor(sensor.healthScore || 0)">
+                            <span [style.color]="getHealthColor(sensor.healthScore || 0)">
+                                {{ sensor.healthScore }}%
+                            </span>
+                        </div>
+                        <span class="health-label">{{ getHealthLabel(sensor.healthScore || 0) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Summary -->
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">
+                    <mat-icon>analytics</mat-icon> {{ 'sensorAnalytics.drawer.readingStats' | translate }}
+                </h4>
+                <div class="drawer-kpi-grid">
+                    <div class="drawer-kpi">
+                        <div class="drawer-kpi-value">
+                            {{ sensor.latestValue !== undefined ? (sensor.latestValue | number:'1.0-2') : '—' }}
+                            <small>{{ sensor.unit }}</small>
+                        </div>
+                        <div class="drawer-kpi-label">{{ 'sensorAnalytics.drawer.latest' | translate }}</div>
+                    </div>
+                    <div class="drawer-kpi">
+                        <div class="drawer-kpi-value">{{ sensor.averageValue | number:'1.0-2' }}</div>
+                        <div class="drawer-kpi-label">{{ 'sensorAnalytics.drawer.average' | translate }}</div>
+                    </div>
+                    <div class="drawer-kpi">
+                        <div class="drawer-kpi-value">{{ sensor.minValue | number:'1.0-2' }}</div>
+                        <div class="drawer-kpi-label">{{ 'sensorAnalytics.drawer.minimum' | translate }}</div>
+                    </div>
+                    <div class="drawer-kpi">
+                        <div class="drawer-kpi-value">{{ sensor.maxValue | number:'1.0-2' }}</div>
+                        <div class="drawer-kpi-label">{{ 'sensorAnalytics.drawer.maximum' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thresholds -->
+            @if (sensor.min_warning !== undefined || sensor.max_warning !== undefined) {
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">
+                    <mat-icon>tune</mat-icon> {{ 'sensorAnalytics.drawer.thresholds' | translate }}
+                </h4>
+                <div class="threshold-grid">
+                    @if (sensor.min_critical !== undefined) {
+                    <div class="threshold-item critical-low">
+                        <span class="threshold-label">{{ 'sensorAnalytics.drawer.minCritical' | translate }}</span>
+                        <span class="threshold-value">{{ sensor.min_critical }}</span>
+                    </div>
+                    }
+                    @if (sensor.min_warning !== undefined) {
+                    <div class="threshold-item warning-low">
+                        <span class="threshold-label">{{ 'sensorAnalytics.drawer.minWarning' | translate }}</span>
+                        <span class="threshold-value">{{ sensor.min_warning }}</span>
+                    </div>
+                    }
+                    @if (sensor.max_warning !== undefined) {
+                    <div class="threshold-item warning-high">
+                        <span class="threshold-label">{{ 'sensorAnalytics.drawer.maxWarning' | translate }}</span>
+                        <span class="threshold-value">{{ sensor.max_warning }}</span>
+                    </div>
+                    }
+                    @if (sensor.max_critical !== undefined) {
+                    <div class="threshold-item critical-high">
+                        <span class="threshold-label">{{ 'sensorAnalytics.drawer.maxCritical' | translate }}</span>
+                        <span class="threshold-value">{{ sensor.max_critical }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- Detail Chart -->
+            <div class="drawer-section chart-section">
+                <h4 class="drawer-section-title">
+                    <mat-icon>show_chart</mat-icon> {{ 'sensorAnalytics.drawer.readingHistory' | translate }}
+                </h4>
+                <div class="chart-wrapper drawer-chart">
+                    <canvas baseChart [data]="sensorDetailChartData()" [type]="lineChartType"
+                        [options]="lineChartOptions">
+                    </canvas>
+                </div>
+            </div>
+
+            <!-- Metadata -->
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">
+                    <mat-icon>description</mat-icon> {{ 'sensorAnalytics.drawer.metadata' | translate }}
+                </h4>
+                <div class="meta-info">
+                    <div class="meta-row">
+                        <span class="meta-label">{{ 'sensorAnalytics.drawer.totalReadings' | translate }}</span>
+                        <span class="meta-value">{{ sensor.readingCount }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">{{ 'sensorAnalytics.drawer.lastReading' | translate }}</span>
+                        <span class="meta-value">
+                            {{ sensor.latestTimestamp ? (sensor.latestTimestamp | date:'medium') : ('common.never' |
+                            translate) }}
+                        </span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">{{ 'sensorAnalytics.drawer.sensorId' | translate }}</span>
+                        <span class="meta-value mono">{{ sensor.sensor_id }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">{{ 'sensorAnalytics.drawer.deviceId' | translate }}</span>
+                        <span class="meta-value mono">{{ sensor.device_id }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        } @else {
+        <div class="drawer-body">
+            <div class="empty-state">
+                <mat-icon>sensors_off</mat-icon>
+                <p>{{ 'sensorAnalytics.drawer.notFound' | translate }}</p>
+            </div>
+        </div>
+        }
+    </aside>
+    }
+</div>

@@ -1,0 +1,86 @@
+<!-- =============================================
+     SECTION 2 — À PROPOS DE FEEDIN
+     Credibility + Intention Section
+     Placed immediately after Hero
+     ============================================= -->
+
+<section class="about-section" id="about-section" [attr.aria-label]="'landing.about.title' | translate">
+    <div class="about-container">
+
+        <!-- Two-Column Layout -->
+        <div class="about-grid">
+
+            <!-- LEFT: Text Content -->
+            <div class="about-content" appScrollReveal="fade-right">
+
+                <!-- Section Label -->
+                <span class="about-label">{{ 'landing.about.label' | translate }}</span>
+
+                <!-- Section Title (H2) — SEO keyword: agriculture intelligente -->
+                <h2 class="about-title">{{ 'landing.about.title' | translate }}</h2>
+
+                <!-- Core Message — Origin Story -->
+                <p class="about-lead">
+                    {{ 'landing.about.lead' | translate }}
+                </p>
+
+                <!-- Supporting Paragraph — Trust & Vision -->
+                <p class="about-body">
+                    {{ 'landing.about.body' | translate }}
+                </p>
+
+                <!-- Decorative Separator -->
+                <div class="about-separator" aria-hidden="true"></div>
+
+                <!-- 3 Value Statements -->
+                <ul class="about-values" role="list">
+                    <li class="about-value-item">
+                        {{ 'landing.about.values.v1' | translate }}
+                    </li>
+                    <li class="about-value-item">
+                        {{ 'landing.about.values.v2' | translate }}
+                    </li>
+                    <li class="about-value-item">
+                        {{ 'landing.about.values.v3' | translate }}
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- RIGHT: Visual Media Card -->
+            <div class="about-visual" appScrollReveal="fade-left" [delay]="0.15">
+
+                <div class="about-media-card">
+                    <div class="about-media" role="img"
+                        aria-label="Paysage agricole serein illustrant la mission de Feedin">
+                        <img src="../../../../../assets/landing/images/propos.png"
+                            alt="Agriculteur dans son champ au lever du soleil — agriculture intelligente et durable"
+                            loading="lazy" width="600" height="400">
+                        <!-- Default placeholder visual -->
+                        <div class="about-media-placeholder">
+                            <div class="placeholder-icon" aria-hidden="true">
+                                <svg width="64" height="64" viewBox="0 0 64 64" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 48L24 28L36 40L44 32L56 48H8Z" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="44" cy="20" r="6" stroke="currentColor" stroke-width="2" />
+                                    <rect x="4" y="8" width="56" height="48" rx="4" stroke="currentColor"
+                                        stroke-width="2" />
+                                </svg>
+                            </div>
+                            <span class="placeholder-text">{{ 'landing.about.mediaPlaceholder' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Accent -->
+                    <div class="media-accent" aria-hidden="true"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="about-bg-gradient" aria-hidden="true"></div>
+</section>

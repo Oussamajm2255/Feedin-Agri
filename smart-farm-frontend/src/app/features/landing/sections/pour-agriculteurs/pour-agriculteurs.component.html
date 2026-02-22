@@ -1,0 +1,41 @@
+<!-- =============================================
+     SECTION — CONÇU POUR LES VRAIS AGRICULTEURS
+     Trust & Human-centered | Centered + 3 Cards
+     ============================================= -->
+
+<section class="agriculteurs-section" id="agriculteurs-section" aria-labelledby="agriculteurs-title">
+    <div class="agriculteurs-container">
+
+        <!-- Centered Header -->
+        <div class="agriculteurs-header" appScrollReveal="fade-up">
+            <span class="agriculteurs-label">{{ 'landing.farmers.label' | translate }}</span>
+            <h2 id="agriculteurs-title" class="agriculteurs-title">
+                {{ 'landing.farmers.title' | translate }}
+            </h2>
+            <p class="agriculteurs-subtitle">
+                {{ 'landing.farmers.subtitle' | translate }}
+            </p>
+        </div>
+
+        <!-- 3 Trust Cards -->
+        <div class="agriculteurs-grid">
+            @for (card of cards; track card.id) {
+            <article class="agriculteur-card" appScrollReveal="fade-up" [delay]="card.id * 0.15">
+                <!-- Card Visual Slot -->
+                <div class="card-visual">
+                    <img [src]="card.imagePath" [alt]="card.imageAlt" loading="lazy">
+                </div>
+
+                <!-- Card Content -->
+                <div class="card-body">
+                    <h3 class="card-title">{{ card.titleKey | translate }}</h3>
+                    <p class="card-description">{{ card.descriptionKey | translate }}</p>
+                </div>
+            </article>
+            }
+        </div>
+
+    </div>
+
+    <div class="agriculteurs-bg" aria-hidden="true"></div>
+</section>

@@ -1,0 +1,353 @@
+<div class="admin-overview-page">
+  <!-- Header Bar -->
+  <div class="overview-header">
+    <div class="header-left">
+      <div class="title-section">
+        <h1 class="page-title">
+          <mat-icon class="title-icon">dashboard</mat-icon>
+          {{ 'admin.overview.title' | translate }}
+        </h1>
+        <small class="page-subtitle">{{ 'admin.overview.subtitle' | translate }}</small>
+      </div>
+      <div *ngIf="(selectedFarmId() || selectedFarmerId())" class="active-filters">
+        <div *ngIf="selectedFarmId() && selectedFarmName()" class="active-filter-badge">
+          <mat-icon>filter_alt</mat-icon>
+          <span>{{ 'admin.sidebar.farms' | translate }}: {{ selectedFarmName() }}</span>
+          <button mat-icon-button (click)="clearFarmFilter()" class="clear-filter-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="selectedFarmerId() && selectedFarmerName()" class="active-filter-badge">
+          <mat-icon>person</mat-icon>
+          <span>{{ 'admin.sidebar.farmers' | translate }}: {{ selectedFarmerName() }}</span>
+          <button mat-icon-button (click)="clearFarmerFilter()" class="clear-filter-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <button *ngIf="selectedFarmId() || selectedFarmerId()" mat-button (click)="clearAllFilters()"
+          class="clear-all-filters-btn">
+          <mat-icon>clear_all</mat-icon>
+          <span>{{ 'common.clearFilters' | translate }}</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-right">
+      <!-- Date Range Selector -->
+      <mat-form-field appearance="outline" class="date-range-selector">
+        <mat-label>
+          <mat-icon class="filter-icon">date_range</mat-icon>
+          {{ 'common.date' | translate }}
+        </mat-label>
+        <mat-select [value]="dateRange()" (selectionChange)="onDateRangeChange($event.value)">
+          <mat-option value="today">
+            <mat-icon>today</mat-icon>
+            <span>{{ 'admin.logs.today' | translate }}</span>
+          </mat-option>
+          <mat-option value="7days">
+            <mat-icon>view_week</mat-icon>
+            <span>{{ 'admin.logs.last7d' | translate }}</span>
+          </mat-option>
+          <mat-option value="30days">
+            <mat-icon>calendar_month</mat-icon>
+            <span>{{ 'common.date' | translate }}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Farmer Filter -->
+      <mat-form-field appearance="outline" class="farmer-filter">
+        <mat-label>
+          <mat-icon class="filter-icon">person</mat-icon>
+          {{ 'admin.farmers.filters.status' | translate }}
+        </mat-label>
+        <mat-select [value]="selectedFarmerId()" (selectionChange)="onFarmerFilterChange($event.value)">
+          <mat-option [value]="null">
+            <mat-icon>people</mat-icon>
+            <span>{{ 'admin.sidebar.farmers' | translate }} ({{ availableFarmers().length }})</span>
+          </mat-option>
+          <mat-option *ngFor="let farmer of availableFarmers(); trackBy: trackByFarmerId" [value]="farmer.user_id">
+            <mat-icon>person</mat-icon>
+            <span>{{ farmer.name }}</span>
+            <small> • {{ farmer.email }}</small>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Farm Filter -->
+      <mat-form-field appearance="outline" class="farm-filter">
+        <mat-label>
+          <mat-icon class="filter-icon">agriculture</mat-icon>
+          {{ 'admin.devices.filters.farm' | translate }}
+        </mat-label>
+        <mat-select [value]="selectedFarmId()" (selectionChange)="onFarmFilterChange($event.value)"
+          [disabled]="!!selectedFarmerId()">
+          <mat-option [value]="null">
+            <mat-icon>apps</mat-icon>
+            <span>{{ 'admin.sidebar.farms' | translate }} ({{ filteredFarms().length }})</span>
+          </mat-option>
+          <mat-option *ngFor="let farm of filteredFarms(); trackBy: trackByFarmId" [value]="farm.farm_id">
+            <mat-icon>agriculture</mat-icon>
+            <span>{{ farm.name }}</span>
+            <small *ngIf="farm.location"> • {{ farm.location }}</small>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>{{ 'admin.overview.loading' | translate }}</p>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="overview-kpi-row" *ngIf="!isLoading()">
+    <div *ngFor="let kpi of kpiCards(); trackBy: trackByKpiLabel" class="kpi-card" [class.clickable]="kpi.route"
+      [class.has-trend]="kpi.trend !== null && kpi.trend !== undefined" [class]="kpi.performanceClass || 'perf-neutral'"
+      (click)="kpi.route && navigateTo(kpi.route)" [matTooltip]="kpi.subtitle || ''" matTooltipPosition="above">
+      <div class="kpi-icon-wrapper">
+        <div class="kpi-icon" [class]="'icon-' + kpi.icon">
+          <mat-icon>{{ kpi.icon }}</mat-icon>
+        </div>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-value">{{ kpi.value | number }}</div>
+        <div class="kpi-label">{{ kpi.label }}</div>
+        <div *ngIf="kpi.subtitle" class="kpi-subtitle">{{ kpi.subtitle }}</div>
+
+        <!-- Trend Indicator with Arrows -->
+        <div *ngIf="kpi.trend !== null && kpi.trend !== undefined" class="kpi-trend-arrow"
+          [class]="kpi.trendColor || 'neutral'">
+          <span class="trend-arrow-symbol">{{ kpi.trendArrow || '→' }}</span>
+          <span class="trend-value">{{ kpi.trend | number:'1.0-1' }}%</span>
+        </div>
+      </div>
+      <div *ngIf="kpi.route" class="kpi-action">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="overview-main-grid" *ngIf="!isLoading()">
+    <!-- Left Column -->
+    <div class="overview-main-column">
+      <!-- Usage Trend Card -->
+      <div class="card usage-trend-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <mat-icon>trending_up</mat-icon>
+            {{ 'admin.overview.recentActivity.title' | translate }}
+          </h3>
+        </div>
+        <div class="card-content">
+          <div *ngIf="!overviewTrends()" class="placeholder-content">
+            <mat-icon class="placeholder-icon">bar_chart</mat-icon>
+            <p>{{ 'common.loading' | translate }}</p>
+          </div>
+          <div *ngIf="overviewTrends()" class="trends-content">
+            <div class="chart-container">
+              <canvas baseChart [data]="chartData()" [type]="lineChartType" [options]="lineChartOptions"></canvas>
+            </div>
+            <div class="chart-legend">
+              <small>Period: {{ overviewTrends()?.period || 'N/A' }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity Timeline -->
+      <div class="card recent-activity-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <mat-icon>history</mat-icon>
+            {{ 'admin.overview.recentActivity.title' | translate }}
+            <span *ngIf="recentActivity().length > 0" class="activity-count-badge">
+              ({{ recentActivity().length }})
+            </span>
+          </h3>
+          <button mat-icon-button (click)="toggleActivityExpansion()" class="expand-collapse-btn"
+            [matTooltip]="isActivityExpanded() ? ('admin.logs.collapse' | translate) : ('admin.logs.expand' | translate)"
+            [attr.aria-expanded]="isActivityExpanded()">
+            <mat-icon class="expand-icon">{{ isActivityExpanded() ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+          </button>
+        </div>
+        <div class="card-content" [class.collapsed]="!isActivityExpanded()">
+          <div *ngIf="recentActivity().length === 0" class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <p>{{ 'admin.overview.recentActivity.noActivity' | translate }}</p>
+          </div>
+          <div *ngIf="recentActivity().length > 0" class="activity-timeline">
+            <div *ngFor="let activity of recentActivity(); let i = index; trackBy: trackByActivityId"
+              class="activity-item" [class]="'activity-' + activity.color">
+              <div class="activity-timeline-line" *ngIf="i < recentActivity().length - 1"></div>
+              <div class="activity-icon-wrapper">
+                <div class="activity-icon" [class]="'icon-' + activity.color">
+                  <mat-icon>{{ activity.icon }}</mat-icon>
+                </div>
+                <div *ngIf="activity.type === 'notification' && activity.metadata?.read === false"
+                  class="activity-unread-badge"></div>
+              </div>
+              <div class="activity-content">
+                <div class="activity-header">
+                  <div class="activity-title">{{ activity.title }}</div>
+                  <div class="activity-type-badge" [class]="'badge-' + activity.type">
+                    {{ activity.type === 'action' ? 'Action' : activity.metadata?.level || 'Alert' }}
+                  </div>
+                </div>
+                <div class="activity-description">{{ activity.description }}</div>
+                <div class="activity-footer">
+                  <div class="activity-time">
+                    <mat-icon class="time-icon">schedule</mat-icon>
+                    <span>{{ activity.timestamp | date:'short' }}</span>
+                  </div>
+                  <div *ngIf="activity.metadata?.farmName" class="activity-farm">
+                    <mat-icon>agriculture</mat-icon>
+                    <span>{{ activity.metadata?.farmName }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Farms Table -->
+      <div class="card top-farms-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <mat-icon>star</mat-icon>
+            {{ 'admin.overview.quickActions.viewFarms' | translate }}
+          </h3>
+        </div>
+        <div class="card-content">
+          <div *ngIf="topFarms().length === 0" class="empty-state">
+            <mat-icon>agriculture</mat-icon>
+            <p>{{ 'admin.farmers.empty.title' | translate }}</p>
+          </div>
+          <div *ngIf="topFarms().length > 0" class="top-farms-list">
+            <div *ngFor="let farm of topFarms(); let i = index; trackBy: trackByFarmId" class="top-farm-item"
+              [class.rank-1]="i === 0" [class.rank-2]="i === 1" [class.rank-3]="i === 2"
+              (click)="navigateTo('/admin/farms')">
+              <div class="farm-rank">
+                <div class="rank-number">{{ i + 1 }}</div>
+                <div *ngIf="i === 0" class="rank-crown">
+                  <mat-icon>emoji_events</mat-icon>
+                </div>
+              </div>
+              <div class="farm-info">
+                <div class="farm-name-wrapper">
+                  <mat-icon class="farm-icon">agriculture</mat-icon>
+                  <div class="farm-name">{{ farm.name }}</div>
+                </div>
+                <div class="farm-stats">
+                  <div class="device-count-badge">
+                    <mat-icon class="device-icon">devices</mat-icon>
+                    <span class="device-count">{{ farm.deviceCount }}</span>
+                    <span class="device-label">device{{ farm.deviceCount !== 1 ? 's' : '' }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="farm-action">
+                <button mat-icon-button class="view-btn" (click)="navigateTo('/admin/farms'); $event.stopPropagation()">
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="overview-side-column">
+      <!-- Farms Needing Attention -->
+      <div class="card farms-attention-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <mat-icon>warning</mat-icon>
+            {{ 'admin.overview.systemStatus.issuesDetected' | translate }}
+          </h3>
+        </div>
+        <div class="card-content">
+          <div *ngIf="farmsNeedingAttention().length === 0" class="empty-state">
+            <mat-icon>check_circle</mat-icon>
+            <p>{{ 'admin.overview.systemStatus.allOperational' | translate }}</p>
+          </div>
+          <div *ngIf="farmsNeedingAttention().length > 0" class="attention-list">
+            <div *ngFor="let farm of farmsNeedingAttention(); trackBy: trackByFarmId" class="attention-item"
+              (click)="navigateTo('/admin/farms')">
+              <div class="attention-icon">
+                <mat-icon>warning</mat-icon>
+              </div>
+              <div class="attention-content">
+                <div class="attention-farm-name">{{ farm.name }}</div>
+                <div class="attention-issue">{{ farm.issue }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Devices Status Card -->
+      <div class="card devices-status-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <mat-icon>devices</mat-icon>
+            {{ 'admin.overview.stats.totalDevices' | translate }}
+          </h3>
+        </div>
+        <div class="card-content">
+          <div *ngIf="deviceStats()" class="status-stats">
+            <div class="status-item status-online">
+              <div class="status-label">{{ 'common.online' | translate }}</div>
+              <div class="status-value online">
+                {{ deviceStats().online || 0 }}
+              </div>
+            </div>
+            <div class="status-item status-offline">
+              <div class="status-label">{{ 'common.offline' | translate }}</div>
+              <div class="status-value offline">
+                {{ deviceStats().offline || 0 }}
+              </div>
+            </div>
+            <div class="status-item status-maintenance">
+              <div class="status-label">{{ 'admin.settings.general.maintenanceMode' | translate }}</div>
+              <div class="status-value maintenance">
+                {{ deviceStats().maintenance || 0 }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!deviceStats()" class="placeholder-content">
+            <mat-icon class="placeholder-icon">devices</mat-icon>
+            <p>{{ 'common.loading' | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions Card -->
+      <div class="card quick-actions-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <mat-icon>bolt</mat-icon>
+            {{ 'admin.overview.quickActions.title' | translate }}
+          </h3>
+        </div>
+        <div class="card-content">
+          <div class="actions-grid">
+            <button *ngFor="let action of quickActions(); trackBy: trackByActionRoute" mat-raised-button
+              [class]="'action-button ' + (action.urgent ? 'urgent' : '')" [style.background]="action.gradient"
+              [matTooltip]="action.tooltip" matTooltipPosition="above" (click)="navigateTo(action.route)">
+              <div class="action-icon-wrapper">
+                <mat-icon>{{ action.icon }}</mat-icon>
+                <span *ngIf="action.badge !== null" class="action-badge">{{ action.badge }}</span>
+              </div>
+              <span class="action-label">{{ action.label }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

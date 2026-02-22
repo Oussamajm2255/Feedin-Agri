@@ -1,0 +1,67 @@
+<!-- =============================================
+     SECTION — CE QUE FEEDIN APPORTE À L'AGRICULTURE
+     Value Proposition | Two-Column Layout
+     ============================================= -->
+
+<section class="valeur-section" id="valeur-section" [attr.aria-label]="'landing.value.title' | translate">
+    <div class="valeur-container">
+        <div class="valeur-grid">
+
+            <!-- LEFT: Text Content -->
+            <div class="valeur-content" appScrollReveal="fade-right">
+
+                <span class="valeur-label">{{ 'landing.value.label' | translate }}</span>
+
+                <h2 class="valeur-title">
+                    {{ 'landing.value.title' | translate }}
+                </h2>
+
+                <p class="valeur-intro">
+                    {{ 'landing.value.intro' | translate }}
+                </p>
+
+                <!-- Benefits List -->
+                <ul class="valeur-benefits" role="list">
+                    @for (benefit of benefits; track $index) {
+                    <li class="valeur-benefit-item">
+                        {{ benefit.textKey | translate }}
+                    </li>
+                    }
+                </ul>
+
+            </div>
+
+            <!-- RIGHT: Visual Card -->
+            <div class="valeur-visual" appScrollReveal="fade-left" [delay]="0.15">
+                <div class="valeur-media-card">
+                    <div class="valeur-media" role="img"
+                        aria-label="Paysage agricole illustrant les bénéfices de Feedin pour la gestion des cultures">
+
+                        <img src="assets/landing/gif's/background.gif"
+                            alt="Champ agricole au lever du soleil — gestion agricole durable avec Feedin"
+                            loading="lazy" width="900" height="600">
+                        <div class="valeur-media-placeholder">
+                            <div class="placeholder-icon" aria-hidden="true">
+                                <svg width="56" height="56" viewBox="0 0 56 56" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 42L21 24.5L31.5 35L38 28L49 42H7Z" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                        opacity="0.5" />
+                                    <circle cx="38.5" cy="17.5" r="5" stroke="currentColor" stroke-width="1.5"
+                                        opacity="0.5" />
+                                    <rect x="3.5" y="7" width="49" height="42" rx="3.5" stroke="currentColor"
+                                        stroke-width="1.5" opacity="0.4" />
+                                </svg>
+                            </div>
+                            <span class="placeholder-text">{{ 'landing.value.mediaPlaceholder' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="media-accent" aria-hidden="true"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="valeur-bg" aria-hidden="true"></div>
+</section>

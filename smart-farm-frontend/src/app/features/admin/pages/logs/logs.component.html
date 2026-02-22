@@ -1,0 +1,587 @@
+<div class="logs-page">
+    <!-- ==================== PREMIUM HEADER WITH FILTERS ==================== -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title gradient-text">
+                    <mat-icon>article</mat-icon>
+                    {{ 'admin.logs.title' | translate }}
+                </h1>
+                <p class="page-subtitle">{{ 'admin.logs.subtitle' | translate }}</p>
+            </div>
+            <div class="header-actions">
+                <button mat-stroked-button class="btn-secondary" (click)="refresh()" [disabled]="loading()"
+                    [matTooltip]="'admin.logs.refreshTooltip' | translate"
+                    [attr.aria-label]="'admin.logs.refreshTooltip' | translate">
+                    <mat-icon>refresh</mat-icon>
+                    <span class="btn-text">{{ 'admin.logs.refresh' | translate }}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Bar Integrated in Header -->
+        <div class="header-filters">
+            <!-- Search Field (Left) -->
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>{{ 'admin.logs.search' | translate }}</mat-label>
+                <input matInput [value]="searchQuery()" (input)="onSearchInput($any($event.target).value)"
+                    [placeholder]="'admin.logs.searchPlaceholder' | translate" />
+                <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <!-- Filters Group (Right Aligned) -->
+            <div class="filters-group-right">
+                <!-- Date Range Quick Filters -->
+                <div class="quick-filters">
+                    <button mat-stroked-button [class.active]="selectedDateRange() === 'today'"
+                        (click)="selectedDateRange.set('today')" [matTooltip]="'admin.logs.today' | translate">
+                        {{ 'admin.logs.today' | translate }}
+                    </button>
+                    <button mat-stroked-button [class.active]="selectedDateRange() === '24h'"
+                        (click)="selectedDateRange.set('24h')" [matTooltip]="'admin.logs.last24h' | translate">
+                        24H
+                    </button>
+                    <button mat-stroked-button [class.active]="selectedDateRange() === '7d'"
+                        (click)="selectedDateRange.set('7d')" [matTooltip]="'admin.logs.last7d' | translate">
+                        7 Days
+                    </button>
+                    <button mat-stroked-button [class.active]="selectedDateRange() === 'all'"
+                        (click)="selectedDateRange.set('all')" [matTooltip]="'admin.logs.all' | translate">
+                        {{ 'admin.logs.all' | translate }}
+                    </button>
+                </div>
+
+                <!-- Type Filter -->
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>{{ 'admin.logs.filterType' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="selectedType" (ngModelChange)="selectedType.set($event)">
+                        <mat-option value="">{{ 'admin.logs.allTypes' | translate }}</mat-option>
+                        <mat-option value="system">{{ 'admin.logs.typeSystem' | translate }}</mat-option>
+                        <mat-option value="device">{{ 'admin.logs.typeDevice' | translate }}</mat-option>
+                        <mat-option value="sensor">{{ 'admin.logs.typeSensor' | translate }}</mat-option>
+                        <mat-option value="user">{{ 'admin.logs.typeUser' | translate }}</mat-option>
+                        <mat-option value="auto">{{ 'admin.logs.typeAutoRule' | translate }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Status Filter -->
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>{{ 'admin.logs.filterStatus' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="selectedStatus" (ngModelChange)="selectedStatus.set($event)">
+                        <mat-option value="">{{ 'admin.logs.allStatuses' | translate }}</mat-option>
+                        <mat-option value="success">{{ 'admin.logs.statusSuccess' | translate }}</mat-option>
+                        <mat-option value="error">{{ 'admin.logs.statusError' | translate }}</mat-option>
+                        <mat-option value="warning">{{ 'admin.logs.statusWarning' | translate }}</mat-option>
+                        <mat-option value="info">{{ 'admin.logs.statusInfo' | translate }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Clear Filters (Red Glass Effect) -->
+                @if (hasActiveFilters()) {
+                <button mat-button class="clear-filters-btn glass-danger" (click)="clearFilters()"
+                    [matTooltip]="'admin.logs.clearFilters' | translate">
+                    <mat-icon>clear</mat-icon>
+                    {{ 'admin.logs.clearAll' | translate }}
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TWO-PANEL LAYOUT ==================== -->
+    <div class="logs-container">
+        <!-- ==================== LEFT PANEL: LOG LIST ==================== -->
+        <div class="logs-list-panel">
+            <!-- Results Count -->
+            <div class="results-count">
+                <span class="count-text">
+                    {{ totalFiltered() }} {{ totalFiltered() === 1 ? ('admin.logs.logUnit' | translate) :
+                    ('admin.logs.logsUnit' | translate) }} {{ 'common.found' | translate }}
+                </span>
+            </div>
+
+            <!-- Loading State with Skeleton -->
+            @if (loading()) {
+            <div class="skeleton-container">
+                @for (skeleton of [1,2,3,4,5,6,7]; track skeleton) {
+                <div class="skeleton-item">
+                    <div class="skeleton-icon"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line skeleton-title"></div>
+                        <div class="skeleton-line skeleton-description"></div>
+                        <div class="skeleton-line skeleton-meta"></div>
+                    </div>
+                    <div class="skeleton-badge"></div>
+                </div>
+                }
+            </div>
+            }
+
+            <!-- Error State -->
+            @else if (error()) {
+            <div class="error-state">
+                <mat-icon class="error-icon">error_outline</mat-icon>
+                <p class="error-message">{{ error() }}</p>
+                <button mat-raised-button color="primary" (click)="refresh()">
+                    <mat-icon>refresh</mat-icon>
+                    {{ 'admin.logs.retry' | translate }}
+                </button>
+            </div>
+            }
+
+            <!-- Empty State -->
+            @else if (totalFiltered() === 0) {
+            <div class="empty-state">
+                <mat-icon class="empty-icon">inbox</mat-icon>
+                <h3>{{ 'admin.logs.noLogs' | translate }}</h3>
+                <p>{{ 'admin.logs.noLogsDesc' | translate }}</p>
+                @if (hasActiveFilters()) {
+                <button mat-raised-button color="primary" (click)="clearFilters()">
+                    {{ 'admin.logs.clearFiltersBtn' | translate }}
+                </button>
+                }
+            </div>
+            }
+
+            <!-- Grouped Logs List with Collapsible Sections -->
+            @else {
+            <div class="logs-list">
+                @for (group of groupedLogs(); track group.label) {
+                <div class="log-group">
+                    <!-- Collapsible Group Header -->
+                    <div class="group-header" (click)="toggleGroup(group.label)">
+                        <div class="group-header-left">
+                            <button mat-icon-button type="button" class="expand-icon-btn"
+                                (click)="toggleGroup(group.label); $event.stopPropagation()"
+                                [attr.aria-expanded]="group.isExpanded"
+                                [matTooltip]="'admin.logs.toggleGroup' | translate"
+                                [attr.aria-label]="(group.isExpanded ? ('admin.logs.collapse' | translate) : ('admin.logs.expand' | translate)) + ' ' + group.label">
+                                <mat-icon class="expand-icon" [class.expanded]="group.isExpanded">
+                                    expand_more
+                                </mat-icon>
+                            </button>
+                            <span class="group-label">{{ group.label }}</span>
+                            <span class="group-count-badge">{{ group.logs.length }}</span>
+                        </div>
+                        @if (group.timeRange) {
+                        <span class="group-time-range">{{ group.timeRange }}</span>
+                        }
+                    </div>
+
+                    <!-- Group Content (Collapsible) -->
+                    <div class="group-content" [class.collapsed]="!group.isExpanded">
+                        @for (log of group.logs; track log.id) {
+                        @let formatted = formatLogEntry(log);
+                        <div class="log-item" [class.selected]="selectedLog()?.id === log.id" (click)="selectLog(log)">
+                            <!-- Primary Icon -->
+                            <div class="log-icon" [attr.data-status]="log.status" [attr.data-type]="formatted.type">
+                                <mat-icon>{{ formatted.icon }}</mat-icon>
+                            </div>
+
+                            <!-- Premium Formatted Content -->
+                            <div class="log-content">
+                                <!-- Action Title - Human Readable -->
+                                <div class="log-title">{{ formatted.formattedTitle || formatted.action }}</div>
+
+                                <!-- Structured Info -->
+                                <div class="log-structured">
+                                    @if (formatted.category) {
+                                    <span class="log-badge log-category">
+                                        <mat-icon class="badge-icon">{{ formatted.icon }}</mat-icon>
+                                        {{ formatted.category }}
+                                    </span>
+                                    }
+                                    @if (formatted.farm) {
+                                    <span class="log-badge log-farm">
+                                        <mat-icon class="badge-icon">agriculture</mat-icon>
+                                        {{ formatted.farm }}
+                                    </span>
+                                    }
+                                    @if (formatted.path && formatted.path.length > 0) {
+                                    <span class="log-path">
+                                        <mat-icon class="path-icon">chevron_right</mat-icon>
+                                        {{ formatted.path.join(' → ') }}
+                                    </span>
+                                    }
+                                </div>
+
+                                <!-- Meta Row -->
+                                <div class="log-meta">
+                                    <span class="meta-source">
+                                        <mat-icon class="meta-icon">{{ getSourceIcon(log.source_type) }}</mat-icon>
+                                        {{ log.source_type }}
+                                    </span>
+                                    <span class="meta-divider">•</span>
+                                    <span class="meta-time" [matTooltip]="formatAbsoluteTime(log.created_at)">
+                                        {{ formatRelativeTime(log.created_at) }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Status Badge -->
+                            <div class="log-status">
+                                <mat-chip [class]="'status-chip status-' + log.status">
+                                    {{ log.status }}
+                                </mat-chip>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- ==================== RIGHT PANEL: DETAILS ==================== -->
+        <div class="logs-details-panel" [class.open]="isPanelOpen()">
+            @if (!selectedLog()) {
+            <!-- Empty State -->
+            <div class="details-empty-state">
+                <div class="empty-illustration">
+                    <mat-icon>description</mat-icon>
+                </div>
+                <h3>{{ 'admin.logs.noLogSelected' | translate }}</h3>
+                <p>{{ 'admin.logs.noLogSelectedDesc' | translate }}</p>
+            </div>
+            } @else {
+            @let formatted = formatLogEntry(selectedLog()!);
+            <!-- Details Header -->
+            <div class="details-header">
+                <div class="header-title">
+                    <mat-icon [attr.data-status]="selectedLog()!.status" [attr.data-type]="formatted.type">
+                        {{ formatted.icon }}
+                    </mat-icon>
+                    <div class="title-content">
+                        <h2>{{ formatted.formattedTitle || formatted.action }}</h2>
+                        <p class="subtitle">{{ formatAbsoluteTime(selectedLog()!.created_at) }}</p>
+                    </div>
+                </div>
+                <button mat-icon-button type="button" class="close-btn" (click)="closePanel()"
+                    [matTooltip]="'admin.logs.closeDetails' | translate"
+                    [attr.aria-label]="'admin.logs.closePanel' | translate">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+
+            <!-- Details Tabs -->
+            <mat-tab-group class="details-tabs" [(selectedIndex)]="activeTab"
+                (selectedIndexChange)="activeTab.set($event)">
+                <!-- Tab 1: Overview -->
+                <mat-tab [label]="'admin.logs.tabs.overview' | translate">
+                    <div class="tab-content">
+                        <!-- Structured Info -->
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3>{{ 'admin.logs.details.actionDetails' | translate }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="structured-info">
+                                    @if (formatted.category) {
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.category' | translate }}</span>
+                                        <span class="info-value">{{ formatted.category }}</span>
+                                    </div>
+                                    }
+                                    @if (formatted.farm) {
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.farm' | translate }}</span>
+                                        <span class="info-value">{{ formatted.farm }}</span>
+                                    </div>
+                                    }
+                                    @if (formatted.path && formatted.path.length > 0) {
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.path' | translate }}</span>
+                                        <span class="info-value">{{ formatted.path.join(' → ') }}</span>
+                                    </div>
+                                    }
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.action' | translate }}</span>
+                                        <span class="info-value">{{ formatted.action }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3>{{ 'admin.logs.details.status' | translate }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <mat-chip [class]="'status-chip-large status-' + selectedLog()!.status">
+                                    <mat-icon>{{ selectedLog()!.status === 'success' ? 'check_circle' :
+                                        selectedLog()!.status === 'error' ? 'error' : selectedLog()!.status ===
+                                        'warning' ? 'warning' : 'info' }}</mat-icon>
+                                    {{ selectedLog()!.status | uppercase }}
+                                </mat-chip>
+                            </div>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3>{{ 'admin.logs.details.message' | translate }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <p class="message-text">{{ selectedLog()!.message }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Error Message (if present) -->
+                        @if (selectedLog()!.error_message) {
+                        <div class="overview-section error-section">
+                            <div class="section-header">
+                                <h3>{{ 'admin.logs.details.errorDetails' | translate }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="error-box">
+                                    <mat-icon>error_outline</mat-icon>
+                                    <p>{{ selectedLog()!.error_message }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                        <!-- Quick Info -->
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3>{{ 'admin.logs.details.quickInfo' | translate }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.sourceType' | translate
+                                            }}</span>
+                                        <span class="info-value">{{ selectedLog()!.source_type }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.sourceId' | translate }}</span>
+                                        <span class="info-value">{{ selectedLog()!.source_id }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.actionUri' | translate }}</span>
+                                        <span class="info-value">{{ selectedLog()!.action_uri }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">{{ 'admin.logs.details.timestamp' | translate }}</span>
+                                        <span class="info-value">{{ formatRelativeTime(selectedLog()!.created_at)
+                                            }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 2: Metadata -->
+                <mat-tab [label]="'admin.logs.tabs.metadata' | translate">
+                    <div class="tab-content">
+                        <div class="metadata-list">
+                            @for (key of getMetadataKeys(selectedLog()!); track key) {
+                            <div class="metadata-item">
+                                <div class="metadata-key">
+                                    {{ key }}
+                                    <button mat-icon-button class="copy-btn"
+                                        (click)="copyToClipboard(formatMetadataValue(getMetadataValue(selectedLog()!, key)))"
+                                        [matTooltip]="'admin.logs.copyValue' | translate">
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                                <div class="metadata-value">
+                                    {{ formatMetadataValue(getMetadataValue(selectedLog()!, key)) }}
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 3: Raw JSON -->
+                <mat-tab [label]="'admin.logs.tabs.rawJson' | translate">
+                    <div class="tab-content">
+                        <div class="json-viewer">
+                            <div class="json-header">
+                                <button mat-stroked-button (click)="copyToClipboard(stringifyJson(selectedLog()))">
+                                    <mat-icon>content_copy</mat-icon>
+                                    {{ 'admin.logs.copyJson' | translate }}
+                                </button>
+                            </div>
+                            <pre class="json-content">{{ stringifyJson(selectedLog()) }}</pre>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 4: Related Objects -->
+                <mat-tab [label]="'admin.logs.tabs.relatedObjects' | translate">
+                    <div class="tab-content">
+                        <!-- Device -->
+                        @if (selectedLog()!.device_id) {
+                        <div class="related-section">
+                            <div class="section-header">
+                                <h3>
+                                    <mat-icon>devices</mat-icon>
+                                    {{ 'admin.logs.related.device' | translate }}
+                                </h3>
+                            </div>
+                            <div class="section-content">
+                                @if (loadingRelatedDevice()) {
+                                <div class="loading-inline">
+                                    <mat-spinner diameter="24"></mat-spinner>
+                                    <span>{{ 'admin.logs.related.loadingDevice' | translate }}</span>
+                                </div>
+                                } @else if (relatedDevice()) {
+                                <div class="related-card">
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.deviceId' | translate
+                                            }}</span>
+                                        <span class="related-value">{{ relatedDevice()!.device_id }}</span>
+                                    </div>
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.type' | translate }}</span>
+                                        <span class="related-value">{{ relatedDevice()!.device_type }}</span>
+                                    </div>
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.status' | translate }}</span>
+                                        <span class="related-value">{{ relatedDevice()!.status }}</span>
+                                    </div>
+                                    @if (relatedDevice()!.last_seen) {
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.lastSeen' | translate
+                                            }}</span>
+                                        <span class="related-value">{{ formatAbsoluteTime(relatedDevice()!.last_seen!)
+                                            }}</span>
+                                    </div>
+                                    }
+                                </div>
+                                } @else {
+                                <p class="no-data">{{ 'admin.logs.related.deviceNotFound' | translate }}</p>
+                                }
+                            </div>
+                        </div>
+                        }
+
+                        <!-- Sensor -->
+                        @if (selectedLog()!.sensor_id) {
+                        <div class="related-section">
+                            <div class="section-header">
+                                <h3>
+                                    <mat-icon>sensors</mat-icon>
+                                    {{ 'admin.logs.related.sensor' | translate }}
+                                </h3>
+                            </div>
+                            <div class="section-content">
+                                @if (loadingRelatedSensor()) {
+                                <div class="loading-inline">
+                                    <mat-spinner diameter="24"></mat-spinner>
+                                    <span>{{ 'admin.logs.related.loadingSensor' | translate }}</span>
+                                </div>
+                                } @else if (relatedSensor()) {
+                                <div class="related-card">
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.sensorId' | translate
+                                            }}</span>
+                                        <span class="related-value">{{ relatedSensor()!.sensor_id }}</span>
+                                    </div>
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.type' | translate }}</span>
+                                        <span class="related-value">{{ relatedSensor()!.sensor_type }}</span>
+                                    </div>
+                                    @if (relatedSensor()!.unit) {
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.unit' | translate }}</span>
+                                        <span class="related-value">{{ relatedSensor()!.unit }}</span>
+                                    </div>
+                                    }
+                                </div>
+                                } @else {
+                                <p class="no-data">{{ 'admin.logs.related.sensorNotFound' | translate }}</p>
+                                }
+                            </div>
+                        </div>
+                        }
+
+                        <!-- User -->
+                        @if (selectedLog()!.user_id) {
+                        <div class="related-section">
+                            <div class="section-header">
+                                <h3>
+                                    <mat-icon>person</mat-icon>
+                                    {{ 'admin.logs.related.user' | translate }}
+                                </h3>
+                            </div>
+                            <div class="section-content">
+                                @if (loadingRelatedUser()) {
+                                <div class="loading-inline">
+                                    <mat-spinner diameter="24"></mat-spinner>
+                                    <span>{{ 'admin.logs.related.loadingUser' | translate }}</span>
+                                </div>
+                                } @else if (relatedUser()) {
+                                <div class="related-card">
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.name' | translate }}</span>
+                                        <span class="related-value">{{ relatedUser()!.first_name }} {{
+                                            relatedUser()!.last_name }}</span>
+                                    </div>
+                                    <div class="related-item">
+                                        <span class="related-label">{{ 'admin.logs.related.email' | translate }}</span>
+                                        <span class="related-value">{{ relatedUser()!.email }}</span>
+                                    </div>
+                                </div>
+                                } @else {
+                                <p class="no-data">{{ 'admin.logs.related.userNotFound' | translate }}</p>
+                                }
+                            </div>
+                        </div>
+                        }
+
+                        <!-- No Related Objects -->
+                        @if (!selectedLog()!.device_id && !selectedLog()!.sensor_id && !selectedLog()!.user_id &&
+                        !selectedLog()!.farm_id) {
+                        <div class="no-related-state">
+                            <mat-icon>link_off</mat-icon>
+                            <p>{{ 'admin.logs.related.noRelatedObjects' | translate }}</p>
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 5: Timeline -->
+                <mat-tab [label]="'admin.logs.tabs.timeline' | translate">
+                    <div class="tab-content">
+                        @if (loadingTimeline()) {
+                        <div class="loading-state">
+                            <mat-spinner diameter="40"></mat-spinner>
+                            <p>{{ 'admin.logs.timeline.loading' | translate }}</p>
+                        </div>
+                        } @else if (timelineLogs().length === 0) {
+                        <div class="no-timeline-state">
+                            <mat-icon>timeline</mat-icon>
+                            <p>{{ 'admin.logs.timeline.noEvents' | translate }}</p>
+                        </div>
+                        } @else {
+                        <div class="timeline-list">
+                            @for (log of timelineLogs(); track log.id) {
+                            <div class="timeline-item" (click)="selectLog(log)">
+                                <div class="timeline-marker" [attr.data-status]="log.status"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">{{ getShortTitle(log.action_uri) }}</div>
+                                    <div class="timeline-meta">
+                                        <span class="timeline-time">{{ formatRelativeTime(log.created_at) }}</span>
+                                        <span class="meta-divider">•</span>
+                                        <mat-chip [class]="'status-chip-small status-' + log.status">
+                                            {{ log.status }}
+                                        </mat-chip>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+            }
+        </div>
+    </div>
+</div>

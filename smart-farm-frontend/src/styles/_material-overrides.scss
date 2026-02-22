@@ -1,0 +1,102 @@
+// ============================================
+// Material Component Style Overrides
+// ============================================
+//
+// This file contains CSS custom properties and mixins for
+// overriding Angular Material component styles without ::ng-deep.
+//
+// Usage:
+// 1. Include this file in your component's styleUrls
+// 2. Apply the CSS variables in your component's :host
+//
+// Note: Angular Material v18+ supports CSS custom properties
+// for most styling. Prefer using these over ::ng-deep.
+// ============================================
+
+// TerraFlow Design System Colors
+:root {
+  // Primary colors
+  --tf-primary: #10b981;
+  --tf-primary-light: rgba(16, 185, 129, 0.1);
+  --tf-primary-dark: #059669;
+
+  // Status colors
+  --tf-success: #4caf50;
+  --tf-warning: #ff9800;
+  --tf-error: #f44336;
+  --tf-info: #2196f3;
+
+  // Light theme
+  --tf-light-bg: #f9fafb;
+  --tf-card-bg: #ffffff;
+  --tf-border-color: #e5e7eb;
+  --tf-text-primary: #1f2937;
+  --tf-text-secondary: #6b7280;
+
+  // Dark theme (applied via body.dark-theme)
+  body.dark-theme & {
+    --tf-light-bg: #0f172a;
+    --tf-card-bg: #1e293b;
+    --tf-border-color: #334155;
+    --tf-text-primary: #f1f5f9;
+    --tf-text-secondary: #94a3b8;
+  }
+}
+
+// Material Form Field Mixin
+// Apply this to style mat-form-field without ::ng-deep
+@mixin mat-form-field-terraflow {
+  --mdc-outlined-text-field-container-shape: 12px;
+  --mdc-outlined-text-field-outline-color: var(--tf-border-color);
+  --mdc-outlined-text-field-focus-outline-color: var(--tf-primary);
+  --mdc-outlined-text-field-hover-outline-color: var(--tf-primary-light);
+  --mdc-outlined-text-field-label-text-color: var(--tf-text-secondary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--tf-primary);
+  --mdc-outlined-text-field-input-text-color: var(--tf-text-primary);
+}
+
+// Material Select Mixin
+@mixin mat-select-terraflow {
+  --mat-select-panel-background-color: var(--tf-card-bg);
+  --mat-select-enabled-trigger-text-color: var(--tf-text-primary);
+  --mat-select-enabled-arrow-color: var(--tf-primary);
+  --mat-option-hover-state-layer-color: var(--tf-primary-light);
+  --mat-option-selected-state-layer-color: rgba(16, 185, 129, 0.12);
+}
+
+// Material Card Mixin
+@mixin mat-card-terraflow {
+  --mdc-elevated-card-container-color: var(--tf-card-bg);
+  --mdc-elevated-card-container-shape: 16px;
+  --mat-card-subtitle-text-color: var(--tf-text-secondary);
+  --mat-card-title-text-color: var(--tf-text-primary);
+}
+
+// Material Tab Group Mixin
+@mixin mat-tabs-terraflow {
+  --mdc-tab-indicator-active-indicator-color: var(--tf-primary);
+  --mat-tab-header-active-focus-label-text-color: var(--tf-primary);
+  --mat-tab-header-active-hover-label-text-color: var(--tf-primary);
+  --mat-tab-header-inactive-label-text-color: var(--tf-text-secondary);
+}
+
+// Material Chip Mixin
+@mixin mat-chip-terraflow {
+  --mdc-chip-elevated-container-color: var(--tf-card-bg);
+  --mdc-chip-label-text-color: var(--tf-text-primary);
+  --mdc-chip-with-icon-icon-color: var(--tf-primary);
+}
+
+// Material Button Mixin
+@mixin mat-button-terraflow {
+  --mdc-filled-button-container-color: var(--tf-primary);
+  --mdc-filled-button-label-text-color: #ffffff;
+  --mdc-outlined-button-outline-color: var(--tf-primary);
+  --mdc-outlined-button-label-text-color: var(--tf-primary);
+}
+
+// Material Progress Spinner Mixin
+@mixin mat-spinner-terraflow {
+  --mdc-circular-progress-active-indicator-color: var(--tf-primary);
+}
+

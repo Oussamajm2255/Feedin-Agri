@@ -1,0 +1,392 @@
+// ================================
+// LANDING PAGE — Mobile-First
+// ================================
+.landing-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    background: var(--light-bg);
+}
+
+// ================================
+// FLOATING NAVIGATION — Mobile-First
+// ================================
+.floating-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 0.5rem 0.75rem;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.nav-container {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 100px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+// ---- Nav Links: mobile slide-out ----
+.nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    height: 100dvh;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 5rem 1.5rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border-left: 1px solid var(--glass-border);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+    z-index: 200;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.mobile-open {
+        display: flex;
+        transform: translateX(0);
+    }
+}
+
+// ---- Mobile overlay for floating nav ----
+.floating-mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 150;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+
+    &.active {
+        display: block;
+        opacity: 1;
+    }
+}
+
+// ---- Mobile auth buttons in slide-out ----
+.floating-mobile-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    position: relative;
+
+    &:hover {
+        color: var(--primary-green);
+        background: rgba(16, 185, 129, 0.08);
+    }
+
+    &.active {
+        color: var(--primary-green);
+        font-weight: 600;
+        background: rgba(16, 185, 129, 0.1);
+    }
+}
+
+.nav-cta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nav-icon-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: var(--primary-green);
+        color: white;
+        border-color: transparent;
+    }
+}
+
+.nav-button {
+    border: none;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    font-family: system-ui, -apple-system, sans-serif;
+
+    &.primary {
+        padding: 0.625rem 1.25rem;
+        background: var(--primary-green);
+        color: white;
+
+        &:hover {
+            background: var(--dark-green, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+    }
+
+    &.secondary {
+        padding: 0.625rem 1rem;
+        background: transparent;
+        color: var(--text-primary);
+
+        &:hover {
+            color: var(--primary-green);
+        }
+    }
+}
+
+// Desktop auth buttons — hidden on mobile
+.desktop-only {
+    display: none;
+}
+
+// ---- Floating Hamburger ----
+.floating-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 250;
+    flex-shrink: 0;
+
+    .hamburger-line {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+    }
+
+    &.active .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(4px, 4px);
+    }
+
+    &.active .hamburger-line:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    &.active .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(4px, -4px);
+    }
+}
+
+/* SHARED FOOTER OVERRIDES */
+app-footer {
+    display: block;
+    margin-top: 0;
+}
+
+// ================================
+// BACK TO TOP BUTTON
+// ================================
+.back-to-top {
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: #B5E042;
+    color: #052952;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+    pointer-events: none;
+
+    &.visible {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(181, 224, 66, 0.4);
+        background: #C4EB56;
+    }
+
+    &:active {
+        transform: translateY(-2px);
+    }
+
+    svg {
+        stroke: #052952;
+    }
+}
+
+// ================================
+// DARK THEME
+// ================================
+:host-context(body.dark-theme) {
+    .nav-container {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// ================================
+// RESPONSIVE — TABLET (≥768px)
+// ================================
+@media (min-width: 768px) {
+    .floating-nav {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .nav-container {
+        padding: 0.625rem 1.25rem;
+        gap: 0.75rem;
+    }
+
+    .nav-icon-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .back-to-top {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+// ================================
+// RESPONSIVE — DESKTOP (≥1024px)
+// ================================
+@media (min-width: 1024px) {
+    .floating-nav {
+        padding: 1rem 2rem;
+    }
+
+    .nav-container {
+        justify-content: center;
+        gap: 3rem;
+        padding: 0.75rem 2rem;
+    }
+
+    // Show inline nav links on desktop
+    .nav-links {
+        display: flex;
+        position: static;
+        width: auto;
+        height: auto;
+        flex-direction: row;
+        gap: 1.5rem;
+        padding: 0;
+        background: none;
+        backdrop-filter: none;
+        border-left: none;
+        box-shadow: none;
+        transform: none;
+        transition: none;
+    }
+
+    .nav-link {
+        font-size: 0.9375rem;
+        padding: 0.5rem 0.25rem;
+        border-radius: 0;
+
+        &:hover {
+            background: none;
+        }
+
+        &.active {
+            background: none;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: var(--primary-green);
+            }
+        }
+    }
+
+    // Show desktop auth buttons, hide hamburger & mobile bits
+    .desktop-only {
+        display: inline-flex;
+    }
+
+    .floating-hamburger {
+        display: none;
+    }
+
+    .floating-mobile-overlay {
+        display: none !important;
+    }
+
+    .floating-mobile-auth {
+        display: none;
+    }
+
+    .nav-cta {
+        gap: 0.75rem;
+    }
+
+    .back-to-top {
+        bottom: 2rem;
+        right: 2rem;
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+}

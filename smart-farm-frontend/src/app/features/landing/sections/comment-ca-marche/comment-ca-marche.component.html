@@ -1,0 +1,55 @@
+<!-- =============================================
+     SECTION — COMMENT FEEDIN FONCTIONNE
+     Step Flow | Horizontal (desktop) / Vertical (mobile)
+     ============================================= -->
+
+<section class="how-section" id="how-section" [attr.aria-label]="'landing.howItWorks.title' | translate">
+    <div class="how-container">
+
+        <!-- Section Header -->
+        <div class="how-header" appScrollReveal="fade-up">
+            <span class="how-label">{{ 'landing.howItWorks.label' | translate }}</span>
+            <h2 class="how-title">{{ 'landing.howItWorks.title' | translate }}</h2>
+            <p class="how-subtitle">{{ 'landing.howItWorks.subtitle' | translate }}</p>
+        </div>
+
+        <!-- Alternating Timeline -->
+        <div class="how-timeline">
+            <div class="timeline-central-line"></div>
+
+            @for (step of steps; track step.number; let i = $index) {
+            <div class="timeline-row" [class.is-reversed]="i % 2 !== 0" appScrollReveal="fade-up" [delay]="i * 0.1">
+
+                <!-- Content (Left or Right depending on reverse) -->
+                <div class="timeline-content">
+                    <div class="step-card">
+                        <div class="step-pill">0{{ step.number }}</div>
+                        <h3 class="step-title">{{ step.titleKey | translate }}</h3>
+                        <p class="step-description">{{ step.descriptionKey | translate }}</p>
+                    </div>
+                </div>
+
+                <!-- Center Node -->
+                <div class="timeline-node">
+                    <div class="node-circle" aria-hidden="true">
+                        {{ step.number < 10 ? '0' + step.number : step.number }} </div>
+                    </div>
+
+                    <!-- Visual (Image) -->
+                    <div class="timeline-visual">
+                        <div class="visual-wrapper" *ngIf="step.imagePath">
+                            <img [src]="step.imagePath" [alt]="step.titleKey | translate" loading="lazy">
+                            <!-- Glow effect -->
+                            <div class="visual-glow"></div>
+                        </div>
+                    </div>
+
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Background Accents -->
+        <div class="bg-accent bg-accent-1"></div>
+        <div class="bg-accent bg-accent-2"></div>
+</section>

@@ -1,0 +1,42 @@
+<!-- =============================================
+     SECTION — NOTRE IMPACT SUR L'AGRICULTURE
+     Credibility & Vision | Full-width background
+     ============================================= -->
+
+<section class="impact-section" id="impact-agriculture-section" [attr.aria-label]="'landing.impact.title' | translate">
+
+    <!-- Background image for SEO (hidden visually, accessible to crawlers) -->
+    <img class="impact-seo-img" src="/assets/landing/images/am%C3%A9nagement%20des%20espaces%20agricoles.jpg"
+        alt="Champs agricoles verdoyants au coucher du soleil — impact positif sur l'agriculture durable" loading="lazy"
+        width="1920" height="800" aria-hidden="true">
+
+    <!-- Visual placeholder: high-resolution agricultural background image -->
+    <!-- Replace the CSS background-image in .impact-section with your chosen image -->
+
+    <div class="impact-overlay" aria-hidden="true"></div>
+
+    <div class="impact-container">
+
+        <!-- Header -->
+        <div class="impact-header" appScrollReveal="fade-up">
+            <span class="impact-label">{{ 'landing.impact.label' | translate }}</span>
+            <h2 class="impact-title">
+                {{ 'landing.impact.title' | translate }}
+            </h2>
+            <p class="impact-lead">
+                {{ 'landing.impact.lead' | translate }}
+            </p>
+        </div>
+
+        <!-- Impact Statements -->
+        <div class="impact-statements">
+            @for (stmt of statements; track stmt.id) {
+            <div class="impact-statement" appScrollReveal="fade-up" [delay]="stmt.id * 0.15">
+                <p class="statement-metric">{{ stmt.metricKey | translate }}</p>
+                <p class="statement-label">{{ stmt.labelKey | translate }}</p>
+            </div>
+            }
+        </div>
+
+    </div>
+</section>

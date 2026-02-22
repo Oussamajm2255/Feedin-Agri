@@ -1,0 +1,231 @@
+<div class="sensor-registration-dialog">
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">sensors</mat-icon>
+            <div class="header-text">
+                <h2>Register New Sensor</h2>
+                <p class="header-subtitle">Add a new sensor to your smart farm monitoring system</p>
+            </div>
+        </div>
+        <button mat-icon-button (click)="onCancel()" class="close-btn" matTooltip="Close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Dialog Content -->
+    <mat-dialog-content>
+        <form [formGroup]="sensorForm" class="sensor-form">
+            <!-- A. Basic Information Section -->
+            <section class="form-section premium-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">info</mat-icon>
+                    <h3 class="section-title">Basic Information</h3>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Sensor Unique ID -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Sensor Unique ID</mat-label>
+                        <input matInput formControlName="sensorId" placeholder="e.g., TEMP_001, DHT11_GH1" maxlength="36" required>
+                        <mat-icon matPrefix>fingerprint</mat-icon>
+                        @if (sensorForm.get('sensorId')?.valid && sensorForm.get('sensorId')?.touched) {
+                        <mat-icon matSuffix class="success-icon">check_circle</mat-icon>
+                        }
+                        <mat-hint>Unique identifier for this sensor (max 36 characters)</mat-hint>
+                        @if (sensorForm.get('sensorId')?.invalid && sensorForm.get('sensorId')?.touched) {
+                        <mat-error>{{ getErrorMessage('sensorId') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- Farm Selection -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Farm</mat-label>
+                        <mat-select formControlName="farmId" required>
+                            @for (farm of data.farms; track farm.farm_id) {
+                            <mat-option [value]="farm.farm_id">
+                                <div class="option-content">
+                                    <mat-icon class="option-icon">agriculture</mat-icon>
+                                    <span>{{ farm.name }}</span>
+                                </div>
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix>agriculture</mat-icon>
+                        <mat-hint>Select the farm for this sensor</mat-hint>
+                        @if (sensorForm.get('farmId')?.invalid && sensorForm.get('farmId')?.touched) {
+                        <mat-error>{{ getErrorMessage('farmId') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- Crop Selection (Optional) -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Crop (Optional)</mat-label>
+                        <mat-select formControlName="cropId">
+                            <mat-option [value]="">-- No specific crop --</mat-option>
+                            @for (crop of data.crops; track crop.crop_id) {
+                            <mat-option [value]="crop.crop_id">
+                                <div class="option-content">
+                                    <mat-icon class="option-icon">eco</mat-icon>
+                                    <span>{{ crop.name }}</span>
+                                </div>
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix>eco</mat-icon>
+                        <mat-hint>Associate with a specific crop</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Device ID -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Device ID</mat-label>
+                        <input matInput formControlName="deviceId" placeholder="e.g., RPI001, ARDUINO_01" maxlength="100" required>
+                        <mat-icon matPrefix>devices</mat-icon>
+                        <mat-hint>Device this sensor is connected to</mat-hint>
+                        @if (sensorForm.get('deviceId')?.invalid && sensorForm.get('deviceId')?.touched) {
+                        <mat-error>{{ getErrorMessage('deviceId') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- Sensor Type -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Sensor Type</mat-label>
+                        <mat-select formControlName="sensorType" required>
+                            @for (type of sensorTypes; track type.value) {
+                            <mat-option [value]="type.value">
+                                <div class="option-content">
+                                    <mat-icon class="option-icon">category</mat-icon>
+                                    <span>{{ type.label }}</span>
+                                </div>
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix>category</mat-icon>
+                        <mat-hint>Select the type of sensor</mat-hint>
+                        @if (sensorForm.get('sensorType')?.invalid && sensorForm.get('sensorType')?.touched) {
+                        <mat-error>{{ getErrorMessage('sensorType') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- Measurement Unit -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Measurement Unit</mat-label>
+                        <input matInput formControlName="unit" placeholder="e.g., °C, %, ppm, lux" maxlength="20" required>
+                        <mat-icon matPrefix>straighten</mat-icon>
+                        <mat-hint>Unit of measurement</mat-hint>
+                        @if (sensorForm.get('unit')?.invalid && sensorForm.get('unit')?.touched) {
+                        <mat-error>{{ getErrorMessage('unit') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <!-- Location Description -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Location Description</mat-label>
+                        <input matInput formControlName="location" placeholder="e.g., Greenhouse A - Section 2, Field North Corner" maxlength="100">
+                        <mat-icon matPrefix>location_on</mat-icon>
+                        <mat-hint>💡 Specify exact location within your farm for easy identification</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                @if (sensorTypeInfo()) {
+                <div class="info-box warning">
+                    <mat-icon>warning</mat-icon>
+                    <span>{{ sensorTypeInfo() }}</span>
+                </div>
+                }
+            </section>
+
+            <!-- B. Alert Thresholds Configuration Section -->
+            <section class="form-section premium-section threshold-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">warning</mat-icon>
+                    <h3 class="section-title">Alert Thresholds Configuration</h3>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Critical Minimum -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Critical Minimum</mat-label>
+                        <input matInput type="number" formControlName="minCritical" step="0.01" placeholder="e.g., 0">
+                        <mat-icon matPrefix class="critical-icon">arrow_downward</mat-icon>
+                        <mat-hint>🔴 Critical low threshold</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Warning Minimum -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Warning Minimum</mat-label>
+                        <input matInput type="number" formControlName="minWarning" step="0.01" placeholder="e.g., 10">
+                        <mat-icon matPrefix class="warning-icon">trending_down</mat-icon>
+                        <mat-hint>🟡 Warning low threshold</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Warning Maximum -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Warning Maximum</mat-label>
+                        <input matInput type="number" formControlName="maxWarning" step="0.01" placeholder="e.g., 35">
+                        <mat-icon matPrefix class="warning-icon">trending_up</mat-icon>
+                        <mat-hint>🟡 Warning high threshold</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Critical Maximum -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Critical Maximum</mat-label>
+                        <input matInput type="number" formControlName="maxCritical" step="0.01" placeholder="e.g., 45">
+                        <mat-icon matPrefix class="critical-icon">arrow_upward</mat-icon>
+                        <mat-hint>🔴 Critical high threshold</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="info-box">
+                    <mat-icon>info</mat-icon>
+                    <span>⚠️ Set thresholds for automatic alerts: Critical < Warning < Normal < Warning < Critical</span>
+                </div>
+            </section>
+
+            <!-- C. Automated Actions Section -->
+            <section class="form-section premium-section action-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">settings</mat-icon>
+                    <h3 class="section-title">Automated Actions</h3>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Action for Low Values -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Action for Low Values</mat-label>
+                        <textarea matInput formControlName="actionLow" rows="3" placeholder="e.g., Turn on heater, Send alert to manager, Activate irrigation"></textarea>
+                        <mat-icon matPrefix>arrow_downward</mat-icon>
+                        <mat-hint>🤖 Define what should happen when sensor values drop below thresholds</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Action for High Values -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Action for High Values</mat-label>
+                        <textarea matInput formControlName="actionHigh" rows="3" placeholder="e.g., Turn on fan, Open windows, Send SMS alert"></textarea>
+                        <mat-icon matPrefix>arrow_upward</mat-icon>
+                        <mat-hint>🤖 Define what should happen when sensor values exceed thresholds</mat-hint>
+                    </mat-form-field>
+                </div>
+            </section>
+        </form>
+    </mat-dialog-content>
+
+    <!-- Dialog Actions -->
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button (click)="onCancel()" [disabled]="isLoading()" class="cancel-btn">
+            <mat-icon>close</mat-icon>
+            Cancel
+        </button>
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="sensorForm.invalid || isLoading()" class="register-btn">
+            @if (isLoading()) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            Registering...
+            } @else {
+            <ng-container>
+                <mat-icon>save</mat-icon>
+                Register Sensor
+            </ng-container>
+            }
+        </button>
+    </mat-dialog-actions>
+</div>

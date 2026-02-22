@@ -1,0 +1,653 @@
+<!-- 
+================================================================================
+DEVICE DIALOG TEMPLATE (UNIFIED VIEW + EDIT + CREATE MODE)
+================================================================================
+Features:
+- Skeleton loading state
+- Tab-based layout (Overview, Configuration, Advanced)
+- View mode with read-only fields and metadata display
+- Edit mode with full form editing
+- Create mode for new devices
+- Premium glassmorphism styling
+- Full dark mode support
+================================================================================
+-->
+
+<div class="device-dialog" [class.view-mode]="isViewMode()" [class.edit-mode]="isEditMode()"
+    [class.create-mode]="isCreateMode()">
+
+    <!-- ==================== SKELETON LOADING STATE ==================== -->
+    @if (isLoadingDevice()) {
+    <div class="skeleton-container" [@skeletonFade]="'loading'">
+        <!-- Skeleton Header -->
+        <div class="skeleton-header">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton-text-group">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+            </div>
+            <div class="skeleton-close-btn"></div>
+        </div>
+
+        <!-- Skeleton Tabs -->
+        <div class="skeleton-tabs">
+            <div class="skeleton-tab"></div>
+            <div class="skeleton-tab"></div>
+            <div class="skeleton-tab"></div>
+        </div>
+
+        <!-- Skeleton Content -->
+        <div class="skeleton-content">
+            <!-- Form field skeletons -->
+            <div class="skeleton-section">
+                <div class="skeleton-section-title"></div>
+                <div class="skeleton-form-grid">
+                    <div class="skeleton-field"></div>
+                    <div class="skeleton-field"></div>
+                    <div class="skeleton-field full-width"></div>
+                </div>
+            </div>
+            <div class="skeleton-section">
+                <div class="skeleton-section-title"></div>
+                <div class="skeleton-form-grid">
+                    <div class="skeleton-field"></div>
+                    <div class="skeleton-field"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skeleton Footer -->
+        <div class="skeleton-footer">
+            <div class="skeleton-button"></div>
+            <div class="skeleton-button primary"></div>
+        </div>
+    </div>
+    }
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    @if (!isLoadingDevice()) {
+    <div class="dialog-main" [@contentFade]>
+
+        <!-- ==================== DIALOG HEADER ==================== -->
+        <div class="dialog-header">
+            <div class="header-content">
+                <div class="header-icon-wrapper">
+                    <mat-icon class="header-icon">{{ getDeviceIcon() }}</mat-icon>
+                    @if (isViewMode()) {
+                    <span class="mode-badge view-badge">View</span>
+                    }
+                    @if (isEditMode()) {
+                    <span class="mode-badge edit-badge">Editing</span>
+                    }
+                    @if (isCreateMode()) {
+                    <span class="mode-badge create-badge">New</span>
+                    }
+                </div>
+                <div class="header-text">
+                    <h2>{{ dialogTitle() }}</h2>
+                    <p class="header-subtitle">{{ dialogSubtitle() }}</p>
+                    @if (device() && (isViewMode() || isEditMode())) {
+                    <div class="header-meta">
+                        <span class="device-id-badge">
+                            <mat-icon>fingerprint</mat-icon>
+                            {{ device()?.device_id }}
+                        </span>
+                        @if (device()?.status) {
+                        <span class="status-badge" [attr.data-status]="device()?.status">
+                            <mat-icon>{{
+                                device()?.status === 'online' ? 'check_circle' :
+                                device()?.status === 'offline' ? 'cancel' : 'build_circle'
+                                }}</mat-icon>
+                            {{ device()?.status | titlecase }}
+                        </span>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+            <button mat-icon-button (click)="onClose()" class="close-btn" matTooltip="Close">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <!-- ==================== TAB NAVIGATION ==================== -->
+        <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="premium-tabs" animationDuration="300ms">
+
+            <!-- ==================== TAB 1: OVERVIEW ==================== -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="tab-icon">dashboard</mat-icon>
+                    <span class="tab-label">Overview</span>
+                </ng-template>
+
+                <div class="tab-content" [@fadeMode]>
+                    <form [formGroup]="deviceForm" class="device-form">
+
+                        <!-- A. Basic Information Section -->
+                        <section class="form-section glass-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">info</mat-icon>
+                                <h3 class="section-title">Basic Information</h3>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Device ID (Required, Disabled in Edit/View Mode) -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Device ID</mat-label>
+                                    <input matInput formControlName="device_id" placeholder="e.g., DEV-FARM-001"
+                                        [readonly]="isViewMode()"
+                                        [matTooltip]="isEditMode() || isViewMode() ? 'Device ID cannot be changed' : ''">
+                                    <mat-icon matPrefix>fingerprint</mat-icon>
+                                    @if (isCreateMode() && isValidatingDeviceId()) {
+                                    <mat-spinner matSuffix diameter="20"></mat-spinner>
+                                    }
+                                    @if (isCreateMode() && deviceForm.get('device_id')?.valid &&
+                                    !isValidatingDeviceId()) {
+                                    <mat-icon matSuffix class="success-icon">check_circle</mat-icon>
+                                    }
+                                    @if (isEditMode() || isViewMode()) {
+                                    <mat-icon matSuffix class="locked-icon" matTooltip="ID is locked">lock</mat-icon>
+                                    }
+                                    <mat-hint>
+                                        @if (isEditMode() || isViewMode()) {
+                                        <span class="locked-hint">Device ID cannot be modified</span>
+                                        } @else {
+                                        Unique identifier for this device
+                                        }
+                                    </mat-hint>
+                                    @if (deviceForm.get('device_id')?.invalid && deviceForm.get('device_id')?.touched) {
+                                    <mat-error>{{ getErrorMessage('device_id') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- Device Name (Required) -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Device Name</mat-label>
+                                    <input matInput formControlName="name"
+                                        placeholder="e.g., Main Gateway - North Field" [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>label</mat-icon>
+                                    <mat-hint>Friendly name for identification</mat-hint>
+                                    @if (deviceForm.get('name')?.invalid && deviceForm.get('name')?.touched) {
+                                    <mat-error>{{ getErrorMessage('name') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- Device Type (Required) -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Device Type</mat-label>
+                                    <mat-select formControlName="device_type" [disabled]="isViewMode()">
+                                        @for (type of deviceTypes; track type.value) {
+                                        <mat-option [value]="type.value">
+                                            <div class="option-content">
+                                                <mat-icon class="option-icon">{{ type.icon }}</mat-icon>
+                                                <div class="option-text">
+                                                    <span class="option-label">{{ type.label }}</span>
+                                                    <span class="option-description">{{ type.description }}</span>
+                                                </div>
+                                            </div>
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-icon matPrefix>{{ getDeviceIcon() }}</mat-icon>
+                                    <mat-hint>Select the type of device</mat-hint>
+                                </mat-form-field>
+                            </div>
+                        </section>
+
+                        <!-- B. Assignment Section -->
+                        <section class="form-section glass-section assignment-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">place</mat-icon>
+                                <h3 class="section-title">Assignment</h3>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Farm (Required) -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Farm</mat-label>
+                                    <mat-select formControlName="farm_id" [disabled]="isViewMode()">
+                                        @for (farm of data.farms; track farm.farm_id) {
+                                        <mat-option [value]="farm.farm_id">
+                                            <div class="option-content">
+                                                <mat-icon class="option-icon">agriculture</mat-icon>
+                                                <span>{{ farm.name }}</span>
+                                            </div>
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-icon matPrefix>agriculture</mat-icon>
+                                    <mat-hint>Select the farm for this device</mat-hint>
+                                    @if (deviceForm.get('farm_id')?.invalid && deviceForm.get('farm_id')?.touched) {
+                                    <mat-error>{{ getErrorMessage('farm_id') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- Farm Owner (Read-only) -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Farm Owner</mat-label>
+                                    <input matInput [value]="farmOwnerName()" readonly disabled>
+                                    <mat-icon matPrefix>person</mat-icon>
+                                    <mat-hint>Automatically filled based on farm selection</mat-hint>
+                                </mat-form-field>
+
+                                <!-- Location (Optional) -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Location</mat-label>
+                                    <input matInput formControlName="location"
+                                        placeholder="e.g., North Field, Greenhouse 2" [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>location_on</mat-icon>
+                                    <mat-hint>Specific location within the farm</mat-hint>
+                                </mat-form-field>
+                            </div>
+                        </section>
+
+                        <!-- C. Status & Tags Section -->
+                        <section class="form-section glass-section status-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">sell</mat-icon>
+                                <h3 class="section-title">Status & Tags</h3>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Status -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status" [disabled]="isViewMode()">
+                                        @for (status of statusOptions; track status.value) {
+                                        <mat-option [value]="status.value">
+                                            <div class="option-content status-option" [attr.data-status]="status.value">
+                                                <mat-icon class="option-icon status-icon"
+                                                    [ngClass]="'icon-' + status.color">
+                                                    {{ status.icon }}
+                                                </mat-icon>
+                                                <span>{{ status.label }}</span>
+                                            </div>
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-icon matPrefix>signal_cellular_alt</mat-icon>
+                                </mat-form-field>
+
+                                <!-- Tags -->
+                                @if (!isViewMode()) {
+                                <div class="full-width tags-container">
+                                    <label class="tags-label">Tags</label>
+                                    <mat-form-field appearance="outline" class="tags-field">
+                                        <mat-label>Add tags</mat-label>
+                                        <mat-chip-grid #chipGrid>
+                                            @for (tag of tags(); track tag) {
+                                            <mat-chip-row (removed)="removeTag(tag)" class="premium-chip">
+                                                {{ tag }}
+                                                <button matChipRemove>
+                                                    <mat-icon>cancel</mat-icon>
+                                                </button>
+                                            </mat-chip-row>
+                                            }
+                                        </mat-chip-grid>
+                                        <input placeholder="Type and press Enter" [matChipInputFor]="chipGrid"
+                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                            (matChipInputTokenEnd)="addTag($event)" />
+                                        <mat-icon matPrefix>label</mat-icon>
+                                        <mat-hint>Press Enter or comma to add tags</mat-hint>
+                                    </mat-form-field>
+                                </div>
+                                }
+                                @if (isViewMode() && tags().length > 0) {
+                                <div class="full-width tags-display">
+                                    <label class="tags-label">Tags</label>
+                                    <div class="tags-list">
+                                        @for (tag of tags(); track tag) {
+                                        <span class="tag-chip">{{ tag }}</span>
+                                        }
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </section>
+
+                        <!-- D. Metadata Section (View/Edit Mode Only) -->
+                        @if (isViewMode() || isEditMode()) {
+                        <section class="form-section glass-section metadata-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">schedule</mat-icon>
+                                <h3 class="section-title">Metadata</h3>
+                            </div>
+
+                            <div class="metadata-grid">
+                                <!-- Created At -->
+                                <div class="metadata-item">
+                                    <mat-icon class="metadata-icon">event</mat-icon>
+                                    <div class="metadata-content">
+                                        <span class="metadata-label">Created At</span>
+                                        <span class="metadata-value">{{ formatDate(createdAt()) }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Updated At -->
+                                <div class="metadata-item">
+                                    <mat-icon class="metadata-icon">update</mat-icon>
+                                    <div class="metadata-content">
+                                        <span class="metadata-label">Updated At</span>
+                                        <span class="metadata-value">{{ formatDate(updatedAt()) }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Last Seen -->
+                                <div class="metadata-item">
+                                    <mat-icon class="metadata-icon">visibility</mat-icon>
+                                    <div class="metadata-content">
+                                        <span class="metadata-label">Last Seen</span>
+                                        <span class="metadata-value">{{ formatRelativeTime(lastSeen()) }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Health Score -->
+                                @if (healthScore() !== null) {
+                                <div class="metadata-item health-score-item" [attr.data-health]="getHealthScoreColor()">
+                                    <mat-icon class="metadata-icon">favorite</mat-icon>
+                                    <div class="metadata-content">
+                                        <span class="metadata-label">Health Score</span>
+                                        <div class="health-score-display">
+                                            <span class="health-score-value">{{ healthScore() }}%</span>
+                                            <div class="health-score-bar">
+                                                <div class="health-score-fill" [style.width.%]="healthScore()"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+
+                                <!-- Alerts Count -->
+                                @if (alertsCount() !== null) {
+                                <div class="metadata-item alerts-item">
+                                    <mat-icon class="metadata-icon">notifications</mat-icon>
+                                    <div class="metadata-content">
+                                        <span class="metadata-label">Active Alerts</span>
+                                        <span class="metadata-value alerts-value"
+                                            [class.has-alerts]="alertsCount() > 0">
+                                            {{ alertsCount() }}
+                                        </span>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </section>
+                        }
+
+                    </form>
+                </div>
+            </mat-tab>
+
+            <!-- ==================== TAB 2: CONFIGURATION ==================== -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="tab-icon">settings</mat-icon>
+                    <span class="tab-label">Configuration</span>
+                </ng-template>
+
+                <div class="tab-content" [@fadeMode]>
+                    <form [formGroup]="deviceForm" class="device-form">
+
+                        <!-- Technical Details Section -->
+                        <section class="form-section glass-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">memory</mat-icon>
+                                <h3 class="section-title">Technical Details</h3>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Firmware Version -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Firmware Version</mat-label>
+                                    <input matInput formControlName="firmware_version" placeholder="e.g., v2.4.1"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>system_update_alt</mat-icon>
+                                </mat-form-field>
+
+                                <!-- IP Address -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>IP Address</mat-label>
+                                    <input matInput formControlName="ip_address" placeholder="e.g., 192.168.1.100"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>dns</mat-icon>
+                                    @if (deviceForm.get('ip_address')?.invalid && deviceForm.get('ip_address')?.touched)
+                                    {
+                                    <mat-error>{{ getErrorMessage('ip_address') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- MAC Address -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>MAC Address</mat-label>
+                                    <input matInput formControlName="mac_address" placeholder="e.g., AA:BB:CC:DD:EE:FF"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>settings_ethernet</mat-icon>
+                                    @if (deviceForm.get('mac_address')?.invalid &&
+                                    deviceForm.get('mac_address')?.touched) {
+                                    <mat-error>{{ getErrorMessage('mac_address') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- Protocol -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Protocol</mat-label>
+                                    <mat-select formControlName="protocol" [disabled]="isViewMode()">
+                                        @for (protocol of protocols; track protocol.value) {
+                                        <mat-option [value]="protocol.value">
+                                            <div class="option-content">
+                                                <mat-icon class="option-icon">{{ protocol.icon }}</mat-icon>
+                                                <span>{{ protocol.label }}</span>
+                                            </div>
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-icon matPrefix>cable</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </section>
+
+                        <!-- MQTT Settings (Conditional) -->
+                        @if (showMqttSettings()) {
+                        <section class="form-section glass-section mqtt-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon mqtt-icon">cloud_queue</mat-icon>
+                                <h3 class="section-title">MQTT Configuration</h3>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- MQTT Broker -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>MQTT Broker</mat-label>
+                                    <input matInput formControlName="mqtt_broker" placeholder="e.g., mqtt.example.com"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>dns</mat-icon>
+                                    @if (deviceForm.get('mqtt_broker')?.invalid &&
+                                    deviceForm.get('mqtt_broker')?.touched) {
+                                    <mat-error>{{ getErrorMessage('mqtt_broker') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- MQTT Port -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>MQTT Port</mat-label>
+                                    <input matInput type="number" formControlName="mqtt_port" [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>power</mat-icon>
+                                    @if (deviceForm.get('mqtt_port')?.invalid && deviceForm.get('mqtt_port')?.touched) {
+                                    <mat-error>{{ getErrorMessage('mqtt_port') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- MQTT Topic -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>MQTT Topic</mat-label>
+                                    <input matInput formControlName="mqtt_topic"
+                                        placeholder="e.g., farm/devices/+/status" [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>topic</mat-icon>
+                                    @if (deviceForm.get('mqtt_topic')?.invalid && deviceForm.get('mqtt_topic')?.touched)
+                                    {
+                                    <mat-error>{{ getErrorMessage('mqtt_topic') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- MQTT Username -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>MQTT Username</mat-label>
+                                    <input matInput formControlName="mqtt_username" placeholder="Optional"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>person</mat-icon>
+                                </mat-form-field>
+
+                                <!-- MQTT Password -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>MQTT Password</mat-label>
+                                    <input matInput type="password" formControlName="mqtt_password"
+                                        placeholder="Optional" [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>lock</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </section>
+                        }
+
+                    </form>
+                </div>
+            </mat-tab>
+
+            <!-- ==================== TAB 3: ADVANCED ==================== -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="tab-icon">tune</mat-icon>
+                    <span class="tab-label">Advanced</span>
+                </ng-template>
+
+                <div class="tab-content" [@fadeMode]>
+                    <form [formGroup]="deviceForm" class="device-form">
+
+                        <!-- Advanced Settings Section -->
+                        <section class="form-section glass-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">tune</mat-icon>
+                                <h3 class="section-title">Advanced Settings</h3>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Health Score -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Health Score</mat-label>
+                                    <input matInput type="number" formControlName="health_score" min="0" max="100"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>favorite</mat-icon>
+                                    <mat-hint>0-100 (Default: 100)</mat-hint>
+                                    @if (deviceForm.get('health_score')?.invalid &&
+                                    deviceForm.get('health_score')?.touched) {
+                                    <mat-error>{{ getErrorMessage('health_score') }}</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <!-- Install Date -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Install Date</mat-label>
+                                    <input matInput [matDatepicker]="installPicker" formControlName="install_date"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>event</mat-icon>
+                                    @if (!isViewMode()) {
+                                    <mat-datepicker-toggle matSuffix [for]="installPicker"></mat-datepicker-toggle>
+                                    }
+                                    <mat-datepicker #installPicker></mat-datepicker>
+                                </mat-form-field>
+
+                                <!-- Warranty Date -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Warranty Expiry Date</mat-label>
+                                    <input matInput [matDatepicker]="warrantyPicker" formControlName="warranty_date"
+                                        [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>verified_user</mat-icon>
+                                    @if (!isViewMode()) {
+                                    <mat-datepicker-toggle matSuffix [for]="warrantyPicker"></mat-datepicker-toggle>
+                                    }
+                                    <mat-datepicker #warrantyPicker></mat-datepicker>
+                                </mat-form-field>
+
+                                <!-- Description -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Description</mat-label>
+                                    <input matInput formControlName="description"
+                                        placeholder="Brief description of the device" [readonly]="isViewMode()">
+                                    <mat-icon matPrefix>description</mat-icon>
+                                    <mat-hint>{{ deviceForm.get('description')?.value?.length || 0 }}/300</mat-hint>
+                                </mat-form-field>
+
+                                <!-- Notes -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Notes</mat-label>
+                                    <textarea matInput formControlName="notes" rows="4"
+                                        placeholder="Additional notes and comments"
+                                        [readonly]="isViewMode()"></textarea>
+                                    <mat-icon matPrefix>notes</mat-icon>
+                                    <mat-hint>{{ deviceForm.get('notes')?.value?.length || 0 }}/500</mat-hint>
+                                </mat-form-field>
+                            </div>
+                        </section>
+
+                    </form>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <!-- ==================== DIALOG ACTIONS ==================== -->
+        <mat-dialog-actions align="end" class="dialog-actions">
+            <!-- View Mode Actions -->
+            @if (isViewMode()) {
+            <button mat-stroked-button (click)="onClose()" class="close-btn-footer">
+                <mat-icon>close</mat-icon>
+                <span>Close</span>
+            </button>
+            <button mat-raised-button color="primary" (click)="switchToEditMode()" class="edit-btn">
+                <mat-icon>edit</mat-icon>
+                <span>Edit Device</span>
+            </button>
+            }
+
+            <!-- Edit Mode Actions -->
+            @if (isEditMode()) {
+            <button mat-stroked-button (click)="cancelEdit()" [disabled]="isLoading()" class="cancel-btn">
+                <mat-icon>close</mat-icon>
+                <span>{{ data.mode === 'view' ? 'Cancel' : 'Close' }}</span>
+            </button>
+            <button mat-raised-button color="primary" (click)="onSubmit()"
+                [disabled]="deviceForm.invalid || isLoading()" class="submit-btn">
+                @if (isLoading()) {
+                <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+                <span>Saving...</span>
+                } @else {
+                <ng-container>
+                    <mat-icon>save</mat-icon>
+                    <span>Save Changes</span>
+                </ng-container>
+                }
+            </button>
+            }
+
+            <!-- Create Mode Actions -->
+            @if (isCreateMode()) {
+            <button mat-stroked-button (click)="onCancel()" [disabled]="isLoading()" class="cancel-btn">
+                <mat-icon>close</mat-icon>
+                <span>Cancel</span>
+            </button>
+            <button mat-raised-button color="primary" (click)="onSubmit()"
+                [disabled]="deviceForm.invalid || isLoading() || isValidatingDeviceId()" class="submit-btn">
+                @if (isLoading()) {
+                <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+                <span>Creating...</span>
+                } @else {
+                <ng-container>
+                    <mat-icon>add_circle</mat-icon>
+                    <span>Create Device</span>
+                </ng-container>
+                }
+            </button>
+            }
+        </mat-dialog-actions>
+
+    </div>
+    }
+</div>

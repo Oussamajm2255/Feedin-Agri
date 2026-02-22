@@ -1,0 +1,580 @@
+{
+  "colorPalette": {
+    "lightTheme": {
+      "primary-50": "#f0f9ff",
+      "primary-100": "#e0f2fe",
+      "primary-200": "#bae6fd",
+      "primary-300": "#7dd3fc",
+      "primary-400": "#38bdf8",
+      "primary-500": "#0ea5e9",
+      "primary-600": "#0284c7",
+      "primary-700": "#0369a1",
+      "primary-800": "#075985",
+      "primary-900": "#0c4a6e",
+      "success-50": "#f0fdf4",
+      "success-100": "#dcfce7",
+      "success-200": "#bbf7d0",
+      "success-300": "#86efac",
+      "success-400": "#4ade80",
+      "success-500": "#22c55e",
+      "success-600": "#16a34a",
+      "success-700": "#15803d",
+      "success-800": "#166534",
+      "success-900": "#14532d",
+      "danger-50": "#fef2f2",
+      "danger-100": "#fee2e2",
+      "danger-200": "#fecaca",
+      "danger-300": "#fca5a5",
+      "danger-400": "#f87171",
+      "danger-500": "#ef4444",
+      "danger-600": "#dc2626",
+      "danger-700": "#b91c1c",
+      "danger-800": "#991b1b",
+      "danger-900": "#7f1d1d",
+      "warning-50": "#fffbeb",
+      "warning-100": "#fef3c7",
+      "warning-200": "#fde68a",
+      "warning-300": "#fcd34d",
+      "warning-400": "#fbbf24",
+      "warning-500": "#f59e0b",
+      "warning-600": "#d97706",
+      "warning-700": "#b45309",
+      "warning-800": "#92400e",
+      "warning-900": "#78350f",
+      "info-50": "#eff6ff",
+      "info-100": "#dbeafe",
+      "info-200": "#bfdbfe",
+      "info-300": "#93c5fd",
+      "info-400": "#60a5fa",
+      "info-500": "#3b82f6",
+      "info-600": "#2563eb",
+      "info-700": "#1d4ed8",
+      "info-800": "#1e40af",
+      "info-900": "#1e3a8a",
+      "gray-50": "#f9fafb",
+      "gray-100": "#f3f4f6",
+      "gray-200": "#e5e7eb",
+      "gray-300": "#d1d5db",
+      "gray-400": "#9ca3af",
+      "gray-500": "#6b7280",
+      "gray-600": "#4b5563",
+      "gray-700": "#374151",
+      "gray-800": "#1f2937",
+      "gray-900": "#111827",
+      "slate-50": "#f8fafc",
+      "slate-100": "#f1f5f9",
+      "slate-200": "#e2e8f0",
+      "slate-300": "#cbd5e1",
+      "slate-400": "#94a3b8",
+      "slate-500": "#64748b",
+      "slate-600": "#475569",
+      "slate-700": "#334155",
+      "slate-800": "#1e293b",
+      "slate-900": "#0f172a",
+      "green-50": "#f0fdf4",
+      "green-100": "#dcfce7",
+      "green-200": "#bbf7d0",
+      "green-300": "#86efac",
+      "green-400": "#4ade80",
+      "green-500": "#10b981",
+      "green-600": "#059669",
+      "green-700": "#047857",
+      "green-800": "#065f46",
+      "green-900": "#064e3b",
+      "text-primary": "var(--gray-900)",
+      "text-secondary": "var(--gray-600)",
+      "text-tertiary": "var(--gray-500)",
+      "text-disabled": "var(--gray-400)",
+      "text-inverse": "var(--gray-50)",
+      "bg-primary": "var(--gray-50)",
+      "bg-secondary": "var(--gray-100)",
+      "bg-tertiary": "var(--gray-200)",
+      "bg-inverse": "var(--gray-900)",
+      "border-primary": "var(--gray-300)",
+      "border-secondary": "var(--gray-200)",
+      "border-focus": "var(--primary-500)",
+      "interactive-primary": "var(--green-500)",
+      "interactive-primary-hover": "var(--green-600)",
+      "interactive-primary-active": "var(--green-700)",
+      "color-success": "var(--success-500)",
+      "color-danger": "var(--danger-500)",
+      "color-warning": "var(--warning-500)",
+      "color-info": "var(--info-500)",
+      "header-bg": "#fafafa",
+      "header-bg-gradient": "linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)",
+      "header-text": "#1f2937",
+      "header-text-secondary": "#4b5563",
+      "header-border": "rgba(0, 0, 0, 0.1)",
+      "header-shadow": "0 4px 20px rgba(0, 0, 0, 0.08)",
+      "nav-item-hover": "rgba(16, 185, 129, 0.08)",
+      "nav-item-active": "rgba(16, 185, 129, 0.15)",
+      "user-menu-bg": "#ffffff",
+      "user-menu-shadow": "0 8px 32px rgba(0, 0, 0, 0.12)",
+      "user-menu-border": "rgba(0, 0, 0, 0.08)",
+      "user-menu-item-hover": "rgba(16, 185, 129, 0.08)",
+      "user-menu-item-active": "rgba(16, 185, 129, 0.12)",
+      "card-bg": "#ffffff",
+      "border-color": "#e5e7eb",
+      "divider-color": "rgba(0, 0, 0, 0.08)",
+      "primary-green": "#10b981",
+      "secondary-green": "#34d399",
+      "dark-green": "#047857",
+      "primary-blue": "#3b82f6",
+      "secondary-blue": "#60a5fa",
+      "light-bg": "#f8fafb",
+      "success": "#10b981",
+      "warning": "#f59e0b",
+      "danger": "#ef4444",
+      "glass-bg": "rgba(255, 255, 255, 0.75)",
+      "glass-border": "rgba(16, 185, 129, 0.2)"
+    },
+    "darkTheme": {
+      "glass-bg": "rgba(30, 41, 59, 0.7)",
+      "glass-bg-strong": "rgba(30, 41, 59, 0.9)",
+      "glass-bg-subtle": "rgba(30, 41, 59, 0.5)",
+      "glass-border": "rgba(100, 116, 139, 0.3)",
+      "text-primary": "var(--slate-50)",
+      "text-secondary": "var(--slate-300)",
+      "text-tertiary": "var(--slate-400)",
+      "text-disabled": "var(--slate-500)",
+      "text-inverse": "var(--slate-900)",
+      "bg-primary": "var(--slate-900)",
+      "bg-secondary": "var(--slate-800)",
+      "bg-tertiary": "var(--slate-700)",
+      "bg-inverse": "var(--slate-50)",
+      "border-primary": "var(--slate-600)",
+      "border-secondary": "var(--slate-700)",
+      "border-focus": "var(--primary-400)",
+      "interactive-primary": "var(--green-400)",
+      "interactive-primary-hover": "var(--green-500)",
+      "interactive-primary-active": "var(--green-600)",
+      "shadow-xs": "0 1px 2px 0 rgba(0, 0, 0, 0.3)",
+      "shadow-sm": "0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)",
+      "shadow-md": "0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4)",
+      "shadow-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4)",
+      "shadow-xl": "0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)",
+      "shadow-2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+      "shadow-glass": "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(100, 116, 139, 0.3)",
+      "shadow-glass-hover": "0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(100, 116, 139, 0.4)",
+      "header-bg": "#1e293b",
+      "header-bg-gradient": "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+      "header-text": "#f1f5f9",
+      "header-text-secondary": "#cbd5e1",
+      "header-border": "rgba(255, 255, 255, 0.1)",
+      "header-shadow": "0 4px 20px rgba(0, 0, 0, 0.4)",
+      "nav-item-hover": "rgba(16, 185, 129, 0.12)",
+      "nav-item-active": "rgba(16, 185, 129, 0.2)",
+      "user-menu-bg": "#1e293b",
+      "user-menu-shadow": "0 8px 32px rgba(0, 0, 0, 0.5)",
+      "user-menu-border": "rgba(255, 255, 255, 0.1)",
+      "user-menu-item-hover": "rgba(16, 185, 129, 0.12)",
+      "user-menu-item-active": "rgba(16, 185, 129, 0.18)",
+      "card-bg": "#1e293b",
+      "border-color": "#334155",
+      "divider-color": "rgba(255, 255, 255, 0.1)",
+      "light-bg": "#0f172a",
+      "text-primary": "#f1f5f9",
+      "text-secondary": "#cbd5e1",
+      "primary-green": "#34d399",
+      "glass-bg": "rgba(30, 41, 59, 0.75)",
+      "glass-border": "rgba(100, 116, 139, 0.3)",
+      "dialog-backdrop": "rgba(0, 0, 0, 0.7)",
+      "dialog-bg": "var(--glass-bg-strong)"
+    },
+    "glassTokens": {
+      "glass-bg": "rgba(255, 255, 255, 0.7)",
+      "glass-bg-strong": "rgba(255, 255, 255, 0.85)",
+      "glass-bg-subtle": "rgba(255, 255, 255, 0.5)",
+      "glass-border": "rgba(255, 255, 255, 0.3)",
+      "glass-blur": "blur(16px)",
+      "glass-blur-strong": "blur(24px)"
+    },
+    "semanticTokens": {
+      "text-primary": "var(--gray-900)",
+      "text-secondary": "var(--gray-600)",
+      "text-tertiary": "var(--gray-500)",
+      "text-disabled": "var(--gray-400)",
+      "text-inverse": "var(--gray-50)",
+      "bg-primary": "var(--gray-50)",
+      "bg-secondary": "var(--gray-100)",
+      "bg-tertiary": "var(--gray-200)",
+      "bg-inverse": "var(--gray-900)",
+      "border-primary": "var(--gray-300)",
+      "border-secondary": "var(--gray-200)",
+      "border-focus": "var(--primary-500)",
+      "interactive-primary": "var(--green-500)",
+      "interactive-primary-hover": "var(--green-600)",
+      "interactive-primary-active": "var(--green-700)",
+      "color-success": "var(--success-500)",
+      "color-danger": "var(--danger-500)",
+      "color-warning": "var(--warning-500)",
+      "color-info": "var(--info-500)"
+    },
+    "shadows": {
+      "shadow-xs": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "shadow-sm": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+      "shadow-md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+      "shadow-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
+      "shadow-xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+      "shadow-2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+      "shadow-inner": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)",
+      "shadow-glass": "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.8)",
+      "shadow-glass-hover": "0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9)"
+    },
+    "spacing": {
+      "space-0": "0",
+      "space-1": "0.25rem",
+      "space-2": "0.5rem",
+      "space-3": "0.75rem",
+      "space-4": "1rem",
+      "space-5": "1.25rem",
+      "space-6": "1.5rem",
+      "space-7": "1.75rem",
+      "space-8": "2rem",
+      "space-10": "2.5rem",
+      "space-12": "3rem",
+      "space-16": "4rem",
+      "space-20": "5rem",
+      "space-24": "6rem"
+    },
+    "radius": {
+      "radius-none": "0",
+      "radius-sm": "0.375rem",
+      "radius-md": "0.5rem",
+      "radius-lg": "0.75rem",
+      "radius-xl": "1rem",
+      "radius-2xl": "1.25rem",
+      "radius-3xl": "1.5rem",
+      "radius-full": "9999px"
+    },
+    "gradients": {
+      "gradient-success": "linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%)",
+      "gradient-danger": "linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 100%)",
+      "gradient-warning": "linear-gradient(135deg, var(--warning-500) 0%, var(--warning-600) 100%)",
+      "gradient-info": "linear-gradient(135deg, var(--info-500) 0%, var(--info-600) 100%)",
+      "gradient-primary": "linear-gradient(135deg, var(--green-500) 0%, var(--green-600) 100%)"
+    },
+    "glow": {
+      "glow-success": "rgba(34, 197, 94, 0.3)",
+      "glow-danger": "rgba(239, 68, 68, 0.3)",
+      "glow-warning": "rgba(245, 158, 11, 0.3)",
+      "glow-info": "rgba(59, 130, 246, 0.3)"
+    },
+    "zIndex": {
+      "z-base": "0",
+      "z-dropdown": "1000",
+      "z-sticky": "1020",
+      "z-fixed": "1030",
+      "z-modal-backdrop": "1040",
+      "z-modal": "1050",
+      "z-popover": "1060",
+      "z-tooltip": "1070",
+      "z-notification": "9999"
+    }
+  },
+  "apiEndpoints": {
+    "farms": {
+      "GET /api/v1/farms": "Get all farms",
+      "GET /api/v1/farms/:id": "Get farm by ID",
+      "POST /api/v1/farms": "Create farm",
+      "PATCH /api/v1/farms/:id": "Update farm",
+      "DELETE /api/v1/farms/:id": "Delete farm"
+    },
+    "devices": {
+      "GET /api/v1/devices": "Get all devices (query: includeSensors)",
+      "GET /api/v1/devices/:id": "Get device by ID (query: includeSensors)",
+      "POST /api/v1/devices": "Create device",
+      "PATCH /api/v1/devices/:id": "Update device",
+      "DELETE /api/v1/devices/:id": "Delete device",
+      "GET /api/v1/devices/:deviceId/actions": "Get device actions",
+      "GET /api/v1/devices/by-farm/:farmId": "Get devices by farm",
+      "GET /api/v1/devices/status/:status": "Get devices by status",
+      "PATCH /api/v1/devices/:deviceId/status": "Update device status",
+      "GET /api/v1/devices/statistics": "Get device statistics"
+    },
+    "sensors": {
+      "GET /api/v1/sensors": "Get all sensors",
+      "GET /api/v1/sensors/:id": "Get sensor by ID",
+      "POST /api/v1/sensors": "Create sensor",
+      "PATCH /api/v1/sensors/:id": "Update sensor",
+      "DELETE /api/v1/sensors/:id": "Delete sensor",
+      "GET /api/v1/sensors/by-farm/:farmId": "Get sensors by farm",
+      "GET /api/v1/sensors/by-device/:deviceId": "Get sensors by device",
+      "GET /api/v1/crops/:cropId/sensors": "Get sensors by crop (query: includeReadings)"
+    },
+    "readings": {
+      "GET /api/v1/sensor-readings": "Get sensor readings (query: limit, offset)",
+      "GET /api/v1/sensor-readings/:id": "Get sensor reading by ID",
+      "POST /api/v1/sensor-readings": "Create sensor reading",
+      "DELETE /api/v1/sensor-readings/:id": "Delete sensor reading",
+      "GET /api/v1/sensor-readings/by-sensor/:sensorId": "Get readings by sensor (query: limit, offset)",
+      "GET /api/v1/sensor-readings/by-sensor/:sensorId/latest": "Get latest reading for sensor",
+      "GET /api/v1/sensor-readings/by-sensor/:sensorId/date-range": "Get readings by date range (query: startDate, endDate, limit)",
+      "GET /api/v1/sensor-readings/by-sensor/:sensorId/statistics": "Get sensor statistics (query: days)",
+      "GET /api/v1/sensor-readings/by-farm/:farmId": "Get readings by farm (query: limit, offset)",
+      "GET /api/v1/sensor-readings/by-farm/:farmId/statistics": "Get farm statistics (query: days)",
+      "GET /api/v1/sensor-readings/by-device/:deviceId": "Get readings by device (query: limit, offset)",
+      "GET /api/v1/sensor-readings/by-device/:deviceId/date-range": "Get readings by device date range (query: startDate, endDate, limit)"
+    },
+    "actions": {
+      "GET /api/v1/actions": "Get actions with filters (query: limit, offset, device_id, sensor_id, trigger_source, status, from, to)",
+      "GET /api/v1/actions/:id": "Get action by ID",
+      "POST /api/v1/actions/execute": "Execute action"
+    },
+    "notifications": {
+      "GET /api/v1/notifications": "Get notifications (query: limit, offset, is_read, level, source, from, to)",
+      "GET /api/v1/notifications/unread-count": "Get unread notifications count",
+      "POST /api/v1/notifications/mark-read": "Mark notifications as read (body: { ids: string[] })",
+      "POST /api/v1/notifications/mark-all-read": "Mark all notifications as read",
+      "DELETE /api/v1/notifications/:id": "Delete notification"
+    },
+    "auth": {
+      "POST /api/v1/auth/login": "Login (withCredentials: true)",
+      "POST /api/v1/users/register": "Register user (withCredentials: true)"
+    },
+    "users": {
+      "GET /api/v1/users": "Get all users (query: includeFarms)",
+      "GET /api/v1/users/:id": "Get user by ID (query: includeFarms)",
+      "PATCH /api/v1/users/:id": "Update user",
+      "PATCH /api/v1/users/:id/password": "Update user password (body: { password: string })",
+      "DELETE /api/v1/users/:id": "Delete user",
+      "GET /api/v1/users/:userId/farms": "Get user farms"
+    },
+    "crops": {
+      "GET /api/v1/crops": "Get all crops",
+      "GET /api/v1/crops/:id": "Get crop by ID",
+      "POST /api/v1/crops": "Create crop",
+      "PATCH /api/v1/crops/:id": "Update crop",
+      "DELETE /api/v1/crops/:id": "Delete crop"
+    },
+    "health": {
+      "GET /api/v1/health": "Get basic health check",
+      "GET /api/v1/health/detailed": "Get detailed health check",
+      "GET /api/v1/health/database": "Get database health",
+      "GET /api/v1/health/mqtt": "Get MQTT health",
+      "GET /api/v1/health/sensors": "Get sensors health"
+    }
+  },
+  "adminDashboardEndpoints": {
+    "overview": {
+      "available": [
+        "GET /api/v1/devices/statistics",
+        "GET /api/v1/farms",
+        "GET /api/v1/devices",
+        "GET /api/v1/sensors",
+        "GET /api/v1/sensor-readings",
+        "GET /api/v1/users",
+        "GET /api/v1/health/detailed",
+        "GET /api/v1/notifications/unread-count"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/overview/stats - Overall system statistics (total farms, devices, users, active sessions)",
+        "GET /api/v1/admin/overview/recent-activity - Recent system activity across all farms",
+        "GET /api/v1/admin/overview/kpis - Key performance indicators for admin dashboard"
+      ]
+    },
+    "devices": {
+      "available": [
+        "GET /api/v1/devices",
+        "GET /api/v1/devices/:id",
+        "POST /api/v1/devices",
+        "PATCH /api/v1/devices/:id",
+        "DELETE /api/v1/devices/:id",
+        "GET /api/v1/devices/statistics",
+        "GET /api/v1/devices/by-farm/:farmId",
+        "GET /api/v1/devices/status/:status",
+        "PATCH /api/v1/devices/:deviceId/status",
+        "GET /api/v1/devices/:deviceId/actions"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/devices/bulk-operations - Bulk device operations",
+        "GET /api/v1/admin/devices/export - Export device data",
+        "GET /api/v1/admin/devices/health-report - Device health report across all farms"
+      ]
+    },
+    "systemHealth": {
+      "available": [
+        "GET /api/v1/health",
+        "GET /api/v1/health/detailed",
+        "GET /api/v1/health/database",
+        "GET /api/v1/health/mqtt",
+        "GET /api/v1/health/sensors"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/system-health/logs - System logs and error tracking",
+        "GET /api/v1/admin/system-health/performance - System performance metrics",
+        "GET /api/v1/admin/system-health/alerts - System health alerts and warnings",
+        "GET /api/v1/admin/system-health/uptime - System uptime and availability metrics"
+      ]
+    },
+    "logs": {
+      "available": [
+        "GET /api/v1/actions",
+        "GET /api/v1/notifications"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/logs/audit - Audit logs for admin actions",
+        "GET /api/v1/admin/logs/access - Access logs and authentication events",
+        "GET /api/v1/admin/logs/errors - Error logs and exceptions",
+        "GET /api/v1/admin/logs/system - System logs and events",
+        "GET /api/v1/admin/logs/export - Export logs in various formats"
+      ]
+    },
+    "users": {
+      "available": [
+        "GET /api/v1/users",
+        "GET /api/v1/users/:id",
+        "PATCH /api/v1/users/:id",
+        "DELETE /api/v1/users/:id",
+        "PATCH /api/v1/users/:id/password",
+        "GET /api/v1/users/:userId/farms"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/users/roles - Get user roles and permissions",
+        "POST /api/v1/admin/users/:id/roles - Assign roles to user",
+        "GET /api/v1/admin/users/activity - User activity logs",
+        "GET /api/v1/admin/users/sessions - Active user sessions",
+        "POST /api/v1/admin/users/:id/disable - Disable user account",
+        "POST /api/v1/admin/users/:id/enable - Enable user account",
+        "GET /api/v1/admin/users/statistics - User statistics and analytics"
+      ]
+    },
+    "farms": {
+      "available": [
+        "GET /api/v1/farms",
+        "GET /api/v1/farms/:id",
+        "POST /api/v1/farms",
+        "PATCH /api/v1/farms/:id",
+        "DELETE /api/v1/farms/:id"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/farms/statistics - Farm statistics across all farms",
+        "GET /api/v1/admin/farms/performance - Farm performance metrics",
+        "GET /api/v1/admin/farms/export - Export farm data"
+      ]
+    },
+    "farmers": {
+      "available": [
+        "GET /api/v1/users",
+        "GET /api/v1/users/:id",
+        "GET /api/v1/users/:userId/farms"
+      ],
+      "missingAPIs": [
+        "GET /api/v1/admin/farmers - Get all farmers (filtered users with farmer role)",
+        "GET /api/v1/admin/farmers/:id - Get farmer details",
+        "GET /api/v1/admin/farmers/:id/farms - Get all farms for a farmer",
+        "GET /api/v1/admin/farmers/:id/activity - Get farmer activity logs",
+        "GET /api/v1/admin/farmers/statistics - Farmer statistics and analytics",
+        "POST /api/v1/admin/farmers/:id/assign-farm - Assign farm to farmer",
+        "POST /api/v1/admin/farmers/:id/unassign-farm - Unassign farm from farmer"
+      ]
+    },
+    "settings": {
+      "available": [],
+      "missingAPIs": [
+        "GET /api/v1/admin/settings - Get system settings",
+        "PATCH /api/v1/admin/settings - Update system settings",
+        "GET /api/v1/admin/settings/notifications - Get notification settings",
+        "PATCH /api/v1/admin/settings/notifications - Update notification settings",
+        "GET /api/v1/admin/settings/automation - Get automation rules",
+        "POST /api/v1/admin/settings/automation - Create automation rule",
+        "PATCH /api/v1/admin/settings/automation/:id - Update automation rule",
+        "DELETE /api/v1/admin/settings/automation/:id - Delete automation rule",
+        "GET /api/v1/admin/settings/thresholds - Get sensor thresholds",
+        "PATCH /api/v1/admin/settings/thresholds - Update sensor thresholds"
+      ]
+    }
+  },
+  "missingAPIs": {
+    "overview": [
+      "GET /api/v1/admin/overview/stats - Overall system statistics (total farms, devices, users, active sessions)",
+      "GET /api/v1/admin/overview/recent-activity - Recent system activity across all farms",
+      "GET /api/v1/admin/overview/kpis - Key performance indicators for admin dashboard"
+    ],
+    "devices": [
+      "GET /api/v1/admin/devices/bulk-operations - Bulk device operations",
+      "GET /api/v1/admin/devices/export - Export device data",
+      "GET /api/v1/admin/devices/health-report - Device health report across all farms"
+    ],
+    "systemHealth": [
+      "GET /api/v1/admin/system-health/logs - System logs and error tracking",
+      "GET /api/v1/admin/system-health/performance - System performance metrics",
+      "GET /api/v1/admin/system-health/alerts - System health alerts and warnings",
+      "GET /api/v1/admin/system-health/uptime - System uptime and availability metrics"
+    ],
+    "logs": [
+      "GET /api/v1/admin/logs/audit - Audit logs for admin actions",
+      "GET /api/v1/admin/logs/access - Access logs and authentication events",
+      "GET /api/v1/admin/logs/errors - Error logs and exceptions",
+      "GET /api/v1/admin/logs/system - System logs and events",
+      "GET /api/v1/admin/logs/export - Export logs in various formats"
+    ],
+    "users": [
+      "GET /api/v1/admin/users/roles - Get user roles and permissions",
+      "POST /api/v1/admin/users/:id/roles - Assign roles to user",
+      "GET /api/v1/admin/users/activity - User activity logs",
+      "GET /api/v1/admin/users/sessions - Active user sessions",
+      "POST /api/v1/admin/users/:id/disable - Disable user account",
+      "POST /api/v1/admin/users/:id/enable - Enable user account",
+      "GET /api/v1/admin/users/statistics - User statistics and analytics"
+    ],
+    "farms": [
+      "GET /api/v1/admin/farms/statistics - Farm statistics across all farms",
+      "GET /api/v1/admin/farms/performance - Farm performance metrics",
+      "GET /api/v1/admin/farms/export - Export farm data"
+    ],
+    "farmers": [
+      "GET /api/v1/admin/farmers - Get all farmers (filtered users with farmer role)",
+      "GET /api/v1/admin/farmers/:id - Get farmer details",
+      "GET /api/v1/admin/farmers/:id/farms - Get all farms for a farmer",
+      "GET /api/v1/admin/farmers/:id/activity - Get farmer activity logs",
+      "GET /api/v1/admin/farmers/statistics - Farmer statistics and analytics",
+      "POST /api/v1/admin/farmers/:id/assign-farm - Assign farm to farmer",
+      "POST /api/v1/admin/farmers/:id/unassign-farm - Unassign farm from farmer"
+    ],
+    "settings": [
+      "GET /api/v1/admin/settings - Get system settings",
+      "PATCH /api/v1/admin/settings - Update system settings",
+      "GET /api/v1/admin/settings/notifications - Get notification settings",
+      "PATCH /api/v1/admin/settings/notifications - Update notification settings",
+      "GET /api/v1/admin/settings/automation - Get automation rules",
+      "POST /api/v1/admin/settings/automation - Create automation rule",
+      "PATCH /api/v1/admin/settings/automation/:id - Update automation rule",
+      "DELETE /api/v1/admin/settings/automation/:id - Delete automation rule",
+      "GET /api/v1/admin/settings/thresholds - Get sensor thresholds",
+      "PATCH /api/v1/admin/settings/thresholds - Update sensor thresholds"
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

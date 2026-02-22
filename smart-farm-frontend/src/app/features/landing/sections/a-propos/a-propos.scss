@@ -1,0 +1,396 @@
+/* =============================================
+   SECTION 2 — À PROPOS DE FEEDIN
+   Calm credibility section — No hype, no features
+   Mobile-first approach
+   ============================================= */
+
+// ================================
+// SECTION WRAPPER
+// ================================
+.about-section {
+    position: relative;
+    padding: 7rem 2rem 8rem;
+    overflow: hidden;
+    background: var(--light-bg);
+
+    // Soft top border for visual separation from hero
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        max-width: 600px;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                var(--border-color) 50%,
+                transparent 100%);
+    }
+}
+
+// ================================
+// CONTAINER
+// ================================
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+// ================================
+// TWO-COLUMN GRID
+// Desktop: side-by-side | Mobile: stacked
+// ================================
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+
+    @media (min-width: 1024px) {
+        gap: 5rem;
+    }
+}
+
+// ================================
+// TEXT CONTENT (LEFT COLUMN)
+// ================================
+.about-content {
+    order: 2; // Text below image on mobile
+
+    @media (min-width: 768px) {
+        order: 1; // Text left on desktop
+    }
+}
+
+// Section Label — Small accent tag
+.about-label {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    padding: 0.4rem 1rem;
+    background: rgba(16, 185, 129, 0.08);
+    border-radius: 100px;
+    border: 1px solid rgba(16, 185, 129, 0.12);
+}
+
+// Section Title — H2
+.about-title {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 1.75rem;
+    letter-spacing: -0.01em;
+}
+
+// Core Message — Lead paragraph
+.about-lead {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+    max-width: 540px;
+}
+
+// Supporting Paragraph — Trust paragraph
+.about-body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 540px;
+}
+
+// ================================
+// DECORATIVE SEPARATOR
+// ================================
+.about-separator {
+    width: 48px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg,
+            var(--primary-green),
+            var(--secondary-green, #34d399));
+    margin-bottom: 1.75rem;
+    transition: width 0.4s ease;
+}
+
+// ================================
+// VALUE STATEMENTS (3 items)
+// ================================
+.about-values {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.about-value-item {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding-left: 1.25rem;
+    position: relative;
+    line-height: 1.5;
+    transition: color 0.3s ease;
+
+    // Subtle green dot indicator
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--primary-green);
+        opacity: 0.6;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    &:hover {
+        color: var(--text-primary);
+
+        &::before {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.3);
+        }
+    }
+}
+
+// ================================
+// VISUAL / MEDIA CARD (RIGHT COLUMN)
+// ================================
+.about-visual {
+    order: 1; // Image above text on mobile
+
+    @media (min-width: 768px) {
+        order: 2; // Image right on desktop
+    }
+}
+
+.about-media-card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.about-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+
+    // Media fills the container
+    img,
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 24px;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    // Gentle zoom on hover (desktop only)
+    @media (min-width: 768px) {
+
+        &:hover img,
+        &:hover video {
+            transform: scale(1.03);
+        }
+    }
+}
+
+// ================================
+// PLACEHOLDER (until media is chosen)
+// ================================
+.about-media-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.04) 0%,
+            rgba(59, 130, 246, 0.03) 100%);
+    border-radius: 24px;
+    min-height: 280px;
+
+    @media (min-width: 768px) {
+        min-height: 360px;
+    }
+}
+
+.placeholder-icon {
+    color: var(--text-secondary);
+    opacity: 0.35;
+    transition: opacity 0.3s ease;
+
+    .about-media-placeholder:hover & {
+        opacity: 0.55;
+    }
+}
+
+.placeholder-text {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+// ================================
+// MEDIA ACCENT — Decorative corner element
+// ================================
+.media-accent {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.12) 0%,
+            rgba(16, 185, 129, 0.04) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    z-index: -1;
+    transition: transform 0.4s ease;
+
+    @media (min-width: 768px) {
+        width: 100px;
+        height: 100px;
+        bottom: -12px;
+        right: -12px;
+    }
+}
+
+.about-media-card:hover .media-accent {
+    transform: translate(4px, 4px);
+}
+
+// ================================
+// BACKGROUND DECORATION
+// ================================
+.about-bg-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 70% 30%,
+            rgba(16, 185, 129, 0.03) 0%,
+            transparent 50%);
+    pointer-events: none;
+}
+
+// ================================
+// DARK THEME OVERRIDES
+// ================================
+:host-context(body.dark-theme) {
+    .about-section {
+        background: var(--light-bg);
+    }
+
+    .about-label {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.18);
+    }
+
+    .about-media {
+        border-color: var(--glass-border);
+        background: var(--glass-bg);
+    }
+
+    .about-media-placeholder {
+        background: linear-gradient(135deg,
+                rgba(16, 185, 129, 0.06) 0%,
+                rgba(59, 130, 246, 0.04) 100%);
+    }
+
+    .media-accent {
+        background: linear-gradient(135deg,
+                rgba(16, 185, 129, 0.15) 0%,
+                rgba(16, 185, 129, 0.05) 100%);
+        border-color: rgba(16, 185, 129, 0.15);
+    }
+
+    .about-value-item::before {
+        opacity: 0.5;
+    }
+}
+
+// ================================
+// RESPONSIVE REFINEMENTS
+// ================================
+@media (max-width: 480px) {
+    .about-section {
+        padding: 4rem 1.25rem 5rem;
+    }
+
+    .about-title {
+        font-size: 1.625rem;
+    }
+
+    .about-lead {
+        font-size: 1rem;
+    }
+
+    .about-body {
+        font-size: 0.9375rem;
+    }
+
+    .media-accent {
+        width: 60px;
+        height: 60px;
+        bottom: -6px;
+        right: -6px;
+    }
+}
+
+// ================================
+// REDUCED MOTION SUPPORT
+// ================================
+@media (prefers-reduced-motion: reduce) {
+
+    .about-media img,
+    .about-media video {
+        transition: none;
+    }
+
+    .media-accent {
+        transition: none;
+    }
+
+    .about-separator {
+        transition: none;
+    }
+
+    .about-value-item,
+    .about-value-item::before {
+        transition: none;
+    }
+}

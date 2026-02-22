@@ -1,0 +1,492 @@
+<div class="admin-devices-page" [class.rtl]="languageService.isRTL()">
+  <!-- ==================== HEADER ZONE ==================== -->
+  <!-- Premium Page Header (Transparent) -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="title-row">
+          <div class="title-icon-wrapper">
+            <mat-icon class="title-icon">devices_other</mat-icon>
+            <div class="icon-pulse"></div>
+          </div>
+          <div class="title-text">
+            <h1 class="page-title" @fadeInUp>
+              {{ 'admin.devices.title' | translate }}
+              <span class="title-badge" @scaleIn>
+                <mat-icon>verified</mat-icon>
+                {{ totalDevices() }}
+              </span>
+            </h1>
+            <p class="page-subtitle" @fadeInUp>{{ 'admin.devices.subtitle' | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions" @fadeInUp>
+        <app-export-button title="Device Inventory Report" sectionName="Devices" subtitle="All registered IoT devices"
+          filename="devices_export" [columns]="exportColumns" [data]="filteredDevices()" [disabled]="loading()">
+        </app-export-button>
+
+        <button mat-flat-button class="btn-secondary" (click)="onRegisterSensor()" [disabled]="loading()">
+          <mat-icon>sensors</mat-icon>
+          <span>{{ 'admin.devices.registerSensor' | translate }}</span>
+        </button>
+
+        <button mat-flat-button class="btn-primary premium-btn" (click)="onNewDevice()" [disabled]="loading()">
+          <mat-icon>add_circle</mat-icon>
+          <span>{{ 'admin.devices.addDevice' | translate }}</span>
+          <div class="btn-shine"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Row (Matching Overview Logic) -->
+    <div class="kpi-row" @fadeInUp>
+      @if (loadingStats()) {
+      @for (i of [1,2,3,4]; track i) {
+      <div class="kpi-card skeleton-card shimmer"></div>
+      }
+      } @else {
+      @for (kpi of kpiCards(); track kpi.label) {
+      <div class="kpi-card" [class]="kpi.performanceClass || 'perf-neutral'" [matTooltip]="kpi.subtitle || ''"
+        matTooltipPosition="above">
+        <div class="kpi-icon-wrapper">
+          <div class="kpi-icon" [class]="'icon-' + kpi.icon">
+            <mat-icon>{{ kpi.icon }}</mat-icon>
+          </div>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ kpi.value | number }}</div>
+          <div class="kpi-label">{{ kpi.label }}</div>
+          <div *ngIf="kpi.subtitle" class="kpi-subtitle">{{ kpi.subtitle }}</div>
+
+          <!-- Trend Indicator -->
+          <div *ngIf="kpi.trend !== undefined" class="kpi-trend-arrow" [class]="kpi.trendColor || 'neutral'">
+            <span class="trend-arrow-symbol">{{ kpi.trendArrow }}</span>
+            <span class="trend-value">{{ kpi.trend | number:'1.0-1' }}%</span>
+          </div>
+        </div>
+      </div>
+      }
+      }
+    </div>
+  </header>
+
+  <!-- ==================== FILTERS AND SEARCH STRIP ==================== -->
+  <div class="filters-strip glass-panel" [@fadeInDown]>
+    <div class="filters-left">
+      <!-- Status Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <mat-icon class="label-icon">toggle_on</mat-icon>
+          {{ 'admin.devices.filters.status' | translate }}
+        </label>
+        <div class="chip-group">
+          @for (status of statusOptions; track status.value) {
+          <button mat-chip-button class="filter-chip" [class.selected]="selectedStatuses().includes(status.value)"
+            [attr.data-status]="status.value" (click)="toggleStatusFilter(status.value)">
+            <span class="status-dot" [attr.data-status]="status.value"></span>
+            <span>{{ status.label }}</span>
+            @if (selectedStatuses().includes(status.value)) {
+            <mat-icon class="chip-check">check</mat-icon>
+            }
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- Type Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <mat-icon class="label-icon">category</mat-icon>
+          {{ 'admin.devices.filters.type' | translate }}
+        </label>
+        <div class="chip-group">
+          @for (type of typeOptions; track type.value) {
+          <button mat-chip-button class="filter-chip" [class.selected]="selectedTypes().includes(type.value)"
+            [attr.data-type]="type.value" (click)="toggleTypeFilter(type.value)">
+            <mat-icon class="chip-icon">{{ type.icon }}</mat-icon>
+            <span>{{ type.label }}</span>
+            @if (selectedTypes().includes(type.value)) {
+            <mat-icon class="chip-check">check</mat-icon>
+            }
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="filters-right">
+      <!-- Farm Filter -->
+      <mat-form-field appearance="outline" class="modern-form-field">
+        <mat-label>
+          <mat-icon>cottage</mat-icon>
+          {{ 'admin.devices.filters.farm' | translate }}
+        </mat-label>
+        <mat-select [value]="selectedFarmId()" (selectionChange)="onFarmFilterChange($event.value)">
+          <mat-option [value]="null">
+            {{ 'admin.devices.filters.allFarms' | translate }}
+          </mat-option>
+          @for (farm of farms(); track farm.farm_id) {
+          <mat-option [value]="farm.farm_id">
+            {{ farm.name }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Search -->
+      <mat-form-field appearance="outline" class="modern-form-field search-field">
+        <mat-label>{{ 'admin.devices.filters.search' | translate }}</mat-label>
+        <input matInput [formControl]="searchControl"
+          [placeholder]="'admin.devices.filters.searchPlaceholder' | translate" />
+        <mat-icon matPrefix>search</mat-icon>
+        @if (searchControl.value) {
+        <button matSuffix mat-icon-button (click)="searchControl.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+      </mat-form-field>
+
+      <!-- Clear Filters -->
+      @if (hasActiveFilters()) {
+      <button mat-stroked-button class="clear-filters-btn" (click)="clearAllFilters()" [matBadge]="activeFiltersCount()"
+        matBadgeSize="small" matBadgeColor="warn">
+        <mat-icon>filter_alt_off</mat-icon>
+        {{ 'admin.devices.filters.clear' | translate }}
+      </button>
+      }
+    </div>
+  </div>
+
+  <!-- ==================== VIEW CONTROLS BAR ==================== -->
+  <section class="view-controls-bar glass-panel" [@fadeIn]>
+    <div class="controls-left">
+      <!-- View Mode Toggle -->
+      <div class="view-toggle">
+        <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'table'" (click)="setViewMode('table')"
+          matTooltip="{{ 'common.view' | translate }}">
+          <mat-icon>table_rows</mat-icon>
+        </button>
+        <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')"
+          [matTooltip]="'common.view' | translate">
+          <mat-icon>grid_view</mat-icon>
+        </button>
+      </div>
+
+      <!-- Results Count -->
+      <div class="results-count">
+        <mat-icon>devices_other</mat-icon>
+        <span>{{ filteredDevices().length }} {{ 'common.of' | translate }} {{ totalDevices() }} {{ 'admin.devices.title'
+          | translate }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <div class="content-container" [@fadeIn]>
+
+    <!-- ==================== TABLE VIEW ==================== -->
+    @if (viewMode() === 'table') {
+    <div class="table-card glass-panel">
+      @if (loading()) {
+      <!-- Skeleton Loader -->
+      <div class="skeleton-table">
+        @for (row of [1,2,3,4,5]; track row) {
+        <div class="skeleton-row" [style.animation-delay]="animationDelay(row)">
+          <div class="skeleton-cell skeleton-text"></div>
+          <div class="skeleton-cell skeleton-text"></div>
+          <div class="skeleton-cell skeleton-text"></div>
+          <div class="skeleton-cell skeleton-text"></div>
+          <div class="skeleton-cell skeleton-badge"></div>
+          <div class="skeleton-cell skeleton-text"></div>
+          <div class="skeleton-cell skeleton-text"></div>
+          <div class="skeleton-cell skeleton-actions"></div>
+        </div>
+        }
+      </div>
+      } @else if (filteredDevices().length === 0 || groupedDevicesArray().length === 0) {
+      <!-- Empty State -->
+      <div class="empty-state" [@floatIn]>
+        <div class="empty-icon-wrapper">
+          <mat-icon class="empty-icon">devices_other</mat-icon>
+        </div>
+        <h3>{{ 'admin.devices.empty.title' | translate }}</h3>
+        <p>{{ 'admin.devices.empty.message' | translate }}</p>
+        <button mat-flat-button color="primary" (click)="onNewDevice()">
+          <mat-icon>add</mat-icon>
+          {{ 'admin.devices.empty.action' | translate }}
+        </button>
+      </div>
+      } @else {
+      <!-- Grouped Devices Table View -->
+      <div class="grouped-devices-container">
+        @for (group of groupedDevicesArray(); track group.key) {
+        <div class="device-group" [@fadeIn]>
+          <div class="group-header" (click)="toggleGroup(group.key)" [class.expanded]="isGroupExpanded(group.key)">
+            <div class="group-header-content">
+              <div class="expand-indicator">
+                <mat-icon>{{ isGroupExpanded(group.key) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+              </div>
+              <div class="group-info">
+                <div class="group-title">
+                  <mat-icon class="group-icon">cottage</mat-icon>
+                  <span class="farm-name">{{ group.farmName }}</span>
+                </div>
+                <div class="group-meta">
+                  <div class="meta-item">
+                    <mat-icon>person</mat-icon>
+                    <span>{{ group.ownerName }}</span>
+                  </div>
+                  <div class="meta-separator">•</div>
+                  <div class="meta-item">
+                    <span class="device-count">{{ group.devices.length }} {{ 'admin.devices.title' | translate }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if (isGroupExpanded(group.key)) {
+          <div class="group-content" [@fadeIn]>
+            <table mat-table [dataSource]="group.devices" matSort class="devices-table modern-table">
+              <!-- Device ID Column -->
+              <ng-container matColumnDef="device_id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'admin.devices.table.deviceId' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <div class="device-id-wrapper">
+                    <mat-icon class="device-icon">tag</mat-icon>
+                    <span class="device-id-text">{{ device.device_id }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'admin.devices.table.name' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <span class="device-name">{{ device.name }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Farm Column -->
+              <ng-container matColumnDef="farm">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ 'admin.devices.table.farm' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <div class="cell-content">
+                    <mat-icon class="small-icon">cottage</mat-icon>
+                    <span>{{ getFarmName(device.farm_id) }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Location Column -->
+              <ng-container matColumnDef="location">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ 'admin.devices.table.location' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <div class="cell-content">
+                    <mat-icon class="small-icon">location_on</mat-icon>
+                    <span>{{ device.location || '—' }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'admin.devices.table.status' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <span class="status-badge" [attr.data-status]="device.status">
+                    <mat-icon class="status-icon">{{ getStatusIcon(device.status) }}</mat-icon>
+                    <span>{{ device.status | titlecase }}</span>
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Device Type Column -->
+              <ng-container matColumnDef="device_type">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ 'admin.devices.table.type' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <span class="type-badge" [attr.data-type]="device.device_type">
+                    <mat-icon>{{ getTypeIcon(device.device_type || '') }}</mat-icon>
+                    <span>{{ device.device_type || 'N/A' | titlecase }}</span>
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Last Seen Column -->
+              <ng-container matColumnDef="last_seen">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'admin.devices.table.lastSeen' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <div class="cell-content">
+                    <mat-icon class="small-icon">schedule</mat-icon>
+                    <span>{{ formatDate(device.last_seen) }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ 'admin.devices.table.actions' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let device">
+                  <div class="table-actions">
+                    <button mat-icon-button class="action-btn btn-view" (click)="onViewDetails(device, $event)"
+                      [matTooltip]="'admin.devices.actions.viewDetails' | translate">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button class="action-btn btn-edit" (click)="onEditDevice(device, $event)"
+                      [matTooltip]="'admin.devices.actions.edit' | translate">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="action-btn btn-delete" (click)="onDeleteDevice(device, $event)"
+                      [matTooltip]="'admin.devices.actions.delete' | translate">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick(row)" class="table-row">
+              </tr>
+            </table>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+
+    <!-- ==================== GRID VIEW ==================== -->
+    @if (viewMode() === 'grid') {
+    <div class="grid-view" [@fadeIn]>
+      @if (loading()) {
+      <!-- Skeleton Grid Loader -->
+      <div class="devices-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="device-card skeleton-card shimmer">
+          <div class="skeleton-card-header"></div>
+          <div class="skeleton-card-body">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+          </div>
+        </div>
+        }
+      </div>
+      } @else if (filteredDevices().length === 0) {
+      <!-- Empty State -->
+      <div class="empty-state" [@floatIn]>
+        <div class="empty-icon-wrapper">
+          <mat-icon class="empty-icon">devices_other</mat-icon>
+        </div>
+        <h3>{{ 'admin.devices.empty.title' | translate }}</h3>
+        <p>{{ 'admin.devices.empty.message' | translate }}</p>
+        <button mat-flat-button color="primary" (click)="onNewDevice()">
+          <mat-icon>add</mat-icon>
+          {{ 'admin.devices.empty.action' | translate }}
+        </button>
+      </div>
+      } @else {
+      <!-- Premium Device Cards Grid -->
+      <div class="devices-grid">
+        @for (device of filteredDevices(); track device.device_id; let i = $index) {
+        <article class="device-card glass-card" [attr.data-status]="device.status"
+          [style.animation-delay]="(i * 50) + 'ms'" [@fadeIn]>
+
+          <!-- Card Status Indicator -->
+          <div class="card-status-indicator" [attr.data-status]="device.status"></div>
+
+          <!-- Card Status Badge -->
+          <span class="card-status-badge" [attr.data-status]="device.status">
+            <mat-icon class="status-icon-small">{{ getStatusIcon(device.status) }}</mat-icon>
+            {{ device.status | titlecase }}
+          </span>
+
+          <!-- Card Header -->
+          <div class="card-header" (click)="onViewDetails(device, $event)">
+            <div class="device-avatar" [attr.data-type]="device.device_type">
+              <mat-icon>{{ getTypeIcon(device.device_type || '') }}</mat-icon>
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="device-title-section">
+              <h3 class="device-title">{{ device.name }}</h3>
+              <p class="device-subtitle">
+                <mat-icon class="subtitle-icon">tag</mat-icon>
+                {{ device.device_id }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Card Stats -->
+          <div class="card-stats">
+            <div class="stat-item">
+              <mat-icon>category</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ device.device_type || 'N/A' | titlecase }}</span>
+                <span class="stat-label">{{ 'admin.devices.table.type' | translate }}</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>cottage</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value" [title]="getFarmName(device.farm_id)">{{ getFarmName(device.farm_id) }}</span>
+                <span class="stat-label">{{ 'admin.devices.table.farm' | translate }}</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>schedule</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ formatDate(device.last_seen) }}</span>
+                <span class="stat-label">{{ 'admin.devices.table.lastSeen' | translate }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Location -->
+          @if (device.location) {
+          <div class="card-location">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ device.location }}</span>
+          </div>
+          }
+
+          <!-- Card Actions -->
+          <div class="card-actions">
+            <button mat-icon-button class="card-action-btn view" (click)="onViewDetails(device, $event)"
+              [matTooltip]="'admin.devices.actions.viewDetails' | translate">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button class="card-action-btn edit" (click)="onEditDevice(device, $event)"
+              [matTooltip]="'admin.devices.actions.edit' | translate">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="card-action-btn delete" (click)="onDeleteDevice(device, $event)"
+              [matTooltip]="'admin.devices.actions.delete' | translate">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </article>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

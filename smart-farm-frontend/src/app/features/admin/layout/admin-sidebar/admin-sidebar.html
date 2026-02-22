@@ -1,0 +1,72 @@
+<aside class="admin-sidebar" [class.drawer-open]="isDrawerOpen" [class.mobile]="isMobile" [class.tablet]="isTablet"
+  [class.rtl]="isRTL()">
+  <!-- Logo / Brand Area -->
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <img src="assets/images/logos/only_F.png" alt="Feedin Logo" class="logo-icon" />
+      <span class="logo-text feedin-brand">Feedin</span>
+    </div>
+  </div>
+
+  <!-- Navigation List -->
+  <nav class="sidebar-nav" role="navigation" aria-label="Admin Navigation">
+    <ul class="nav-list" role="list">
+      <li *ngFor="let item of navItems" class="nav-item"
+        [class.active]="isActive(item.route) || hasActiveChild(item)"
+        [class.has-children]="item.children && item.children.length > 0"
+        [class.expanded]="isExpanded(item)"
+        role="listitem">
+        <a class="nav-link"
+          [attr.aria-label]="getNavLabel(item.label)"
+          [attr.aria-current]="isActive(item.route) ? 'page' : null"
+          [attr.aria-expanded]="item.children ? isExpanded(item) : null"
+          [attr.aria-haspopup]="item.children && item.children.length > 0 ? 'menu' : null"
+          tabindex="0"
+          (click)="navigate(item.route)"
+          (keydown.enter)="navigate(item.route)"
+          (keydown.space)="navigate(item.route); $event.preventDefault()"
+          [matTooltip]="getNavLabel(item.label)"
+          [matTooltipPosition]="isRTL() ? 'left' : 'right'"
+          [matTooltipDisabled]="isDrawerOpen || isMobile || isTablet">
+          <!-- Magic Curved Elements -->
+          <b class="curve-top"></b>
+          <b class="curve-bottom"></b>
+
+          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+          <span class="nav-text">{{ getNavLabel(item.label) }}</span>
+        </a>
+
+        <!-- Sub-navigation -->
+        <ul *ngIf="item.children && item.children.length > 0"
+          class="sub-nav-list"
+          [class.expanded]="isExpanded(item)"
+          role="list"
+          [attr.aria-label]="getNavLabel(item.label) + ' submenu'">
+          <li *ngFor="let child of item.children"
+            class="sub-nav-item"
+            [class.active]="isActive(child.route)"
+            role="listitem">
+            <a class="sub-nav-link"
+              [attr.aria-label]="getNavLabel(child.label)"
+              [attr.aria-current]="isActive(child.route) ? 'page' : null"
+              tabindex="0"
+              (click)="navigate(child.route); $event.stopPropagation()"
+              (keydown.enter)="navigate(child.route); $event.stopPropagation()"
+              (keydown.space)="navigate(child.route); $event.preventDefault(); $event.stopPropagation()">
+              <mat-icon class="sub-nav-icon">{{ child.icon }}</mat-icon>
+              <span class="sub-nav-text">{{ getNavLabel(child.label) }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar Footer (optional) -->
+  <div class="sidebar-footer">
+    <div class="version-info">
+      <mat-icon class="version-icon">info</mat-icon>
+      <span class="version-text">v2.0.0</span>
+    </div>
+  </div>
+</aside>

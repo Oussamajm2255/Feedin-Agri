@@ -1,0 +1,105 @@
+<!-- =============================================
+     SECTION — CONFIANCE, SÉCURITÉ & FIABILITÉ
+     Trust & Reassurance | Text left + Icon grid right
+     ============================================= -->
+
+<section class="confiance-section" id="confiance-section" [attr.aria-label]="'landing.trust.title' | translate">
+    <div class="confiance-container">
+        <div class="confiance-grid">
+
+            <!-- LEFT: Text Content & Image -->
+            <div class="confiance-content" appScrollReveal="fade-right">
+
+                <span class="confiance-label">{{ 'landing.trust.label' | translate }}</span>
+
+                <h2 class="confiance-title">
+                    {{ 'landing.trust.title' | translate }}
+                </h2>
+
+                <p class="confiance-lead">
+                    {{ 'landing.trust.lead' | translate }}
+                </p>
+
+                <p class="confiance-body">
+                    {{ 'landing.trust.body' | translate }}
+                </p>
+
+                <div class="confiance-visual mt-8">
+                    <img src="assets/landing/images/étude de projet & formation.png" alt="Confiance et fiabilité"
+                        loading="lazy">
+                </div>
+            </div>
+
+            <!-- RIGHT: Icon Grid -->
+            <div class="confiance-icons" appScrollReveal="fade-left" [delay]="0.1">
+                <ul class="trust-grid" role="list">
+                    @for (item of trustItems; track item.id) {
+                    <li class="trust-item">
+                        <span class="trust-icon" aria-hidden="true">
+                            <!-- Lock Icon -->
+                            <svg *ngIf="item.iconId === 'lock'" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+
+                            <!-- Clock Icon -->
+                            <svg *ngIf="item.iconId === 'clock'" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+
+                            <!-- Users Icon -->
+                            <svg *ngIf="item.iconId === 'users'" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+
+                            <!-- Globe Icon -->
+                            <svg *ngIf="item.iconId === 'globe'" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+
+                            <!-- Smartphone Icon -->
+                            <svg *ngIf="item.iconId === 'smartphone'" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                                <line x1="12" y1="18" x2="12.01" y2="18" />
+                            </svg>
+
+                            <!-- Refresh Icon -->
+                            <svg *ngIf="item.iconId === 'refresh'" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 4v6h-6" />
+                                <path d="M1 20v-6h6" />
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                            </svg>
+                        </span>
+                        <div class="trust-text">
+                            <strong class="trust-title">{{ item.titleKey | translate }}</strong>
+                            <span class="trust-desc">{{ item.descriptionKey | translate }}</span>
+                        </div>
+                    </li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="confiance-bg" aria-hidden="true"></div>
+</section>
