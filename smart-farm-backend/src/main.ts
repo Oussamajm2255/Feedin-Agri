@@ -22,34 +22,11 @@ async function bootstrap() {
       logger: ['error', 'warn', 'log', 'debug', 'verbose'],
     });
 
-    // ✅ Security headers
-    app.use(helmet({
-      contentSecurityPolicy: false, // CSP is managed at the frontend/nginx layer
-      crossOriginResourcePolicy: { policy: 'cross-origin' },
-    }));
-    app.use(cookieParser());
+    // ✅ Trust Proxy (Essential for cross-domain cookies on Railway)
+    (app.getHttpAdapter().getInstance() as any).set('trust proxy', 1);
 
-    // ✅ Global exception filter
-    app.useGlobalFilters(new AllExceptionsFilter());
-
-    // ✅ Global validation pipe
-    app.useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-        transformOptions: {
-          enableImplicitConversion: true,
-        },
-      }),
-    );
-
-    // ✅ Global prefix for all routes
-    app.setGlobalPrefix('api/v1');
-
-    // ✅ CORS Configuration
+    // ✅ CORS Configuration (MOVE TO TOP to handle preflight earlier)
     const corsOrigin = process.env.CORS_ORIGIN?.trim();
-
     const defaultOrigins = [
       'https://feedin-agri-production.up.railway.app',
       'https://feedingreen.up.railway.app',
@@ -74,8 +51,34 @@ async function bootstrap() {
       credentials: true,
       maxAge: 86400,
     });
+    logger.log(`✅ CORS configured early | Origins: ${defaultOrigins.concat(corsOrigin || []).join(', ')}`);
 
-    logger.log(`✅ CORS configured successfully | Origins: ${defaultOrigins.concat(corsOrigin || []).join(', ')}`);
+    // ✅ Security headers
+    app.use(helmet({
+      contentSecurityPolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }));
+    app.use(cookieParser());
+
+    // ✅ Global exception filter
+    app.useGlobalFilters(new AllExceptionsFilter());
+
+    // ✅ Global validation pipe
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    );
+
+    // ✅ Global prefix for all routes
+    app.setGlobalPrefix('api/v1');
+
+
 
     const port = process.env.PORT || 3000;
     await app.listen(port);

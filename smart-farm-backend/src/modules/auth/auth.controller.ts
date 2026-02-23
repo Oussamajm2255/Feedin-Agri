@@ -7,7 +7,7 @@ import { randomBytes } from 'crypto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -16,8 +16,8 @@ export class AuthController {
     const { token, user: safeUser } = await this.authService.login(user);
     res.cookie('sf_auth', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Always true for cross-domain sameSite: none
+      sameSite: 'none', // Mandatory for cross-domain cookies
       maxAge: 1000 * 60 * 60 * 24, // 1 day
       path: '/',
     });
@@ -43,8 +43,8 @@ export class AuthController {
     const token = randomBytes(32).toString('hex');
     res.cookie('sf_csrf', token, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 24,
       path: '/',
     });

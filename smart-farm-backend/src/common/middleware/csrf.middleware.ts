@@ -11,10 +11,10 @@ export class CsrfMiddleware implements NestMiddleware {
     if (!token) {
       token = randomBytes(32).toString('hex');
       res.cookie(cookieName, token, {
-        httpOnly: false, // must be readable by frontend
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        httpOnly: false,
+        secure: true,
+        sameSite: 'none',
+        maxAge: 1000 * 60 * 60 * 24,
         path: '/',
       });
     }
