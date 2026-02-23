@@ -1,8 +1,8 @@
-// src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
+import * as cors from 'cors';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 
@@ -11,47 +11,26 @@ async function bootstrap() {
 
   try {
     logger.log('🚀 Starting Smart Farm Backend...');
-    logger.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    logger.log(`🗄️ Database URL: ${process.env.DATABASE_URL ? 'Set' : 'Not set'}`);
-    logger.log(`🔌 MQTT Broker: ${process.env.MQTT_BROKER || 'Not set'}`);
-
-    // Add a small delay to allow database to initialize
-    await new Promise(resolve => setTimeout(resolve, 2000));
 
     const app = await NestFactory.create(AppModule, {
       logger: ['error', 'warn', 'log', 'debug', 'verbose'],
     });
 
-    // ✅ Trust Proxy (Essential for cross-domain cookies on Railway)
-    (app.getHttpAdapter().getInstance() as any).set('trust proxy', 1);
+    // 1️⃣ Trust Proxy (Essential for cross-domain cookies on Railway)
+    const expressApp = app.getHttpAdapter().getInstance();
+    (expressApp as any).set('trust proxy', 1);
 
-    // ✅ CORS Configuration (MOVE TO TOP to handle preflight earlier)
-    const corsOrigin = process.env.CORS_ORIGIN?.trim();
-    const defaultOrigins = [
-      'https://feedin-agri-production.up.railway.app',
-      'https://feedingreen.up.railway.app',
-      'https://feedingreen.com',
-      'http://localhost:4200',
-      'http://127.0.0.1:4200',
-    ];
-
-    app.enableCors({
-      origin: (origin, callback) => {
-        if (!origin || defaultOrigins.includes(origin) || (corsOrigin && corsOrigin.split(',').includes(origin))) {
-          callback(null, true);
-        } else if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) {
-          callback(null, true);
-        } else {
-          callback(null, false);
-        }
-      },
+    // 2️⃣ Raw CORS middleware (Fast Debug Mode: origin: true)
+    // This provides the most robust handling for preflight and credentials
+    app.use(cors({
+      origin: true,
+      credentials: true,
       methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'Origin', 'X-Requested-With'],
-      exposedHeaders: ['Set-Cookie'],
-      credentials: true,
-      maxAge: 86400,
-    });
-    logger.log(`✅ CORS configured early | Origins: ${defaultOrigins.concat(corsOrigin || []).join(', ')}`);
+      exposedHeaders: ['Set-Cookie']
+    }));
+
+    logger.log('✅ CORS (Raw Middleware) and Trust Proxy configured');
 
     // ✅ Security headers
     app.use(helmet({

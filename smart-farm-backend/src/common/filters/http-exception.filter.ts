@@ -42,37 +42,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   private setCorsHeaders(request: Request, response: Response) {
-    const corsOrigin = process.env.CORS_ORIGIN?.trim();
     const origin = request.headers.origin;
-
-    let allowedOrigin: string | undefined;
-
-    const defaultOrigins = [
-      'https://feedin-agri-production.up.railway.app',
-      'https://feedingreen.up.railway.app',
-      'https://feedingreen.com',
-      'http://localhost:4200',
-      'http://127.0.0.1:4200',
-    ];
-
-    if (!origin) {
-      allowedOrigin = undefined;
-    } else if (defaultOrigins.includes(origin)) {
-      allowedOrigin = origin;
-    } else if (corsOrigin && corsOrigin.split(',').includes(origin)) {
-      allowedOrigin = origin;
-    } else if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) {
-      allowedOrigin = origin;
-    } else if (corsOrigin === '*') {
-      allowedOrigin = origin;
+    if (origin) {
+      response.setHeader('Access-Control-Allow-Origin', origin);
+      response.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+      response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, Accept, Origin, X-Requested-With');
+      response.setHeader('Access-Control-Allow-Credentials', 'true');
     }
-
-    if (allowedOrigin) {
-      response.setHeader('Access-Control-Allow-Origin', allowedOrigin);
-    }
-    response.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, Accept, Origin, X-Requested-With');
-    response.setHeader('Access-Control-Allow-Credentials', 'true');
   }
 }
 
@@ -161,36 +137,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
   }
 
   private setCorsHeaders(request: Request, response: Response) {
-    const corsOrigin = process.env.CORS_ORIGIN?.trim();
     const origin = request.headers.origin;
-
-    let allowedOrigin: string | undefined;
-
-    const defaultOrigins = [
-      'https://feedin-agri-production.up.railway.app',
-      'https://feedingreen.up.railway.app',
-      'https://feedingreen.com',
-      'http://localhost:4200',
-      'http://127.0.0.1:4200',
-    ];
-
-    if (!origin) {
-      allowedOrigin = undefined;
-    } else if (defaultOrigins.includes(origin)) {
-      allowedOrigin = origin;
-    } else if (corsOrigin && corsOrigin.split(',').includes(origin)) {
-      allowedOrigin = origin;
-    } else if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) {
-      allowedOrigin = origin;
-    } else if (corsOrigin === '*') {
-      allowedOrigin = origin;
+    if (origin) {
+      response.setHeader('Access-Control-Allow-Origin', origin);
+      response.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+      response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, Accept, Origin, X-Requested-With');
+      response.setHeader('Access-Control-Allow-Credentials', 'true');
     }
-
-    if (allowedOrigin) {
-      response.setHeader('Access-Control-Allow-Origin', allowedOrigin);
-    }
-    response.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, Accept, Origin, X-Requested-With');
-    response.setHeader('Access-Control-Allow-Credentials', 'true');
   }
 }
