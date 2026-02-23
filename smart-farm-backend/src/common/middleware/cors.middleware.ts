@@ -38,6 +38,7 @@ export class CorsMiddleware implements NestMiddleware {
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, Accept, Origin, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie, X-CSRF-Token');
     res.setHeader('Access-Control-Max-Age', '86400');
 
     // Handle preflight requests

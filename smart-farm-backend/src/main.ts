@@ -47,53 +47,8 @@ async function bootstrap() {
     // ✅ Global prefix for all routes
     app.setGlobalPrefix('api/v1');
 
-    // ✅ CORS Configuration
-    // Note: When credentials: true, we cannot use '*' - must specify exact origins
-    const corsOrigin = process.env.CORS_ORIGIN?.trim();
-    let allowedOrigins: string[] | ((origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void);
-
-    // Default origins that should always be included
-    const defaultOrigins = [
-      'http://127.0.0.1:4200',
-      'http://localhost:4200',
-      'https://feedin-agri-production.up.railway.app',
-      'https://feedingreen.up.railway.app',
-      'https://feedingreen.com',
-    ];
-
-    const isOriginAllowed = (origin: string | undefined): boolean => {
-      if (!origin) return true;
-      if (defaultOrigins.includes(origin)) return true;
-      if (corsOrigin && corsOrigin !== '*' && corsOrigin.split(',').map(o => o.trim()).includes(origin)) return true;
-      if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) return true;
-      return false;
-    };
-
-    if (corsOrigin === '*') {
-      allowedOrigins = (origin, callback) => callback(null, true);
-      logger.log('🌐 CORS: Allowing all origins (*) with credentials support');
-    } else {
-      allowedOrigins = (origin, callback) => {
-        if (isOriginAllowed(origin)) {
-          callback(null, true);
-        } else {
-          logger.warn(`🚫 CORS: Blocked origin ${origin}`);
-          callback(null, false); // Just block, don't throw error to avoid 500
-        }
-      };
-      logger.log('🌐 CORS: Dynamic filtering for *.up.railway.app and feedingreen.com enabled');
-    }
-
-    app.enableCors({
-      origin: allowedOrigins,
-      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'Origin', 'X-Requested-With'],
-      exposedHeaders: ['Set-Cookie'],
-      credentials: true,
-      preflightContinue: false,
-      optionsSuccessStatus: 204,
-      maxAge: 86400, // 24 hours
-    });
+    // ✅ CORS is handled by CorsMiddleware in AppModule
+    logger.log(`🌐 CORS: Handled by global CorsMiddleware`);
 
     logger.log(`✅ CORS configured successfully`);
     logger.log(`📋 CORS_ORIGIN env: ${corsOrigin || 'not set'}`);

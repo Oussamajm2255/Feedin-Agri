@@ -49,14 +49,14 @@ export class PourAgriculteursComponent {
       titleKey: 'landing.farmers.cards.c2.title',
       descriptionKey: 'landing.farmers.cards.c2.desc',
       imageAlt: 'Grande exploitation agricole vue du ciel — gestion de cultures à grande échelle',
-      imagePath: 'assets/landing/images/serres agricoles connectées.jpg'
+      imagePath: 'assets/landing/images/serres-agricoles-connectees.jpg'
     },
     {
       id: 2,
       titleKey: 'landing.farmers.cards.c3.title',
       descriptionKey: 'landing.farmers.cards.c3.desc',
       imageAlt: 'Groupe d\'agriculteurs coopératifs — collaboration et agriculture solidaire',
-      imagePath: 'assets/landing/images/équipe travaillant dans une serre.png'
+      imagePath: 'assets/landing/images/equipe-serre.png'
     }
   ];
 }

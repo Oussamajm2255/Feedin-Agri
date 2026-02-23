@@ -42,28 +42,28 @@ export class CommentCaMarcheComponent {
       iconId: 'seedling',
       titleKey: 'landing.howItWorks.steps.s1.title',
       descriptionKey: 'landing.howItWorks.steps.s1.desc',
-      imagePath: 'assets/landing/images/serre agricole connectée.png'
+      imagePath: 'assets/landing/images/serre-agricole-connectee.png'
     },
     {
       number: 2,
       iconId: 'monitor',
       titleKey: 'landing.howItWorks.steps.s2.title',
       descriptionKey: 'landing.howItWorks.steps.s2.desc',
-      imagePath: 'assets/landing/images/dashboard iot & capteurs.png'
+      imagePath: 'assets/landing/images/dashboard-iot-capteurs.png'
     },
     {
       number: 3,
       iconId: 'target',
       titleKey: 'landing.howItWorks.steps.s3.title',
       descriptionKey: 'landing.howItWorks.steps.s3.desc',
-      imagePath: 'assets/landing/images/systèmes dautomatisation de serr.png'
+      imagePath: 'assets/landing/images/systemes-automatisation-serre.png'
     },
     {
       number: 4,
       iconId: 'trending-up',
       titleKey: 'landing.howItWorks.steps.s4.title',
       descriptionKey: 'landing.howItWorks.steps.s4.desc',
-      imagePath: 'assets/landing/images/dashboard de supervision.png'
+      imagePath: 'assets/landing/images/dashboard-supervision.png'
     }
   ];
 }
