@@ -47,8 +47,35 @@ async function bootstrap() {
     // ✅ Global prefix for all routes
     app.setGlobalPrefix('api/v1');
 
-    // ✅ CORS is handled by CorsMiddleware in AppModule
-    logger.log(`🌐 CORS: Handled by global CorsMiddleware`);
+    // ✅ CORS Configuration
+    const corsOrigin = process.env.CORS_ORIGIN?.trim();
+
+    const defaultOrigins = [
+      'https://feedin-agri-production.up.railway.app',
+      'https://feedingreen.up.railway.app',
+      'https://feedingreen.com',
+      'http://localhost:4200',
+      'http://127.0.0.1:4200',
+    ];
+
+    app.enableCors({
+      origin: (origin, callback) => {
+        if (!origin || defaultOrigins.includes(origin) || (corsOrigin && corsOrigin.split(',').includes(origin))) {
+          callback(null, true);
+        } else if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) {
+          callback(null, true);
+        } else {
+          callback(null, false);
+        }
+      },
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'Origin', 'X-Requested-With'],
+      exposedHeaders: ['Set-Cookie'],
+      credentials: true,
+      maxAge: 86400,
+    });
+
+    logger.log(`✅ CORS configured successfully`);
 
     logger.log(`✅ CORS configured successfully`);
     logger.log(`📋 CORS_ORIGIN env: ${corsOrigin || 'not set'}`);

@@ -19,7 +19,6 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { ZonesModule } from './modules/zones/zones.module';
 import { typeOrmConfig } from './config/typeorm.config';
 import { CsrfMiddleware } from './common/middleware/csrf.middleware';
-import { CorsMiddleware } from './common/middleware/cors.middleware';
 
 @Module({
   imports: [
@@ -52,7 +51,7 @@ import { CorsMiddleware } from './common/middleware/cors.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // Apply CORS middleware first, then CSRF
-    consumer.apply(CorsMiddleware, CsrfMiddleware).forRoutes('*');
+    // Apply CSRF middleware
+    consumer.apply(CsrfMiddleware).forRoutes('*');
   }
 }

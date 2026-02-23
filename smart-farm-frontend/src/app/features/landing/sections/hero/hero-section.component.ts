@@ -9,11 +9,11 @@
  * Interaction: Smooth scroll-driven animations and parallax effects
  */
 
-import { 
-  Component, 
-  ElementRef, 
-  ViewChild, 
-  AfterViewInit, 
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
   OnDestroy,
   ChangeDetectionStrategy,
   signal,
@@ -42,7 +42,7 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
       <!-- Background Image -->
       <div class="hero-backdrop" #backdrop>
         <img 
-          src="/assets/images/logos/landing-bg.jpg" 
+          src="/assets/images/landing-bg.jpg" 
           alt="Paysage agricole intelligent" 
           class="hero-bg-img"
           loading="eager"
@@ -59,7 +59,7 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
         <div class="nav-inner">
           <a class="nav-brand" (click)="scrollToSection('hero')">
             <div class="brand-icon">
-              <img src="/assets/images/logos/only_F.png" alt="Feedin Logo" class="brand-logo">
+              <img src="/assets/images/only_F.png" alt="Feedin Logo" class="brand-logo">
             </div>
             <span class="brand-text">Feedin</span>
           </a>
@@ -985,7 +985,7 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvasContainer') canvasContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('heroSection') heroSection!: ElementRef<HTMLElement>;
   @ViewChild('backdrop') backdrop!: ElementRef<HTMLDivElement>;
-  
+
   private threeService = inject(ThreeSceneService);
   private scrollService = inject(ScrollAnimationService);
   private themeService = inject(ThemeService);
@@ -994,10 +994,10 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
 
   activeSection = input<string>('hero-section');
   theme = toSignal(this.themeService.theme$);
-  
+
   private heroScene: ImmersiveHeroScene | null = null;
   private scrollUnsubscribe: (() => void) | null = null;
-  
+
   hasScrolled = signal(false);
   contentReady = signal(false);
   mobileMenuOpen = signal(false);
@@ -1007,7 +1007,7 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.contentReady.set(true);
     }, 100);
-    
+
     this.initThreeScene();
     this.setupScrollTracking();
     this.setupCursorTracking();
@@ -1079,7 +1079,7 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
         if (this.heroScene) {
           this.heroScene.setScrollProgress(progress);
         }
-        
+
         this.ngZone.run(() => {
           this.hasScrolled.set(progress > 0.03);
         });
@@ -1090,14 +1090,14 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
   private setupCursorTracking(): void {
     this.ngZone.runOutsideAngular(() => {
       const container = this.heroSection.nativeElement;
-      
+
       container.addEventListener('mousemove', (e: MouseEvent) => {
         const rect = container.getBoundingClientRect();
         const normalizedX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
         const normalizedY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-        
+
         this.threeService.updateCameraForCursor(normalizedX, normalizedY);
-        
+
         // Update scene with cursor for particle interaction
         if (this.heroScene) {
           this.heroScene.setCursorPosition(normalizedX, normalizedY);
@@ -1109,21 +1109,21 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
   private setupParallax(): void {
     this.ngZone.runOutsideAngular(() => {
       let ticking = false;
-      
+
       const updateParallax = () => {
         const scrollY = window.scrollY;
         const parallaxAmount = scrollY * 0.1;
-        
+
         if (this.backdrop?.nativeElement) {
           const img = this.backdrop.nativeElement.querySelector('.hero-bg-img') as HTMLElement;
           if (img) {
             img.style.transform = `translateY(${parallaxAmount}px) scale(1.1)`;
           }
         }
-        
+
         ticking = false;
       };
-      
+
       window.addEventListener('scroll', () => {
         if (!ticking) {
           requestAnimationFrame(updateParallax);

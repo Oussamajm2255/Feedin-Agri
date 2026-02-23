@@ -24,7 +24,7 @@ export const environment = {
   assets: {
     loginVideo: 'assets/vids/login.mp4',
     loginVideoFallback: 'assets/images/login-bg.jpg',
-    logo: 'assets/images/logos/Feedin_pnglogo.png'
+    logo: 'assets/images/Feedin_pnglogo.png'
   },
 
   // UI Configuration

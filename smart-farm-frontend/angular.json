@@ -33,15 +33,7 @@
               "src/android-chrome-192x192.png",
               "src/android-chrome-512x512.png",
               "src/site.webmanifest",
-              "src/landing-bg.jpg",
-              "src/only_F.png",
-              "src/Feedin_logo.png",
-              "src/Feedin_pnglogo.png",
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              }
+              "src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",

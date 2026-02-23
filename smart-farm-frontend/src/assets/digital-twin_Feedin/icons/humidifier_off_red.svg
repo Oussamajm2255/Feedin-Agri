@@ -1,0 +1,53 @@
+<svg width="160" height="200" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+    :root {
+      --r1: #ef4444; /* main red */
+      --r2: rgba(239, 68, 68, 0.28); /* medium fill */
+      --r3: rgba(239, 68, 68, 0.16); /* soft fill */
+    }
+
+    /* Device body */
+    .body {
+      fill: var(--r3);
+      stroke: var(--r1);
+      stroke-width: 4;
+      rx: 14;
+    }
+
+    /* Top nozzle */
+    .nozzle {
+      fill: var(--r2);
+      stroke: var(--r1);
+      stroke-width: 3;
+    }
+
+    /* Water tank (dim red) */
+    .tank {
+      fill: var(--r3);
+      stroke: var(--r1);
+      stroke-width: 3;
+    }
+
+    /* Status LED (red OFF indicator) */
+    .led {
+      fill: var(--r1);
+      opacity: 1;
+    }
+  </style>
+
+  <!-- Humidifier body -->
+  <rect class="body" x="35" y="80" width="90" height="100" rx="18" />
+
+  <!-- Water tank -->
+  <rect class="tank" x="45" y="100" width="70" height="60" rx="12" />
+
+  <!-- Top nozzle -->
+  <ellipse class="nozzle" cx="80" cy="78" rx="28" ry="12" />
+
+  <!-- Status LED -->
+  <circle class="led" cx="80" cy="160" r="6" />
+
+  <!-- No steam here (OFF STATE) -->
+
+</svg>

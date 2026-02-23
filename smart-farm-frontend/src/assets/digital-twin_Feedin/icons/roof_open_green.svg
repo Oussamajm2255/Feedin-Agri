@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140" viewBox="0 0 200 140">
+  <style>
+    .frame {
+      fill: none;
+      stroke: #22c55e;
+      stroke-width: 4;
+      stroke-linejoin: round;
+    }
+
+    .glass {
+      fill: rgba(34, 197, 94, 0.08);
+      stroke: #22c55e;
+      stroke-width: 2;
+    }
+
+    .roof-fixed {
+      fill: rgba(34, 197, 94, 0.25);
+      stroke: #22c55e;
+      stroke-width: 3;
+    }
+
+    .roof-open {
+      fill: rgba(34, 197, 94, 0.5);
+      stroke: #22c55e;
+      stroke-width: 3;
+    }
+  </style>
+
+  <!-- Greenhouse walls -->
+  
+
+  <!-- Left fixed roof panel -->
+  <polygon class="roof-fixed" points="40,60 100,30 100,40 40,70"/>
+
+  <!-- Right animated roof panel -->
+  <g>
+    <polygon class="roof-open" points="100,30 160,60 160,70 100,40">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 100 30; -35 100 30; 0 100 30" dur="1.5s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- Frame outline -->
+  
+</svg>

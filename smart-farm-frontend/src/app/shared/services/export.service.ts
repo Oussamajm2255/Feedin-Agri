@@ -15,21 +15,21 @@ export const FEEDIN_COLORS = {
   secondary: '#3b82f6',      // Blue-500
   secondaryDark: '#2563eb',  // Blue-600
   accent: '#8b5cf6',         // Purple-500
-  
+
   // Background colors
   headerBg: '#10b981',
   altRowBg: '#f0fdf4',       // Very light green
   altRowBgDark: '#dcfce7',   // Light green
-  
+
   // Text colors
   textPrimary: '#1f2937',
   textSecondary: '#6b7280',
   textWhite: '#ffffff',
-  
+
   // Border colors
   border: '#e5e7eb',
   borderDark: '#d1d5db',
-  
+
   // Status colors
   success: '#22c55e',
   warning: '#f59e0b',
@@ -81,20 +81,20 @@ export class ExportService {
   // This will be loaded dynamically from assets
   private logoBase64: string = '';
   private logoLoaded = false;
-  
+
   constructor() {
     this.loadLogo();
   }
-  
+
   /**
    * Load the Feedin logo and convert to base64
    */
   private async loadLogo(): Promise<void> {
     try {
-      const response = await fetch('/assets/images/logos/Feedin_logo.png');
+      const response = await fetch('/assets/images/Feedin_logo.png');
       const blob = await response.blob();
       const reader = new FileReader();
-      
+
       return new Promise((resolve, reject) => {
         reader.onload = () => {
           this.logoBase64 = reader.result as string;
@@ -109,7 +109,7 @@ export class ExportService {
       this.logoLoaded = false;
     }
   }
-  
+
   /**
    * Ensure logo is loaded before export
    */
@@ -118,13 +118,13 @@ export class ExportService {
       await this.loadLogo();
     }
   }
-  
+
   /**
    * Generate a professional PDF export
    */
   async exportToPDF(options: PDFExportOptions): Promise<void> {
     await this.ensureLogoLoaded();
-    
+
     const {
       title,
       subtitle,
@@ -138,33 +138,33 @@ export class ExportService {
       adminName,
       includeTimestamp = true
     } = options;
-    
+
     // Create PDF document
     const doc = new jsPDF({
       orientation,
       unit: 'mm',
       format: pageSize
     });
-    
+
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;
     let yPosition = margin;
-    
+
     // Add header with logo and title
     yPosition = this.addPDFHeader(doc, title, subtitle, pageWidth, margin);
-    
+
     // Add metadata section
     if (includeTimestamp || adminName) {
       yPosition = this.addPDFMetadata(doc, yPosition, margin, pageWidth, includeTimestamp, adminName);
     }
-    
+
     // Add table
     const tableColumns = columns.map(col => ({
       header: col.header,
       dataKey: col.key
     }));
-    
+
     const tableData = data.map(row => {
       const formattedRow: any = {};
       columns.forEach(col => {
@@ -172,7 +172,7 @@ export class ExportService {
       });
       return formattedRow;
     });
-    
+
     autoTable(doc, {
       startY: yPosition + 5,
       head: [columns.map(col => col.header)],
@@ -211,14 +211,14 @@ export class ExportService {
         }
       }
     });
-    
+
     // Generate filename with date
     const generatedFilename = this.generateFilename(filename, 'pdf');
-    
+
     // Save the PDF
     doc.save(generatedFilename);
   }
-  
+
   /**
    * Add PDF header with logo and title
    */
@@ -230,15 +230,15 @@ export class ExportService {
     margin: number
   ): number {
     let yPosition = margin;
-    
+
     // Add gradient-like header background
     doc.setFillColor(...this.hexToRgb(FEEDIN_COLORS.primary));
     doc.rect(0, 0, pageWidth, 35, 'F');
-    
+
     // Add a secondary color accent stripe
     doc.setFillColor(...this.hexToRgb(FEEDIN_COLORS.primaryDark));
     doc.rect(0, 32, pageWidth, 3, 'F');
-    
+
     // Add logo if available
     if (this.logoBase64) {
       try {
@@ -247,26 +247,26 @@ export class ExportService {
         console.warn('Could not add logo to PDF:', e);
       }
     }
-    
+
     // Add title (centered or offset based on logo)
     doc.setTextColor(...this.hexToRgb(FEEDIN_COLORS.textWhite));
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    
+
     const titleX = this.logoBase64 ? margin + 40 : pageWidth / 2;
     const titleAlign = this.logoBase64 ? 'left' : 'center';
     doc.text(title, titleX, 18, { align: titleAlign as any });
-    
+
     // Add subtitle if provided
     if (subtitle) {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.text(subtitle, titleX, 26, { align: titleAlign as any });
     }
-    
+
     return 40; // Return Y position after header
   }
-  
+
   /**
    * Add metadata section (export date, admin name, etc.)
    */
@@ -281,9 +281,9 @@ export class ExportService {
     doc.setFontSize(9);
     doc.setTextColor(...this.hexToRgb(FEEDIN_COLORS.textSecondary));
     doc.setFont('helvetica', 'normal');
-    
+
     const metadataLines: string[] = [];
-    
+
     if (includeTimestamp) {
       const now = new Date();
       const dateStr = now.toLocaleDateString('en-US', {
@@ -297,18 +297,18 @@ export class ExportService {
       });
       metadataLines.push(`Generated: ${dateStr} at ${timeStr}`);
     }
-    
+
     if (adminName) {
       metadataLines.push(`Generated by: ${adminName}`);
     }
-    
+
     metadataLines.forEach((line, index) => {
       doc.text(line, margin, yPosition + (index * 5));
     });
-    
+
     return yPosition + (metadataLines.length * 5) + 5;
   }
-  
+
   /**
    * Add page numbers to PDF
    */
@@ -320,7 +320,7 @@ export class ExportService {
   ): void {
     const pageCount = (doc as any).internal.getNumberOfPages();
     const currentPage = (doc as any).internal.getCurrentPageInfo().pageNumber;
-    
+
     doc.setFontSize(8);
     doc.setTextColor(...this.hexToRgb(FEEDIN_COLORS.textSecondary));
     doc.text(
@@ -330,7 +330,7 @@ export class ExportService {
       { align: 'right' }
     );
   }
-  
+
   /**
    * Add footer to PDF
    */
@@ -343,7 +343,7 @@ export class ExportService {
     // Add footer line
     doc.setDrawColor(...this.hexToRgb(FEEDIN_COLORS.border));
     doc.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
-    
+
     // Add company info
     doc.setFontSize(8);
     doc.setTextColor(...this.hexToRgb(FEEDIN_COLORS.textSecondary));
@@ -351,7 +351,7 @@ export class ExportService {
     doc.text('Feedin - Smart Agriculture Platform', margin, pageHeight - 10);
     doc.text('© ' + new Date().getFullYear() + ' Feedin. All rights reserved.', margin, pageHeight - 6);
   }
-  
+
   /**
    * Get column styles for autoTable
    */
@@ -365,7 +365,7 @@ export class ExportService {
     });
     return styles;
   }
-  
+
   /**
    * Generate a CSV export
    */
@@ -381,33 +381,33 @@ export class ExportService {
       adminName,
       sectionName
     } = options;
-    
+
     const lines: string[] = [];
-    
+
     // Add metadata rows if requested
     if (includeMetadata) {
       lines.push(this.escapeCSV(`Feedin Export - ${title}`, delimiter));
-      
+
       if (sectionName) {
         lines.push(this.escapeCSV(`Section: ${sectionName}`, delimiter));
       }
-      
+
       if (includeTimestamp) {
         const now = new Date();
         lines.push(this.escapeCSV(`Export Date: ${now.toISOString()}`, delimiter));
       }
-      
+
       if (adminName) {
         lines.push(this.escapeCSV(`Generated by: ${adminName}`, delimiter));
       }
-      
+
       lines.push(''); // Empty line before data
     }
-    
+
     // Add header row
     const headerRow = columns.map(col => this.escapeCSVField(col.header)).join(delimiter);
     lines.push(headerRow);
-    
+
     // Add data rows
     data.forEach(row => {
       const dataRow = columns.map(col => {
@@ -416,18 +416,18 @@ export class ExportService {
       }).join(delimiter);
       lines.push(dataRow);
     });
-    
+
     // Create CSV content with BOM for UTF-8
     const BOM = '\uFEFF';
     const csvContent = BOM + lines.join('\r\n');
-    
+
     // Create and download file
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const generatedFilename = this.generateFilename(filename, 'csv');
-    
+
     this.downloadFile(blob, generatedFilename);
   }
-  
+
   /**
    * Format a value based on its type
    */
@@ -435,7 +435,7 @@ export class ExportService {
     if (value === null || value === undefined) {
       return '-';
     }
-    
+
     switch (format) {
       case 'date':
         return this.formatDate(value);
@@ -453,7 +453,7 @@ export class ExportService {
         return String(value);
     }
   }
-  
+
   /**
    * Format date value
    */
@@ -470,7 +470,7 @@ export class ExportService {
       return String(value);
     }
   }
-  
+
   /**
    * Format datetime value
    */
@@ -489,7 +489,7 @@ export class ExportService {
       return String(value);
     }
   }
-  
+
   /**
    * Format currency value
    */
@@ -500,7 +500,7 @@ export class ExportService {
       currency: 'USD'
     }).format(value);
   }
-  
+
   /**
    * Format number value
    */
@@ -508,30 +508,30 @@ export class ExportService {
     if (typeof value !== 'number') return String(value);
     return new Intl.NumberFormat('en-US').format(value);
   }
-  
+
   /**
    * Escape CSV field value
    */
   private escapeCSVField(value: string): string {
     if (!value) return '';
-    
+
     // If the value contains special characters, wrap in quotes
     if (value.includes(',') || value.includes('"') || value.includes('\n') || value.includes('\r')) {
       // Escape double quotes by doubling them
       value = value.replace(/"/g, '""');
       return `"${value}"`;
     }
-    
+
     return value;
   }
-  
+
   /**
    * Escape entire CSV line
    */
   private escapeCSV(value: string, delimiter: string): string {
     return this.escapeCSVField(value);
   }
-  
+
   /**
    * Generate filename with timestamp
    */
@@ -541,7 +541,7 @@ export class ExportService {
     const safeName = baseName.toLowerCase().replace(/\s+/g, '_');
     return `feedin_${safeName}_${dateStr}.${extension}`;
   }
-  
+
   /**
    * Convert hex color to RGB array
    */
@@ -556,7 +556,7 @@ export class ExportService {
     }
     return [0, 0, 0];
   }
-  
+
   /**
    * Download a file
    */

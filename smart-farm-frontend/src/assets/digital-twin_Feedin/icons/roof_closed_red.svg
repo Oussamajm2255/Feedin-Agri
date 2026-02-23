@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140" viewBox="0 0 200 140">
+  <style>
+    .frame {
+      fill: none;
+      stroke: #ef4444; /* red */
+      stroke-width: 4;
+      stroke-linejoin: round;
+    }
+
+    .glass {
+      fill: rgba(239, 68, 68, 0.08);
+      stroke: #ef4444;
+      stroke-width: 2;
+    }
+
+    .roof-fixed {
+      fill: rgba(239, 68, 68, 0.25);
+      stroke: #ef4444;
+      stroke-width: 3;
+    }
+
+    .roof-closed {
+      fill: rgba(239, 68, 68, 0.5);
+      stroke: #ef4444;
+      stroke-width: 3;
+    }
+  </style>
+
+  <!-- Greenhouse walls -->
+  
+
+  <!-- Left roof panel -->
+  <polygon class="roof-fixed" points="40,60 100,30 100,40 40,70"/>
+
+  <!-- Right roof panel (closed, flat) -->
+  <polygon class="roof-closed" points="100,30 160,60 160,70 100,40"/>
+
+  <!-- Frame outline -->
+  
+</svg>

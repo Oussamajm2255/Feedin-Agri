@@ -1,0 +1,3275 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "refresh": "Actualiser",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "close": "Fermer",
+    "show": "Afficher",
+    "hide": "Masquer",
+    "unknownError": "Erreur inconnue",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "confirm": "Confirmer",
+    "confirmation": "Confirmation",
+    "pleaseConfirm": "Êtes-vous sûr de vouloir continuer ?",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "info": "Information",
+    "operationSuccess": "Opération terminée avec succès",
+    "operationError": "Une erreur s'est produite pendant l'opération",
+    "operationWarning": "Veuillez examiner attentivement les détails",
+    "operationInfo": "Message d'information",
+    "name": "Nom",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "status": "Statut",
+    "date": "Date",
+    "time": "Heure",
+    "actions": "Actions",
+    "details": "Détails",
+    "view": "Voir",
+    "select": "Sélectionner",
+    "all": "Tous",
+    "none": "Aucun",
+    "clear": "Effacer",
+    "reset": "Réinitialiser",
+    "submit": "Soumettre",
+    "update": "Mettre à jour",
+    "create": "Créer",
+    "remove": "Supprimer",
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "in": "dans",
+    "of": "de",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "help": "Centre d'Aide",
+    "ago": "il y a",
+    "never": "Jamais",
+    "justNow": "À l'instant",
+    "pagination": "Contrôles de pagination",
+    "account": "Compte",
+    "session": "Session",
+    "preferences": "Préférences et configuration",
+    "signOut": "Déconnectez-vous de votre compte",
+    "scrollToSave": "Faites défiler pour enregistrer",
+    "scrollToCreate": "Faites défiler pour créer"
+  },
+  "pending": {
+    "title": "Votre demande est en cours d'examen",
+    "subtitle": "Nous préparons votre espace de travail en fonction de votre profil agricole.",
+    "status": {
+      "submitted": "Demande soumise",
+      "verification": "Vérification du profil",
+      "activation": "Activation du compte"
+    },
+    "nextSteps": {
+      "title": "Et ensuite ?",
+      "description": "Vous recevrez un e-mail d'activation une fois votre compte prêt.<br>Cela prend généralement moins de 24 heures."
+    },
+    "actions": {
+      "support": "Contacter le support",
+      "features": "Découvrir vos futurs accès"
+    },
+    "badge": "En attente d'approbation",
+    "features": {
+      "title": "Ce à quoi vous aurez accès",
+      "items": {
+        "dashboard": {
+          "title": "Tableau de Bord de la Ferme",
+          "desc": "Aperçu en temps réel de toute votre ferme avec des insights personnalisés"
+        },
+        "sensors": {
+          "title": "Surveillance des Capteurs",
+          "desc": "Connectez et surveillez vos capteurs de sol, météo et cultures depuis un seul endroit"
+        },
+        "crops": {
+          "title": "Gestion des Cultures",
+          "desc": "Suivez les cycles de croissance, planifiez les rotations et obtenez des recommandations intelligentes"
+        },
+        "weather": {
+          "title": "Intelligence Météo",
+          "desc": "Prévisions localisées et alertes adaptées à l'emplacement de votre ferme"
+        }
+      }
+    }
+  },
+  "export": {
+    "button": {
+      "label": "Exporter les données",
+      "tooltip": "Exporter ces données au format PDF ou CSV",
+      "noData": "Aucune donnée disponible pour l'exportation"
+    },
+    "modal": {
+      "title": "Exporter les données",
+      "selectFormat": "Sélectionner le format d'exportation",
+      "recordsToExport": "Enregistrements à exporter",
+      "records": "enregistrements",
+      "pdfDescription": "Rapport professionnel avec la marque Feedin",
+      "csvDescription": "Format de données compatible tableur",
+      "timestamp": "Date d'exportation",
+      "generatedBy": "Généré par",
+      "export": "Télécharger l'exportation",
+      "exporting": "Exportation en cours...",
+      "generatingFile": "Génération de votre fichier..."
+    },
+    "notifications": {
+      "success": "Fichier {{format}} téléchargé avec succès !",
+      "error": "L'exportation a échoué. Veuillez réessayer."
+    },
+    "pdf": {
+      "pageOf": "Page {{current}} sur {{total}}",
+      "generatedOn": "Généré le",
+      "companyInfo": "Feedin - Plateforme Agricole Intelligente"
+    }
+  },
+  "actionStream": {
+    "title": "Flux d'Actions",
+    "actionExecuted": "Action exécutée",
+    "actionFailed": "Action échouée"
+  },
+  "admin": {
+    "header": {
+      "searchPlaceholder": "Rechercher..."
+    },
+    "sidebar": {
+      "title": "Admin TerraFlow",
+      "overview": "Vue d'ensemble",
+      "farms": "Fermes",
+      "devices": "Appareils",
+      "sensorAnalytics": "Analyses de Capteurs",
+      "users": "Utilisateurs",
+      "farmers": "Agriculteurs",
+      "logs": "Journaux",
+      "notifications": "Notifications",
+      "settings": "Paramètres",
+      "systemHealth": "Santé du Système"
+    },
+    "overview": {
+      "title": "Vue d'ensemble Admin",
+      "subtitle": "Statistiques système et accès rapide",
+      "loading": "Chargement des données...",
+      "refresh": "Actualiser",
+      "stats": {
+        "totalUsers": "Total Utilisateurs",
+        "totalFarms": "Total Fermes",
+        "totalDevices": "Total Appareils",
+        "activeDevices": "Appareils Actifs",
+        "onlineDevices": "Appareils En Ligne",
+        "offlineDevices": "Appareils Hors Ligne",
+        "totalSensors": "Total Capteurs",
+        "criticalAlerts": "Alertes Critiques",
+        "actionsToday": "Actions Aujourd'hui",
+        "systemHealth": "Santé du Système"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "viewUsers": "Voir les Utilisateurs",
+        "viewFarms": "Voir les Fermes",
+        "viewDevices": "Voir les Appareils",
+        "viewLogs": "Voir les Journaux",
+        "viewNotifications": "Voir les Notifications",
+        "viewSettings": "Voir les Paramètres"
+      },
+      "recentActivity": {
+        "title": "Activité Récente",
+        "noActivity": "Aucune activité récente"
+      },
+      "systemStatus": {
+        "title": "État du Système",
+        "allOperational": "Tous les Systèmes Opérationnels",
+        "issuesDetected": "Problèmes Détectés"
+      }
+    },
+    "notifications": {
+      "title": "Notifications Admin",
+      "subtitle": "Gérer et surveiller toutes les notifications système",
+      "systemStatus": "État du Système",
+      "allSystemsOperational": "Tous les Systèmes Opérationnels",
+      "issuesDetected": "Problèmes Détectés",
+      "totalNotifications": "Total Notifications",
+      "unread": "Non lues",
+      "critical": "Critique",
+      "warning": "Avertissement",
+      "info": "Info",
+      "success": "Succès",
+      "markAllRead": "Tout Marquer comme Lu",
+      "refresh": "Actualiser",
+      "search": "Rechercher des notifications...",
+      "filterByType": "Filtrer par type",
+      "filterByStatus": "Filtrer par statut",
+      "allTypes": "Tous les Types",
+      "allStatuses": "Tous les Statuts",
+      "clearFilters": "Effacer les Filtres",
+      "noNotifications": "Aucune notification trouvée",
+      "noNotificationsDesc": "Aucune notification ne correspond à vos filtres.",
+      "loadMore": "Charger Plus",
+      "showing": "Affichage de {{current}} sur {{total}} notifications",
+      "sendNotification": "Envoyer une Notification",
+      "broadcast": "Diffuser à Tous les Utilisateurs",
+      "targetUser": "Cibler un Utilisateur Spécifique",
+      "notificationSent": "Notification envoyée avec succès",
+      "notificationError": "Échec de l'envoi de la notification",
+      "deleteNotification": "Supprimer la Notification",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette notification ?",
+      "bulkDelete": "Supprimer la Sélection",
+      "bulkMarkRead": "Marquer la Sélection comme Lue",
+      "selected": "{{count}} sélectionné(s)",
+      "stats": {
+        "total": "Total",
+        "unread": "Non lues",
+        "critical": "Critique",
+        "today": "Aujourd'hui"
+      },
+      "types": {
+        "system": "Système",
+        "device": "Appareil",
+        "sensor": "Capteur",
+        "user": "Utilisateur",
+        "farm": "Ferme",
+        "action": "Action"
+      }
+    },
+    "settings": {
+      "title": "Paramètres Admin",
+      "subtitle": "Configurer les paramètres et préférences du système",
+      "save": "Enregistrer les Paramètres",
+      "saving": "Enregistrement...",
+      "saved": "Paramètres enregistrés avec succès",
+      "saveError": "Échec de l'enregistrement des paramètres",
+      "reset": "Réinitialiser par Défaut",
+      "resetConfirm": "Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?",
+      "sections": {
+        "general": "Paramètres Généraux",
+        "notifications": "Paramètres de Notification",
+        "security": "Paramètres de Sécurité",
+        "system": "Préférences Système",
+        "support": "Aide & Support"
+      },
+      "general": {
+        "title": "Paramètres Généraux",
+        "subtitle": "Configurer les préférences système de base",
+        "platformName": "Nom de la Plateforme",
+        "platformNamePlaceholder": "Entrez le nom de la plateforme",
+        "timezone": "Fuseau Horaire",
+        "language": "Langue par Défaut",
+        "dateFormat": "Format de Date",
+        "timeFormat": "Format d'Heure",
+        "currency": "Devise",
+        "maintenanceMode": "Mode Maintenance",
+        "maintenanceModeDesc": "Activer pour empêcher l'accès utilisateur pendant la maintenance"
+      },
+      "notifications": {
+        "title": "Paramètres de Notification",
+        "subtitle": "Configurer comment et quand les notifications sont envoyées",
+        "emailNotifications": "Notifications par E-mail",
+        "emailNotificationsDesc": "Envoyer des notifications par e-mail",
+        "pushNotifications": "Notifications Push",
+        "pushNotificationsDesc": "Envoyer des notifications push du navigateur",
+        "smsNotifications": "Notifications SMS",
+        "smsNotificationsDesc": "Envoyer des notifications par SMS",
+        "criticalAlerts": "Alertes Critiques",
+        "criticalAlertsDesc": "Toujours envoyer les alertes système critiques",
+        "digestFrequency": "Fréquence du Résumé",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel"
+      },
+      "security": {
+        "title": "Paramètres de Sécurité",
+        "subtitle": "Configurer l'authentification et le contrôle d'accès",
+        "sessionTimeout": "Délai de Session (minutes)",
+        "maxLoginAttempts": "Tentatives de Connexion Max",
+        "passwordMinLength": "Longueur Minimale du Mot de Passe",
+        "requireMfa": "Exiger l'Authentification Multi-Facteurs",
+        "requireMfaDesc": "Forcer tous les utilisateurs à utiliser MFA",
+        "ipWhitelist": "Liste Blanche IP",
+        "ipWhitelistPlaceholder": "Entrez les adresses IP, une par ligne",
+        "auditLog": "Activer le Journal d'Audit",
+        "auditLogDesc": "Enregistrer toutes les actions administratives"
+      },
+      "system": {
+        "title": "Préférences Système",
+        "subtitle": "Configurer le comportement du système et les options avancées",
+        "autoRefresh": "Intervalle d'Actualisation Auto (secondes)",
+        "cacheTimeout": "Délai de Cache (minutes)",
+        "apiRateLimit": "Limite de Taux API (requêtes/minute)",
+        "debugMode": "Mode Débogage",
+        "debugModeDesc": "Activer la journalisation détaillée pour le débogage",
+        "dataRetention": "Rétention des Données (jours)",
+        "backupFrequency": "Fréquence de Sauvegarde"
+      },
+      "support": {
+        "title": "Aide & Support",
+        "subtitle": "Accéder à la documentation, aux FAQ et contacter le support",
+        "documentation": "Documentation",
+        "faq": "FAQ",
+        "contactSupport": "Contacter le Support",
+        "reportBug": "Signaler un Bug",
+        "version": "Version",
+        "buildDate": "Date de Build"
+      },
+      "tags": {
+        "autoRefresh": "Actualisation auto",
+        "cache": "Cache",
+        "api": "API",
+        "docs": "Docs",
+        "faq": "FAQ",
+        "comingSoon": "Bientôt"
+      }
+    },
+    "logs": {
+      "title": "Journaux Système",
+      "subtitle": "Suivre tous les événements, actions et erreurs du système",
+      "refresh": "Actualiser",
+      "refreshTooltip": "Actualiser les journaux",
+      "search": "Rechercher des journaux...",
+      "searchPlaceholder": "Rechercher dans les messages, actions, erreurs...",
+      "filterType": "Type",
+      "filterStatus": "Statut",
+      "allTypes": "Tous les Types",
+      "allStatuses": "Tous les Statuts",
+      "typeSystem": "Système",
+      "typeDevice": "Appareil",
+      "typeSensor": "Capteur",
+      "typeUser": "Utilisateur",
+      "typeAutoRule": "Règle Auto",
+      "statusSuccess": "Succès",
+      "statusError": "Erreur",
+      "statusWarning": "Avertissement",
+      "statusInfo": "Info",
+      "today": "Aujourd'hui",
+      "last24h": "Dernières 24 heures",
+      "last7d": "7 derniers jours",
+      "all": "Tous",
+      "clearAll": "Tout Effacer",
+      "clearFilters": "Effacer tous les filtres",
+      "found": "{{count}} {{unit}} trouvé(s)",
+      "logUnit": "journal",
+      "logsUnit": "journaux",
+      "noLogs": "Aucun journal trouvé",
+      "noLogsDesc": "Essayez d'ajuster vos filtres ou votre recherche",
+      "clearFiltersBtn": "Effacer les Filtres",
+      "retry": "Réessayer",
+      "noLogSelected": "Aucun Journal Sélectionné",
+      "noLogSelectedDesc": "Sélectionnez une entrée de journal pour voir ses détails",
+      "closeDetails": "Fermer les détails",
+      "closePanel": "Fermer le panneau de détails",
+      "tabs": {
+        "overview": "Aperçu",
+        "metadata": "Métadonnées",
+        "rawJson": "JSON Brut",
+        "relatedObjects": "Objets Liés",
+        "timeline": "Chronologie"
+      },
+      "details": {
+        "actionDetails": "Détails de l'Action",
+        "category": "Catégorie",
+        "farm": "Ferme",
+        "path": "Chemin",
+        "action": "Action",
+        "status": "Statut",
+        "message": "Message",
+        "errorDetails": "Détails de l'Erreur",
+        "quickInfo": "Info Rapide",
+        "sourceType": "Type de Source",
+        "sourceId": "ID de Source",
+        "actionUri": "URI d'Action",
+        "timestamp": "Horodatage"
+      },
+      "related": {
+        "device": "Appareil",
+        "sensor": "Capteur",
+        "user": "Utilisateur",
+        "deviceId": "ID Appareil",
+        "type": "Type",
+        "status": "Statut",
+        "lastSeen": "Dernière Vue",
+        "sensorId": "ID Capteur",
+        "unit": "Unité",
+        "name": "Nom",
+        "email": "E-mail",
+        "loadingDevice": "Chargement de l'appareil...",
+        "loadingSensor": "Chargement du capteur...",
+        "loadingUser": "Chargement de l'utilisateur...",
+        "deviceNotFound": "Appareil non trouvé",
+        "sensorNotFound": "Capteur non trouvé",
+        "userNotFound": "Utilisateur non trouvé",
+        "noRelatedObjects": "Aucun objet lié trouvé"
+      },
+      "timeline": {
+        "loading": "Chargement de la chronologie...",
+        "noEvents": "Aucun événement lié trouvé"
+      },
+      "copyJson": "Copier JSON",
+      "copyValue": "Copier la valeur",
+      "toggleGroup": "Basculer le groupe",
+      "collapse": "Réduire",
+      "expand": "Développer"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "Gérer tous les comptes, rôles et accès aux fermes",
+      "search": "Rechercher des utilisateurs...",
+      "addUser": "Ajouter un Utilisateur",
+      "editUser": "Modifier l'Utilisateur",
+      "deleteUser": "Supprimer l'Utilisateur",
+      "noUsers": "Aucun utilisateur trouvé",
+      "totalUsers": "Total Utilisateurs",
+      "activeUsers": "Utilisateurs Actifs",
+      "adminUsers": "Administrateurs",
+      "farmerUsers": "Agriculteurs",
+      "role": "Rôle",
+      "allRoles": "Tous les Rôles",
+      "admin": "Administrateur",
+      "farmer": "Agriculteur",
+      "status": "Statut",
+      "allStatuses": "Tous les Statuts",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "joinDate": "Date d'Inscription",
+      "lastLogin": "Dernière Connexion",
+      "farmsAssigned": "Fermes Assignées",
+      "actions": "Actions",
+      "viewDetails": "Voir les Détails",
+      "assignFarm": "Assigner une Ferme",
+      "deactivate": "Désactiver",
+      "activate": "Activer",
+      "userCreated": "Utilisateur créé avec succès",
+      "userUpdated": "Utilisateur mis à jour avec succès",
+      "userDeleted": "Utilisateur supprimé avec succès",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+      "filterByRole": "Filtrer par rôle",
+      "filterByStatus": "Filtrer par statut",
+      "clearFilters": "Effacer les Filtres"
+    },
+    "devices": {
+      "title": "Appareils Admin",
+      "subtitle": "Gérer et surveiller tous les appareils du système",
+      "search": "Rechercher des appareils...",
+      "addDevice": "Ajouter un Appareil",
+      "editDevice": "Modifier l'Appareil",
+      "deleteDevice": "Supprimer l'Appareil",
+      "noDevices": "Aucun appareil trouvé",
+      "totalDevices": "Total Appareils",
+      "onlineDevices": "Appareils En Ligne",
+      "offlineDevices": "Appareils Hors Ligne",
+      "filterByStatus": "Filtrer par statut",
+      "filterByType": "Filtrer par type",
+      "filterByFarm": "Filtrer par ferme",
+      "allStatuses": "Tous les Statuts",
+      "allTypes": "Tous les Types",
+      "allFarms": "Toutes les Fermes",
+      "clearFilters": "Effacer les Filtres",
+      "refresh": "Actualiser",
+      "export": "Exporter",
+      "viewDetails": "Voir les Détails",
+      "deviceName": "Nom de l'Appareil",
+      "deviceType": "Type d'Appareil",
+      "farm": "Ferme",
+      "status": "Statut",
+      "lastSeen": "Dernière Vue",
+      "actions": "Actions"
+    },
+    "farmers": {
+      "title": "Agriculteurs",
+      "subtitle": "Gérer les comptes agriculteurs et l'attribution des fermes",
+      "search": "Rechercher des agriculteurs...",
+      "addFarmer": "Ajouter un Agriculteur",
+      "editFarmer": "Modifier l'Agriculteur",
+      "deleteFarmer": "Supprimer l'Agriculteur",
+      "noFarmers": "Aucun agriculteur trouvé",
+      "totalFarmers": "Total Agriculteurs",
+      "activeFarmers": "Agriculteurs Actifs",
+      "assignFarm": "Assigner une Ferme",
+      "farmsAssigned": "Fermes Assignées",
+      "filterByStatus": "Filtrer par statut",
+      "allStatuses": "Tous les Statuts",
+      "clearFilters": "Effacer les Filtres",
+      "refresh": "Actualiser",
+      "viewDetails": "Voir les Détails",
+      "name": "Nom",
+      "email": "E-mail",
+      "status": "Statut",
+      "joinDate": "Date d'Inscription",
+      "lastLogin": "Dernière Connexion",
+      "actions": "Actions"
+    }
+  },
+  "language": {
+    "select": "Choisir la langue",
+    "switch": "Changer de langue"
+  },
+  "alerts": {
+    "confirmAction": "Confirmer l'action",
+    "confirmTurnOn": "Activer l'appareil",
+    "confirmTurnOff": "Désactiver l'appareil",
+    "confirmDisableAutomation": "Désactiver l'automatisation",
+    "confirmEnableAutomation": "Activer l'automatisation",
+    "confirmSafeMode": "Confirmation du mode sécurisé",
+    "turnOnMessage": "Êtes-vous sûr de vouloir activer {{device}} ? Cela activera l'appareil immédiatement.",
+    "turnOffMessage": "Êtes-vous sûr de vouloir désactiver {{device}} ? Cela désactivera l'appareil immédiatement.",
+    "disableAutomationMessage": "La désactivation de l'automatisation arrêtera toutes les actions automatiques. Vous devrez contrôler les appareils manuellement. Êtes-vous sûr ?",
+    "enableAutomationMessage": "L'activation de l'automatisation permettra au système de contrôler automatiquement les appareils en fonction des lectures des capteurs. Continuer ?",
+    "safeModeMessage": "Le mode sécurisé empêche toutes les actions des appareils. Activer le mode sécurisé pour sécuriser votre système ?",
+    "genericActionMessage": "Êtes-vous sûr de vouloir effectuer cette action ?",
+    "deviceName": "Nom de l'appareil",
+    "zone": "Zone",
+    "sensorType": "Type de capteur",
+    "measuredValue": "Valeur actuelle",
+    "noRecentReading": "Aucune lecture récente",
+    "thresholdRange": "Plage de seuil",
+    "targetValue": "Valeur cible",
+    "lastUpdate": "Dernière mise à jour",
+    "notAvailable": "Non disponible",
+    "noSensorData": "Aucune donnée de capteur disponible pour cet appareil",
+    "unknown": "Inconnu",
+    "device": "cet appareil",
+    "actionToPerform": "Action à effectuer",
+    "automationEnabled": "Système d'automatisation activé",
+    "automationDisabled": "Système d'automatisation désactivé",
+    "safeModeEnabled": "Mode sécurisé activé",
+    "safeModeDisabled": "Mode sécurisé désactivé"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "devices": "Appareils",
+    "sensors": "Capteurs",
+    "liveReadings": "Lectures en direct",
+    "actions": "Actions",
+    "crops": "Cultures",
+    "notifications": "Notifications",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "farms": "Fermes"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "loginSuccess": "Connexion réussie",
+    "loginError": "Erreur de connexion",
+    "registerSuccess": "Compte créé avec succès",
+    "registerError": "Erreur lors de la création du compte",
+    "invalidCredentials": "Identifiants invalides",
+    "emailRequired": "L'e-mail est requis",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "weakPassword": "Mot de passe trop faible",
+    "sessionExpired": "Session expirée. Veuillez vous reconnecter",
+    "authenticationRequired": "Authentification requise",
+    "loginToViewActions": "Veuillez vous connecter pour voir les actions récentes",
+    "signingIn": "Connexion en cours...",
+    "loggingIn": "Connexion en cours...",
+    "invalidEmailFormat": "Format d'e-mail invalide",
+    "networkError": "Problème de connexion, veuillez réessayer plus tard",
+    "tooManyAttempts": "Trop de tentatives de connexion. Veuillez attendre",
+    "welcomeBack": "Bon retour",
+    "welcomeBackUser": "Bon retour !",
+    "loginSubtitle": "Connectez-vous pour accéder à votre tableau de bord",
+    "emailPlaceholder": "Entrez votre e-mail",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "success": "Succès !",
+    "registerNow": "S'inscrire maintenant",
+    "rateLimitTitle": "Trop de tentatives",
+    "rateLimitMessage": "Vous avez dépassé le nombre maximum de tentatives de connexion. Veuillez attendre 15 minutes avant de réessayer.",
+    "rateLimited": "Trop de tentatives",
+    "pleaseWait15Minutes": "Veuillez attendre 15 minutes avant de réessayer",
+    "fullName": "Nom complet",
+    "phoneOptional": "Numéro de téléphone (Optionnel)",
+    "farmType": "Type de ferme",
+    "farmType_small": "Petite ferme",
+    "farmType_commercial": "Ferme commerciale",
+    "farmType_cooperative": "Coopérative",
+    "areaHectares": "Surface à couvrir (ha)",
+    "region": "Pays / Région",
+    "registerSubtitle": "Parlez-nous de votre ferme et nous préparerons votre espace",
+    "requestAccess": "Demander l'accès",
+    "invalidEmail": "Veuillez entrer une adresse email valide",
+    "stepAccount": "Compte",
+    "stepFarm": "Ferme",
+    "nextStep": "Suivant : Détails de la ferme",
+    "back": "Retour",
+    "backToHome": "Retour à l'accueil"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcomeMessage": "Bon retour, {{name}} ! Voici un aperçu de votre ferme intelligente.",
+    "loadingData": "Chargement des données du tableau de bord...",
+    "farmSelector": {
+      "title": "Sélection de ferme",
+      "devices": "appareils",
+      "location": "Emplacement",
+      "selectFarm": "Sélectionner la ferme"
+    },
+    "kpi": {
+      "tooltips": {
+        "all": "Voir toutes les cultures",
+        "healthRatio": "Cultures saines vs stressées",
+        "growthStage": "Phase de croissance actuelle",
+        "soilMoisture": "Humidité moyenne du sol",
+        "temperature": "Température moyenne",
+        "humidity": "Humidité moyenne"
+      },
+      "labels": {
+        "total": "Cultures totales",
+        "healthRatio": "Ratio de santé",
+        "growthStage": "Phase de croissance",
+        "soilMoisture": "Humidité du sol",
+        "temperature": "Température",
+        "humidity": "Humidité",
+        "lastUpdated": "Dernière mise à jour"
+      },
+      "relative": {
+        "never": "Jamais"
+      }
+    },
+    "health": {
+      "title": "Analyses de santé",
+      "subtitle": "Surveillance des capteurs en temps réel",
+      "timeRange": {
+        "last7": "7 derniers jours",
+        "last30": "30 derniers jours"
+      },
+      "loading": "Chargement des données capteurs...",
+      "empty": {
+        "title": "Aucun capteur connecté",
+        "description": "Connectez des capteurs à cette culture pour suivre sa santé."
+      },
+      "tabs": {
+        "soilMoisture": "Humidité du sol",
+        "temperature": "Température",
+        "humidity": "Humidité"
+      },
+      "chartPlaceholder": "Graphique prêt - installez ngx-echarts pour l'activer",
+      "chartTitles": {
+        "soilMoisture": "Humidité du sol au fil du temps",
+        "temperature": "Température au fil du temps",
+        "humidity": "Humidité au fil du temps"
+      },
+      "chartLabels": {
+        "unknown": "Inconnu",
+        "minWarning": "Avertissement minimum",
+        "maxWarning": "Avertissement maximum"
+      }
+    },
+    "smartActions": {
+      "title": "Actions intelligentes",
+      "subtitle": "Contrôlez les appareils de cette zone",
+      "modes": {
+        "manual": "Manuel",
+        "auto": "Auto"
+      },
+      "loading": "Chargement des actions d'appareil...",
+      "empty": {
+        "title": "Aucun appareil contrôlable",
+        "description": "Aucun appareil n'est configuré pour cette zone."
+      },
+      "actions": {
+        "turnOn": "Allumer",
+        "turnOff": "Éteindre"
+      },
+      "autoIndicator": "Contrôle automatique actif",
+      "availableActions": {
+        "tooltip": "Exécuter {{action}}",
+        "on": "Marche",
+        "off": "Arrêt",
+        "start": "Démarrer",
+        "stop": "Arrêter",
+        "open": "Ouvrir",
+        "close": "Fermer"
+      },
+      "quickActions": {
+        "allOn": "Tout allumer",
+        "allOnTooltip": "Allumer tous les appareils",
+        "allOff": "Tout éteindre",
+        "allOffTooltip": "Éteindre tous les appareils",
+        "refreshTooltip": "Actualiser l'état des appareils"
+      },
+      "status": {
+        "on": "Marche",
+        "off": "Arrêt",
+        "auto": "Auto"
+      },
+      "actionTypes": {
+        "irrigation": "Irrigation",
+        "ventilation": "Ventilation",
+        "lighting": "Éclairage",
+        "heating": "Chauffage",
+        "pump": "Pompe",
+        "control": "Contrôle"
+      },
+      "defaultDescription": "Contrôler {{name}}",
+      "snackbar": {
+        "autoMode": "Passage en mode automatique",
+        "manualMode": "Passage en mode manuel",
+        "loadError": "Échec du chargement des actions",
+        "deviceSuccess": "{{device}} est passé à {{action}}",
+        "deviceError": "Impossible de contrôler {{device}}"
+      }
+    },
+    "timeline": {
+      "title": "Événements récents",
+      "subtitle": "Actions, alertes et notifications",
+      "actions": {
+        "markAllRead": "Tout marquer comme lu",
+        "loadMore": "Charger plus d'événements"
+      },
+      "filters": {
+        "all": "Tous les événements",
+        "actions": "Actions",
+        "alerts": "Alertes",
+        "notifications": "Notifications"
+      },
+      "loading": "Chargement des événements...",
+      "empty": {
+        "title": "Aucun événement trouvé",
+        "description": "Aucun événement {{filter}} au cours des 7 derniers jours."
+      },
+      "groups": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "count": "{{count}} événements"
+      },
+      "status": {
+        "success": "Succès",
+        "warning": "Avertissement",
+        "error": "Erreur",
+        "info": "Info"
+      },
+      "events": {
+        "actionTitle": "{{action}} - {{device}}",
+        "actionDefault": "Action",
+        "deviceDefault": "Appareil",
+        "actionDescription": "Déclenché par {{source}}",
+        "systemSource": "Système",
+        "noDescription": "Aucune description"
+      }
+    },
+    "statistics": {
+      "totalDevices": "Total des appareils",
+      "activeDevices": "Appareils actifs",
+      "offlineDevices": "Appareils hors ligne",
+      "onlineDevices": "Appareils en ligne",
+      "onlineRate": "Taux de connexion",
+      "totalSensors": "Total des capteurs",
+      "activeSensors": "Capteurs actifs",
+      "recentReadings": "Lectures récentes",
+      "pendingActions": "Actions en attente",
+      "offline": "hors ligne",
+      "maintenance": "maintenance",
+      "online": "en ligne",
+      "devices": "appareils",
+      "systemHealth": "Santé du Système"
+    },
+    "statusBadges": {
+      "excellent": "Excellent",
+      "good": "Bon",
+      "needsAttention": "Nécessite une attention",
+      "connected": "Connecté",
+      "systemOperational": "Tous les systèmes fonctionnent",
+      "optimal": "Optimal",
+      "checkRequired": "Vérification requise"
+    },
+    "sections": {
+      "farmMap": {
+        "title": "Carte de la ferme",
+        "openInMaps": "Ouvrir dans Google Maps",
+        "noData": "Coordonnées de la ferme indisponibles"
+      },
+      "farmDetails": {
+        "title": "Détails de la ferme",
+        "labels": {
+          "name": "Nom de la ferme",
+          "owner": "Propriétaire",
+          "location": "Emplacement",
+          "coordinates": "Coordonnées",
+          "id": "ID de la ferme",
+          "created": "Créée le",
+          "updated": "Dernière mise à jour"
+        },
+        "noData": "Aucune donnée de ferme disponible"
+      },
+      "weather": {
+        "title": "Météo et insights IA",
+        "loading": "Chargement des données météo...",
+        "feelsLike": "Ressenti {{value}}°C",
+        "details": {
+          "humidity": "Humidité",
+          "wind": "Vitesse du vent",
+          "clouds": "Couverture nuageuse",
+          "rainChance": "Probabilité de pluie",
+          "sunrise": "Lever du soleil",
+          "sunset": "Coucher du soleil"
+        },
+        "units": {
+          "wind": "m/s"
+        },
+        "hourlyTitle": "Prochaines 24 heures",
+        "dailyTitle": "Prévision sur 7 jours",
+        "aiInsightsTitle": "Insights IA",
+        "noData": "Aucune donnée météo. Les coordonnées de la ferme sont requises."
+      },
+      "digitalTwin": {
+        "title": "Jumeau numérique de serre intelligente"
+      },
+      "zones": {
+        "title": "Zones de la ferme",
+        "noZones": "Aucune zone configurée",
+        "noZonesDescription": "Les zones vous aident à organiser votre ferme en espaces logiques — serres, champs ou cultures hydroponiques. Elles facilitent le suivi de chaque partie de votre ferme.",
+        "allZones": "Toutes les zones",
+        "selector": "Zone",
+        "types": {
+          "indoor": "Intérieur",
+          "outdoor": "Extérieur",
+          "greenhouse": "Serre",
+          "hydroponic": "Hydroponique"
+        },
+        "health": {
+          "good": "En bonne santé",
+          "warning": "À surveiller",
+          "critical": "Attention requise"
+        },
+        "alerts": {
+          "needsAttention": "Attention requise",
+          "worthMonitoring": "À surveiller",
+          "noAlerts": "Tout va bien — aucune alerte en ce moment."
+        },
+        "labels": {
+          "crops": "Cultures",
+          "sensors": "Capteurs",
+          "devices": "Appareils",
+          "alerts": "Alertes",
+          "latestReadings": "Dernières lectures",
+          "recommendations": "Recommandations"
+        }
+      }
+    },
+    "fab": {
+      "quickActions": "Actions rapides",
+      "liveReadings": "Lectures en direct",
+      "devices": "Appareils",
+      "actionsCenter": "Centre d'actions",
+      "sensorInfo": "Infos capteurs",
+      "crops": "Cultures"
+    },
+    "controlCenter": {
+      "title": "Centre de contrôle de la ferme intelligente",
+      "subtitle": "Surveillez les capteurs et contrôlez vos appareils",
+      "description": "Surveillez les capteurs de votre ferme en temps réel, exécutez des actions manuelles et suivez l'historique des actions.",
+      "liveReadings": "Lectures en direct",
+      "devices": "Appareils",
+      "actionsCenter": "Centre d'actions",
+      "sensorInfo": "Informations sur les capteurs"
+    },
+    "recentActivity": {
+      "title": "Activité récente",
+      "noActivity": "Aucune activité récente"
+    },
+    "deviceStatus": {
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "maintenance": "Maintenance",
+      "error": "Erreur",
+      "active": "Actif"
+    },
+    "quickActions": "Actions rapides",
+    "systemHealth": "Santé du système",
+    "allSystemsOperational": "Tous les systèmes opérationnels",
+    "excellent": "EXCELLENT",
+    "good": "BON",
+    "needsAttention": "BESOIN D'ATTENTION",
+    "connected": "CONNECTÉ",
+    "optimal": "OPTIMAL",
+    "checkRequired": "VÉRIFICATION NÉCESSAIRE",
+    "farmMap": "Carte de la ferme",
+    "interactiveFarmMap": "Carte interactive de la ferme",
+    "realTimeSensorLocations": "Emplacements des capteurs en temps réel et surveillance des champs bientôt disponibles !",
+    "sensorMarkers": "Marqueurs de capteurs",
+    "fieldBoundaries": "Limites de champ",
+    "realTimeUpdates": "Mises à jour en temps réel",
+    "weatherAiInsights": "Météo et perspectives IA",
+    "weatherForecastAi": "Prévisions météo et IA",
+    "smartPredictions": "Prédictions intelligentes et recommandations basées sur la météo bientôt disponibles !",
+    "sevenDayForecast": "Prévisions sur 7 jours",
+    "aiSuggestions": "Suggestions IA",
+    "irrigationAlerts": "Alertes d'irrigation",
+    "farmDetails": "Détails de la ferme",
+    "cropSensorData": "Données de culture et capteurs",
+    "detailedCropProgress": "Progression détaillée des cultures et lectures des capteurs bientôt disponibles !",
+    "cropProgress": "Progression des cultures",
+    "sensorReadings": "Lectures des capteurs",
+    "growthAnalytics": "Analyses de croissance",
+    "liveReadings": "Lectures en direct",
+    "actionsCenter": "Centre d'actions",
+    "sensorInfo": "Informations sur les capteurs",
+    "crops": "Cultures"
+  },
+  "devices": {
+    "title": "Appareils",
+    "subtitle": "Consultez les informations sur vos appareils IoT",
+    "pageAriaLabel": "Vue d'ensemble des appareils",
+    "aria": {
+      "headerActions": "Actions des appareils",
+      "toggleViewTo": "Passer à la vue {{view}}",
+      "filters": "Filtres des appareils",
+      "filterControls": "Contrôles de filtrage"
+    },
+    "viewModes": {
+      "cards": "cartes",
+      "table": "tableau"
+    },
+    "addDevice": "Ajouter un appareil",
+    "editDevice": "Modifier l'appareil",
+    "deleteDevice": "Supprimer l'appareil",
+    "deviceName": "Nom de l'appareil",
+    "deviceType": "Type d'appareil",
+    "deviceId": "ID de l'appareil",
+    "status": "Statut",
+    "lastSeen": "Dernière vue",
+    "location": "Emplacement",
+    "actions": "Actions",
+    "noDevices": "Aucun appareil",
+    "deviceDetails": "Détails de l'appareil",
+    "connectionStatus": "Statut de connexion",
+    "batteryLevel": "Niveau de batterie",
+    "signalStrength": "Force du signal",
+    "firmwareVersion": "Version du firmware",
+    "lastMaintenance": "Dernière maintenance",
+    "nextMaintenance": "Prochaine maintenance",
+    "statusOnline": "En ligne",
+    "statusOffline": "Hors ligne",
+    "statusActive": "Actif",
+    "statusInactive": "Inactif",
+    "statusError": "Erreur",
+    "deviceTypes": {
+      "sensor": "Capteur",
+      "actuator": "Actionneur",
+      "controller": "Contrôleur",
+      "gateway": "Passerelle",
+      "camera": "Caméra",
+      "weather": "Station météo",
+      "unknown": "Inconnu",
+      "dht11Sensor": "Capteur DHT11",
+      "dht22Sensor": "Capteur DHT22",
+      "soilMoistureSensor": "Capteur d'humidité du sol",
+      "waterPump": "Pompe à eau",
+      "irrigationPump": "Pompe d'irrigation",
+      "fan": "Ventilateur",
+      "ventilator": "Ventilateur",
+      "heater": "Chauffage",
+      "light": "Éclairage",
+      "ledLight": "Éclairage LED",
+      "roofMotor": "Moteur de toit",
+      "windowMotor": "Moteur de fenêtre",
+      "monitor": "Moniteur"
+    },
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher des appareils...",
+    "filterByStatus": "Filtrer par statut",
+    "filterByType": "Filtrer par type",
+    "filterByTypeScopedHint": "Types disponibles pour la ferme sélectionnée",
+    "allStatuses": "Tous les statuts",
+    "allTypes": "Tous les types",
+    "clearFilters": "Effacer les filtres",
+    "activeFiltersCount": "{{count}} filtre(s) actif(s)",
+    "selectedCount": "{{count}} sélectionné(s)",
+    "deleteSelected": "Supprimer la sélection",
+    "toggleView": "Basculer la vue",
+    "deviceNamePlaceholder": "Entrez le nom de l'appareil",
+    "locationPlaceholder": "Entrez l'emplacement de l'appareil",
+    "descriptionPlaceholder": "Entrez la description de l'appareil",
+    "deviceInformation": "Informations sur l'appareil",
+    "ipAddressPlaceholder": "192.168.1.100",
+    "macAddressPlaceholder": "AA:BB:CC:DD:EE:FF",
+    "firmwareVersionPlaceholder": "1.0.0",
+    "networkSettings": "Paramètres réseau",
+    "ipAddress": "Adresse IP",
+    "macAddress": "Adresse MAC",
+    "createdAt": "Créé le",
+    "basicInfo": "Informations de base",
+    "sensors": "Capteurs",
+    "noSensors": "Aucun capteur",
+    "noSensorsDescription": "Cet appareil n'a aucun capteur associé",
+    "sensorId": "ID du capteur",
+    "unit": "Unité",
+    "thresholds": "Seuils",
+    "minCritical": "Min critique",
+    "maxCritical": "Max critique",
+    "statistics": "Statistiques",
+    "noStatistics": "Aucune statistique",
+    "noStatisticsDescription": "Aucune statistique disponible pour cet appareil",
+    "uptime": "Temps de fonctionnement",
+    "dataTransmitted": "Données transmises",
+    "lastRestart": "Dernier redémarrage",
+    "restart": "Redémarrer",
+    "restartDevice": "Redémarrer l'appareil",
+    "restartInitiated": "Redémarrage de l'appareil initié",
+    "updateFirmware": "Mettre à jour le firmware",
+    "firmwareUpdateInitiated": "Mise à jour du firmware initiée",
+    "editDeviceDescription": "Modifier les informations et paramètres de l'appareil",
+    "addDeviceDescription": "Ajouter un nouvel appareil à votre ferme",
+    "deviceCreated": "Appareil créé avec succès",
+    "deviceUpdated": "Appareil mis à jour avec succès",
+    "deviceDeleted": "Appareil supprimé avec succès",
+    "devicesDeleted": "{{count}} appareils supprimés avec succès",
+    "card": {
+      "ariaLabel": "Carte de l'appareil {{name}}",
+      "statusLabel": "Statut {{status}}, vu {{lastSeen}}",
+      "locationLabel": "Situé à {{location}}",
+      "actionsAria": "Actions de l'appareil",
+      "viewDetailsAria": "Voir les détails de {{name}}",
+      "activateActionAria": "Activer {{name}}",
+      "deactivateActionAria": "Désactiver {{name}}"
+    },
+    "exportHeaders": {
+      "name": "Nom",
+      "type": "Type",
+      "location": "Emplacement",
+      "status": "Statut",
+      "lastSeen": "Dernière vue",
+      "description": "Description"
+    },
+    "devicesDeletedSuccess": "{{count}} appareils supprimés avec succès",
+    "confirmBulkStatusChange": "Changer le statut de {{count}} appareils en {{status}} ?",
+    "bulkStatusUpdated": "Statut mis à jour en {{status}} pour {{count}} appareils",
+    "notAvailableShort": "N/D",
+    "uptimeDaysHours": "{{days}}j {{hours}}h",
+    "uptimeHoursMinutes": "{{hours}}h {{minutes}}m",
+    "uptimeMinutes": "{{minutes}} min",
+    "sensorLocationUnknown": "Emplacement indisponible",
+    "noReadings": "Aucune lecture disponible",
+    "noReadingsDescription": "Aucune lecture n'a encore été reçue pour cet appareil.",
+    "noActions": "Aucune action sur l'appareil",
+    "noActionsDescription": "Aucune action manuelle ou automatique récente pour cet appareil.",
+    "tabs": {
+      "overview": "Aperçu",
+      "sensors": "Capteurs ({{count}})",
+      "readings": "Lectures récentes",
+      "actions": "Actions ({{count}})"
+    },
+    "dialog": {
+      "ariaLabel": "Détails de l'appareil {{name}}"
+    },
+    "readings": {
+      "value1": "Valeur 1",
+      "value2": "Valeur 2"
+    },
+    "actionStatus": {
+      "ack": "Accusé",
+      "pending": "En attente",
+      "error": "Erreur",
+      "failed": "Échec",
+      "sent": "Envoyé",
+      "queued": "En file d'attente",
+      "unknown": "Inconnu"
+    },
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer {{name}} ?",
+    "confirmBulkDelete": "Êtes-vous sûr de vouloir supprimer {{count}} appareils : {{names}} ?",
+    "deleteDeviceConfirmation": "Êtes-vous sûr de vouloir supprimer cet appareil ?",
+    "deviceNotFound": "Appareil non trouvé",
+    "noPermission": "Vous n'avez pas la permission d'effectuer cette action",
+    "deviceAlreadyExists": "Un appareil avec ce nom existe déjà",
+    "loadError": "Échec du chargement des appareils",
+    "loadErrorDescription": "Une erreur s'est produite lors du chargement des appareils. Veuillez réessayer.",
+    "noFarmSelected": "Veuillez d'abord sélectionner une ferme",
+    "noDevicesDescription": "Aucun appareil trouvé. Ajoutez votre premier appareil pour commencer."
+  },
+  "sensors": {
+    "title": "Capteurs",
+    "subtitle": "Consultez les informations sur vos capteurs de ferme",
+    "addSensor": "Ajouter un capteur",
+    "editSensor": "Modifier le capteur",
+    "deleteSensor": "Supprimer le capteur",
+    "sensorName": "Nom du capteur",
+    "sensorType": "Type de capteur",
+    "sensorId": "ID du capteur",
+    "value": "Valeur",
+    "unit": "Unité",
+    "timestamp": "Horodatage",
+    "status": "Statut",
+    "location": "Emplacement",
+    "noSensors": "Aucun capteur",
+    "noSensorsFound": "Aucun capteur trouvé",
+    "adjustFilters": "Essayez d'ajuster vos filtres ou termes de recherche",
+    "orphanedSensorsWarning": "Avertissement des capteurs orphelins",
+    "orphanedSensorsMessage": "capteur(s) sans appareil parent valide",
+    "unknownDevice": "Appareil inconnu",
+    "parentDevice": "Appareil parent",
+    "sensorDetails": "Détails du capteur",
+    "currentValue": "Valeur actuelle",
+    "minValue": "Valeur minimale",
+    "maxValue": "Valeur maximale",
+    "averageValue": "Valeur moyenne",
+    "sensorTypes": {
+      "temperature": "Température",
+      "humidity": "Humidité",
+      "soilMoisture": "Humidité du sol",
+      "soil": "Sol",
+      "light": "Lumière",
+      "ph": "pH",
+      "nutrients": "Nutriments",
+      "pressure": "Pression",
+      "wind": "Vent",
+      "rain": "Pluie",
+      "co2": "Dioxyde de carbone",
+      "unknown": "Inconnu"
+    },
+    "units": {
+      "celsius": "Celsius",
+      "fahrenheit": "Fahrenheit",
+      "percent": "Pourcentage",
+      "lux": "Lux",
+      "ph": "pH",
+      "bar": "Bar",
+      "kmh": "km/h",
+      "mm": "mm",
+      "ppm": "ppm",
+      "unknown": "Inconnu"
+    }
+  },
+  "sensorReadings": {
+    "title": "Lectures des Capteurs",
+    "subtitle": "Surveillance et perspectives en temps réel",
+    "liveData": "Données en direct",
+    "historicalData": "Données historiques",
+    "noReadings": "Aucune lecture disponible",
+    "recentReadings": "lectures récentes",
+    "primaryValue": "Valeur primaire",
+    "secondaryValue": "Valeur secondaire",
+    "lastReading": "Dernière lecture",
+    "readingHistory": "Historique des lectures",
+    "exportData": "Exporter les données",
+    "active": "Actif",
+    "normal": "Normal",
+    "warning": "Avertissement",
+    "critical": "Critique",
+    "offline": "Hors ligne",
+    "noData": "Aucune donnée disponible",
+    "lastUpdated": "Dernière mise à jour",
+    "allGood": "Tout va bien",
+    "criticalConditions": "Conditions critiques",
+    "attentionNeeded": "Attention requise",
+    "acrossAllFarms": "dans toutes les fermes",
+    "noRecentData": "Aucune donnée récente",
+    "optimalRange": "Plage optimale",
+    "belowMinimum": "En dessous du minimum",
+    "aboveMaximum": "Au-dessus du maximum",
+    "belowOptimal": "En dessous de l'optimal",
+    "aboveOptimal": "Au-dessus de l'optimal",
+    "timeRange": "Plage de temps",
+    "selectSensor": "Sélectionner un capteur",
+    "allSensors": "Tous les capteurs",
+    "chartView": "Vue graphique",
+    "tableView": "Vue tableau",
+    "realTime": "Temps réel",
+    "lastHour": "Dernière heure",
+    "lastDay": "Dernier jour",
+    "lastWeek": "Dernière semaine",
+    "lastMonth": "Dernier mois",
+    "kpiDashboard": {
+      "totalSensors": "Total des Capteurs",
+      "onlinePercentage": "En ligne",
+      "criticalSensors": "Critique",
+      "lastUpdate": "Dernière mise à jour"
+    },
+    "filters": {
+      "type": "Type",
+      "range": "Plage",
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher...",
+      "all": "Tous",
+      "showFilters": "Afficher les filtres",
+      "hideFilters": "Masquer les filtres",
+      "temperature": "🌡️ Temp",
+      "humidity": "💧 Humidité",
+      "soilMoisture": "🌱 Sol",
+      "light": "☀️ Lumière",
+      "ph": "⚗️ pH",
+      "pressure": "🌀 Pression",
+      "timeRanges": {
+        "15m": "15min",
+        "1h": "1h",
+        "6h": "6h",
+        "24h": "24h"
+      }
+    },
+    "sensorList": {
+      "sensors": "Capteurs",
+      "pinned": "Épinglé",
+      "online": "En ligne",
+      "lastUpdate": "Dernière mise à jour",
+      "ago": "il y a",
+      "seconds": "s",
+      "minutes": "m",
+      "hours": "h",
+      "days": "j"
+    },
+    "deviceDetail": {
+      "selectDevice": "Sélectionner un capteur",
+      "selectDeviceDescription": "Choisissez un capteur dans la liste pour afficher des informations détaillées et des données en temps réel",
+      "currentValue": "Valeur actuelle",
+      "lastUpdate": "Dernière mise à jour",
+      "optimalRange": "Plage optimale",
+      "delta1h": "Changement en 1h",
+      "thresholdZones": "Zones de seuil",
+      "minimum": "Min",
+      "maximum": "Max",
+      "historicalData": "Données historiques",
+      "noChartData": "Aucune donnée de graphique disponible",
+      "loading": "Chargement..."
+    },
+    "footer": {
+      "allSystemsNormal": "Tous les systèmes normaux",
+      "allSensorsOperating": "Tous les capteurs fonctionnent dans les plages optimales",
+      "criticalAlert": "Alerte critique",
+      "sensorsNeedAttention": "{{count}} capteurs nécessitent une attention immédiate",
+      "warningAlert": "Avertissement",
+      "sensorsAboveThreshold": "{{count}} capteurs au-dessus du seuil",
+      "systemsOffline": "Systèmes hors ligne",
+      "sensorsNotResponding": "{{count}} capteurs ne répondent pas"
+    },
+    "density": {
+      "comfortable": "Confortable",
+      "compact": "Compact"
+    },
+    "statusLabels": {
+      "NORMAL": "NORMAL",
+      "WARNING": "AVERTISSEMENT",
+      "CRITICAL": "CRITIQUE",
+      "OFFLINE": "HORS LIGNE"
+    }
+  },
+  "manualControl": {
+    "title": "Centre de Contrôle des Appareils",
+    "subtitle": "Exécuter des actions manuelles sur vos appareils de ferme intelligente",
+    "onlineDevices": "Appareils en Ligne",
+    "pendingActions": "Actions en Attente",
+    "statusPending": "En Attente",
+    "statusSuccess": "Réussi",
+    "statusFailed": "Échoué",
+    "statusTimeout": "Expiré",
+    "actionSentMessage": "Action \"{{actionName}}\" envoyée à l'appareil - en attente de confirmation...",
+    "actionSuccessMessage": "✅ Action \"{{actionName}}\" exécutée avec succès!",
+    "actionFailedMessage": "❌ Action \"{{actionName}}\" échouée: {{error}}",
+    "actionTimeoutMessage": "⏰ Action \"{{actionName}}\" expirée",
+    "loadDevicesError": "Échec du chargement des appareils"
+  },
+  "notifications": {
+    "adminTitle": "Notifications Admin",
+    "adminMessage": "Cette fonctionnalité est actuellement en cours de développement pour les administrateurs.",
+    "title": "Alertes de la ferme",
+    "subtitle": "Restez informé de ce qui se passe sur votre ferme",
+    "needAttention": "nécessitent une attention",
+    "unread": "non lues",
+    "totalAlerts": "alertes au total",
+    "markAllRead": "Marquer tout comme lu",
+    "refresh": "Actualiser",
+    "loadingFarmData": "Chargement des données de la ferme...",
+    "markAsRead": "Marquer comme lu",
+    "dismiss": "Ignorer",
+    "loading": "Chargement...",
+    "showMoreNotifications": "Afficher plus de notifications",
+    "showingNotifications": "Affichage de {{current}} sur {{total}} notifications",
+    "allGood": "Tout va bien !",
+    "noAlerts": "Aucune alerte pour le moment. Votre ferme fonctionne parfaitement.",
+    "tip": "Conseil :",
+    "youWillGetNotified": "Vous serez notifié ici quand :",
+    "temperatureHumidityOutsideRange": "La température ou l'humidité sort des plages de sécurité",
+    "devicesNeedAttention": "Les appareils nécessitent une attention ou une maintenance",
+    "actionsSucceedFail": "Les actions réussissent ou échouent",
+    "systemUpdates": "Des mises à jour système ou des changements importants se produisent",
+    "quietHours": "Heures silencieuses",
+    "enableQuietHours": "Activer les heures silencieuses",
+    "startHour": "Heure de début",
+    "endHour": "Heure de fin",
+    "cooldown": "Délai d'attente",
+    "cooldownMinutes": "Délai d'attente (minutes)",
+    "settingsPage": {
+      "title": "Paramètres de notification",
+      "subtitle": "Affinez les plages horaires, les niveaux et les sources des alertes",
+      "quietHoursDescription": "Silence des notifications pendant certaines heures",
+      "cooldownDescription": "Temps minimal entre deux notifications similaires",
+      "levelsTitle": "Catégories de notification · Niveaux",
+      "levelsDescription": "Choisissez les niveaux de gravité à recevoir",
+      "sourcesTitle": "Catégories de notification · Sources",
+      "sourcesDescription": "Sélectionnez les sources autorisées à vous contacter",
+      "actionsInfo": "Les changements sont appliqués immédiatement après l'enregistrement",
+      "placeholders": {
+        "startHour": "22",
+        "endHour": "6",
+        "cooldown": "15"
+      },
+      "labels": {
+        "hourSuffix": ":00",
+        "minutes": "minutes"
+      },
+      "quietHoursInfo": "Les notifications seront silencieuses de <strong>{{start}}</strong> à <strong>{{end}}</strong>",
+      "cooldownInfo": "Le même type de notification ne se répétera pas avant <strong>{{minutes}}</strong> minutes",
+      "levelDescriptions": {
+        "critical": "Problèmes urgents nécessitant une action immédiate",
+        "warning": "Alertes importantes demandant votre attention",
+        "info": "Informations générales et mises à jour",
+        "success": "Opérations réussies et tâches terminées"
+      },
+      "sourceDescriptions": {
+        "sensors": "Capteurs de température, d'humidité et de sol",
+        "devices": "Appareils IoT connectés et équipements",
+        "actions": "Actions automatiques et déclencheurs",
+        "system": "État du système et mises à jour",
+        "maintenance": "Rappels et plannings de maintenance",
+        "security": "Alertes de sécurité et journaux d'accès"
+      }
+    },
+    "categories": "Catégories",
+    "critical": "Critique",
+    "warning": "Avertissement",
+    "info": "Information",
+    "success": "Succès",
+    "sensors": "Capteurs",
+    "devices": "Appareils",
+    "actions": "Actions",
+    "system": "Système",
+    "maintenance": "Maintenance",
+    "security": "Sécurité",
+    "saveSettings": "Enregistrer les paramètres",
+    "settingsSaved": "Paramètres enregistrés avec succès",
+    "settingsError": "Erreur lors de l'enregistrement des paramètres",
+    "deviceOffline": "Appareil hors ligne",
+    "actionFailed": "Action échouée",
+    "actionSuccess": "Action terminée avec succès",
+    "sensorAlert": "Alerte de capteur",
+    "systemUpdate": "Mise à jour système",
+    "maintenanceReminder": "Rappel de maintenance",
+    "securityAlert": "Alerte de sécurité",
+    "urgent": "Urgent",
+    "important": "Important",
+    "normal": "Normal",
+    "low": "Faible",
+    "temperatureHigh": "Votre serre devient trop chaude ({{temp}}). Le système essaiera de la refroidir automatiquement.",
+    "temperatureLow": "Votre serre devient trop froide ({{temp}}). Le système essaiera de la réchauffer automatiquement.",
+    "temperatureNormal": "La température est de {{temp}}. Surveillez vos plantes.",
+    "temperatureAttention": "La température nécessite une attention dans votre serre.",
+    "humidityHigh": "L'air est trop humide ({{humidity}}). Le système essaiera de réduire l'humidité automatiquement.",
+    "humidityLow": "L'air est trop sec ({{humidity}}). Le système essaiera d'ajouter de l'humidité automatiquement.",
+    "humidityNormal": "L'humidité est de {{humidity}}. Vos plantes devraient être à l'aise.",
+    "humidityAttention": "Les niveaux d'humidité nécessitent une attention dans votre serre.",
+    "deviceOnline": "Votre appareil est de nouveau en ligne et fonctionne normalement.",
+    "actionUpdate": "Mise à jour concernant une action sur votre ferme.",
+    "somethingHappened": "Quelque chose s'est passé sur votre ferme que vous devriez savoir.",
+    "temperatureTooHigh": "Température Trop Élevée",
+    "temperatureTooLow": "Température Trop Basse",
+    "temperatureAlert": "Alerte de Température",
+    "humidityTooHigh": "Humidité Trop Élevée",
+    "humidityTooLow": "Humidité Trop Basse",
+    "humidityAlert": "Alerte d'Humidité",
+    "deviceConnectionLost": "Connexion Appareil Perdue",
+    "deviceConnected": "Appareil Connecté",
+    "actionCompleted": "Action Terminée",
+    "thresholdWarning": "Avertissement de Seuil",
+    "markAsUnread": "Marquer comme non lu",
+    "deleteNotification": "Supprimer la notification",
+    "deleteAll": "Tout supprimer",
+    "noNotifications": "Aucune notification",
+    "notificationDetails": "Détails de la notification",
+    "notificationHistory": "Historique des notifications",
+    "filterByType": "Filtrer par type",
+    "filterByDate": "Filtrer par date",
+    "notificationTypes": {
+      "deviceOffline": "Appareil hors ligne",
+      "sensorAlert": "Alerte de capteur",
+      "actionCompleted": "Action terminée",
+      "actionFailed": "Action échouée",
+      "maintenanceDue": "Maintenance due",
+      "harvestReady": "Récolte prête",
+      "weatherAlert": "Alerte météo",
+      "systemUpdate": "Mise à jour système"
+    },
+    "totalNotifications": "Total des Notifications",
+    "advanced": "Avancé",
+    "clearAllFilters": "Effacer tous les filtres",
+    "filterApplied": "Filtre appliqué : {{filter}}",
+    "farmFilterApplied": "Filtre ferme appliqué : {{farm}}",
+    "deviceFilterApplied": "Filtre appareil appliqué : {{device}}",
+    "searchResults": "Résultats de recherche pour : {{query}}",
+    "searchCleared": "Recherche effacée",
+    "allFiltersCleared": "Tous les filtres effacés",
+    "total": "Total",
+    "lastUpdated": "Dernière mise à jour",
+    "never": "Jamais",
+    "listView": "Vue liste",
+    "timelineView": "Vue chronologique",
+    "mapView": "Vue carte",
+    "farm": "Ferme",
+    "allFarms": "Toutes les fermes",
+    "selectFarm": "Sélectionner une ferme",
+    "device": "Appareil",
+    "allDevices": "Tous les appareils",
+    "selectDevice": "Sélectionner un appareil",
+    "sensor": "Capteur",
+    "allSensors": "Tous les capteurs",
+    "selectSensor": "Sélectionner un capteur",
+    "startDate": "Date de début",
+    "selectStartDate": "Sélectionner la date de début",
+    "endDate": "Date de fin",
+    "selectEndDate": "Sélectionner la date de fin",
+    "sensorFilterApplied": "Filtre capteur appliqué : {{sensor}}",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher des notifications...",
+    "preparingInsights": "Préparation de vos informations...",
+    "created": "Créé",
+    "location": "Emplacement",
+    "source": "Source",
+    "suggestedAction": "Action suggérée",
+    "context": "Contexte",
+    "mapViewComingSoon": "Vue carte à venir",
+    "mapViewDescription": "Une carte interactive avec des épingles de notification sera disponible dans la prochaine mise à jour.",
+    "showMore": "Afficher plus",
+    "showing": "Affichage",
+    "of": "sur",
+    "everythingCalm": "Tout est calme",
+    "markedAsRead": "Notification marquée comme lue",
+    "dismissed": "Notification supprimée",
+    "allMarkedRead": "Toutes les notifications marquées comme lues",
+    "view": "Voir",
+    "read": "Lu",
+    "deleteDialog": {
+      "title": "Supprimer la notification ?",
+      "message": "Cette action ne peut pas être annulée. La notification sera définitivement supprimée de votre historique.",
+      "cancel": "Annuler",
+      "delete": "Supprimer"
+    },
+    "todayMorning": "Ce matin",
+    "todayAfternoon": "Cet après-midi",
+    "yesterday": "Hier",
+    "thisWeek": "Cette semaine",
+    "older": "Plus ancien",
+    "deviceUpdate": "Mise à jour de l'appareil",
+    "all": "Tous",
+    "noNotificationsYet": "Aucune notification pour le moment - votre ferme fonctionne bien",
+    "allClear": "Tout est Clair",
+    "allCaughtUp": "Vous êtes à jour avec vos notifications",
+    "upToDate": "À Jour",
+    "noCriticalIssues": "Aucun problème critique détecté"
+  },
+  "actions": {
+    "title": "Centre d'Actions",
+    "subtitle": "Contrôlez vos appareils et surveillez toutes les actions automatisées et manuelles",
+    "history": "Historique des Actions",
+    "liveFeed": "Flux d'Actions en Direct",
+    "liveFeedDescription": "Surveillance en temps réel des actions récentes avec actualisation automatique",
+    "activityLog": "Journal d'Activité de la Ferme",
+    "activityLogDescription": "Voyez ce qui s'est passé sur votre ferme - simple et clair",
+    "manualControl": "Contrôle Manuel",
+    "actionStream": "Flux d'Actions",
+    "timeFilterTitle": "Quand voulez-vous voir ?",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "week": "Cette Semaine",
+    "month": "Ce Mois",
+    "thisWeek": "Cette Semaine",
+    "thisMonth": "Ce Mois",
+    "summary": "Résumé",
+    "totalActions": "Total des Actions",
+    "successful": "Réussi",
+    "failed": "Échoué",
+    "manual": "Manuel",
+    "noActivity": "Aucune Activité",
+    "showThisWeek": "Afficher Cette Semaine",
+    "showMore": "Afficher Plus d'Actions",
+    "showingActions": "Affichage de {{current}} sur {{total}} actions",
+    "statusSent": "Terminé",
+    "statusConfirmed": "Confirmé",
+    "statusFailed": "Échoué",
+    "statusWaiting": "En Attente",
+    "noActivityToday": "Aucune action aujourd'hui. Votre ferme fonctionne parfaitement !",
+    "noActivityYesterday": "Aucune action hier.",
+    "noActivityWeek": "Aucune action cette semaine. Tout semble bon !",
+    "noActivityMonth": "Aucune action ce mois-ci.",
+    "noActivityFound": "Aucune activité trouvée.",
+    "loadDataError": "Échec du chargement des données",
+    "loadActionsError": "Échec du chargement des actions",
+    "retryComingSoon": "Fonctionnalité de nouvelle tentative bientôt disponible",
+    "exportComingSoon": "Fonctionnalité d'exportation bientôt disponible",
+    "manualActionTitle": "Vous avez activé {{action}} sur {{device}}",
+    "automaticActionTitle": "Le système {{action}} sur {{device}}{{reason}}",
+    "actionFailedDescription": "Cette action a échoué. {{error}}",
+    "checkDeviceConnection": "Veuillez vérifier la connexion de votre appareil",
+    "manualActionDescription": "Vous avez contrôlé manuellement votre appareil à {{time}}",
+    "automaticActionDescription": "parce que {{sensor}} était {{value}}{{unit}}",
+    "automaticActionDescriptionSimple": "Le système a pris une action automatiquement",
+    "automationReason": " ({{sensor}}: {{value}}{{unit}})",
+    "noRecentActions": "Aucune action récente",
+    "automatic": "Automatique",
+    "manualPercent": "Manuel",
+    "automatedPercent": "Automatisé",
+    "lastAction": "Dernière Action",
+    "filters": "Filtres",
+    "customRange": "Plage Personnalisée",
+    "moreFilters": "Plus de Filtres",
+    "lessFilters": "Moins de Filtres",
+    "farm": "Ferme",
+    "allFarms": "Toutes les Fermes",
+    "actionType": "Type d'Action",
+    "allTypes": "Tous les Types",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher des actions...",
+    "tableView": "Vue Tableau",
+    "timelineView": "Vue Chronologique",
+    "exportPDF": "Exporter PDF",
+    "exportCSV": "Exporter CSV",
+    "timestamp": "Horodatage",
+    "triggerSource": "Source de Déclenchement",
+    "status": "Statut",
+    "targetDevice": "Appareil Cible",
+    "performedBy": "Exécuté Par",
+    "system": "Système",
+    "operator": "Opérateur",
+    "noActionsFound": "Aucune action trouvée",
+    "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
+    "showDetails": "Afficher les Détails",
+    "noActivityDescription": "Aucune activité récente à afficher",
+    "loadMore": "Charger Plus",
+    "insights": "Insights IA",
+    "mostFrequentAction": "Action la plus fréquente : {{action}} ({{percent}}%)",
+    "executedAt": "Exécuté À",
+    "metrics": "Métriques",
+    "errorDetails": "Détails de l'Erreur",
+    "additionalDetails": "Détails Supplémentaires",
+    "actionUri": "URI d'Action",
+    "mqttTopic": "Sujet MQTT",
+    "payload": "Charge Utile",
+    "justNow": "À l'instant",
+    "minutesAgo": "Il y a {{count}} minutes",
+    "hoursAgo": "Il y a {{count}} heures",
+    "daysAgo": "Il y a {{count}} jours",
+    "weeksAgo": "Il y a des semaines",
+    "exportPDFComingSoon": "Export PDF bientôt disponible",
+    "exportCSVComingSoon": "Export CSV bientôt disponible",
+    "recentActions": {
+      "title": "Actions Récentes",
+      "subtitle": "Surveillez les dernières activités de votre ferme",
+      "farm": "Ferme",
+      "allFarms": "Toutes les Fermes",
+      "device": "Appareil",
+      "allDevices": "Tous les Appareils",
+      "user": "Utilisateur",
+      "allUsers": "Tous les Utilisateurs",
+      "manual": "Manuel",
+      "automated": "Automatisé",
+      "timeRange": "Plage de Temps",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "thisWeek": "Cette Semaine",
+      "thisMonth": "Ce Mois",
+      "details": "Détails",
+      "actionUri": "URI d'Action",
+      "sensorId": "ID du Capteur",
+      "error": "Erreur",
+      "noActions": "Aucune Action Récente",
+      "noActionsDescription": "Aucune action n'a été enregistrée récemment. Revenez plus tard pour les mises à jour d'activité.",
+      "total": "Total",
+      "warnings": "Avertissements",
+      "loading": "Chargement des actions récentes...",
+      "todayMorning": "Ce Matin",
+      "manualActionTitle": "Action manuelle sur {{device}}",
+      "automaticActionTitle": "{{action}} automatique sur {{device}}",
+      "actionFailedDescription": "Action échouée : {{error}}",
+      "checkDeviceConnection": "Veuillez vérifier la connexion de l'appareil",
+      "manualActionDescription": "Action manuelle exécutée à {{time}}",
+      "automaticActionDescription": "Action automatique déclenchée par {{reason}} à {{time}}",
+      "automaticActionDescriptionSimple": "Action automatique exécutée",
+      "statusSent": "Envoyé",
+      "statusConfirmed": "Confirmé",
+      "statusFailed": "Échoué",
+      "statusWaiting": "En Attente",
+      "automatic": "Automatique",
+      "actionTypes": {
+        "irrigation": "Irrigation",
+        "ventilation": "Ventilation",
+        "lighting": "Éclairage",
+        "heating": "Chauffage",
+        "watering": "Arrosage",
+        "fan": "Ventilateur",
+        "pump": "Pompe",
+        "light": "Lumière",
+        "fertilization": "Fertilisation",
+        "pestControl": "Lutte Antiparasitaire",
+        "harvesting": "Récolte",
+        "planting": "Plantation",
+        "pruning": "Taille",
+        "monitoring": "Surveillance",
+        "alert": "Alerte",
+        "openRoof": "Ouvrir le toit",
+        "closeRoof": "Fermer le toit",
+        "openWindow": "Ouvrir la fenêtre",
+        "closeWindow": "Fermer la fenêtre",
+        "startPump": "Démarrer la pompe",
+        "stopPump": "Arrêter la pompe",
+        "turnOnFan": "Allumer le ventilateur",
+        "turnOffFan": "Éteindre le ventilateur",
+        "turnOnHeater": "Allumer le chauffage",
+        "turnOffHeater": "Éteindre le chauffage",
+        "turnOnLight": "Allumer la lumière",
+        "turnOffLight": "Éteindre la lumière",
+        "humidifierOn": "Humidificateur activé",
+        "humidifierOff": "Humidificateur désactivé",
+        "ventilatorOn": "Ventilateur activé",
+        "ventilatorOff": "Ventilateur désactivé",
+        "waterPumpOn": "Pompe à eau activée",
+        "waterPumpOff": "Pompe à eau désactivée",
+        "lightOn": "Lumière allumée",
+        "lightOff": "Lumière éteinte"
+      },
+      "justNow": "À l'instant",
+      "minutesAgo": "Il y a {{count}} minutes",
+      "hoursAgo": "Il y a {{count}} heures",
+      "daysAgo": "Il y a {{count}} jours",
+      "weeksAgo": "Il y a {{count}} semaines",
+      "summaryText": "{{total}} actions ({{manual}} manuelles, {{automated}} automatisées)"
+    }
+  },
+  "crops": {
+    "title": "Cultures",
+    "addCrop": "Ajouter une culture",
+    "editCrop": "Modifier la culture",
+    "deleteCrop": "Supprimer la culture",
+    "cropName": "Nom de la culture",
+    "cropType": "Type de culture",
+    "plantingDate": "Date de plantation",
+    "harvestDate": "Date de récolte",
+    "expectedHarvest": "Récolte attendue",
+    "status": "Statut",
+    "yield": "Rendement",
+    "area": "Superficie",
+    "location": "Emplacement",
+    "noCrops": "Aucune culture",
+    "cropDetails": "Détails de la culture",
+    "growthStage": "Stade de croissance",
+    "healthStatus": "État de santé",
+    "irrigationSchedule": "Calendrier d'irrigation",
+    "fertilizationSchedule": "Calendrier de fertilisation",
+    "common": {
+      "noLocation": "Pas d'emplacement",
+      "relative": {
+        "justNow": "À l'instant",
+        "minutesAgo": "Il y a {{count}} min",
+        "hoursAgo": "Il y a {{count}} h",
+        "yesterday": "Hier",
+        "daysAgo": "Il y a {{count}} j"
+      }
+    },
+    "dashboard": {
+      "states": {
+        "loading": {
+          "title": "Chargement du tableau de bord des cultures",
+          "subtitle": "Récupération de vos données et analyses..."
+        },
+        "error": {
+          "title": "Oups ! Une erreur s'est produite",
+          "cta": "Réessayer",
+          "retryAria": "Relancer le chargement du tableau de bord"
+        },
+        "empty": {
+          "title": "Aucune culture trouvée",
+          "subtitle": "Créez votre première culture pour suivre sa santé et sa croissance.",
+          "cta": "Créer une culture",
+          "ctaAria": "Créer votre première culture"
+        }
+      },
+      "header": {
+        "selectCrop": "Sélectionner une culture",
+        "selectAria": "Sélectionnez une culture à afficher",
+        "actions": {
+          "refresh": "Actualiser les données",
+          "refreshAria": "Actualiser les données du tableau de bord",
+          "edit": "Modifier la culture",
+          "editAria": "Modifier les détails de la culture",
+          "viewAll": "Toutes les cultures",
+          "viewAllAria": "Afficher toutes les cultures"
+        }
+      },
+      "aria": {
+        "status": "Statut : {{status}}"
+      },
+      "kpi": {
+        "ariaLabel": "Indicateurs clés de performance"
+      },
+      "details": {
+        "title": "Détails de la culture",
+        "variety": "Variété",
+        "planted": "Plantée",
+        "expectedHarvest": "Récolte prévue",
+        "status": "Statut",
+        "description": "Description",
+        "notes": "Notes",
+        "notAvailable": "N/D",
+        "ariaLabel": "Détails de la culture et capteurs"
+      },
+      "sensors": {
+        "title": "Capteurs connectés",
+        "empty": "Aucun capteur connecté à cette culture"
+      },
+      "actions": {
+        "ariaLabel": "Actions intelligentes"
+      },
+      "timeline": {
+        "title": "Événements récents",
+        "ariaLabel": "Chronologie des événements récents",
+        "hideAria": "Masquer la chronologie",
+        "showAria": "Afficher la chronologie"
+      },
+      "errors": {
+        "loadCrops": "Impossible de charger les cultures",
+        "loadDashboard": "Impossible de charger le tableau de bord des cultures"
+      },
+      "header": "Vue d'ensemble des cultures",
+      "selectCrop": "Sélectionner une culture",
+      "healthAnalytics": "Santé et analyses",
+      "cropDetails": "Détails de la culture",
+      "smartActions": "Actions intelligentes",
+      "eventsTimeline": "Événements récents",
+      "mapComparison": "Carte et comparaison",
+      "sustainability": "Métriques de durabilité",
+      "noCropSelected": "Aucune culture sélectionnée",
+      "selectCropDescription": "Veuillez sélectionner une culture dans le menu déroulant ci-dessus pour voir son tableau de bord",
+      "loading": "Chargement du tableau de bord",
+      "error": "Erreur lors du chargement des données de la culture",
+      "loadingMessage": "Récupération de vos données de culture et analyses...",
+      "errorTitle": "Oups ! Quelque chose s'est mal passé",
+      "tryAgain": "Réessayer",
+      "noCropsTitle": "Aucune culture trouvée",
+      "noCropsMessage": "Commencez par créer votre première culture pour surveiller sa santé et sa croissance.",
+      "createCrop": "Créer une culture",
+      "selectCropAria": "Sélectionner une culture à afficher",
+      "connectedSensors": "Capteurs connectés",
+      "noSensors": "Aucun capteur connecté à cette culture",
+      "variety": "Variété",
+      "planted": "Planté",
+      "description": "Description",
+      "notes": "Notes",
+      "noLocation": "Aucun emplacement",
+      "na": "N/D",
+      "refreshData": "Actualiser les données",
+      "allCrops": "Toutes les cultures",
+      "viewAll": "Voir toutes les cultures",
+      "kpiSection": "Indicateurs de performance clés",
+      "detailsSidebar": "Détails de la culture et capteurs",
+      "actionsSection": "Actions des appareils intelligents",
+      "eventsSection": "Chronologie des événements récents",
+      "recentEvents": "Événements récents",
+      "actionsAlertsNotifications": "Actions, alertes et notifications",
+      "allEvents": "Tous les événements",
+      "actions": "Actions",
+      "alerts": "Alertes",
+      "notifications": "Notifications",
+      "loadingEvents": "Chargement des événements...",
+      "noEventsFound": "Aucun événement trouvé",
+      "noEventsMessage": "Aucun événement {{filter}} au cours des 7 derniers jours.",
+      "loadMoreEvents": "Charger plus d'événements",
+      "markAllRead": "Tout marquer comme lu",
+      "refresh": "Actualiser",
+      "controlDevices": "Contrôler les appareils pour cette zone de culture",
+      "manual": "Manuel",
+      "auto": "Auto",
+      "loadingDeviceActions": "Chargement des actions des appareils...",
+      "noControllableDevices": "Aucun appareil contrôlable",
+      "noDevicesMessage": "Aucun appareil n'est configuré pour cette zone de culture.",
+      "allOn": "Tout allumer",
+      "allOff": "Tout éteindre",
+      "turnOn": "Allumer",
+      "turnOff": "Éteindre",
+      "automatedControlActive": "Contrôle automatisé actif",
+      "realTimeMonitoring": "Surveillance en temps réel des capteurs",
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "loadingSensorData": "Chargement des données des capteurs...",
+      "noSensorsConnected": "Aucun capteur connecté",
+      "noSensorsMessage": "Connectez des capteurs à cette culture pour commencer à surveiller sa santé.",
+      "soilMoisture": "Humidité du sol",
+      "temperature": "Température",
+      "humidity": "Humidité",
+      "showTimeline": "Afficher la chronologie",
+      "hideTimeline": "Masquer la chronologie"
+    },
+    "details": {
+      "name": "Nom",
+      "variety": "Variété",
+      "status": "Statut",
+      "plantingDate": "Date de plantation",
+      "expectedHarvest": "Récolte attendue"
+    },
+    "statuses": {
+      "planted": "Planté",
+      "growing": "En croissance",
+      "harvested": "Récolté",
+      "failed": "Échoué"
+    },
+    "analytics": {
+      "title": "Analyses",
+      "loading": "Chargement des analyses..."
+    },
+    "kpi": {
+      "tooltips": {
+        "all": "Voir toutes les cultures",
+        "healthRatio": "Cultures saines vs stressées",
+        "growthStage": "Stade de croissance actuel",
+        "soilMoisture": "Humidité moyenne du sol sur tous les capteurs",
+        "temperature": "Température moyenne sur tous les capteurs",
+        "humidity": "Humidité moyenne sur tous les capteurs"
+      },
+      "labels": {
+        "total": "Total des cultures",
+        "healthRatio": "Ratio de santé",
+        "growthStage": "Stade de croissance",
+        "soilMoisture": "Humidité du sol",
+        "temperature": "Température",
+        "humidity": "Humidité",
+        "lastUpdated": "Dernière mise à jour"
+      },
+      "relative": {
+        "never": "Jamais"
+      }
+    },
+    "kpis": {
+      "yield": "Rendement",
+      "growthStage": "Stade de croissance",
+      "irrigationStatus": "Statut d'irrigation",
+      "soilMoisture": "Humidité du sol",
+      "temperature": "Température",
+      "humidity": "Humidité",
+      "sunlight": "Lumière du soleil",
+      "healthScore": "Score de santé"
+    },
+    "actions": {
+      "irrigateNow": "Irriguer maintenant",
+      "adjustShading": "Ajuster l'ombrage",
+      "activateVentilation": "Activer la ventilation",
+      "fertilize": "Fertiliser",
+      "alertTechnician": "Alerter le technicien",
+      "confirmAction": "Confirmer l'action",
+      "turnOnIrrigation": "Activer l'irrigation pour {{zone}} ?",
+      "actionExecuted": "Action exécutée avec succès",
+      "actionFailed": "Action échouée",
+      "confirmTurnOnIrrigation": "Êtes-vous sûr de vouloir démarrer l'irrigation ?"
+    },
+    "timeline": {
+      "title": "Événements récents",
+      "subtitle": "Actions, alertes et notifications",
+      "actions": {
+        "markAllRead": "Tout marquer comme lu",
+        "loadMore": "Charger plus d'événements"
+      },
+      "filters": {
+        "all": "Tous les événements",
+        "actions": "Actions",
+        "alerts": "Alertes",
+        "notifications": "Notifications"
+      },
+      "loading": "Chargement des événements...",
+      "empty": {
+        "title": "Aucun événement trouvé",
+        "description": "Aucun événement {{filter}} au cours des 7 derniers jours."
+      },
+      "groups": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "count": "{{count}} événements"
+      },
+      "status": {
+        "success": "Succès",
+        "warning": "Avertissement",
+        "error": "Erreur",
+        "info": "Information"
+      },
+      "events": {
+        "actionTitle": "{{action}} sur {{device}}",
+        "actionDefault": "Action",
+        "deviceDefault": "Appareil",
+        "actionDescription": "Déclenché par {{source}}",
+        "systemSource": "Système",
+        "noDescription": "Aucune description disponible"
+      },
+      "irrigationStarted": "Irrigation démarrée",
+      "fertilizerAdded": "Engrais ajouté",
+      "diseaseAlert": "Alerte de maladie",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "noEvents": "Aucun événement récent"
+    },
+    "sustainability": {
+      "waterSaved": "Eau économisée",
+      "energySaved": "Énergie économisée",
+      "co2Reduction": "Réduction de CO₂",
+      "irrigationEfficiency": "Efficacité d'irrigation",
+      "liters": "L",
+      "kwh": "kWh",
+      "kg": "kg"
+    },
+    "cropTypes": {
+      "vegetables": "Légumes",
+      "fruits": "Fruits",
+      "grains": "Céréales",
+      "herbs": "Herbes",
+      "flowers": "Fleurs",
+      "trees": "Arbres"
+    },
+    "growthStages": {
+      "planting": "Plantation",
+      "germination": "Germination",
+      "vegetative": "Végétatif",
+      "flowering": "Floraison",
+      "fruiting": "Fructification",
+      "harvest": "Récolte"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "personalInfo": "Informations personnelles",
+    "accountSettings": "Paramètres du compte",
+    "changePassword": "Changer le mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "updateProfile": "Mettre à jour le profil",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "profileUpdated": "Profil mis à jour",
+    "passwordUpdated": "Mot de passe mis à jour",
+    "uploadAvatar": "Télécharger un avatar",
+    "removeAvatar": "Supprimer l'avatar",
+    "accountInfo": "Informations du compte",
+    "memberSince": "Membre depuis",
+    "lastLogin": "Dernière connexion",
+    "accountStatus": "Statut du compte",
+    "descriptions": {
+      "personalInfo": "Mettez à jour vos informations personnelles et vos coordonnées",
+      "security": "Sécurisez votre compte avec un mot de passe robuste",
+      "accountInfo": "Consultez les informations et l'activité de votre compte"
+    },
+    "sections": {
+      "fullName": "Nom complet",
+      "contact": "Informations de contact",
+      "location": "Localisation",
+      "additional": "Informations supplémentaires"
+    },
+    "fields": {
+      "phone": "Numéro de téléphone",
+      "address": "Adresse",
+      "city": "Ville",
+      "country": "Pays",
+      "dateOfBirth": "Date de naissance",
+      "gender": "Genre",
+      "userId": "ID utilisateur",
+      "role": "Rôle"
+    },
+    "placeholders": {
+      "firstName": "Saisissez le prénom",
+      "lastName": "Saisissez le nom",
+      "email": "nom@exemple.com",
+      "phone": "+33 6 00 00 00 00",
+      "address": "Adresse",
+      "city": "Ville",
+      "country": "Pays",
+      "gender": "Genre",
+      "currentPassword": "Entrez le mot de passe actuel",
+      "newPassword": "Entrez le nouveau mot de passe",
+      "confirmPassword": "Confirmez le nouveau mot de passe"
+    },
+    "tooltips": {
+      "dateOfBirth": "Sélectionnez votre date de naissance"
+    },
+    "securityRequirements": {
+      "title": "Exigences du mot de passe",
+      "items": {
+        "minLength": "Au moins 6 caractères",
+        "mixCharacters": "Utilisez une combinaison de lettres et de chiffres",
+        "unique": "N'utilisez pas les mêmes mots de passe que sur d'autres comptes"
+      }
+    },
+    "actions": {
+      "changePhoto": "Changer la photo de profil",
+      "togglePasswordVisibility": "Afficher / masquer le mot de passe"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "general": "Général",
+    "notifications": "Notifications",
+    "security": "Sécurité",
+    "language": "Langue",
+    "theme": "Thème",
+    "timezone": "Fuseau horaire",
+    "units": "Unités",
+    "saveSettings": "Enregistrer les paramètres",
+    "resetSettings": "Réinitialiser les paramètres",
+    "settingsSaved": "Paramètres enregistrés",
+    "notificationSettings": {
+      "title": "Paramètres de notification",
+      "emailNotifications": "Notifications par e-mail",
+      "pushNotifications": "Notifications push",
+      "smsNotifications": "Notifications SMS",
+      "criticalAlerts": "Alertes critiques",
+      "maintenanceReminders": "Rappels de maintenance",
+      "harvestAlerts": "Alertes de récolte",
+      "weatherUpdates": "Mises à jour météo"
+    },
+    "privacySettings": {
+      "title": "Paramètres de confidentialité",
+      "dataSharing": "Partage de données",
+      "analytics": "Analytiques",
+      "cookies": "Cookies",
+      "locationTracking": "Suivi de localisation"
+    },
+    "page": {
+      "subtitle": "Gérez vos préférences et configurations d'application",
+      "cards": {
+        "badgeComingSoon": "Bientôt disponible",
+        "notifications": {
+          "subtitle": "Configurez les heures silencieuses, les catégories et les délais de répétition des alertes",
+          "tags": {
+            "quietHours": "Heures silencieuses",
+            "categories": "Catégories",
+            "cooldown": "Délai"
+          }
+        },
+        "appearance": {
+          "title": "Apparence",
+          "subtitle": "Personnalisez le thème, les couleurs et les préférences d'affichage",
+          "tags": {
+            "theme": "Thème",
+            "darkMode": "Mode sombre",
+            "colors": "Couleurs"
+          }
+        },
+        "languageRegion": {
+          "title": "Langue et région",
+          "subtitle": "Définissez votre langue préférée et vos formats régionaux",
+          "tags": {
+            "language": "Langue",
+            "timezone": "Fuseau horaire",
+            "dateFormat": "Format de date"
+          }
+        },
+        "privacy": {
+          "title": "Confidentialité et sécurité",
+          "subtitle": "Gérez la confidentialité des données, les sessions et les paramètres de sécurité",
+          "tags": {
+            "twoFactor": "2FA",
+            "sessions": "Sessions",
+            "dataExport": "Export de données"
+          }
+        },
+        "system": {
+          "title": "Préférences système",
+          "subtitle": "Configurez le comportement du système et les options avancées",
+          "tags": {
+            "autoRefresh": "Actualisation auto",
+            "cache": "Cache",
+            "api": "API"
+          }
+        },
+        "support": {
+          "title": "Aide et support",
+          "subtitle": "Accédez à la documentation, aux FAQ et contactez l'assistance",
+          "tags": {
+            "docs": "Docs",
+            "faq": "FAQ",
+            "contact": "Contact"
+          }
+        }
+      },
+      "info": {
+        "title": "Besoin d'aide ?",
+        "description": "Les paramètres vous permettent de personnaliser votre expérience TerraFlow. Les changements sont enregistrés automatiquement et s'appliquent immédiatement."
+      }
+    }
+  },
+  "farms": {
+    "title": "Fermes",
+    "addFarm": "Ajouter une ferme",
+    "editFarm": "Modifier la ferme",
+    "deleteFarm": "Supprimer la ferme",
+    "farmName": "Nom de la ferme",
+    "farmLocation": "Emplacement de la ferme",
+    "farmSize": "Taille de la ferme",
+    "farmType": "Type de ferme",
+    "noFarms": "Aucune ferme",
+    "farmDetails": "Détails de la ferme",
+    "selectFarm": "Sélectionner une ferme",
+    "farmManagement": "Gestion de la ferme",
+    "farmStatistics": "Statistiques de la ferme",
+    "farmTypes": {
+      "organic": "Biologique",
+      "conventional": "Conventionnelle",
+      "hydroponic": "Hydroponique",
+      "greenhouse": "Serre",
+      "openField": "Champ ouvert"
+    },
+    "manageFarms": "Gérez vos fermes et leurs configurations",
+    "noFarmsFound": "Aucune ferme trouvée",
+    "getStarted": "Commencez par créer votre première ferme pour organiser vos opérations agricoles.",
+    "createFirstFarm": "Créez votre première ferme",
+    "addFarmFunctionality": "Fonctionnalité d'ajout de ferme bientôt disponible",
+    "editFarmFunctionality": "Fonctionnalité de modification de ferme bientôt disponible",
+    "deleteFarmConfirmation": "Êtes-vous sûr de vouloir supprimer la ferme",
+    "farmDeleted": "Ferme supprimée avec succès",
+    "errorDeletingFarm": "Erreur lors de la suppression de la ferme",
+    "loadingFarms": "Chargement des fermes...",
+    "noLocationSpecified": "Aucun emplacement spécifié"
+  },
+  "validation": {
+    "required": "Ce champ est requis",
+    "minLength": "La longueur minimale est de {{min}} caractères",
+    "maxLength": "La longueur maximale est de {{max}} caractères",
+    "invalidFormat": "Format invalide",
+    "email": "Veuillez entrer une adresse e-mail valide",
+    "password": "Le mot de passe doit contenir au moins 8 caractères",
+    "fieldRequired": "Ce champ est requis",
+    "invalidEmail": "Adresse e-mail invalide",
+    "invalidPassword": "Mot de passe invalide",
+    "fieldRequiredWithName": "{{field}} est requis",
+    "invalidEmailWithName": "Veuillez saisir une adresse e-mail valide pour {{field}}",
+    "minLengthWithName": "{{field}} doit contenir au moins {{min}} caractères"
+  },
+  "errors": {
+    "networkError": "Erreur réseau",
+    "serverError": "Erreur serveur",
+    "unauthorized": "Non autorisé",
+    "forbidden": "Interdit",
+    "notFound": "Non trouvé",
+    "validationError": "Erreur de validation",
+    "unknownError": "Erreur inconnue",
+    "createError": "Erreur lors de la création",
+    "updateError": "Erreur lors de la mise à jour",
+    "deleteError": "Erreur lors de la suppression",
+    "bulkDeleteError": "Erreur lors de la suppression multiple",
+    "tryAgain": "Réessayer",
+    "contactSupport": "Contacter le support"
+  },
+  "language": {
+    "switch": "Changer de langue",
+    "select": "Sélectionner la langue",
+    "arabic": "Arabe",
+    "french": "Français",
+    "english": "Anglais"
+  },
+  "actionStream": {
+    "title": "Flux d'Actions",
+    "subtitle": "Surveillance en direct et analyse historique de toutes les activités de la ferme",
+    "live": "EN DIRECT",
+    "liveActions": "Actions en Direct",
+    "totalToday": "Total Aujourd'hui",
+    "warnings": "Avertissements",
+    "farm": "Ferme",
+    "allFarms": "Toutes les Fermes",
+    "device": "Appareil",
+    "allDevices": "Tous les Appareils",
+    "user": "Utilisateur",
+    "allUsers": "Tous les Utilisateurs",
+    "manual": "Manuel",
+    "automated": "Automatisé",
+    "timeRange": "Plage de Temps",
+    "liveOnly": "En Direct Seulement",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "thisWeek": "Cette Semaine",
+    "thisMonth": "Ce Mois",
+    "liveStream": "Flux en Direct",
+    "historicalTimeline": "Chronologie Historique",
+    "details": "Détails",
+    "actionUri": "URI d'Action",
+    "sensorId": "ID du Capteur",
+    "error": "Erreur",
+    "noLiveActions": "Aucune Action en Direct",
+    "noLiveActionsDescription": "Aucune action ne se produit actuellement. Vérifiez dans quelques instants.",
+    "noActions": "Aucune Action Trouvée",
+    "noActionsDescription": "Aucune action trouvée pour la période sélectionnée. Essayez d'ajuster vos filtres.",
+    "total": "Total",
+    "loading": "Chargement du flux d'actions...",
+    "todayMorning": "Ce Matin",
+    "manualActionTitle": "{{action}} manuel sur {{device}}",
+    "automaticActionTitle": "{{action}} automatique sur {{device}}",
+    "actionFailedDescription": "Action échouée : {{error}}",
+    "checkDeviceConnection": "Veuillez vérifier la connexion de l'appareil",
+    "manualActionDescription": "Action manuelle exécutée à {{time}}",
+    "automaticActionDescription": "Déclenchée par la lecture de {{sensor}} {{value}}{{unit}}",
+    "automaticActionDescriptionSimple": "Le système a pris une action automatique",
+    "statusSent": "Envoyé",
+    "statusConfirmed": "Confirmé",
+    "statusFailed": "Échoué",
+    "statusWaiting": "En Attente",
+    "automatic": "Automatique",
+    "justNow": "À l'instant",
+    "minutesAgo": "Il y a {{count}} minutes",
+    "hoursAgo": "Il y a {{count}} heures",
+    "daysAgo": "Il y a {{count}} jours",
+    "weeksAgo": "Il y a des semaines",
+    "summaryText": "Total : {{total}} actions ({{manual}} manuelles, {{automated}} automatisées, {{warnings}} avertissements)",
+    "actionTypes": {
+      "irrigation": "Irrigation",
+      "ventilation": "Ventilation",
+      "lighting": "Éclairage",
+      "heating": "Chauffage",
+      "watering": "Arrosage",
+      "fan": "Ventilateur",
+      "pump": "Pompe",
+      "light": "Lumière",
+      "fertilization": "Fertilisation",
+      "pestControl": "Lutte Antiparasitaire",
+      "harvesting": "Récolte",
+      "planting": "Plantation",
+      "pruning": "Taille",
+      "monitoring": "Surveillance",
+      "alert": "Alerte",
+      "openRoof": "Ouvrir le toit",
+      "closeRoof": "Fermer le toit",
+      "openWindow": "Ouvrir la fenêtre",
+      "closeWindow": "Fermer la fenêtre",
+      "startPump": "Démarrer la pompe",
+      "stopPump": "Arrêter la pompe",
+      "turnOnFan": "Allumer le ventilateur",
+      "turnOffFan": "Éteindre le ventilateur",
+      "turnOnHeater": "Allumer le chauffage",
+      "turnOffHeater": "Éteindre le chauffage",
+      "turnOnLight": "Allumer la lumière",
+      "turnOffLight": "Éteindre la lumière",
+      "humidifierOn": "Humidificateur activé",
+      "humidifierOff": "Humidificateur désactivé",
+      "ventilatorOn": "Ventilateur activé",
+      "ventilatorOff": "Ventilateur désactivé",
+      "waterPumpOn": "Pompe à eau activée",
+      "waterPumpOff": "Pompe à eau désactivée",
+      "lightOn": "Lumière allumée",
+      "lightOff": "Lumière éteinte"
+    }
+  },
+  "manualControl": {
+    "automationStatus": "Statut d'Automatisation",
+    "on": "ACTIVÉ",
+    "off": "DÉSACTIVÉ",
+    "automationOnSubtext": "Votre ferme fonctionne automatiquement. Les appareils répondront aux données des capteurs.",
+    "automationOffSubtext": "L'automatisation est désactivée. Vous pouvez contrôler les appareils manuellement.",
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "automationActive": "Automatisation Active",
+    "automationActiveDescription": "Votre ferme fonctionne automatiquement. Le système surveillera les capteurs et contrôlera les appareils selon vos paramètres.",
+    "safeMode": "Mode Sécurisé",
+    "directActionPanel": "Panneau d'Actions Directes",
+    "actionPanelDescription": "Contrôlez vos appareils directement lorsque l'automatisation est désactivée.",
+    "noLocation": "Aucun emplacement spécifié",
+    "turnOn": "Allumer",
+    "turnOff": "Éteindre",
+    "noDevices": "Aucun Appareil Disponible",
+    "noDevicesDescription": "Aucun appareil n'est actuellement disponible pour le contrôle manuel.",
+    "loadingDevices": "Chargement des appareils...",
+    "loadDataError": "Échec du chargement des données d'appareils",
+    "automationToggled": "Automatisation {{state}}",
+    "safeModeToggled": "Mode Sécurisé {{state}}",
+    "automationOffConfirmation": "Êtes-vous sûr de vouloir désactiver l'automatisation ? Cela arrêtera tout contrôle automatique des appareils.",
+    "deviceActionExecuted": "Action d'appareil exécutée",
+    "deviceActionFailed": "Échec de l'action d'appareil",
+    "safeModeActive": "Le Mode Sécurisé est actif. Le contrôle des appareils est restreint.",
+    "deviceOffline": "L'appareil est hors ligne",
+    "deviceUnavailable": "L'appareil n'est pas disponible",
+    "automationActiveError": "L'automatisation est actuellement active. Le contrôle manuel est désactivé pour des raisons de sécurité.",
+    "safeModeActiveError": "Le Mode Sécurisé est actif. Le contrôle manuel est désactivé.",
+    "humidityController": "Contrôleur d'Humidité",
+    "humidifier": "Humidificateur",
+    "temperatureController": "Contrôleur de Température",
+    "heater": "Chauffage",
+    "lightController": "Contrôleur d'Éclairage",
+    "fanController": "Contrôleur de Ventilateur",
+    "ventilationSystem": "Système de Ventilation",
+    "waterPump": "Pompe à Eau",
+    "irrigationSystem": "Système d'Irrigation",
+    "sensor": "Capteur",
+    "device": "Appareil",
+    "humidityRange": "Plage d'Humidité",
+    "capacity": "Capacité",
+    "temperatureRange": "Plage de Température",
+    "power": "Puissance",
+    "lightIntensity": "Intensité Lumineuse",
+    "wattage": "Puissance",
+    "airflow": "Débit d'Air",
+    "speed": "Vitesse",
+    "flowRate": "Débit",
+    "pressure": "Pression",
+    "connection": "Connexion",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "lastSeen": "Dernière vue",
+    "justNow": "À l'instant",
+    "minutesAgo": "Il y a {{count}} minutes",
+    "hoursAgo": "Il y a {{count}} heures",
+    "never": "Jamais",
+    "soilMoistureRule": "Auto-irriguer lorsque l'humidité du sol < 20%",
+    "temperatureRule": "Auto-réguler lorsque la température est en dehors de 18-25°C",
+    "actionExecutingTooltip": "L'action \"{{actionName}}\" est actuellement en cours d'exécution. Veuillez patienter...",
+    "deviceOfflineTooltip": "Cette action ne peut pas être exécutée car \"{{deviceName}}\" est actuellement {{status}}. L'appareil doit être en ligne ou actif pour effectuer des actions."
+  },
+  "admin": {
+    "sidebar": {
+      "title": "TerraFlow Admin",
+      "overview": "Vue d'ensemble",
+      "devices": "Appareils",
+      "systemHealth": "Santé du système",
+      "logs": "Journaux",
+      "users": "Utilisateurs",
+      "farms": "Fermes",
+      "farmers": "Agriculteurs",
+      "settings": "Paramètres"
+    },
+    "header": {
+      "searchPlaceholder": "Rechercher des appareils, utilisateurs, journaux..."
+    },
+    "devices": {
+      "title": "Gestion des Appareils",
+      "subtitle": "Gérer tous les appareils du système",
+      "registerSensor": "Enregistrer un Capteur",
+      "addDevice": "Ajouter un Appareil",
+      "stats": {
+        "total": "Total des Appareils",
+        "online": "En Ligne",
+        "offline": "Hors Ligne",
+        "maintenance": "Maintenance"
+      },
+      "filters": {
+        "status": "Statut",
+        "type": "Type",
+        "farm": "Ferme",
+        "allFarms": "Toutes les Fermes",
+        "search": "Rechercher",
+        "searchPlaceholder": "Rechercher par nom, ID, emplacement ou type",
+        "clear": "Effacer les Filtres"
+      },
+      "table": {
+        "deviceId": "ID de l'Appareil",
+        "name": "Nom",
+        "farm": "Ferme",
+        "location": "Emplacement",
+        "status": "Statut",
+        "type": "Type",
+        "lastSeen": "Vu pour la Dernière Fois",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewDetails": "Voir les Détails",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "empty": {
+        "title": "Aucun appareil trouvé",
+        "message": "Commencez par ajouter votre premier appareil",
+        "action": "Ajouter un Appareil"
+      },
+      "details": {
+        "title": "Détails de l'Appareil"
+      },
+      "fields": {
+        "deviceId": "ID de l'Appareil",
+        "type": "Type",
+        "status": "Statut",
+        "farm": "Ferme",
+        "location": "Emplacement",
+        "lastSeen": "Vu pour la Dernière Fois",
+        "createdAt": "Créé le"
+      },
+      "tabs": {
+        "overview": "Vue d'Ensemble",
+        "sensors": "Capteurs",
+        "activity": "Activité"
+      },
+      "noSensors": "Aucun capteur lié à cet appareil",
+      "sensorsList": "Capteurs Liés",
+      "noActivity": "Aucune activité récente trouvée pour cet appareil"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "Gérer tous les comptes, rôles et accès aux fermes",
+      "newUser": "Nouvel Utilisateur",
+      "stats": {
+        "total": "Total",
+        "farmers": "Agriculteurs",
+        "moderators": "Modérateurs",
+        "admins": "Administrateurs"
+      },
+      "filters": {
+        "role": "Rôle",
+        "status": "Statut",
+        "farm": "Ferme",
+        "allFarms": "Toutes les Fermes",
+        "search": "Rechercher",
+        "searchPlaceholder": "Rechercher par nom, e-mail...",
+        "clear": "Effacer les Filtres"
+      },
+      "table": {
+        "name": "Nom",
+        "email": "E-mail",
+        "role": "Rôle",
+        "status": "Statut",
+        "farms": "Fermes",
+        "lastLogin": "Dernière Connexion",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewDetails": "Voir les Détails",
+        "edit": "Modifier",
+        "impersonate": "Usurper l'Identité",
+        "deactivate": "Désactiver"
+      },
+      "empty": {
+        "title": "Aucun utilisateur trouvé",
+        "message": "Commencez par créer votre premier compte utilisateur",
+        "action": "Créer un Utilisateur"
+      },
+      "fields": {
+        "name": "Nom",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "role": "Rôle",
+        "status": "Statut",
+        "location": "Emplacement",
+        "createdAt": "Créé le",
+        "updatedAt": "Mis à jour le",
+        "lastLogin": "Dernière Connexion"
+      },
+      "noFarms": "Cet utilisateur n'est associé à aucune ferme.",
+      "noActivity": "Aucune activité récente trouvée pour cet utilisateur."
+    },
+    "farmers": {
+      "title": "Gestion des Agriculteurs",
+      "subtitle": "Gérer tous les agriculteurs enregistrés et leurs ressources",
+      "farmer": "agriculteur",
+      "farmers": "agriculteurs",
+      "devices": "appareils",
+      "device": "appareil",
+      "sensor": "capteur",
+      "moreFarms": "fermes supplémentaires",
+      "stats": {
+        "totalFarmers": "Total des Agriculteurs",
+        "active": "Actif",
+        "totalFarms": "Total des Fermes",
+        "totalDevices": "Total des Appareils",
+        "farms": "Fermes",
+        "devices": "Appareils",
+        "sensors": "Capteurs",
+        "moderators": "Modérateurs"
+      },
+      "filters": {
+        "search": "Rechercher",
+        "searchPlaceholder": "Rechercher par nom ou e-mail...",
+        "status": "Statut",
+        "allStatus": "Tous les Statuts",
+        "clearAll": "Effacer tous les filtres",
+        "clearFilters": "Effacer les Filtres"
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "unknown": "Inconnu"
+      },
+      "kpi": {
+        "assignedFarms": "Fermes assignées",
+        "totalDevices": "Total des appareils",
+        "location": "Emplacement"
+      },
+      "loading": "Chargement des agriculteurs...",
+      "loadingFarms": "Chargement des fermes...",
+      "loadingDevices": "Chargement des appareils...",
+      "loadingSensors": "Chargement des capteurs...",
+      "loadingModerators": "Chargement des modérateurs...",
+      "loadingActivity": "Chargement de l'activité...",
+      "empty": {
+        "title": "Aucun Agriculteur Trouvé",
+        "description": "Aucun agriculteur ne correspond à vos filtres actuels",
+        "noFarms": "Aucune Ferme Assignée",
+        "noFarmsDesc": "Cet agriculteur n'a pas encore de fermes assignées",
+        "noDevices": "Aucun Appareil Trouvé",
+        "noDevicesDesc": "Cet agriculteur n'a pas d'appareils enregistrés",
+        "noSensors": "Aucun Capteur Trouvé",
+        "noSensorsDesc": "Aucun capteur n'est enregistré sous cet agriculteur",
+        "noModerators": "Aucun Modérateur Trouvé",
+        "noModeratorsDesc": "Aucun modérateur n'est assigné aux fermes de cet agriculteur",
+        "moderatorsHint": "Les modérateurs sont assignés par ferme",
+        "noActivity": "Aucune Activité Trouvée",
+        "noActivityDesc": "Aucune activité récente enregistrée pour cet agriculteur"
+      },
+      "details": {
+        "noSelection": "Aucun Agriculteur Sélectionné",
+        "selectPrompt": "Sélectionnez un agriculteur dans la liste pour voir ses détails"
+      },
+      "tabs": {
+        "overview": "Vue d'Ensemble",
+        "farms": "Fermes",
+        "devices": "Appareils",
+        "sensors": "Capteurs",
+        "moderators": "Modérateurs",
+        "activity": "Activité",
+        "billing": "Facturation"
+      },
+      "sections": {
+        "profile": "Informations du Profil",
+        "quickStats": "Statistiques Rapides",
+        "assignedFarms": "Fermes Assignées"
+      },
+      "fields": {
+        "fullName": "Nom Complet",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "status": "Statut",
+        "location": "Emplacement",
+        "lastActive": "Dernière Activité",
+        "memberSince": "Membre Depuis"
+      },
+      "actions": {
+        "refresh": "Actualiser la liste des agriculteurs",
+        "edit": "Modifier l'agriculteur",
+        "assignFarm": "Assigner une Ferme"
+      },
+      "contextMenu": {
+        "viewDetails": "Voir les Détails",
+        "edit": "Modifier l'Agriculteur",
+        "assignFarm": "Assigner une Ferme"
+      },
+      "billing": {
+        "title": "Facturation & Abonnements",
+        "comingSoon": "Les fonctionnalités de facturation arrivent bientôt",
+        "invoiceHistory": "Historique des Factures",
+        "paymentMethods": "Méthodes de Paiement",
+        "subscriptionPlans": "Plans d'Abonnement"
+      }
+    },
+    "overview": {
+      "title": "Vue d'Ensemble Admin",
+      "subtitle": "Statistiques système et accès rapide",
+      "loading": "Chargement des données de vue d'ensemble...",
+      "refresh": "Actualiser",
+      "stats": {
+        "totalUsers": "Total des Utilisateurs",
+        "totalFarms": "Total des Fermes",
+        "totalDevices": "Total des Appareils",
+        "activeDevices": "Appareils Actifs",
+        "onlineDevices": "Appareils En Ligne",
+        "offlineDevices": "Appareils Hors Ligne",
+        "totalSensors": "Total des Capteurs",
+        "criticalAlerts": "Alertes Critiques",
+        "actionsToday": "Actions Aujourd'hui",
+        "systemHealth": "Santé du Système"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "viewUsers": "Voir les Utilisateurs",
+        "viewFarms": "Voir les Fermes",
+        "viewDevices": "Voir les Appareils",
+        "viewLogs": "Voir les Journaux",
+        "viewNotifications": "Voir les Notifications",
+        "viewSettings": "Voir les Paramètres"
+      },
+      "recentActivity": {
+        "title": "Activité Récente",
+        "noActivity": "Aucune activité récente"
+      },
+      "systemStatus": {
+        "title": "État du Système",
+        "allOperational": "Tous les Systèmes Opérationnels",
+        "issuesDetected": "Problèmes Détectés"
+      }
+    },
+    "notifications": {
+      "title": "Notifications Admin",
+      "subtitle": "Gérer et surveiller toutes les notifications système",
+      "systemStatus": "État du Système",
+      "allSystemsOperational": "Tous les Systèmes Opérationnels",
+      "issuesDetected": "Problèmes Détectés",
+      "totalNotifications": "Total des Notifications",
+      "unread": "Non Lu",
+      "critical": "Critique",
+      "warning": "Avertissement",
+      "info": "Information",
+      "success": "Succès",
+      "markAllRead": "Tout Marquer comme Lu",
+      "refresh": "Actualiser",
+      "search": "Rechercher des notifications...",
+      "filterByType": "Filtrer par type",
+      "filterByStatus": "Filtrer par statut",
+      "allTypes": "Tous les Types",
+      "allStatuses": "Tous les Statuts",
+      "clearFilters": "Effacer les Filtres",
+      "noNotifications": "Aucune notification trouvée",
+      "noNotificationsDesc": "Il n'y a pas de notifications correspondant à vos filtres.",
+      "loadMore": "Charger Plus",
+      "showing": "Affichage de {{current}} sur {{total}} notifications",
+      "sendNotification": "Envoyer une Notification",
+      "broadcast": "Diffuser à Tous les Utilisateurs",
+      "targetUser": "Cibler un Utilisateur Spécifique",
+      "notificationSent": "Notification envoyée avec succès",
+      "notificationError": "Échec de l'envoi de la notification",
+      "deleteNotification": "Supprimer la Notification",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette notification ?",
+      "bulkDelete": "Supprimer la Sélection",
+      "bulkMarkRead": "Marquer la Sélection comme Lu",
+      "selected": "{{count}} sélectionné(s)",
+      "stats": {
+        "total": "Total",
+        "unread": "Non Lu",
+        "critical": "Critique",
+        "today": "Aujourd'hui"
+      },
+      "types": {
+        "system": "Système",
+        "device": "Appareil",
+        "sensor": "Capteur",
+        "user": "Utilisateur",
+        "farm": "Ferme",
+        "action": "Action"
+      }
+    },
+    "settings": {
+      "title": "Paramètres Admin",
+      "subtitle": "Configurer les paramètres et préférences du système",
+      "save": "Enregistrer les Paramètres",
+      "saving": "Enregistrement...",
+      "saved": "Paramètres enregistrés avec succès",
+      "saveError": "Échec de l'enregistrement des paramètres",
+      "reset": "Réinitialiser aux Valeurs par Défaut",
+      "resetConfirm": "Êtes-vous sûr de vouloir réinitialiser tous les paramètres aux valeurs par défaut ?",
+      "sections": {
+        "general": "Paramètres Généraux",
+        "notifications": "Paramètres de Notification",
+        "security": "Paramètres de Sécurité",
+        "system": "Préférences Système",
+        "support": "Aide & Support"
+      },
+      "general": {
+        "title": "Paramètres Généraux",
+        "subtitle": "Configurer les préférences système de base",
+        "platformName": "Nom de la Plateforme",
+        "platformNamePlaceholder": "Entrez le nom de la plateforme",
+        "timezone": "Fuseau Horaire",
+        "language": "Langue par Défaut",
+        "dateFormat": "Format de Date",
+        "timeFormat": "Format d'Heure",
+        "currency": "Devise",
+        "maintenanceMode": "Mode Maintenance",
+        "maintenanceModeDesc": "Activer pour empêcher l'accès des utilisateurs pendant la maintenance"
+      },
+      "notifications": {
+        "title": "Paramètres de Notification",
+        "subtitle": "Configurer comment et quand les notifications sont envoyées",
+        "emailNotifications": "Notifications par E-mail",
+        "emailNotificationsDesc": "Envoyer des notifications par e-mail",
+        "pushNotifications": "Notifications Push",
+        "pushNotificationsDesc": "Envoyer des notifications push du navigateur",
+        "smsNotifications": "Notifications SMS",
+        "smsNotificationsDesc": "Envoyer des notifications par SMS",
+        "criticalAlerts": "Alertes Critiques",
+        "criticalAlertsDesc": "Toujours envoyer les alertes système critiques",
+        "digestFrequency": "Fréquence du Résumé",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel"
+      },
+      "security": {
+        "title": "Paramètres de Sécurité",
+        "subtitle": "Configurer l'authentification et le contrôle d'accès",
+        "sessionTimeout": "Délai de Session (minutes)",
+        "maxLoginAttempts": "Tentatives de Connexion Max",
+        "passwordMinLength": "Longueur Minimale du Mot de Passe",
+        "requireMfa": "Exiger l'Authentification Multi-Facteurs",
+        "requireMfaDesc": "Forcer tous les utilisateurs à utiliser MFA",
+        "ipWhitelist": "Liste Blanche IP",
+        "ipWhitelistPlaceholder": "Entrez les adresses IP, une par ligne",
+        "auditLog": "Activer le Journal d'Audit",
+        "auditLogDesc": "Enregistrer toutes les actions administratives"
+      },
+      "system": {
+        "title": "Préférences Système",
+        "subtitle": "Configurer le comportement du système et les options avancées",
+        "autoRefresh": "Intervalle d'Actualisation Auto (secondes)",
+        "cacheTimeout": "Délai du Cache (minutes)",
+        "apiRateLimit": "Limite de Débit API (requêtes/minute)",
+        "debugMode": "Mode Débogage",
+        "debugModeDesc": "Activer la journalisation détaillée pour le débogage",
+        "dataRetention": "Rétention des Données (jours)",
+        "backupFrequency": "Fréquence de Sauvegarde"
+      },
+      "support": {
+        "title": "Aide & Support",
+        "subtitle": "Accéder à la documentation, aux FAQ et contacter le support",
+        "documentation": "Documentation",
+        "faq": "FAQ",
+        "contactSupport": "Contacter le Support",
+        "reportBug": "Signaler un Bug",
+        "version": "Version",
+        "buildDate": "Date de Build"
+      },
+      "tags": {
+        "autoRefresh": "Actualisation Auto",
+        "cache": "Cache",
+        "api": "API",
+        "docs": "Docs",
+        "faq": "FAQ",
+        "comingSoon": "Bientôt"
+      }
+    },
+    "logs": {
+      "title": "Journaux Système",
+      "subtitle": "Suivre tous les événements, actions et erreurs du système",
+      "refresh": "Actualiser",
+      "refreshTooltip": "Actualiser les journaux",
+      "search": "Rechercher dans les journaux...",
+      "searchPlaceholder": "Rechercher dans les messages, actions, erreurs...",
+      "filterType": "Type",
+      "filterStatus": "Statut",
+      "allTypes": "Tous les Types",
+      "allStatuses": "Tous les Statuts",
+      "typeSystem": "Système",
+      "typeDevice": "Appareil",
+      "typeSensor": "Capteur",
+      "typeUser": "Utilisateur",
+      "typeAutoRule": "Règle Auto",
+      "statusSuccess": "Succès",
+      "statusError": "Erreur",
+      "statusWarning": "Avertissement",
+      "statusInfo": "Information",
+      "today": "Aujourd'hui",
+      "last24h": "Dernières 24 heures",
+      "last7d": "7 derniers jours",
+      "all": "Tout",
+      "clearAll": "Tout Effacer",
+      "clearFilters": "Effacer tous les filtres",
+      "found": "{{count}} {{unit}} trouvé(s)",
+      "logUnit": "journal",
+      "logsUnit": "journaux",
+      "noLogs": "Aucun journal trouvé",
+      "noLogsDesc": "Essayez d'ajuster vos filtres ou votre requête de recherche",
+      "clearFiltersBtn": "Effacer les Filtres",
+      "retry": "Réessayer",
+      "noLogSelected": "Aucun Journal Sélectionné",
+      "noLogSelectedDesc": "Sélectionnez une entrée de journal dans la liste pour voir ses détails",
+      "closeDetails": "Fermer les détails",
+      "closePanel": "Fermer le panneau de détails",
+      "tabs": {
+        "overview": "Vue d'Ensemble",
+        "metadata": "Métadonnées",
+        "rawJson": "JSON Brut",
+        "relatedObjects": "Objets Liés",
+        "timeline": "Chronologie"
+      },
+      "details": {
+        "actionDetails": "Détails de l'Action",
+        "category": "Catégorie",
+        "farm": "Ferme",
+        "path": "Chemin",
+        "action": "Action",
+        "status": "Statut",
+        "message": "Message",
+        "errorDetails": "Détails de l'Erreur",
+        "quickInfo": "Infos Rapides",
+        "sourceType": "Type de Source",
+        "sourceId": "ID de Source",
+        "actionUri": "URI de l'Action",
+        "timestamp": "Horodatage"
+      },
+      "related": {
+        "device": "Appareil",
+        "sensor": "Capteur",
+        "user": "Utilisateur",
+        "deviceId": "ID de l'Appareil",
+        "type": "Type",
+        "status": "Statut",
+        "lastSeen": "Vu pour la Dernière Fois",
+        "sensorId": "ID du Capteur",
+        "unit": "Unité",
+        "name": "Nom",
+        "email": "E-mail",
+        "loadingDevice": "Chargement de l'appareil...",
+        "loadingSensor": "Chargement du capteur...",
+        "loadingUser": "Chargement de l'utilisateur...",
+        "deviceNotFound": "Appareil non trouvé",
+        "sensorNotFound": "Capteur non trouvé",
+        "userNotFound": "Utilisateur non trouvé",
+        "noRelatedObjects": "Aucun objet lié trouvé"
+      },
+      "timeline": {
+        "loading": "Chargement de la chronologie...",
+        "noEvents": "Aucun événement lié trouvé"
+      },
+      "copyJson": "Copier JSON",
+      "copyValue": "Copier la valeur",
+      "toggleGroup": "Basculer le groupe",
+      "collapse": "Réduire",
+      "expand": "Développer"
+    }
+  },
+  "ai": {
+    "recommendations": {
+      "title": "Recommandations Intelligentes",
+      "subtitle": "{{count}} suggestions actionnables",
+      "analyzing": "Analyse de vos cultures...",
+      "optimalRange": "Plage optimale",
+      "empty": {
+        "title": "Tout va bien !",
+        "description": "Vos cultures sont en bonne santé. Aucune action requise pour le moment."
+      },
+      "priority": {
+        "critical": "Critique",
+        "high": "Priorité Haute",
+        "medium": "Moyen",
+        "low": "Info"
+      },
+      "moisture": {
+        "criticalLow": {
+          "title": "🚨 Arrosez {{cropName}} MAINTENANT",
+          "description": "L'humidité du sol est critique à {{value}}{{unit}}. Votre culture risque un stress sévère.",
+          "reason": "Une humidité inférieure à {{optimalMin}}% provoque le flétrissement, un retard de croissance et une perte potentielle.",
+          "impact": "Un arrosage immédiat peut prévenir des dommages irréversibles"
+        },
+        "warningLow": {
+          "title": "💧 Planifiez l'arrosage de {{cropName}}",
+          "description": "L'humidité à {{value}}{{unit}} est sous l'optimal. Arrosez dans les prochaines heures.",
+          "reason": "Le niveau actuel approche la zone de stress. La plage optimale est {{optimalMin}}-{{optimalMax}}%.",
+          "impact": "Un arrosage précoce améliore la santé et le rendement"
+        },
+        "criticalHigh": {
+          "title": "⚠️ Vérifiez le drainage - Sur-arrosage détecté",
+          "description": "L'humidité à {{value}}{{unit}} est trop élevée. Risque de pourriture des racines.",
+          "reason": "L'excès d'eau étouffe les racines et favorise les champignons.",
+          "impact": "Améliorez le drainage pour sauver votre culture"
+        },
+        "optimal": {
+          "title": "✅ L'humidité de {{cropName}} est parfaite",
+          "description": "L'humidité du sol à {{value}}{{unit}} est dans la plage optimale.",
+          "reason": "Votre programme d'irrigation fonctionne bien.",
+          "impact": "Continuez la routine actuelle"
+        }
+      },
+      "temperature": {
+        "criticalLow": {
+          "title": "❄️ Alerte Gel - Protégez {{cropName}}",
+          "description": "La température à {{value}}{{unit}} est dangereusement basse. Risque de dommages par le gel.",
+          "reason": "Les températures sous {{optimalMin}}°C peuvent geler les cellules végétales.",
+          "impact": "Couvrez les cultures ou activez le chauffage immédiatement"
+        },
+        "criticalHigh": {
+          "title": "🌡️ Stress Thermique - Refroidissez {{cropName}}",
+          "description": "La température à {{value}}{{unit}} est trop élevée. Les cultures sont stressées.",
+          "reason": "Les hautes températures causent flétrissement et coups de soleil.",
+          "impact": "Fournissez de l'ombre ou augmentez la ventilation"
+        },
+        "warningLow": {
+          "title": "🌡️ Baisse de température pour {{cropName}}",
+          "description": "La température à {{value}}{{unit}} est sous l'optimal mais pas critique.",
+          "reason": "Les températures fraîches ralentissent la croissance.",
+          "impact": "Surveillez de près et préparez une protection si nécessaire"
+        }
+      },
+      "humidity": {
+        "criticalHigh": {
+          "title": "💨 Humidité élevée - Améliorez la ventilation",
+          "description": "L'humidité à {{value}}{{unit}} augmente le risque de maladie pour {{cropName}}.",
+          "reason": "L'humidité élevée favorise les maladies fongiques comme le mildiou.",
+          "impact": "Augmentez le flux d'air pour réduire la pression des maladies"
+        },
+        "criticalLow": {
+          "title": "💦 Humidité basse - Considérez la brumisation",
+          "description": "L'humidité à {{value}}{{unit}} est trop basse pour une croissance optimale.",
+          "reason": "La faible humidité cause du stress et augmente les besoins en eau.",
+          "impact": "Une légère brumisation peut maintenir la santé des feuilles"
+        }
+      },
+      "harvest": {
+        "soon": {
+          "title": "📅 Récolte approchant pour {{cropName}}",
+          "description": "La date de récolte prévue est dans les 7 prochains jours.",
+          "reason": "Préparez l'équipement et planifiez la logistique de récolte.",
+          "impact": "Une récolte à temps assure la meilleure qualité"
+        },
+        "ready": {
+          "title": "🌾 {{cropName}} est prêt à récolter !",
+          "description": "Votre culture a atteint la maturité. Récoltez dans les prochains jours.",
+          "reason": "Retarder la récolte peut réduire la qualité.",
+          "impact": "Récoltez au pic pour une valeur maximale"
+        }
+      },
+      "growthStage": {
+        "seedling": {
+          "title": "🌱 {{cropName}} au stade plantule",
+          "description": "Votre culture est en croissance précoce. Concentrez-vous sur l'humidité et la protection.",
+          "reason": "Les plantules sont délicates et nécessitent une attention particulière.",
+          "impact": "De bons soins précoces mènent à des plantes fortes"
+        },
+        "flowering": {
+          "title": "🌸 {{cropName}} est en floraison",
+          "description": "Considérez l'application d'engrais pour soutenir le développement des fleurs.",
+          "reason": "La floraison a des besoins nutritifs élevés.",
+          "impact": "Une nutrition appropriée pendant la floraison améliore le rendement"
+        }
+      },
+      "weather": {
+        "rainExpected": {
+          "title": "🌧️ Pluie prévue - Sautez l'arrosage",
+          "description": "De la pluie est prévue. Économisez l'eau en sautant l'irrigation.",
+          "reason": "Les précipitations naturelles fourniront suffisamment d'humidité.",
+          "impact": "Conservez l'eau et réduisez les coûts"
+        },
+        "frostWarning": {
+          "title": "❄️ Avertissement de gel ce soir",
+          "description": "Les températures devraient descendre sous zéro. Protégez les cultures sensibles.",
+          "reason": "Le gel peut causer des dommages sévères aux plantes non protégées.",
+          "impact": "Couvrez les cultures ou activez les systèmes de chauffage"
+        },
+        "heatWarning": {
+          "title": "☀️ Chaleur extrême prévue",
+          "description": "Hautes températures prévues. Augmentez l'arrosage et fournissez de l'ombre.",
+          "reason": "Le stress thermique réduit la croissance et peut endommager les cultures.",
+          "impact": "Des soins supplémentaires pendant les vagues de chaleur préviennent les pertes"
+        }
+      },
+      "actions": {
+        "waterNow": "Arroser Maintenant",
+        "scheduleWatering": "Planifier l'Arrosage",
+        "checkDrainage": "Vérifier le Drainage",
+        "protectFromFrost": "Protéger Maintenant",
+        "activateCooling": "Activer le Refroidissement",
+        "monitorTemperature": "Surveiller",
+        "improveVentilation": "Améliorer l'Aération",
+        "mistCrop": "Brumiser la Culture",
+        "prepareHarvest": "Préparer la Récolte",
+        "harvestNow": "Récolter Maintenant",
+        "viewGrowthTips": "Voir les Conseils",
+        "applyFertilizer": "Fertiliser",
+        "skipWatering": "Sauter l'Arrosage",
+        "provideShade": "Ajouter de l'Ombre",
+        "viewDetails": "Voir les Détails",
+        "dismiss": "Ignorer",
+        "executeAllCritical": "Corriger tous les problèmes critiques",
+        "fixAll": "Tout Corriger"
+      }
+    }
+  },
+  "farms": {
+    "farmManagement": "Gestion des Fermes",
+    "manageFarms": "Gérez vos fermes et leurs configurations",
+    "addFarm": "Ajouter une ferme",
+    "noLocationSpecified": "Aucun emplacement spécifié",
+    "noFarmsFound": "Aucune ferme trouvée",
+    "getStarted": "Commencez par créer votre première ferme pour organiser vos opérations agricoles.",
+    "createFirstFarm": "Créer votre première ferme",
+    "loadingFarms": "Chargement des fermes..."
+  },
+  "sensorAnalytics": {
+    "title": "Analyse des Capteurs",
+    "subtitleAdmin": "Surveiller, analyser et exporter les données des capteurs IoT sur toutes les fermes",
+    "subtitleFarmer": "Surveiller, analyser et exporter les données des capteurs de vos fermes",
+    "tabSubtitle": "Analyses avancées, graphiques et surveillance de la santé",
+    "dashboardTitle": "Tableau de Bord d'Analyse des Capteurs",
+    "dashboardDesc": "Consultez des graphiques détaillés, des analyses de santé, des comparaisons de fermes, la détection d'anomalies et des outils d'exportation pour toutes vos données de capteurs.",
+    "openDashboard": "Ouvrir le Tableau de Bord",
+    "period": "Période",
+    "exportTitle": "Rapport d'Analyse des Capteurs",
+    "exportSection": "Lectures des Capteurs",
+    "exportSubtitleAdmin": "Exportation des données de capteurs de toutes les fermes",
+    "exportSubtitleFarmer": "Exportation des données de capteurs de vos fermes",
+    "liveMode": {
+      "label": "En direct",
+      "start": "Activer les mises à jour en direct (30s)",
+      "stop": "Arrêter les mises à jour en direct"
+    },
+    "datePresets": {
+      "today": "Aujourd'hui",
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "last90Days": "90 derniers jours"
+    },
+    "filters": {
+      "farm": "Ferme",
+      "farmer": "Agriculteur",
+      "sensorType": "Type de capteur",
+      "type": "Type",
+      "anomalies": "Anomalies",
+      "anomaliesOnly": "Anomalies uniquement",
+      "anomaliesOnlyTooltip": "Afficher uniquement les capteurs avec des anomalies",
+      "clearAll": "Tout effacer",
+      "plural": "s"
+    },
+    "search": {
+      "label": "Rechercher des capteurs, fermes, appareils…",
+      "placeholder": "Tapez pour rechercher…"
+    },
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "readings": "Lectures des capteurs",
+      "comparison": "Comparaison des fermes",
+      "health": "Santé des capteurs"
+    },
+    "overview": {
+      "activityTrend": "Tendance d'activité des capteurs",
+      "activityTrendSubtitle": "Lectures et activité des appareils dans le temps",
+      "trendLoading": "Chargement des données de tendance…",
+      "healthDistribution": "Distribution de la santé des capteurs",
+      "noSensorData": "Aucune donnée de capteur disponible",
+      "recentAnomalies": "Anomalies récentes",
+      "allNormal": "Tous les capteurs fonctionnent normalement",
+      "noAnomalies": "Aucune anomalie détectée dans cette période",
+      "farmsBySensorCount": "Fermes par nombre de capteurs",
+      "noFarmData": "Aucune donnée de ferme disponible"
+    },
+    "readings": {
+      "farm": "ferme",
+      "sensor": "capteur",
+      "expandAll": "Tout développer",
+      "collapseAll": "Tout réduire",
+      "noSensors": "Aucun capteur trouvé",
+      "noSensorsDesc": "Aucun capteur ne correspond à vos filtres actuels. Essayez d'ajuster vos critères de recherche."
+    },
+    "table": {
+      "sensor": "Capteur",
+      "type": "Type",
+      "device": "Appareil",
+      "latestValue": "Dernière valeur",
+      "average": "Moyenne",
+      "min": "Min",
+      "max": "Max",
+      "readings": "Lectures",
+      "status": "Statut",
+      "lastReading": "Dernière lecture"
+    },
+    "comparison": {
+      "title": "Comparaison des fermes",
+      "subtitle": "Capteurs, lectures et alertes sur les fermes",
+      "noData": "Aucune donnée de comparaison disponible",
+      "performanceTable": "Tableau de performance des fermes",
+      "farm": "Ferme",
+      "owner": "Propriétaire",
+      "sensors": "Capteurs",
+      "readings": "Lectures",
+      "avgValue": "Valeur moy.",
+      "alerts": "Alertes",
+      "health": "Santé",
+      "uptime": "Disponibilité",
+      "noFarms": "Aucune ferme à comparer"
+    },
+    "health": {
+      "normal": "Normal",
+      "warning": "Avertissement",
+      "critical": "Critique",
+      "offline": "Hors ligne",
+      "distributionTitle": "Distribution de la santé",
+      "anomalyAuditLog": "Journal d'audit des anomalies",
+      "systemHealthy": "Système sain",
+      "allNormalThresholds": "Tous les capteurs fonctionnent dans les seuils normaux"
+    },
+    "anomaly": {
+      "severity": "Sévérité",
+      "sensorId": "ID du capteur",
+      "type": "Type",
+      "farm": "Ferme",
+      "device": "Appareil",
+      "value": "Valeur",
+      "threshold": "Seuil",
+      "detected": "Détecté"
+    },
+    "drawer": {
+      "title": "Détail du capteur",
+      "generalInfo": "Informations générales",
+      "type": "Type",
+      "unit": "Unité",
+      "farm": "Ferme",
+      "device": "Appareil",
+      "owner": "Propriétaire",
+      "location": "Emplacement",
+      "statusHealth": "Statut & Santé",
+      "readingStats": "Statistiques de lecture",
+      "latest": "Dernière",
+      "average": "Moyenne",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "thresholds": "Seuils",
+      "minCritical": "Min critique",
+      "minWarning": "Min avertissement",
+      "maxWarning": "Max avertissement",
+      "maxCritical": "Max critique",
+      "readingHistory": "Historique des lectures",
+      "metadata": "Métadonnées",
+      "totalReadings": "Total des lectures",
+      "lastReading": "Dernière lecture",
+      "sensorId": "ID du capteur",
+      "deviceId": "ID de l'appareil",
+      "viewSensor": "Voir le capteur",
+      "notFound": "Capteur introuvable"
+    }
+  },
+  "landing": {
+    "nav": {
+      "about": "À propos",
+      "value": "Avantages",
+      "howItWorks": "Fonctionnement",
+      "farmers": "Agriculteurs",
+      "impact": "Impact",
+      "trust": "Confiance",
+      "haveAccount": "J'ai un compte",
+      "requestAccess": "Demander l'accès",
+      "switchDark": "Passer en mode sombre",
+      "switchLight": "Passer en mode clair"
+    },
+    "hero": {
+      "title1": "L'agriculture,",
+      "title2": "enfin prévisible.",
+      "cta": "DEMANDER L'ACCÈS",
+      "scrollDown": "Découvrir"
+    },
+    "about": {
+      "label": "À propos",
+      "title": "À propos de Feedin",
+      "lead": "Feedin est né du terrain, là où chaque décision compte. Face aux aléas climatiques, au stress hydrique et à la complexité croissante de la gestion agricole, Feedin accompagne les agriculteurs avec clarté et sérénité — pour une agriculture intelligente, enracinée dans le réel.",
+      "body": "Feedin ne remplace pas l'expérience humaine. Il l'amplifie, en transformant les signaux invisibles du champ en repères clairs, au bon moment. Chaque agriculteur mérite un regard lucide sur ses cultures, son irrigation et la durabilité de ses pratiques — sans complexité, sans jargon.",
+      "values": {
+        "v1": "Pensé pour les réalités du terrain",
+        "v2": "Clair, utile, sans complexité",
+        "v3": "Au service d'une agriculture durable"
+      },
+      "mediaPlaceholder": "Image / GIF / Vidéo"
+    },
+    "value": {
+      "label": "Ce que Feedin apporte",
+      "title": "Une agriculture plus lisible, plus sereine",
+      "intro": "Feedin rend visibles les signaux essentiels de vos parcelles pour que chaque décision soit prise avec confiance.",
+      "benefits": {
+        "b1": "Anticipez les besoins en eau de vos cultures avant qu'il ne soit trop tard",
+        "b2": "Recevez des repères clairs sur l'état de vos parcelles, jour après jour",
+        "b3": "Prenez des décisions d'irrigation et de protection au bon moment",
+        "b4": "Construisez une gestion agricole durable, saison après saison"
+      },
+      "mediaPlaceholder": "Image / GIF"
+    },
+    "howItWorks": {
+      "label": "Comment ça marche ?",
+      "title": "Votre ferme connectée en 4 étapes",
+      "subtitle": "De l'installation des capteurs à l'automatisation intelligente, Feedin vous simplifie le quotidien.",
+      "steps": {
+        "s1": {
+          "title": "Équipez vos parcelles",
+          "desc": "Ajoutez facilement vos serres et équipez-les de nos capteurs (sol, climat, eau). Votre écosystème est prêt."
+        },
+        "s2": {
+          "title": "Visualisez en temps réel",
+          "desc": "Accédez à un tableau de bord intuitif regroupant toutes vos données IoT. Ne devinez plus, constatez."
+        },
+        "s3": {
+          "title": "Agissez et automatisez",
+          "desc": "Définissez des seuils : lancement de l'irrigation, ouverture des toits... Le système agit pour vous."
+        },
+        "s4": {
+          "title": "Supervisez et progressez",
+          "desc": "Analysez vos historiques et prenez des décisions éclairées pour améliorer vos rendements saison après saison."
+        }
+      }
+    },
+    "farmers": {
+      "label": "Pour vous",
+      "title": "Conçu pour les vrais agriculteurs",
+      "subtitle": "Que vous cultiviez des oliviers ou des tomates, que vous gériez 5 hectares ou 500 — Feedin s'adapte à votre réalité.",
+      "cards": {
+        "c1": {
+          "title": "Pour les exploitations familiales",
+          "desc": "Un outil simple, qui respecte votre manière de travailler."
+        },
+        "c2": {
+          "title": "Pour les grandes exploitations",
+          "desc": "Une vue d'ensemble de toutes vos parcelles, sans complication."
+        },
+        "c3": {
+          "title": "Pour les coopératives",
+          "desc": "Accompagnez vos adhérents avec des repères partagés et fiables."
+        }
+      }
+    },
+    "impact": {
+      "label": "Notre impact",
+      "title": "Plus qu'un outil, un avenir durable",
+      "lead": "Feedin ne se limite pas aux données : nous voulons rendre l'agriculture plus résiliente, optimiser vos rendements et protéger nos ressources en construisant une agriculture intelligente.",
+      "stats": {
+        "s1": {
+          "metric": "Optimisation des ressources",
+          "label": "Chaque goutte d'eau et chaque apport nutritif calibré"
+        },
+        "s2": {
+          "metric": "Tranquillité d'esprit",
+          "label": "Anticipez et agissez à distance avec certitude"
+        },
+        "s3": {
+          "metric": "Agriculture durable",
+          "label": "Des pratiques respectueuses pour l'avenir de vos sols"
+        }
+      }
+    },
+    "trust": {
+      "label": "Confiance",
+      "title": "Fiabilité et sécurité au cœur de notre engagement",
+      "lead": "Feedin est conçu pour durer. Vos données sont protégées, votre accès est garanti, et notre équipe est là pour vous accompagner — aujourd'hui et demain.",
+      "body": "Que vous soyez un agriculteur indépendant, une coopérative ou un organisme institutionnel, Feedin offre la fiabilité dont vous avez besoin pour travailler en toute sérénité.",
+      "items": {
+        "i1": {
+          "title": "Données protégées",
+          "desc": "Vos informations restent les vôtres. Hébergement sécurisé, accès contrôlé."
+        },
+        "i2": {
+          "title": "Disponible 24/7",
+          "desc": "Accédez à vos parcelles à tout moment, depuis n'importe quel appareil."
+        },
+        "i3": {
+          "title": "Accompagnement humain",
+          "desc": "Une équipe à votre écoute pour vous accompagner dans la prise en main."
+        },
+        "i4": {
+          "title": "Multilingue",
+          "desc": "Disponible en Français, Anglais et Arabe pour s'adapter à chaque utilisateur."
+        },
+        "i5": {
+          "title": "Simple à utiliser",
+          "desc": "Aucune compétence technique requise. Si vous savez utiliser un téléphone, vous savez utiliser Feedin."
+        },
+        "i6": {
+          "title": "Mises à jour continues",
+          "desc": "Feedin s'améliore régulièrement, sans frais supplémentaires, sans interruption."
+        }
+      }
+    },
+    "ctaFinal": {
+      "title": "Prêt à propulser votre exploitation agricole ?",
+      "text": "Rejoignez Feedin dès aujourd'hui et gérez vos cultures avec précision et sérénité.",
+      "btnPrimary": "Demander l'accès",
+      "secondaryLink": "Découvrir le fonctionnement →",
+      "tertiaryLink": "Une question ? Contactez notre équipe"
+    }
+  }
+}

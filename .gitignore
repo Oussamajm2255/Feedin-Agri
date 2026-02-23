@@ -39,10 +39,10 @@ sfdb.sql
 TerraFlow.sql
 railway.sql
 data-*.csv
-DB/
- Landing-p/
-assets/
-certs/
+/DB/
+/Landing-p/
+/assets/
+/certs/
 SMART_FARM_INVESTIGATION_REPORT.md
 ADMIN_API_EXTENSION_PLAN.md
 DATABASE_TRANSFORMATION_REPORT.md
