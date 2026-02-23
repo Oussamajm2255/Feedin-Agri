@@ -29,8 +29,12 @@ RUN npm run build:prod
 # Production stage with nginx
 FROM nginx:alpine
 
-# Copy built files from builder stage
-COPY --from=builder /app/dist/smart-farm-frontend/browser /usr/share/nginx/html
+# Copy built files from builder stage (handle both v17+ structure and older)
+COPY --from=builder /app/dist/smart-farm-frontend /usr/share/nginx/html
+RUN if [ -d "/usr/share/nginx/html/browser" ]; then \
+      mv /usr/share/nginx/html/browser/* /usr/share/nginx/html/ && \
+      rm -rf /usr/share/nginx/html/browser; \
+    fi
 
 # Copy nginx configuration with security headers
 COPY nginx.conf /etc/nginx/conf.d/default.conf
