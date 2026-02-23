@@ -33,7 +33,7 @@ export class CorsMiddleware implements NestMiddleware {
           allowedOrigin = allowedOrigins[0];
         } else {
           // Last resort: use the request origin or default
-          allowedOrigin = origin || 'https://feedin.up.railway.app';
+          allowedOrigin = origin || 'https://feedin-agri-production.up.railway.app';
         }
       }
     } else {

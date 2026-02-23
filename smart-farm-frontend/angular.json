@@ -32,6 +32,11 @@
                 "glob": "**/*",
                 "input": "src/assets/images/logos",
                 "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/landing/images",
+                "output": "/"
               }
             ],
             "styles": [
