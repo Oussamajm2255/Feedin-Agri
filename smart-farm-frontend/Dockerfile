@@ -35,15 +35,19 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy built files
 COPY --from=builder /app/dist/smart-farm-frontend /usr/share/nginx/html
 
-# Flatten the directory structure if Angular nested it (browser/ server/ etc)
-# This will find index.html and move its siblings to root
+# Flatten ANY subfolder (browser, server, etc.) into the root
+# This finds where index.html is and moves everything from that level up
 RUN cd /usr/share/nginx/html && \
-    if [ -d "browser" ]; then \
-        cp -rn browser/* . && \
-        rm -rf browser; \
+    export DIR=$(find . -name index.html -not -path "./index.html" | head -n 1 | cut -d '/' -f 2) && \
+    if [ -n "$DIR" ] && [ -d "$DIR" ]; then \
+        mv "$DIR"/* . && \
+        rm -rf "$DIR"; \
     fi
 
-# Ensure permissions ARE set for all files
+# Final check: list files for debugging in Railway logs
+RUN echo "Final Nginx Root Contents:" && ls -R /usr/share/nginx/html
+
+# Ensure permissions
 RUN chmod -R 755 /usr/share/nginx/html
 
 # Copy nginx configuration with security headers

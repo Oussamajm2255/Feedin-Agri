@@ -61,25 +61,27 @@ async function bootstrap() {
       'https://feedingreen.com',
     ];
 
-    if (corsOrigin) {
-      if (corsOrigin === '*') {
-        // When credentials are true, we need to allow all origins dynamically
-        // Use a function that accepts any origin
-        allowedOrigins = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-          // Allow any origin when CORS_ORIGIN is set to *
-          callback(null, true);
-        };
-        logger.log('🌐 CORS: Allowing all origins (*) with credentials support');
-      } else {
-        // Split by comma and trim each origin, merge with defaults
-        const envOrigins = corsOrigin.split(',').map(origin => origin.trim()).filter(Boolean);
-        allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])]; // Remove duplicates
-        logger.log(`🌐 CORS: Allowing origins: ${allowedOrigins.join(', ')}`);
-      }
+    const isOriginAllowed = (origin: string | undefined): boolean => {
+      if (!origin) return true;
+      if (defaultOrigins.includes(origin)) return true;
+      if (corsOrigin && corsOrigin !== '*' && corsOrigin.split(',').map(o => o.trim()).includes(origin)) return true;
+      if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) return true;
+      return false;
+    };
+
+    if (corsOrigin === '*') {
+      allowedOrigins = (origin, callback) => callback(null, true);
+      logger.log('🌐 CORS: Allowing all origins (*) with credentials support');
     } else {
-      // Default fallback origins - include the frontend domain
-      allowedOrigins = defaultOrigins;
-      logger.log(`🌐 CORS: Using default origins: ${allowedOrigins.join(', ')}`);
+      allowedOrigins = (origin, callback) => {
+        if (isOriginAllowed(origin)) {
+          callback(null, true);
+        } else {
+          logger.warn(`🚫 CORS: Blocked origin ${origin}`);
+          callback(null, false); // Just block, don't throw error to avoid 500
+        }
+      };
+      logger.log('🌐 CORS: Dynamic filtering for *.up.railway.app and feedingreen.com enabled');
     }
 
     app.enableCors({
