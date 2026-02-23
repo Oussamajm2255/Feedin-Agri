@@ -75,10 +75,7 @@ async function bootstrap() {
       maxAge: 86400,
     });
 
-    logger.log(`✅ CORS configured successfully`);
-
-    logger.log(`✅ CORS configured successfully`);
-    logger.log(`📋 CORS_ORIGIN env: ${corsOrigin || 'not set'}`);
+    logger.log(`✅ CORS configured successfully | Origins: ${defaultOrigins.concat(corsOrigin || []).join(', ')}`);
 
     const port = process.env.PORT || 3000;
     await app.listen(port);

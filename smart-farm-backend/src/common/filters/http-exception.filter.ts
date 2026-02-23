@@ -21,7 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     this.setCorsHeaders(request, response);
 
     const exceptionResponse = exception.getResponse();
-    const error = typeof exceptionResponse === 'string' 
+    const error = typeof exceptionResponse === 'string'
       ? { message: exceptionResponse }
       : exceptionResponse;
 
@@ -44,30 +44,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private setCorsHeaders(request: Request, response: Response) {
     const corsOrigin = process.env.CORS_ORIGIN?.trim();
     const origin = request.headers.origin;
-    
+
     let allowedOrigin: string | undefined;
-    
-    if (corsOrigin === '*') {
-      allowedOrigin = origin || '*';
-    } else if (corsOrigin) {
-      const allowedOrigins = corsOrigin.split(',').map(o => o.trim());
-      if (origin && allowedOrigins.includes(origin)) {
-        allowedOrigin = origin;
-      } else {
-        const defaultOrigins = ['https://feedin.up.railway.app', 'http://localhost:4200', 'http://127.0.0.1:4200'];
-        if (origin && defaultOrigins.includes(origin)) {
-          allowedOrigin = origin;
-        } else if (allowedOrigins.length > 0) {
-          allowedOrigin = allowedOrigins[0];
-        }
-      }
-    } else {
-      const defaultOrigins = ['https://feedin.up.railway.app', 'http://localhost:4200', 'http://127.0.0.1:4200'];
-      if (origin && defaultOrigins.includes(origin)) {
-        allowedOrigin = origin;
-      }
+
+    const defaultOrigins = [
+      'https://feedin-agri-production.up.railway.app',
+      'https://feedingreen.up.railway.app',
+      'https://feedingreen.com',
+      'http://localhost:4200',
+      'http://127.0.0.1:4200',
+    ];
+
+    if (!origin) {
+      allowedOrigin = undefined;
+    } else if (defaultOrigins.includes(origin)) {
+      allowedOrigin = origin;
+    } else if (corsOrigin && corsOrigin.split(',').includes(origin)) {
+      allowedOrigin = origin;
+    } else if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) {
+      allowedOrigin = origin;
+    } else if (corsOrigin === '*') {
+      allowedOrigin = origin;
     }
-    
+
     if (allowedOrigin) {
       response.setHeader('Access-Control-Allow-Origin', allowedOrigin);
     }
@@ -102,7 +101,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       const hasCookie = !!request?.cookies?.['sf_auth'];
       const hasAuthHeader = !!request?.headers?.authorization;
       const cookieValue = request?.cookies?.['sf_auth'];
-      
+
       this.logger.warn(
         `[401 Unauthorized] ${request.method} ${request.url}` +
         ` | Cookie: ${hasCookie ? 'present' : 'missing'}` +
@@ -110,7 +109,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ` | Origin: ${request.headers.origin || 'none'}` +
         ` | All Cookies: ${JSON.stringify(Object.keys(request?.cookies || {}))}`
       );
-      
+
       if (hasCookie && cookieValue) {
         // Try to decode JWT to see if it's valid (without verification)
         try {
@@ -118,7 +117,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
           if (jwtParts.length === 3) {
             const payload = JSON.parse(Buffer.from(jwtParts[1], 'base64').toString());
             this.logger.debug(`[401 Debug] JWT payload - sub: ${payload.sub}, exp: ${payload.exp ? new Date(payload.exp * 1000).toISOString() : 'none'}`);
-            
+
             // Check if token is expired
             if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
               this.logger.warn(`[401 Debug] JWT token is EXPIRED. Exp: ${new Date(payload.exp * 1000).toISOString()}`);
@@ -164,30 +163,29 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private setCorsHeaders(request: Request, response: Response) {
     const corsOrigin = process.env.CORS_ORIGIN?.trim();
     const origin = request.headers.origin;
-    
+
     let allowedOrigin: string | undefined;
-    
-    if (corsOrigin === '*') {
-      allowedOrigin = origin || '*';
-    } else if (corsOrigin) {
-      const allowedOrigins = corsOrigin.split(',').map(o => o.trim());
-      if (origin && allowedOrigins.includes(origin)) {
-        allowedOrigin = origin;
-      } else {
-        const defaultOrigins = ['https://feedin.up.railway.app', 'http://localhost:4200', 'http://127.0.0.1:4200'];
-        if (origin && defaultOrigins.includes(origin)) {
-          allowedOrigin = origin;
-        } else if (allowedOrigins.length > 0) {
-          allowedOrigin = allowedOrigins[0];
-        }
-      }
-    } else {
-      const defaultOrigins = ['https://feedin.up.railway.app', 'http://localhost:4200', 'http://127.0.0.1:4200'];
-      if (origin && defaultOrigins.includes(origin)) {
-        allowedOrigin = origin;
-      }
+
+    const defaultOrigins = [
+      'https://feedin-agri-production.up.railway.app',
+      'https://feedingreen.up.railway.app',
+      'https://feedingreen.com',
+      'http://localhost:4200',
+      'http://127.0.0.1:4200',
+    ];
+
+    if (!origin) {
+      allowedOrigin = undefined;
+    } else if (defaultOrigins.includes(origin)) {
+      allowedOrigin = origin;
+    } else if (corsOrigin && corsOrigin.split(',').includes(origin)) {
+      allowedOrigin = origin;
+    } else if (origin.endsWith('.up.railway.app') || origin.endsWith('feedingreen.com')) {
+      allowedOrigin = origin;
+    } else if (corsOrigin === '*') {
+      allowedOrigin = origin;
     }
-    
+
     if (allowedOrigin) {
       response.setHeader('Access-Control-Allow-Origin', allowedOrigin);
     }
