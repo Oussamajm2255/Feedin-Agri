@@ -7,52 +7,33 @@ export class CorsMiddleware implements NestMiddleware {
     const corsOrigin = process.env.CORS_ORIGIN?.trim();
     const origin = req.headers.origin;
 
-    // Determine allowed origin - ALWAYS set a value to prevent CORS errors
+    const defaultOrigins = [
+      'https://feedin-agri-production.up.railway.app',
+      'https://feedingreen.up.railway.app',
+      'https://feedingreen.com',
+      'http://localhost:4200',
+      'http://127.0.0.1:4200',
+    ];
+
+    const isAllowed = (orig: string | undefined): boolean => {
+      if (!orig) return true;
+      if (defaultOrigins.includes(orig)) return true;
+      if (corsOrigin && corsOrigin !== '*' && corsOrigin.split(',').map(o => o.trim()).includes(orig)) return true;
+      if (orig.endsWith('.up.railway.app') || orig.endsWith('feedingreen.com')) return true;
+      return false;
+    };
+
     let allowedOrigin: string;
 
     if (corsOrigin === '*') {
-      // Allow any origin when CORS_ORIGIN is *
       allowedOrigin = origin || '*';
-    } else if (corsOrigin) {
-      // Check if the request origin is in the allowed list
-      const allowedOrigins = corsOrigin.split(',').map(o => o.trim());
-      if (origin && allowedOrigins.includes(origin)) {
-        allowedOrigin = origin;
-      } else {
-        // Fallback to first allowed origin or use the origin if it's in defaults
-        const defaultOrigins = [
-          'https://feedin-agri-production.up.railway.app',
-          'https://feedingreen.up.railway.app',
-          'https://feedingreen.com',
-          'http://localhost:4200',
-          'http://127.0.0.1:4200',
-        ];
-        if (origin && defaultOrigins.includes(origin)) {
-          allowedOrigin = origin;
-        } else if (allowedOrigins.length > 0) {
-          allowedOrigin = allowedOrigins[0];
-        } else {
-          // Last resort: use the request origin or default
-          allowedOrigin = origin || 'https://feedin-agri-production.up.railway.app';
-        }
-      }
+    } else if (isAllowed(origin)) {
+      allowedOrigin = origin!;
     } else {
-      const defaultOrigins = [
-        'https://feedin-agri-production.up.railway.app',
-        'https://feedingreen.up.railway.app',
-        'https://feedingreen.com',
-        'http://localhost:4200',
-        'http://127.0.0.1:4200',
-      ];
-      if (origin && defaultOrigins.includes(origin)) {
-        allowedOrigin = origin;
-      } else {
-        // Always set a default origin to prevent CORS errors
-        allowedOrigin = origin || 'https://feedin-agri-production.up.railway.app';
-      }
+      allowedOrigin = defaultOrigins[0];
     }
 
-    // ALWAYS set CORS headers - this is critical for preventing CORS errors on 404s
+    // ALWAYS set CORS headers — critical for preventing CORS errors on 404s
     res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, Accept, Origin, X-Requested-With');
@@ -67,4 +48,3 @@ export class CorsMiddleware implements NestMiddleware {
     next();
   }
 }
-

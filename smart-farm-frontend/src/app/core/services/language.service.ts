@@ -62,8 +62,9 @@ export class LanguageService {
   ];
 
   constructor(private http: HttpClient) {
-    this.initializeLanguage();
-    this.loadEnglishFallback();
+    // Load English fallback FIRST so it is available before the user's preferred
+    // language finishes loading. This ensures missing keys always have a fallback.
+    this.loadEnglishFallback(() => this.initializeLanguage());
 
     // Enhanced reactivity effect for automatic UI updates
     effect(() => {
@@ -84,12 +85,14 @@ export class LanguageService {
     this.setLanguage(language);
   }
 
-  private loadEnglishFallback(): void {
-    // Pre-load English fallback for better performance
+  private loadEnglishFallback(onComplete?: () => void): void {
+    // Pre-load English fallback. If en-US.json itself 404s we get an empty object
+    // (non-fatal), then proceed with initializeLanguage anyway.
     this.http.get<Translation>('/assets/i18n/en-US.json').pipe(
       catchError(() => of({}))
     ).subscribe(translations => {
       this.englishFallback = translations;
+      if (onComplete) onComplete();
     });
   }
 
