@@ -56,7 +56,8 @@ async function bootstrap() {
     const defaultOrigins = [
       'http://127.0.0.1:4200',
       'http://localhost:4200',
-      'https://feedin.up.railway.app',
+      'https://feedin-agri-production.up.railway.app',
+      'https://feedingreen.com',
     ];
     
     if (corsOrigin) {
