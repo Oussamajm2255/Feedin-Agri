@@ -16,6 +16,13 @@ RUN npm cache clean --force && \
 # Copy source code
 COPY . .
 
+# Inject API URL if provided (to avoid hardcoded URLs in environment.prod.ts)
+ARG API_URL
+RUN if [ -n "$API_URL" ]; then \
+      sed -i "s|apiUrl: '.*'|apiUrl: '$API_URL/api/v1'|g" src/environments/environment.prod.ts && \
+      sed -i "s|wsUrl: '.*'|wsUrl: '$API_URL'|g" src/environments/environment.prod.ts; \
+    fi
+
 # Build the application
 RUN npm run build:prod
 
