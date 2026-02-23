@@ -29,18 +29,19 @@ RUN npm run build:prod
 # Production stage with nginx
 FROM nginx:alpine
 
-# Clean default nginx directory
+# Clean default nginx directory and ensure it's fresh
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy build output
+# Copy built files from builder stage
 COPY --from=builder /app/dist/smart-farm-frontend /usr/share/nginx/html
 
-# If Angular nested the build in 'browser' folder, move it to root
+# Check for subdirectories and move them to root if they contain index.html
 RUN if [ -d "/usr/share/nginx/html/browser" ]; then \
-      mv /usr/share/nginx/html/browser/* /usr/share/nginx/html/ ; \
+      mv /usr/share/nginx/html/browser/* /usr/share/nginx/html/ && \
+      rm -rf /usr/share/nginx/html/browser; \
     fi
 
-# Final permissions
+# Set permissions
 RUN chmod -R 755 /usr/share/nginx/html
 
 # Copy nginx configuration with security headers
