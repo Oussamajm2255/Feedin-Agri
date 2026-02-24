@@ -43,10 +43,12 @@ export class ScrollAnimationService implements OnDestroy {
   private _scrollProgress = signal(0);
   private _scrollVelocity = signal(0);
   private _isReducedMotion = signal(false);
+  private _isMobile = signal(false);
 
   public scrollProgress = this._scrollProgress.asReadonly();
   public scrollVelocity = this._scrollVelocity.asReadonly();
   public isReducedMotion = this._isReducedMotion.asReadonly();
+  public isMobile = this._isMobile.asReadonly();
 
   // Tracking
   private scrollTriggers: ScrollTrigger[] = [];
@@ -69,6 +71,9 @@ export class ScrollAnimationService implements OnDestroy {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     );
 
+    // Initial mobile check
+    this._isMobile.set(window.innerWidth < 768);
+
     // Listen for changes
     window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
       this._isReducedMotion.set(e.matches);
@@ -76,6 +81,10 @@ export class ScrollAnimationService implements OnDestroy {
         this.disableAllAnimations();
       }
     });
+
+    window.addEventListener('resize', () => {
+      this._isMobile.set(window.innerWidth < 768);
+    }, { passive: true });
 
     // Track scroll velocity
     this.ngZone.runOutsideAngular(() => {
@@ -96,10 +105,10 @@ export class ScrollAnimationService implements OnDestroy {
     const {
       element,
       animation = 'fade-up',
-      duration = 0.8,
+      duration = this._isMobile() ? 0.4 : 0.8, // Faster animations on mobile
       delay = 0,
-      staggerDelay = 0.1,
-      start = 'top 85%',
+      staggerDelay = this._isMobile() ? 0.05 : 0.1, // Tighter stagger on mobile
+      start = this._isMobile() ? 'top 95%' : 'top 85%', // Appear sooner on mobile
       end = 'bottom 20%',
       scrub = false,
       markers = false
@@ -194,7 +203,7 @@ export class ScrollAnimationService implements OnDestroy {
     const { wordsPerLine = 8, readingSpeed = 200 } = options; // 200ms per word avg
     const text = element.textContent || '';
     const wordCount = text.split(/\s+/).length;
-    
+
     // Calculate duration based on content length
     // WHY: Matches natural reading pace so animation finishes as user reads
     const baseDuration = Math.min(1.5, Math.max(0.6, wordCount / wordsPerLine * 0.3));
@@ -272,7 +281,7 @@ export class ScrollAnimationService implements OnDestroy {
 
   private getToVars(animation: string, duration: number, delay: number): gsap.TweenVars {
     const base = { opacity: 1, duration, delay };
-    
+
     switch (animation) {
       case 'fade-up':
         return { ...base, y: 0 };

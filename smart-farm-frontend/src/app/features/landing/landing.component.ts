@@ -16,8 +16,8 @@
  * 9. Footer
  */
 
-import { 
-  Component, 
+import {
+  Component,
   OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
@@ -80,7 +80,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
   isScrolled = signal(false);
   activeSection = signal<string>('hero-section');
   floatingMenuOpen = signal(false);
-  
+
   theme = toSignal(this.themeService.theme$);
 
   // Bound scroll handler reference (for cleanup)
@@ -105,47 +105,54 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     if (wasScrolled !== nowScrolled) {
       this.ngZone.run(() => this.isScrolled.set(nowScrolled));
     }
-    this.detectActiveSection(scrollY);
   }
 
   ngOnInit(): void {
     // Scroll to top on page load
     window.scrollTo(0, 0);
 
-    // Attach scroll listener outside Angular zone for performance,
-    // but use NgZone.run() inside to trigger change detection when needed
+    // Attach scroll listener outside Angular zone for performance
     this.ngZone.runOutsideAngular(() => {
       window.addEventListener('scroll', this.scrollHandler, { passive: true });
-      document.addEventListener('scroll', this.scrollHandler, { passive: true });
     });
   }
 
   ngAfterViewInit(): void {
     this.handleScroll();
+    this.setupIntersectionObserver();
+  }
+
+  private setupIntersectionObserver(): void {
+    const options = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px', // Trigger when section is in the upper part of the screen
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.activeSection.set(entry.target.id);
+        }
+      });
+    }, options);
+
+    this.sections.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
   }
 
   ngOnDestroy(): void {
     this.scrollService.killAll();
     window.removeEventListener('scroll', this.scrollHandler);
-    document.removeEventListener('scroll', this.scrollHandler);
   }
 
   /**
    * ScrollSpy Logic: Detects which section is currently in view
    */
   private detectActiveSection(scrollY: number): void {
-    const offset = 150; // Offset for header height
-    
-    // Check sections in reverse order to find the deepest one in view
-    for (const sectionId of [...this.sections].reverse()) {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        if (scrollY >= (element.offsetTop - offset)) {
-          this.activeSection.set(sectionId);
-          return;
-        }
-      }
-    }
+    // Logic replaced by IntersectionObserver for better performance
   }
 
   scrollTo(sectionId: string): void {
@@ -154,12 +161,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-  
+
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       });
-      
+
       this.activeSection.set(sectionId);
     }
   }

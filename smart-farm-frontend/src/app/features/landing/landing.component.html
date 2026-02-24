@@ -3,6 +3,21 @@
     <nav class="floating-nav" [class.visible]="isScrolled()">
         <div class="nav-container">
             <div class="nav-links" [class.mobile-open]="floatingMenuOpen()">
+                <!-- Mobile Sidebar Header -->
+                <div class="sidebar-header">
+                    <div class="sidebar-brand">
+                        <img src="/assets/images/only_F.png" alt="Feedin Logo" class="sidebar-logo">
+                        <span class="sidebar-brand-text">Feedin</span>
+                    </div>
+                    <button class="sidebar-close" (click)="closeFloatingMenu()" aria-label="Close menu">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
                 <a class="nav-link" [class.active]="activeSection() === 'about-section'"
                     (click)="scrollTo('about-section'); closeFloatingMenu()">{{ 'landing.nav.about' | translate }}</a>
                 <a class="nav-link" [class.active]="activeSection() === 'valeur-section'"
@@ -28,6 +43,17 @@
                     <button class="nav-button primary" (click)="navigateTo('/register'); closeFloatingMenu()">
                         {{ 'landing.nav.requestAccess' | translate }}
                     </button>
+                </div>
+
+                <!-- Sidebar Footer -->
+                <div class="sidebar-footer">
+                    <p class="sidebar-contact">contact&#64;feedin.tn</p>
+                    <div class="sidebar-socials">
+                        <!-- Placeholder for social icons -->
+                        <span class="social-dot"></span>
+                        <span class="social-dot"></span>
+                        <span class="social-dot"></span>
+                    </div>
                 </div>
             </div>
 
@@ -86,23 +112,47 @@
     <!-- 2. À propos de Feedin -->
     <app-a-propos id="about-section" />
 
+    @defer (on viewport) {
     <!-- 3. Ce que Feedin apporte à l'agriculture -->
     <app-valeur-agricole id="valeur-section" />
+    } @placeholder {
+    <div class="section-placeholder" style="height: 600px;"></div>
+    }
 
+    @defer (on viewport) {
     <!-- 4. Comment Feedin fonctionne -->
     <app-comment-ca-marche id="etapes-section" />
+    } @placeholder {
+    <div class="section-placeholder" style="height: 600px;"></div>
+    }
 
+    @defer (on viewport) {
     <!-- 5. Conçu pour les vrais agriculteurs -->
     <app-pour-agriculteurs id="agriculteurs-section" />
+    } @placeholder {
+    <div class="section-placeholder" style="height: 600px;"></div>
+    }
 
+    @defer (on viewport) {
     <!-- 6. Impact sur l'agriculture -->
     <app-impact-agriculture id="impact-agriculture-section" />
+    } @placeholder {
+    <div class="section-placeholder" style="height: 600px;"></div>
+    }
 
+    @defer (on viewport) {
     <!-- 7. Confiance, sécurité et fiabilité -->
     <app-confiance id="confiance-section" />
+    } @placeholder {
+    <div class="section-placeholder" style="height: 600px;"></div>
+    }
 
+    @defer (on viewport) {
     <!-- 8. Appel à l'action final -->
     <app-cta-final id="cta-final-section" />
+    } @placeholder {
+    <div class="section-placeholder" style="height: 400px;"></div>
+    }
 
     <!-- SHARED FOOTER -->
     <app-footer></app-footer>

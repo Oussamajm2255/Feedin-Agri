@@ -45,7 +45,7 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
           src="/assets/images/landing-bg.jpg" 
           alt="Paysage agricole intelligent" 
           class="hero-bg-img"
-          loading="eager"
+          fetchpriority="high"
         >
         <div class="backdrop-overlay"></div>
         <div class="backdrop-vignette"></div>
@@ -65,6 +65,23 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
           </a>
           
           <div class="nav-links" [class.mobile-open]="mobileMenuOpen()">
+            <!-- Mobile Sidebar Header -->
+            <div class="sidebar-header">
+              <div class="sidebar-brand">
+                <img src="/assets/images/only_F.png" alt="Feedin Logo" class="sidebar-logo">
+                <span class="sidebar-brand-text">Feedin</span>
+              </div>
+              <button class="sidebar-close" (click)="closeMobileMenu()" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <a class="nav-link" 
+               [class.active]="activeSection() === 'hero-section'"
+               (click)="scrollToSection('hero'); closeMobileMenu()">{{ 'landing.nav.about' | translate }}</a>
             <a class="nav-link" 
                [class.active]="activeSection() === 'about-section'"
                (click)="scrollToSection('about'); closeMobileMenu()">{{ 'landing.nav.about' | translate }}</a>
@@ -92,6 +109,16 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
               <button class="nav-btn nav-btn--primary" (click)="navigateTo('/register'); closeMobileMenu()">
                 {{ 'landing.nav.requestAccess' | translate }}
               </button>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+              <p class="sidebar-contact">contact&#64;feedin.tn</p>
+              <div class="sidebar-socials">
+                <span class="social-dot"></span>
+                <span class="social-dot"></span>
+                <span class="social-dot"></span>
+              </div>
             </div>
           </div>
           
@@ -321,24 +348,25 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
     }
 
     /* ---- Nav Links (hidden on mobile, shown via hamburger) ---- */
+    /* ---- Nav Links (sidebar) ---- */
     .nav-links {
       display: none;
       position: fixed;
       top: 0;
       right: 0;
-      width: 280px;
+      width: clamp(280px, 85vw, 360px);
       height: 100vh;
       height: 100dvh;
       flex-direction: column;
-      gap: 0.25rem;
-      padding: 5rem 1.5rem 2rem;
+      gap: 0.5rem;
+      padding: 1.5rem;
       background: var(--glass-bg);
-      backdrop-filter: blur(30px);
+      backdrop-filter: blur(40px);
       border-left: 1px solid var(--border-color);
-      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
-      z-index: 200;
+      box-shadow: -15px 0 40px rgba(0, 0, 0, 0.15);
+      z-index: 2000;
       transform: translateX(100%);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .nav-links.mobile-open {
@@ -346,13 +374,61 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
       transform: translateX(0);
     }
 
-    /* Mobile overlay */
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-logo {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .sidebar-brand-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .sidebar-close {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-close:hover {
+      background: var(--primary-green);
+      color: white;
+      transform: rotate(90deg);
+    }
+
     .mobile-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: transparent;
-      z-index: 150;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1500;
       opacity: 0;
       transition: opacity 0.35s ease;
     }
@@ -365,24 +441,74 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
     .nav-link {
       color: var(--text-primary);
       text-decoration: none;
-      font-weight: 500;
-      font-size: 1rem;
+      font-weight: 600;
+      font-size: 1.25rem;
       cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
       position: relative;
-      transition: color 0.2s ease;
-      padding: 0.75rem 1rem;
-      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-link::after {
+      content: '→';
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
     }
 
     .nav-link:hover {
       color: var(--primary-green);
       background: rgba(16, 185, 129, 0.08);
+      padding-left: 1.75rem;
+    }
+
+    .nav-link:hover::after {
+      opacity: 1;
+      transform: translateX(0);
     }
 
     .nav-link.active {
-      color: var(--primary-green);
-      font-weight: 600;
-      background: rgba(16, 185, 129, 0.1);
+      color: white;
+      background: var(--primary-green);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+    }
+
+    .nav-link.active::after {
+      opacity: 1;
+      transform: translateX(0);
+      color: white;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 2rem;
+      text-align: center;
+    }
+
+    .sidebar-contact {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .sidebar-socials {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .social-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-green);
+      border-radius: 50%;
+      opacity: 0.4;
     }
 
     /* Mobile auth buttons inside the slide-out menu */
@@ -390,7 +516,7 @@ import { LanguageSwitcherComponent } from '../../../../shared/components/languag
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
-      margin-top: auto;
+      margin-top: 2rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--border-color);
     }
