@@ -49,19 +49,19 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: clamp(280px, 85vw, 360px);
+    width: 280px;
     height: 100vh;
     height: 100dvh;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 1.5rem;
+    gap: 0.25rem;
+    padding: 5rem 1.5rem 2rem;
     background: var(--glass-bg);
-    backdrop-filter: blur(40px);
+    backdrop-filter: blur(30px);
     border-left: 1px solid var(--glass-border);
-    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.15);
-    z-index: 2000;
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+    z-index: 200;
     transform: translateX(100%);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
     &.mobile-open {
         display: flex;
@@ -69,124 +69,52 @@
     }
 }
 
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--glass-border);
+// ---- Mobile overlay for floating nav ----
+.floating-mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 150;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+
+    &.active {
+        display: block;
+        opacity: 1;
+    }
 }
 
-.sidebar-brand {
+// ---- Mobile auth buttons in slide-out ----
+.floating-mobile-auth {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.75rem;
-
-    .sidebar-logo {
-        width: 38px;
-        height: 38px;
-        object-fit: contain;
-    }
-
-    .sidebar-brand-text {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--text-primary);
-        font-family: 'Outfit', sans-serif;
-    }
-}
-
-.sidebar-close {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-        background: var(--primary-green);
-        color: white;
-        transform: rotate(90deg);
-    }
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border);
 }
 
 .nav-link {
-    color: var(--text-primary);
+    color: var(--text-secondary);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1.25rem;
+    font-weight: 500;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 1rem 1.25rem;
-    border-radius: 16px;
+    transition: all 0.2s ease;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &::after {
-        content: '→';
-        opacity: 0;
-        transform: translateX(-10px);
-        transition: all 0.3s ease;
-        font-size: 1.1rem;
-    }
 
     &:hover {
         color: var(--primary-green);
         background: rgba(16, 185, 129, 0.08);
-        padding-left: 1.75rem;
-
-        &::after {
-            opacity: 1;
-            transform: translateX(0);
-        }
     }
 
     &.active {
-        color: white;
-        background: var(--primary-green);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
-
-        &::after {
-            opacity: 1;
-            transform: translateX(0);
-            color: white;
-        }
-    }
-}
-
-.sidebar-footer {
-    margin-top: auto;
-    padding-top: 2rem;
-    text-align: center;
-}
-
-.sidebar-contact {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    font-weight: 500;
-}
-
-.sidebar-socials {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-
-    .social-dot {
-        width: 8px;
-        height: 8px;
-        background: var(--primary-green);
-        border-radius: 50%;
-        opacity: 0.4;
+        color: var(--primary-green);
+        font-weight: 600;
+        background: rgba(16, 185, 129, 0.1);
     }
 }
 
