@@ -22,6 +22,7 @@ export class CorsMiddleware implements NestMiddleware {
         // Fallback to first allowed origin or use the origin if it's in defaults
         const defaultOrigins = [
           'https://feedin.up.railway.app',
+          'https://feedingreen.up.railway.app',
           'http://localhost:4200',
           'http://127.0.0.1:4200',
         ];
@@ -38,6 +39,7 @@ export class CorsMiddleware implements NestMiddleware {
       // Default: check against known origins, but always set something
       const defaultOrigins = [
         'https://feedin.up.railway.app',
+        'https://feedingreen.up.railway.app',
         'http://localhost:4200',
         'http://127.0.0.1:4200',
       ];

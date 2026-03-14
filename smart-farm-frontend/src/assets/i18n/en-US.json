@@ -152,8 +152,11 @@
     }
   },
   "language": {
+    "switch": "Switch Language",
     "select": "Select Language",
-    "switch": "Switch Language"
+    "arabic": "Arabic",
+    "french": "French",
+    "english": "English"
   },
   "alerts": {
     "confirmAction": "Confirm Action",
@@ -1468,8 +1471,7 @@
       },
       "relative": {
         "never": "Never"
-      },
-      "thresholdInfo": "Warning: {{warningLow}}-{{warningHigh}}{{unit}}, Critical: <{{criticalLow}} or >{{criticalHigh}}{{unit}}"
+      }
     },
     "dashboard": {
       "states": {
@@ -1618,28 +1620,6 @@
     "analytics": {
       "title": "Analytics",
       "loading": "Loading analytics..."
-    },
-    "kpi": {
-      "tooltips": {
-        "all": "View all crops",
-        "healthRatio": "Healthy vs stressed crops",
-        "growthStage": "Current growth stage",
-        "soilMoisture": "Average soil moisture across all sensors",
-        "temperature": "Average temperature across all sensors",
-        "humidity": "Average humidity across all sensors"
-      },
-      "labels": {
-        "total": "Total Crops",
-        "healthRatio": "Health Ratio",
-        "growthStage": "Growth Stage",
-        "soilMoisture": "Soil Moisture",
-        "temperature": "Temperature",
-        "humidity": "Humidity",
-        "lastUpdated": "Last Updated"
-      },
-      "relative": {
-        "never": "Never"
-      }
     },
     "kpis": {
       "yield": "Yield",
@@ -2130,37 +2110,14 @@
     }
   },
   "farms": {
-    "title": "Farms",
-    "addFarm": "Add Farm",
-    "editFarm": "Edit Farm",
-    "deleteFarm": "Delete Farm",
-    "farmName": "Farm Name",
-    "farmLocation": "Farm Location",
-    "farmSize": "Farm Size",
-    "farmType": "Farm Type",
-    "noFarms": "No farms",
-    "farmDetails": "Farm Details",
-    "selectFarm": "Select Farm",
     "farmManagement": "Farm Management",
-    "farmStatistics": "Farm Statistics",
-    "farmTypes": {
-      "organic": "Organic",
-      "conventional": "Conventional",
-      "hydroponic": "Hydroponic",
-      "greenhouse": "Greenhouse",
-      "openField": "Open Field"
-    },
     "manageFarms": "Manage your farms and their configurations",
+    "addFarm": "Add Farm",
+    "noLocationSpecified": "No location specified",
     "noFarmsFound": "No Farms Found",
     "getStarted": "Get started by creating your first farm to organize your agricultural operations.",
     "createFirstFarm": "Create Your First Farm",
-    "addFarmFunctionality": "Add farm functionality coming soon",
-    "editFarmFunctionality": "Edit farm functionality coming soon",
-    "deleteFarmConfirmation": "Are you sure you want to delete farm",
-    "farmDeleted": "Farm deleted successfully",
-    "errorDeletingFarm": "Error deleting farm",
-    "loadingFarms": "Loading farms...",
-    "noLocationSpecified": "No location specified"
+    "loadingFarms": "Loading farms..."
   },
   "validation": {
     "required": "This field is required",
@@ -2190,13 +2147,6 @@
     "bulkDeleteError": "Error deleting multiple items",
     "tryAgain": "Try Again",
     "contactSupport": "Contact Support"
-  },
-  "language": {
-    "switch": "Switch Language",
-    "select": "Select Language",
-    "arabic": "Arabic",
-    "french": "French",
-    "english": "English"
   },
   "actionStream": {
     "title": "Action Stream",
@@ -3069,16 +3019,6 @@
         "fixAll": "Fix All"
       }
     }
-  },
-  "farms": {
-    "farmManagement": "Farm Management",
-    "manageFarms": "Manage your farms and their configurations",
-    "addFarm": "Add Farm",
-    "noLocationSpecified": "No location specified",
-    "noFarmsFound": "No Farms Found",
-    "getStarted": "Get started by creating your first farm to organize your agricultural operations.",
-    "createFirstFarm": "Create Your First Farm",
-    "loadingFarms": "Loading farms..."
   },
   "sensorAnalytics": {
     "title": "Sensor Analytics",
