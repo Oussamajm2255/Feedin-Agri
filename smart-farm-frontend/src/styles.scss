@@ -145,6 +145,21 @@ body.rtl {
   }
 }
 
+// ===== RESPONSIVE UTILITIES =====
+@media (max-width: 480px) {
+  .hide-xs { display: none !important; }
+}
+
+@media (max-width: 380px) {
+  .hide-xxs { display: none !important; }
+}
+
+/* Global Mobile Fixes */
+.landing-page {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 // Date Range Picker Dialog Backdrop Blur
 .cdk-overlay-backdrop.date-range-picker-backdrop {
   background: rgba(0, 0, 0, 0.5) !important;

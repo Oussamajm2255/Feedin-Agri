@@ -649,6 +649,32 @@
         grid-column: span 1;
         min-height: auto;
     }
+
+    /* Small Mobile Bento Tweaks (< 480px) */
+    @media (max-width: 480px) {
+        .bento-section {
+            padding: 3rem 0.75rem;
+        }
+        .bento-card {
+            padding: 1.25rem;
+            border-radius: 20px;
+        }
+        .bc-title {
+            font-size: 1.25rem;
+        }
+        .bc-desc {
+            font-size: 0.8125rem;
+        }
+        .bc-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            svg { width: 20px; height: 20px; }
+        }
+        .large .bc-title {
+            font-size: 1.5rem;
+        }
+    }
 }
 
 // ================================

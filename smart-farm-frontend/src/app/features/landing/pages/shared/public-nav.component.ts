@@ -487,6 +487,19 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       .hamburger      { display: none; }
     }
 
+    /* Small Mobile Tweaks (< 380px) */
+    @media (max-width: 380px) {
+      .brand-text { display: none; }
+      .nav-inner { padding: 0.5rem 0.75rem; }
+      .nav-actions { gap: 0.25rem; }
+    }
+
+    /* Ultra Small (< 340px) */
+    @media (max-width: 340px) {
+      .nav-inner { padding: 0.4rem 0.51rem; }
+      .brand-icon { width: 30px; height: 30px; }
+    }
+
     /* ================================
        TABLET (≥768px) — mobile panel
        ================================ */

@@ -791,6 +791,39 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       }
     }
 
+    /* Small Mobile Hero Tweaks (< 480px) */
+    @media (max-width: 480px) {
+      .hero-content {
+        padding: 1rem;
+        margin-top: -5vh;
+      }
+      .hero-headline {
+        margin-bottom: 1.5rem;
+      }
+      .cta-row {
+        gap: 0.75rem;
+      }
+      .hero-cta {
+        padding: 0.75rem 1.75rem;
+        width: 100%;
+        max-width: 280px;
+      }
+      .cta-helper-text {
+        font-size: 0.75rem;
+        max-width: 260px;
+      }
+    }
+
+    /* Ultra Small Hero Tweaks (< 340px) */
+    @media (max-width: 340px) {
+      .hero-headline {
+        font-size: 1.5rem;
+      }
+      .hero-content {
+        margin-top: -2vh;
+      }
+    }
+
     /* =========================================
        RESPONSIVE — DESKTOP (≥1024px)
        ========================================= */
