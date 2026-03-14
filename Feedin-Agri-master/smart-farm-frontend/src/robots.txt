@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /landing
-Disallow: /api/
-Disallow: /admin/
-Disallow: /dashboard/
-
-Sitemap: https://feedingreen.up.railway.app/sitemap.xml

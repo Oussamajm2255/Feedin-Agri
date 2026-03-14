@@ -81,6 +81,7 @@ async function bootstrap() {
       'http://127.0.0.1:4200',
       'http://localhost:4200',
       'https://feedin.up.railway.app',
+      'https://feedingreen.up.railway.app',
     ];
     
     if (corsOrigin) {

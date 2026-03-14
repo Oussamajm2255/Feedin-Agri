@@ -3241,6 +3241,7 @@
       "cta1": "Contact an Expert",
       "cta2": "Discover our solutions",
       "ctaHelper": "Our team helps you set up your smart farm.",
+      "helper": "Our team helps you set up your smart farm.",
       "scrollDown": "Discover"
     },
     "bento": {
@@ -3267,6 +3268,16 @@
           "title": "Agricultural Development",
           "desc": "Turnkey design and installation of your farm of the future.",
           "cta": "Learn more"
+        },
+        {
+          "title": "Smart Monitoring",
+          "desc": "Real-time tracking of all your agricultural parameters.",
+          "cta": "Learn more"
+        },
+        {
+          "title": "Expert Support",
+          "desc": "Our team accompanies you in every step of your project.",
+          "cta": "Contact us"
         }
       ]
     },
@@ -3289,6 +3300,22 @@
       "card2": {
         "title": "98%",
         "sub": "Satisfied clients"
+      }
+    },
+    "impact": {
+      "stats": {
+        "s1": {
+          "metric": "40%",
+          "label": "Water savings"
+        },
+        "s2": {
+          "metric": "35%",
+          "label": "Yield increase"
+        },
+        "s3": {
+          "metric": "60%",
+          "label": "Loss reduction"
+        }
       }
     },
     "process": {
@@ -3314,7 +3341,11 @@
         }
       ],
       "integrations": {
-        "caption": "Compatible integrations"
+        "caption": "Compatible integrations",
+        "0": "Cloud Storage",
+        "1": "Mobile App",
+        "2": "IoT Sensors",
+        "3": "AI Analytics"
       }
     },
     "ctaFinal": {

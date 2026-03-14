@@ -75,11 +75,11 @@ export class ScrollAnimationService implements OnDestroy {
       }
     });
 
-    // Defer GSAP registration & scroll tracking until after the first render
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Defer scroll tracking until after the first render
     // to avoid blocking the main thread during initial page paint
     afterNextRender(() => {
-      gsap.registerPlugin(ScrollTrigger);
-
       // Track scroll velocity
       this.ngZone.runOutsideAngular(() => {
         this.setupVelocityTracking();

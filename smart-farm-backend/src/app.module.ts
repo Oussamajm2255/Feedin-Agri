@@ -23,10 +23,14 @@ import { DigitalTwinsModule } from './modules/digital-twins/digital-twins.module
 import { typeOrmConfig } from './config/typeorm.config';
 import { CsrfMiddleware } from './common/middleware/csrf.middleware';
 import { CorsMiddleware } from './common/middleware/cors.middleware';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ 
+      load: [configuration],
+      isGlobal: true 
+    }),
     ThrottlerModule.forRoot([
       { name: 'short', ttl: 1000, limit: 3 },
       { name: 'medium', ttl: 10000, limit: 20 },

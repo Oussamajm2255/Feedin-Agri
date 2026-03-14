@@ -1,4 +1,0 @@
-# Smart Farm Device Simulator Dependencies
-# Install with: pip install -r requirements_simulator.txt
-
-paho-mqtt==1.6.1    # MQTT client library

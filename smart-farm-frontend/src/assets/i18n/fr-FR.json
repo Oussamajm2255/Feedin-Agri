@@ -3183,6 +3183,7 @@
       "cta1": "Contactez un expert",
       "cta2": "Découvrir nos solutions",
       "ctaHelper": "Notre équipe vous aide à configurer votre ferme intelligente.",
+      "helper": "Notre équipe vous aide à configurer votre ferme intelligente.",
       "scrollDown": "Découvrir"
     },
     "bento": {
@@ -3209,6 +3210,16 @@
           "title": "Aménagement Agricole",
           "desc": "Conception et installation clé en main de votre ferme du futur.",
           "cta": "En savoir plus"
+        },
+        {
+          "title": "Surveillance Intelligente",
+          "desc": "Suivi en temps réel de tous vos paramètres agricoles.",
+          "cta": "En savoir plus"
+        },
+        {
+          "title": "Support Expert",
+          "desc": "Notre équipe vous accompagne à chaque étape de votre projet.",
+          "cta": "Contactez-nous"
         }
       ]
     },
@@ -3231,6 +3242,22 @@
       "card2": {
         "title": "98%",
         "sub": "Clients satisfaits"
+      }
+    },
+    "impact": {
+      "stats": {
+        "s1": {
+          "metric": "40%",
+          "label": "Économie d'eau"
+        },
+        "s2": {
+          "metric": "35%",
+          "label": "Gain de rendement"
+        },
+        "s3": {
+          "metric": "60%",
+          "label": "Réduction des pertes"
+        }
       }
     },
     "process": {
@@ -3256,7 +3283,11 @@
         }
       ],
       "integrations": {
-        "caption": "Intégrations compatibles"
+        "caption": "Intégrations compatibles",
+        "0": "Stockage Cloud",
+        "1": "Application Mobile",
+        "2": "Capteurs IoT",
+        "3": "Analyses IA"
       }
     },
     "ctaFinal": {

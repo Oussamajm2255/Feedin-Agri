@@ -28,37 +28,37 @@
             "assets": [
               {
                 "glob": "favicon.ico",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               {
                 "glob": "favicon.svg",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               {
                 "glob": "favicon-96x96.png",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               {
                 "glob": "apple-touch-icon.png",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               {
                 "glob": "icon-192.png",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               {
                 "glob": "icon-512.png",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               {
                 "glob": "site.webmanifest",
-                "input": "src/assets/images/favicon/favicon-package",
+                "input": "src/assets/images/favicon",
                 "output": "/"
               },
               "src/assets",
