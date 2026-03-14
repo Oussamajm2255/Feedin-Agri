@@ -1,0 +1,47 @@
+<svg width="200" height="140" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+    /* Fixture body */
+    .fixture {
+      fill: #e5e5e5;
+      stroke: #22c55e;
+      stroke-width: 3;
+      rx: 4;
+    }
+
+    /* LED line strip */
+    .led {
+      stroke: #22c55e;
+      stroke-width: 4;
+      stroke-linecap: round;
+      opacity: 0.9;
+    }
+
+    /* Animated light beams */
+    .beam {
+      stroke: #22c55e;
+      stroke-width: 6;
+      stroke-linecap: round;
+      opacity: 0.25;
+      animation: beamPulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes beamPulse {
+      0%   { opacity: 0.15; stroke-width: 5; }
+      50%  { opacity: 0.45; stroke-width: 9; }
+      100% { opacity: 0.15; stroke-width: 5; }
+    }
+  </style>
+
+  <!-- Light fixture metal bar -->
+  <rect class="fixture" x="30" y="20" width="140" height="20" rx="6" />
+
+  <!-- LED emitter strip -->
+  <line class="led" x1="40" y1="30" x2="160" y2="30" />
+
+  <!-- Light beams (lux emission) -->
+  <line class="beam" x1="55" y1="40" x2="55" y2="110" />
+  <line class="beam" x1="100" y1="40" x2="100" y2="110" />
+  <line class="beam" x1="145" y1="40" x2="145" y2="110" />
+
+</svg>

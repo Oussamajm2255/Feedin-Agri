@@ -1,0 +1,58 @@
+<svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .outer {
+      fill: none;
+      stroke: #00c853;
+      stroke-width: 6;
+    }
+    .blade {
+      fill: #00c853;
+      opacity: 0.85;
+    }
+    .hub {
+      fill: #00c853;
+    }
+    .rotor {
+      transform-origin: 70px 70px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+  </style>
+  <!-- Outer ring -->
+  <circle class="outer" cx="70" cy="70" r="62"/>
+  <!-- Rotating blades -->
+  <g class="rotor">
+    <!-- Blade 1 (top) -->
+    <path class="blade" d="
+      M 65 70
+      L 60 25
+      L 70 20
+      L 80 25
+      L 75 70
+      Z
+    " />
+    <!-- Blade 2 (bottom-right) -->
+    <path class="blade" d="
+      M 70 75
+      L 108 100
+      L 115 95
+      L 110 82
+      L 70 65
+      Z
+    " />
+    <!-- Blade 3 (bottom-left) -->
+    <path class="blade" d="
+      M 70 65
+      L 30 82
+      L 25 95
+      L 32 100
+      L 70 75
+      Z
+    " />
+    <!-- Center hub -->
+    <circle class="hub" cx="70" cy="70" r="12" />
+  </g>
+</svg>

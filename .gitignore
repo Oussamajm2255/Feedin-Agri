@@ -1,56 +1,54 @@
 # Dependencies
 node_modules/
-dist/
-.angular/
-.next/
-.serverless/
-build/
+.npm
 
-# Environment
+# Build outputs
+dist/
+build/
+.angular/
+.cache/
+
+# Environment files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.backup
-*.no-db
-*.minimal
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.cursor/
 
 # OS files
 .DS_Store
 Thumbs.db
-desktop.ini
+Desktop.ini
+ehthumbs.db
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-*.log
+pnpm-debug.log*
 
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
+# Test coverage
+coverage/
 
-# Project specific
-db.json
-sfdb.sql
-TerraFlow.sql
-railway.sql
-data-*.csv
-/DB/
-/Landing-p/
-/assets/
-/certs/
-SMART_FARM_INVESTIGATION_REPORT.md
-ADMIN_API_EXTENSION_PLAN.md
-DATABASE_TRANSFORMATION_REPORT.md
-WALKTHROUGH.md
-IMPLEMENTATION_PLAN.md
-task.md
-walkthrough.md
-implementation_plan.md
- .gemini/
- .cursor/
- .agent/
+# Temp files
+tmp/
+temp/
+
+# TypeORM
+ormconfig*.json
+
+# SSL certs (should be downloaded from Railway, not committed)
+certs/
+
+# Large SQL dumps (keep separately, not in git)
+*.sql
+!sfdb_postgres.sql
+
+# Misc
+package-lock.json

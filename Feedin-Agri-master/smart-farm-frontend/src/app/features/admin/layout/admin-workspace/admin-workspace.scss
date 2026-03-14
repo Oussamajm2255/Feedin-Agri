@@ -1,0 +1,54 @@
+@use '../../../../../styles.scss' as *;
+
+// ================================
+// Admin Workspace
+// Scrollable main content area
+// ================================
+
+// CRITICAL: Host element must participate in flex layout
+// Without this, the component host defaults to display: inline
+// and breaks the flex chain, preventing scrolling
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; // Critical: allows flex child to shrink and enable scrolling
+  overflow: hidden; // Delegate scroll to inner .admin-workspace
+}
+
+.admin-workspace {
+  flex: 1;
+  min-height: 0; // Critical: allows flex child to shrink below content size
+  overflow-y: auto; // THIS is where scrolling happens
+  overflow-x: hidden;
+  background: var(--bg-primary);
+  transition: all var(--duration-normal) var(--ease-in-out);
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--text-tertiary);
+    }
+  }
+}
+
+.workspace-container {
+  padding: var(--space-6);
+  min-height: 100%;
+
+  @media (max-width: 767px) {
+    padding: var(--space-4);
+  }
+}
+

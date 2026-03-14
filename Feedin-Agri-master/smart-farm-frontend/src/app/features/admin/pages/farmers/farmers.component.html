@@ -1,0 +1,643 @@
+<div class="farmers-page">
+    <!-- ==================== PAGE HEADER ==================== -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title gradient-text">
+                    <mat-icon>people</mat-icon>
+                    {{ t('admin.farmers.title') }}
+                </h1>
+                <p class="page-subtitle">{{ t('admin.farmers.subtitle') }}</p>
+            </div>
+            <div class="header-actions">
+                <button mat-stroked-button class="btn-secondary" (click)="refresh()" [disabled]="loading()"
+                    [matTooltip]="t('admin.farmers.actions.refresh')">
+                    <mat-icon>refresh</mat-icon>
+                    {{ t('common.refresh') }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="summary-stats" @fadeIn>
+            <div class="stat-card">
+                <div class="stat-icon farmers-icon">
+                    <mat-icon>people</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ totalFarmers() }}</span>
+                    <span class="stat-label">{{ t('admin.farmers.stats.totalFarmers') }}</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon active-icon">
+                    <mat-icon>verified_user</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ activeFarmersCount() }}</span>
+                    <span class="stat-label">{{ t('admin.farmers.stats.active') }}</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon farms-icon">
+                    <mat-icon>agriculture</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ totalFarmsCount() }}</span>
+                    <span class="stat-label">{{ t('admin.farmers.stats.totalFarms') }}</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon devices-icon">
+                    <mat-icon>devices</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ totalDevicesCount() }}</span>
+                    <span class="stat-label">{{ t('admin.farmers.stats.totalDevices') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TWO-PANEL LAYOUT ==================== -->
+    <div class="farmers-container">
+        <!-- ==================== LEFT PANEL: FARMERS LIST ==================== -->
+        <div class="farmers-list-panel">
+            <!-- Filters Bar -->
+            <div class="filters-bar">
+                <!-- Search Field -->
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>{{ t('admin.farmers.filters.search') }}</mat-label>
+                    <input matInput [value]="searchQuery()" (input)="onSearchInput($any($event.target).value)"
+                        [placeholder]="t('admin.farmers.filters.searchPlaceholder')" />
+                    <mat-icon matPrefix>search</mat-icon>
+                </mat-form-field>
+
+                <!-- Status Filter -->
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>{{ t('admin.farmers.filters.status') }}</mat-label>
+                    <mat-select [value]="selectedStatus()" (selectionChange)="selectedStatus.set($event.value)">
+                        <mat-option value="">{{ t('admin.farmers.filters.allStatus') }}</mat-option>
+                        <mat-option value="active">{{ t('admin.farmers.status.active') }}</mat-option>
+                        <mat-option value="inactive">{{ t('admin.farmers.status.inactive') }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Clear Filters -->
+                @if (hasActiveFilters()) {
+                <button mat-button class="clear-filters-btn" (click)="clearFilters()"
+                    [matTooltip]="t('admin.farmers.filters.clearAll')">
+                    <mat-icon>clear</mat-icon>
+                    {{ t('common.clear') }}
+                </button>
+                }
+            </div>
+
+            <!-- Results Count -->
+            <div class="results-count">
+                <span class="count-text">
+                    {{ totalFiltered() }} {{ totalFiltered() === 1 ? t('admin.farmers.farmer') :
+                    t('admin.farmers.farmers') }} {{ t('common.found') }}
+                </span>
+            </div>
+
+            <!-- Loading State -->
+            @if (loading()) {
+            <div class="loading-state">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>{{ t('admin.farmers.loading') }}</p>
+            </div>
+            }
+
+            <!-- Error State -->
+            @else if (error()) {
+            <div class="error-state">
+                <mat-icon class="error-icon">error_outline</mat-icon>
+                <p class="error-message">{{ error() }}</p>
+                <button mat-raised-button color="primary" (click)="refresh()">
+                    <mat-icon>refresh</mat-icon>
+                    {{ t('common.retry') }}
+                </button>
+            </div>
+            }
+
+            <!-- Empty State -->
+            @else if (totalFiltered() === 0) {
+            <div class="empty-state">
+                <mat-icon class="empty-icon">person_off</mat-icon>
+                <h3>{{ t('admin.farmers.empty.title') }}</h3>
+                <p>{{ t('admin.farmers.empty.description') }}</p>
+                @if (hasActiveFilters()) {
+                <button mat-raised-button color="primary" (click)="clearFilters()">
+                    {{ t('admin.farmers.filters.clearFilters') }}
+                </button>
+                }
+            </div>
+            }
+
+            <!-- Farmers List -->
+            @else {
+            <div class="farmers-list">
+                @for (farmer of filteredFarmers(); track trackByFarmerId($index, farmer)) {
+                <div class="farmer-card" [class.selected]="selectedFarmer()?.user_id === farmer.user_id"
+                    (click)="selectFarmer(farmer)" (contextmenu)="onContextMenu($event, farmer)" @fadeIn>
+
+                    <!-- Avatar -->
+                    <div class="farmer-avatar" [class]="getStatusColor(farmer.status)">
+                        <span>{{ farmer.first_name.charAt(0) }}{{ farmer.last_name.charAt(0) }}</span>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="farmer-info">
+                        <div class="farmer-name"
+                            [innerHTML]="highlightSearch(farmer.first_name + ' ' + farmer.last_name)">
+                        </div>
+                        <div class="farmer-email" [innerHTML]="highlightSearch(farmer.email)"></div>
+
+                        <!-- Quick KPIs -->
+                        <div class="farmer-kpis">
+                            <span class="kpi-badge farms-badge" [matTooltip]="t('admin.farmers.kpi.assignedFarms')">
+                                <mat-icon>agriculture</mat-icon>
+                                {{ farmer.assigned_farms.length }}
+                            </span>
+                            <span class="kpi-badge devices-badge" [matTooltip]="t('admin.farmers.kpi.totalDevices')">
+                                <mat-icon>devices</mat-icon>
+                                {{ farmer.total_devices }}
+                            </span>
+                            @if (farmer.city || farmer.country) {
+                            <span class="kpi-badge location-badge" [matTooltip]="t('admin.farmers.kpi.location')">
+                                <mat-icon>location_on</mat-icon>
+                                {{ farmer.city || farmer.country }}
+                            </span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Status & Time -->
+                    <div class="farmer-meta">
+                        <mat-chip [class]="'status-chip ' + getStatusColor(farmer.status)">
+                            {{ farmer.status || t('admin.farmers.status.active') }}
+                        </mat-chip>
+                        <span class="last-active" [matTooltip]="formatDateTime(farmer.last_active)">
+                            {{ formatRelativeTime(farmer.last_active) }}
+                        </span>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- ==================== RIGHT PANEL: DETAILS ==================== -->
+        <div class="farmers-details-panel" [class.open]="isPanelOpen()">
+            @if (!selectedFarmer()) {
+            <!-- Empty State -->
+            <div class="details-empty-state">
+                <div class="empty-illustration">
+                    <mat-icon>person_search</mat-icon>
+                </div>
+                <h3>{{ t('admin.farmers.details.noSelection') }}</h3>
+                <p>{{ t('admin.farmers.details.selectPrompt') }}</p>
+            </div>
+            } @else {
+            <!-- Details Header -->
+            <div class="details-header" @slideIn>
+                <div class="header-left">
+                    <div class="farmer-avatar large" [class]="getStatusColor(selectedFarmer()!.status)">
+                        <span>{{ selectedFarmer()!.first_name.charAt(0) }}{{ selectedFarmer()!.last_name.charAt(0)
+                            }}</span>
+                    </div>
+                    <div class="header-info">
+                        <h2>{{ selectedFarmer()!.first_name }} {{ selectedFarmer()!.last_name }}</h2>
+                        <p class="subtitle">{{ selectedFarmer()!.email }}</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button mat-stroked-button (click)="editFarmer(selectedFarmer()!)"
+                        [matTooltip]="t('admin.farmers.actions.edit')">
+                        <mat-icon>edit</mat-icon>
+                        {{ t('common.edit') }}
+                    </button>
+                    <button mat-icon-button (click)="closePanel()" [matTooltip]="t('common.close')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Details Tabs -->
+            <mat-tab-group class="details-tabs" [selectedIndex]="activeTab()"
+                (selectedIndexChange)="onTabChange($event)" @panelSlide>
+
+                <!-- Tab 0: Overview -->
+                <mat-tab [label]="t('admin.farmers.tabs.overview')">
+                    <div class="tab-content">
+                        <!-- Profile Section -->
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3><mat-icon>person</mat-icon> {{ t('admin.farmers.sections.profile') }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">{{ t('admin.farmers.fields.fullName') }}</span>
+                                        <span class="info-value">{{ selectedFarmer()!.first_name }} {{
+                                            selectedFarmer()!.last_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">{{ t('admin.farmers.fields.email') }}</span>
+                                        <span class="info-value">{{ selectedFarmer()!.email }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">{{ t('admin.farmers.fields.phone') }}</span>
+                                        <span class="info-value">{{ selectedFarmer()!.phone || t('common.notProvided')
+                                            }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">{{ t('admin.farmers.fields.status') }}</span>
+                                        <mat-chip [class]="'status-chip ' + getStatusColor(selectedFarmer()!.status)">
+                                            {{ selectedFarmer()!.status || t('admin.farmers.status.active') }}
+                                        </mat-chip>
+                                    </div>
+                                    @if (selectedFarmer()!.city || selectedFarmer()!.region ||
+                                    selectedFarmer()!.country) {
+                                    <div class="info-item full-width">
+                                        <span class="info-label">{{ t('admin.farmers.fields.location') }}</span>
+                                        <span class="info-value">
+                                            {{ filterFalsy([selectedFarmer()!.city, selectedFarmer()!.region,
+                                            selectedFarmer()!.country]).join(', ') || t('common.notProvided') }}
+                                        </span>
+                                    </div>
+                                    }
+                                    <div class="info-item">
+                                        <span class="info-label">{{ t('admin.farmers.fields.lastActive') }}</span>
+                                        <span class="info-value">{{ formatDateTime(selectedFarmer()!.last_active)
+                                            }}</span>
+                                    </div>
+                                    @if (selectedFarmer()!.created_at) {
+                                    <div class="info-item">
+                                        <span class="info-label">{{ t('admin.farmers.fields.memberSince') }}</span>
+                                        <span class="info-value">{{ formatDate(selectedFarmer()!.created_at) }}</span>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats Section -->
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3><mat-icon>insights</mat-icon> {{ t('admin.farmers.sections.quickStats') }}</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="quick-stats-grid">
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-icon farms">
+                                            <mat-icon>agriculture</mat-icon>
+                                        </div>
+                                        <div class="quick-stat-info">
+                                            <span class="quick-stat-value">{{ selectedFarmer()!.assigned_farms.length
+                                                }}</span>
+                                            <span class="quick-stat-label">{{ t('admin.farmers.stats.farms') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-icon devices">
+                                            <mat-icon>devices</mat-icon>
+                                        </div>
+                                        <div class="quick-stat-info">
+                                            <span class="quick-stat-value">{{ selectedFarmer()!.total_devices }}</span>
+                                            <span class="quick-stat-label">{{ t('admin.farmers.stats.devices') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-icon sensors">
+                                            <mat-icon>sensors</mat-icon>
+                                        </div>
+                                        <div class="quick-stat-info">
+                                            <span class="quick-stat-value">{{ farmerSensors().length || '—' }}</span>
+                                            <span class="quick-stat-label">{{ t('admin.farmers.stats.sensors') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-icon moderators">
+                                            <mat-icon>supervisor_account</mat-icon>
+                                        </div>
+                                        <div class="quick-stat-info">
+                                            <span class="quick-stat-value">{{ farmerModerators().length || '—' }}</span>
+                                            <span class="quick-stat-label">{{ t('admin.farmers.stats.moderators')
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assigned Farms Preview -->
+                        @if (selectedFarmer()!.assigned_farms.length > 0) {
+                        <div class="overview-section">
+                            <div class="section-header">
+                                <h3><mat-icon>agriculture</mat-icon> {{ t('admin.farmers.sections.assignedFarms') }}
+                                </h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="farms-preview-grid">
+                                    @for (farm of selectedFarmer()!.assigned_farms.slice(0, 4); track farm.farm_id) {
+                                    <div class="farm-preview-card">
+                                        <div class="farm-preview-icon">
+                                            <mat-icon>agriculture</mat-icon>
+                                        </div>
+                                        <div class="farm-preview-info">
+                                            <span class="farm-name">{{ farm.farm_name }}</span>
+                                            <span class="farm-meta">{{ farm.device_count }} {{
+                                                t('admin.farmers.devices') }} • {{ farm.area_hectares }} ha</span>
+                                        </div>
+                                    </div>
+                                    }
+                                    @if (selectedFarmer()!.assigned_farms.length > 4) {
+                                    <div class="farm-preview-more">
+                                        +{{ selectedFarmer()!.assigned_farms.length - 4 }} {{
+                                        t('admin.farmers.moreFarms') }}
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 1: Farms -->
+                <mat-tab [label]="t('admin.farmers.tabs.farms')">
+                    <div class="tab-content">
+                        @if (loadingFarms()) {
+                        <div class="loading-inline">
+                            <mat-spinner diameter="32"></mat-spinner>
+                            <span>{{ t('admin.farmers.loadingFarms') }}</span>
+                        </div>
+                        } @else if (farmerFarms().length === 0) {
+                        <div class="tab-empty-state">
+                            <mat-icon>agriculture</mat-icon>
+                            <h4>{{ t('admin.farmers.empty.noFarms') }}</h4>
+                            <p>{{ t('admin.farmers.empty.noFarmsDesc') }}</p>
+                            <button mat-stroked-button (click)="assignFarm(selectedFarmer()!)">
+                                <mat-icon>add</mat-icon>
+                                {{ t('admin.farmers.actions.assignFarm') }}
+                            </button>
+                        </div>
+                        } @else {
+                        <div class="farms-grid">
+                            @for (farm of farmerFarms(); track farm.farm_id) {
+                            <div class="farm-card">
+                                <div class="farm-card-header">
+                                    <div class="farm-icon">
+                                        <mat-icon>agriculture</mat-icon>
+                                    </div>
+                                    <div class="farm-title">
+                                        <h4>{{ farm.farm_name }}</h4>
+                                        <span class="farm-id">{{ farm.farm_id }}</span>
+                                    </div>
+                                    <mat-chip
+                                        [class]="'status-chip ' + (farm.status === 'active' ? 'status-active' : 'status-inactive')">
+                                        {{ farm.status || t('admin.farmers.status.active') }}
+                                    </mat-chip>
+                                </div>
+                                <div class="farm-card-stats">
+                                    <div class="farm-stat">
+                                        <mat-icon>devices</mat-icon>
+                                        <span>{{ farm.device_count }} {{ t('admin.farmers.devices') }}</span>
+                                    </div>
+                                    <div class="farm-stat">
+                                        <mat-icon>straighten</mat-icon>
+                                        <span>{{ farm.area_hectares }} ha</span>
+                                    </div>
+                                    @if (farm.location) {
+                                    <div class="farm-stat">
+                                        <mat-icon>location_on</mat-icon>
+                                        <span>{{ farm.location }}</span>
+                                    </div>
+                                    }
+                                </div>
+                                @if (farm.created_at) {
+                                <div class="farm-card-footer">
+                                    <span class="created-at">{{ t('common.created') }} {{ formatDate(farm.created_at)
+                                        }}</span>
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 2: Devices -->
+                <mat-tab [label]="t('admin.farmers.tabs.devices')">
+                    <div class="tab-content">
+                        @if (loadingDevices()) {
+                        <div class="loading-inline">
+                            <mat-spinner diameter="32"></mat-spinner>
+                            <span>{{ t('admin.farmers.loadingDevices') }}</span>
+                        </div>
+                        } @else if (farmerDevices().length === 0) {
+                        <div class="tab-empty-state">
+                            <mat-icon>devices</mat-icon>
+                            <h4>{{ t('admin.farmers.empty.noDevices') }}</h4>
+                            <p>{{ t('admin.farmers.empty.noDevicesDesc') }}</p>
+                        </div>
+                        } @else {
+                        <div class="devices-list">
+                            @for (device of farmerDevices(); track trackByDeviceId($index, device)) {
+                            <div class="device-item">
+                                <div class="device-icon" [class]="getDeviceStatusClass(device.status)">
+                                    <mat-icon>{{ device.device_type === 'sensor' ? 'sensors' : device.device_type ===
+                                        'actuator' ? 'toggle_on' : 'router' }}</mat-icon>
+                                </div>
+                                <div class="device-info">
+                                    <span class="device-name">{{ device.name || device.device_id }}</span>
+                                    <span class="device-type">{{ device.device_type || t('admin.farmers.device')
+                                        }}</span>
+                                </div>
+                                <div class="device-meta">
+                                    <mat-chip [class]="'status-chip-small ' + getDeviceStatusClass(device.status)">
+                                        <mat-icon class="status-icon">{{ getDeviceStatusIcon(device.status)
+                                            }}</mat-icon>
+                                        {{ device.status || t('admin.farmers.status.unknown') }}
+                                    </mat-chip>
+                                    <span class="last-seen" [matTooltip]="formatDateTime(device.last_seen)">
+                                        {{ formatRelativeTime(device.last_seen) }}
+                                    </span>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 3: Sensors -->
+                <mat-tab [label]="t('admin.farmers.tabs.sensors')">
+                    <div class="tab-content">
+                        @if (loadingSensors()) {
+                        <div class="loading-inline">
+                            <mat-spinner diameter="32"></mat-spinner>
+                            <span>{{ t('admin.farmers.loadingSensors') }}</span>
+                        </div>
+                        } @else if (farmerSensors().length === 0) {
+                        <div class="tab-empty-state">
+                            <mat-icon>sensors</mat-icon>
+                            <h4>{{ t('admin.farmers.empty.noSensors') }}</h4>
+                            <p>{{ t('admin.farmers.empty.noSensorsDesc') }}</p>
+                        </div>
+                        } @else {
+                        <div class="sensors-list">
+                            @for (sensor of farmerSensors(); track trackBySensorId($index, sensor)) {
+                            <div class="sensor-item">
+                                <div class="sensor-icon">
+                                    <mat-icon>sensors</mat-icon>
+                                </div>
+                                <div class="sensor-info">
+                                    <span class="sensor-name">{{ sensor.name || sensor.sensor_id }}</span>
+                                    <span class="sensor-type">{{ sensor.type || sensor.sensor_type ||
+                                        t('admin.farmers.sensor') }}</span>
+                                </div>
+                                <div class="sensor-meta">
+                                    @if (sensor.unit) {
+                                    <span class="sensor-unit">{{ sensor.unit }}</span>
+                                    }
+                                    @if (sensor.last_value !== undefined) {
+                                    <span class="sensor-value">{{ sensor.last_value }} {{ sensor.unit }}</span>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 4: Moderators -->
+                <mat-tab [label]="t('admin.farmers.tabs.moderators')">
+                    <div class="tab-content">
+                        @if (loadingModerators()) {
+                        <div class="loading-inline">
+                            <mat-spinner diameter="32"></mat-spinner>
+                            <span>{{ t('admin.farmers.loadingModerators') }}</span>
+                        </div>
+                        } @else if (farmerModerators().length === 0) {
+                        <div class="tab-empty-state">
+                            <mat-icon>supervisor_account</mat-icon>
+                            <h4>{{ t('admin.farmers.empty.noModerators') }}</h4>
+                            <p>{{ t('admin.farmers.empty.noModeratorsDesc') }}</p>
+                            <span class="empty-hint">{{ t('admin.farmers.empty.moderatorsHint') }}</span>
+                        </div>
+                        } @else {
+                        <div class="moderators-list">
+                            @for (mod of farmerModerators(); track trackByModeratorId($index, mod)) {
+                            <div class="moderator-item">
+                                <div class="moderator-avatar">
+                                    <span>{{ mod.first_name.charAt(0) }}{{ mod.last_name.charAt(0) }}</span>
+                                </div>
+                                <div class="moderator-info">
+                                    <span class="moderator-name">{{ mod.first_name }} {{ mod.last_name }}</span>
+                                    <span class="moderator-email">{{ mod.email }}</span>
+                                </div>
+                                <div class="moderator-farm">
+                                    <mat-icon>agriculture</mat-icon>
+                                    <span>{{ mod.farm_name }}</span>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 5: Activity -->
+                <mat-tab [label]="t('admin.farmers.tabs.activity')">
+                    <div class="tab-content">
+                        @if (loadingActivity()) {
+                        <div class="loading-inline">
+                            <mat-spinner diameter="32"></mat-spinner>
+                            <span>{{ t('admin.farmers.loadingActivity') }}</span>
+                        </div>
+                        } @else if (farmerActivity().length === 0) {
+                        <div class="tab-empty-state">
+                            <mat-icon>history</mat-icon>
+                            <h4>{{ t('admin.farmers.empty.noActivity') }}</h4>
+                            <p>{{ t('admin.farmers.empty.noActivityDesc') }}</p>
+                        </div>
+                        } @else {
+                        <div class="activity-timeline">
+                            @for (activity of farmerActivity(); track trackByActivityId($index, activity)) {
+                            <div class="activity-item" [class]="getActivityStatusClass(activity.status)">
+                                <div class="activity-marker">
+                                    <mat-icon>{{ getActivityIcon(activity.action) }}</mat-icon>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-action">{{ activity.action }}</div>
+                                    <div class="activity-meta">
+                                        <span class="activity-source">{{ activity.trigger_source }}</span>
+                                        <span class="meta-divider">•</span>
+                                        <span class="activity-time" [matTooltip]="formatDateTime(activity.timestamp)">
+                                            {{ formatRelativeTime(activity.timestamp) }}
+                                        </span>
+                                        <mat-chip
+                                            [class]="'status-chip-small ' + getActivityStatusClass(activity.status)">
+                                            {{ activity.status }}
+                                        </mat-chip>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+
+                <!-- Tab 6: Billing (Placeholder) -->
+                <mat-tab [label]="t('admin.farmers.tabs.billing')">
+                    <div class="tab-content">
+                        <div class="tab-empty-state billing-placeholder">
+                            <mat-icon>payments</mat-icon>
+                            <h4>{{ t('admin.farmers.billing.title') }}</h4>
+                            <p>{{ t('admin.farmers.billing.comingSoon') }}</p>
+                            <div class="placeholder-features">
+                                <span class="feature-item">
+                                    <mat-icon>receipt</mat-icon>
+                                    {{ t('admin.farmers.billing.invoiceHistory') }}
+                                </span>
+                                <span class="feature-item">
+                                    <mat-icon>credit_card</mat-icon>
+                                    {{ t('admin.farmers.billing.paymentMethods') }}
+                                </span>
+                                <span class="feature-item">
+                                    <mat-icon>subscriptions</mat-icon>
+                                    {{ t('admin.farmers.billing.subscriptionPlans') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+            }
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    @if (contextMenuPosition()) {
+    <div class="context-menu" [style.left.px]="contextMenuPosition()!.x" [style.top.px]="contextMenuPosition()!.y">
+        <button class="context-menu-item" (click)="viewFarmer(contextMenuFarmer()!)">
+            <mat-icon>visibility</mat-icon>
+            {{ t('admin.farmers.contextMenu.viewDetails') }}
+        </button>
+        <button class="context-menu-item" (click)="editFarmer(contextMenuFarmer()!)">
+            <mat-icon>edit</mat-icon>
+            {{ t('admin.farmers.contextMenu.edit') }}
+        </button>
+        <button class="context-menu-item" (click)="assignFarm(contextMenuFarmer()!)">
+            <mat-icon>add</mat-icon>
+            {{ t('admin.farmers.contextMenu.assignFarm') }}
+        </button>
+    </div>
+    }
+</div>

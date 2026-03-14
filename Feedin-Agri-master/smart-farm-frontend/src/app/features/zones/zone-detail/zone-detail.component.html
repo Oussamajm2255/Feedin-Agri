@@ -1,0 +1,143 @@
+<div class="zone-detail-container" *ngIf="!isLoading(); else loadingTpl"
+    [attr.dir]="languageService.getCurrentLanguage().direction">
+
+    <!-- Back Button + Header -->
+    <header class="detail-header" *ngIf="zone() as z">
+        <button mat-icon-button (click)="goBack()" class="back-btn" matTooltip="Back to Zones">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-icon-wrap">
+            <mat-icon>{{ getZoneIcon(z.type) }}</mat-icon>
+        </div>
+        <div class="header-info">
+            <h1>{{ z.name }}</h1>
+            <div class="header-meta">
+                <span class="type-chip">{{ z.type }}</span>
+                <span *ngIf="z.area_m2">{{ z.area_m2 }} m²</span>
+                <span class="status-chip" [class.active]="z.status === 'active'">{{ z.status }}</span>
+            </div>
+            <p *ngIf="z.description" class="header-desc">{{ z.description }}</p>
+        </div>
+    </header>
+
+    <!-- Content Sections -->
+    <div class="detail-grid" *ngIf="zone()">
+
+        <!-- ── Sensors Section ─────────────────────────────── -->
+        <section class="detail-section">
+            <div class="section-title">
+                <mat-icon>sensors</mat-icon>
+                <h2>{{ 'zones.detail.sensors' | translate }} ({{ zoneSensors.length }})</h2>
+            </div>
+
+            <!-- Assign Sensor -->
+            <div class="assign-row" *ngIf="unassignedSensors.length > 0">
+                <mat-form-field appearance="outline" class="assign-field">
+                    <mat-label>{{ 'zones.detail.assignSensor' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="selectedSensorId">
+                        @for (s of unassignedSensors; track s.sensor_id) {
+                        <mat-option [value]="s.sensor_id">{{ s.type }} — {{ s.sensor_id | slice:0:8 }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <button mat-flat-button color="primary" (click)="assignSensor()" [disabled]="!selectedSensorId"
+                    class="assign-btn">
+                    <mat-icon>link</mat-icon> {{ 'zones.detail.link' | translate }}
+                </button>
+            </div>
+
+            <!-- Sensor List -->
+            <div class="item-list" *ngIf="zoneSensors.length > 0; else noSensors">
+                @for (sensor of zoneSensors; track sensor.sensor_id) {
+                <div class="item-row">
+                    <mat-icon class="item-icon sensor-icon">sensors</mat-icon>
+                    <div class="item-info">
+                        <strong>{{ sensor.type }}</strong>
+                        <span class="item-sub">{{ sensor.unit }} · {{ sensor.sensor_id | slice:0:12 }}</span>
+                    </div>
+                    <button mat-icon-button color="warn" (click)="unlinkSensor(sensor)" matTooltip="Unlink from zone">
+                        <mat-icon>link_off</mat-icon>
+                    </button>
+                </div>
+                }
+            </div>
+            <ng-template #noSensors>
+                <p class="empty-section-msg">{{ 'zones.detail.noSensors' | translate }}</p>
+            </ng-template>
+        </section>
+
+        <!-- ── Devices Section ─────────────────────────────── -->
+        <section class="detail-section">
+            <div class="section-title">
+                <mat-icon>devices</mat-icon>
+                <h2>{{ 'zones.detail.devices' | translate }} ({{ zoneDevices.length }})</h2>
+            </div>
+
+            <!-- Assign Device -->
+            <div class="assign-row" *ngIf="unassignedDevices.length > 0">
+                <mat-form-field appearance="outline" class="assign-field">
+                    <mat-label>{{ 'zones.detail.assignDevice' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="selectedDeviceId">
+                        @for (d of unassignedDevices; track d.device_id) {
+                        <mat-option [value]="d.device_id">{{ d.name }} ({{ d.device_type }})</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <button mat-flat-button color="primary" (click)="assignDevice()" [disabled]="!selectedDeviceId"
+                    class="assign-btn">
+                    <mat-icon>link</mat-icon> {{ 'zones.detail.link' | translate }}
+                </button>
+            </div>
+
+            <!-- Device List -->
+            <div class="item-list" *ngIf="zoneDevices.length > 0; else noDevices">
+                @for (device of zoneDevices; track device.device_id) {
+                <div class="item-row">
+                    <mat-icon class="item-icon device-icon">memory</mat-icon>
+                    <div class="item-info">
+                        <strong>{{ device.name }}</strong>
+                        <span class="item-sub">{{ device.device_type }} · {{ device.status }}</span>
+                    </div>
+                    <button mat-icon-button color="warn" (click)="unlinkDevice(device)" matTooltip="Unlink from zone">
+                        <mat-icon>link_off</mat-icon>
+                    </button>
+                </div>
+                }
+            </div>
+            <ng-template #noDevices>
+                <p class="empty-section-msg">{{ 'zones.detail.noDevices' | translate }}</p>
+            </ng-template>
+        </section>
+
+        <!-- ── Crops Section ───────────────────────────────── -->
+        <section class="detail-section full-width">
+            <div class="section-title">
+                <mat-icon>spa</mat-icon>
+                <h2>{{ 'zones.detail.crops' | translate }} ({{ zoneCrops.length }})</h2>
+            </div>
+
+            <div class="item-list" *ngIf="zoneCrops.length > 0; else noCrops">
+                @for (crop of zoneCrops; track crop.crop_id) {
+                <div class="item-row">
+                    <mat-icon class="item-icon crop-icon">eco</mat-icon>
+                    <div class="item-info">
+                        <strong>{{ crop.name }}</strong>
+                        <span class="item-sub">{{ crop.variety || '' }} · {{ crop.status }}</span>
+                    </div>
+                </div>
+                }
+            </div>
+            <ng-template #noCrops>
+                <p class="empty-section-msg">{{ 'zones.detail.noCrops' | translate }}</p>
+            </ng-template>
+        </section>
+
+    </div>
+</div>
+
+<ng-template #loadingTpl>
+    <div class="loading-state">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>{{ 'common.loading' | translate }}</p>
+    </div>
+</ng-template>

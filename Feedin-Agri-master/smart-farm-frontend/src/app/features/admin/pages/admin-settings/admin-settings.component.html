@@ -1,0 +1,643 @@
+<div class="admin-settings-page" @pageAnimation>
+    <!-- ==================== HEADER ==================== -->
+    <header class="settings-header glass-header">
+        <div class="header-gradient-overlay"></div>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="title-row">
+                    <div class="title-icon-wrapper">
+                        <mat-icon class="title-icon">settings</mat-icon>
+                        <div class="icon-pulse"></div>
+                    </div>
+                    <div class="title-text">
+                        <h1 class="page-title">{{ 'admin.settings.title' | translate }}</h1>
+                        <p class="page-subtitle">{{ 'admin.settings.subtitle' | translate }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                @if (lastSaved()) {
+                <span class="last-saved">
+                    <mat-icon>check_circle</mat-icon>
+                    Last saved {{ getRelativeTime(lastSaved()) }}
+                </span>
+                }
+                <button mat-stroked-button class="btn-secondary" (click)="exportSettings()">
+                    <mat-icon>download</mat-icon>
+                    {{ 'export.button.label' | translate }}
+                </button>
+                <button mat-stroked-button class="btn-secondary" (click)="importSettings()">
+                    <mat-icon>upload</mat-icon>
+                    {{ 'common.add' | translate }}
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <div class="settings-content">
+        <!-- Settings Navigation Tabs -->
+        <nav class="settings-tabs" @fadeIn>
+            @for (tab of settingsTabs; track tab.id) {
+            <button class="tab-btn" [class.active]="activeTab() === tab.id" [attr.data-color]="tab.color"
+                (click)="setActiveTab(tab.id)">
+                <div class="tab-icon-wrapper">
+                    <mat-icon>{{ tab.icon }}</mat-icon>
+                    @if (getTabStatus(tab.id) === 'modified') {
+                    <span class="tab-indicator modified"></span>
+                    }
+                    @if (getTabStatus(tab.id) === 'error') {
+                    <span class="tab-indicator error"></span>
+                    }
+                </div>
+                <div class="tab-text">
+                    <span class="tab-label">{{ tab.label }}</span>
+                    <span class="tab-description">{{ tab.description }}</span>
+                </div>
+            </button>
+            }
+        </nav>
+
+        <!-- Settings Panels -->
+        <main class="settings-panels" @staggerCards>
+            @if (loading()) {
+            <div class="loading-state">
+                <mat-spinner diameter="48"></mat-spinner>
+                <p>{{ 'common.loading' | translate }}</p>
+            </div>
+            } @else {
+            <form [formGroup]="settingsForm">
+                <!-- General Settings -->
+                @if (activeTab() === 'general') {
+                <div class="settings-panel" @slideIn>
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <mat-icon>tune</mat-icon>
+                            <h2>{{ 'admin.settings.sections.general' | translate }}</h2>
+                        </div>
+                        <p class="panel-description">{{ 'admin.settings.general.subtitle' | translate }}</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>badge</mat-icon>
+                                <h3>{{ 'admin.settings.general.platformName' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.general.platformName' | translate }}</mat-label>
+                                    <input matInput formControlName="site_name" placeholder="My Smart Farm">
+                                    <mat-icon matPrefix>business</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'common.email' | translate }}</mat-label>
+                                    <input matInput type="email" formControlName="contact_email"
+                                        placeholder="admin@example.com">
+                                    <mat-icon matPrefix>email</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>language</mat-icon>
+                                <h3>{{ 'admin.settings.general.language' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.general.language' | translate }}</mat-label>
+                                    <mat-select formControlName="default_language">
+                                        <mat-option value="en">English</mat-option>
+                                        <mat-option value="fr">Français</mat-option>
+                                        <mat-option value="ar">العربية</mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>translate</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.general.timezone' | translate }}</mat-label>
+                                    <mat-select formControlName="timezone">
+                                        <mat-option value="UTC">UTC</mat-option>
+                                        <mat-option value="Europe/Paris">Europe/Paris</mat-option>
+                                        <mat-option value="Africa/Casablanca">Africa/Casablanca</mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>schedule</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="settings-card warning-card">
+                            <div class="card-header">
+                                <mat-icon>engineering</mat-icon>
+                                <h3>{{ 'admin.settings.general.maintenanceMode' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.general.maintenanceMode' |
+                                            translate }}</span>
+                                        <span class="toggle-description">{{ 'admin.settings.general.maintenanceModeDesc'
+                                            | translate }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="maintenance_mode"
+                                        color="warn"></mat-slide-toggle>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Notifications Settings -->
+                @if (activeTab() === 'notifications') {
+                <div class="settings-panel" @slideIn>
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <mat-icon>notifications_active</mat-icon>
+                            <h2>{{ 'admin.settings.sections.notifications' | translate }}</h2>
+                        </div>
+                        <p class="panel-description">{{ 'admin.settings.notifications.subtitle' | translate }}</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>email</mat-icon>
+                                <h3>{{ 'admin.settings.notifications.emailNotifications' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.notifications.emailNotifications'
+                                            | translate }}</span>
+                                        <span class="toggle-description">{{
+                                            'admin.settings.notifications.emailNotificationsDesc' | translate }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="email_enabled"
+                                        color="primary"></mat-slide-toggle>
+                                </div>
+
+                                @if (settingsForm.get('email_enabled')?.value) {
+                                <mat-divider></mat-divider>
+                                <div class="sub-settings">
+                                    <mat-checkbox formControlName="email_sensor_alerts">{{
+                                        'admin.notifications.types.sensor' | translate }}</mat-checkbox>
+                                    <mat-checkbox formControlName="email_device_status">{{
+                                        'admin.notifications.types.device' | translate }}</mat-checkbox>
+                                    <mat-checkbox formControlName="email_daily_digest">{{
+                                        'admin.settings.notifications.daily' | translate }}</mat-checkbox>
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>sms</mat-icon>
+                                <h3>{{ 'admin.settings.notifications.smsNotifications' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.notifications.smsNotifications' |
+                                            translate }}</span>
+                                        <span class="toggle-description">{{
+                                            'admin.settings.notifications.smsNotificationsDesc' | translate }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="sms_enabled" color="primary"></mat-slide-toggle>
+                                </div>
+
+                                @if (settingsForm.get('sms_enabled')?.value) {
+                                <mat-divider></mat-divider>
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'common.name' | translate }}</mat-label>
+                                    <input matInput type="tel" formControlName="sms_phone" placeholder="+1234567890">
+                                    <mat-icon matPrefix>phone</mat-icon>
+                                </mat-form-field>
+                                <mat-checkbox formControlName="sms_critical_only">{{
+                                    'admin.settings.notifications.criticalAlerts' | translate }}</mat-checkbox>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>notifications</mat-icon>
+                                <h3>{{ 'admin.settings.notifications.pushNotifications' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.notifications.pushNotifications' |
+                                            translate }}</span>
+                                        <span class="toggle-description">{{
+                                            'admin.settings.notifications.pushNotificationsDesc' | translate }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="push_enabled" color="primary"></mat-slide-toggle>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Security Settings -->
+                @if (activeTab() === 'security') {
+                <div class="settings-panel" @slideIn>
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <mat-icon>security</mat-icon>
+                            <h2>{{ 'admin.settings.sections.security' | translate }}</h2>
+                        </div>
+                        <p class="panel-description">{{ 'admin.settings.security.subtitle' | translate }}</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>timer</mat-icon>
+                                <h3>{{ 'admin.settings.security.sessionTimeout' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.security.sessionTimeout' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="session_timeout" min="60"
+                                        max="86400">
+                                    <mat-icon matPrefix>schedule</mat-icon>
+                                    <mat-hint>{{ formatTimeout(settingsForm.get('session_timeout')?.value) }}</mat-hint>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.security.maxLoginAttempts' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="max_login_attempts" min="1" max="10">
+                                    <mat-icon matPrefix>lock</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>password</mat-icon>
+                                <h3>{{ 'admin.settings.security.passwordMinLength' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.security.passwordMinLength' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="min_password_length" min="6"
+                                        max="32">
+                                    <mat-icon matPrefix>straighten</mat-icon>
+                                </mat-form-field>
+
+                                <div class="checkbox-group">
+                                    <mat-checkbox formControlName="require_uppercase">{{
+                                        'admin.settings.security.requireMfa' | translate }}</mat-checkbox>
+                                    <mat-checkbox formControlName="require_numbers">{{
+                                        'admin.settings.security.auditLog' | translate }}</mat-checkbox>
+                                    <mat-checkbox formControlName="require_special">{{
+                                        'admin.settings.security.ipWhitelist' | translate }}</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>verified_user</mat-icon>
+                                <h3>{{ 'admin.settings.security.requireMfa' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.security.requireMfa' | translate
+                                            }}</span>
+                                        <span class="toggle-description">{{ 'admin.settings.security.requireMfaDesc' |
+                                            translate }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="require_2fa" color="primary"></mat-slide-toggle>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Advanced Settings -->
+                @if (activeTab() === 'advanced') {
+                <div class="settings-panel" @slideIn>
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <mat-icon>code</mat-icon>
+                            <h2>{{ 'admin.settings.sections.system' | translate }}</h2>
+                        </div>
+                        <p class="panel-description">{{ 'admin.settings.system.subtitle' | translate }}</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>speed</mat-icon>
+                                <h3>{{ 'admin.settings.system.apiRateLimit' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.system.apiRateLimit' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="api_rate_limit" min="10" max="1000">
+                                    <mat-icon matPrefix>speed</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>bug_report</mat-icon>
+                                <h3>{{ 'admin.settings.system.debugMode' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.system.debugMode' | translate
+                                            }}</span>
+                                        <span class="toggle-description">{{ 'admin.settings.system.debugModeDesc' |
+                                            translate }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="debug_mode" color="warn"></mat-slide-toggle>
+                                </div>
+
+                                <mat-divider></mat-divider>
+
+                                <div class="log-level-selector">
+                                    <span class="selector-label">{{ 'admin.settings.system.dataRetention' | translate
+                                        }}</span>
+                                    <div class="log-level-buttons">
+                                        @for (level of logLevels; track level.value) {
+                                        <button type="button" class="level-btn"
+                                            [class.active]="settingsForm.get('log_level')?.value === level.value"
+                                            (click)="setLogLevel(level.value)">
+                                            <mat-icon>{{ level.icon }}</mat-icon>
+                                            {{ level.label }}
+                                        </button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.system.dataRetention' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="log_retention_days" min="1"
+                                        max="365">
+                                    <mat-icon matPrefix>history</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Data & Storage Settings -->
+                @if (activeTab() === 'data') {
+                <div class="settings-panel" @slideIn>
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <mat-icon>storage</mat-icon>
+                            <h2>{{ 'admin.settings.system.backupFrequency' | translate }}</h2>
+                        </div>
+                        <p class="panel-description">{{ 'admin.settings.system.subtitle' | translate }}</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>backup</mat-icon>
+                                <h3>{{ 'admin.settings.system.backupFrequency' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="toggle-setting">
+                                    <div class="toggle-info">
+                                        <span class="toggle-label">{{ 'admin.settings.system.backupFrequency' |
+                                            translate }}</span>
+                                        <span class="toggle-description">{{ 'admin.settings.system.subtitle' | translate
+                                            }}</span>
+                                    </div>
+                                    <mat-slide-toggle formControlName="auto_backup_enabled"
+                                        color="primary"></mat-slide-toggle>
+                                </div>
+
+                                @if (settingsForm.get('auto_backup_enabled')?.value) {
+                                <mat-divider></mat-divider>
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.system.backupFrequency' | translate }}</mat-label>
+                                    <mat-select formControlName="backup_frequency">
+                                        <mat-option value="hourly">{{ 'admin.settings.notifications.daily' | translate
+                                            }}</mat-option>
+                                        <mat-option value="daily">{{ 'admin.settings.notifications.daily' | translate
+                                            }}</mat-option>
+                                        <mat-option value="weekly">{{ 'admin.settings.notifications.weekly' | translate
+                                            }}</mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>schedule</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.system.dataRetention' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="backup_retention" min="1" max="90">
+                                    <mat-icon matPrefix>history</mat-icon>
+                                </mat-form-field>
+                                }
+
+                                <button mat-stroked-button type="button" class="backup-btn" (click)="triggerBackup()">
+                                    <mat-icon>backup</mat-icon>
+                                    {{ 'admin.settings.system.backupFrequency' | translate }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>delete_sweep</mat-icon>
+                                <h3>{{ 'admin.settings.system.dataRetention' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.system.dataRetention' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="sensor_data_retention" min="30"
+                                        max="365">
+                                    <mat-icon matPrefix>sensors</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'admin.settings.security.auditLog' | translate }}</mat-label>
+                                    <input matInput type="number" formControlName="audit_log_retention" min="30"
+                                        max="730">
+                                    <mat-icon matPrefix>history</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <mat-icon>pie_chart</mat-icon>
+                                <h3>{{ 'admin.settings.system.cacheTimeout' | translate }}</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="storage-info">
+                                    <div class="storage-bar">
+                                        <div class="storage-used" [style.width.%]="storageUsedPercent()"></div>
+                                    </div>
+                                    <div class="storage-text">
+                                        <span>{{ formatStorage(storageUsed()) }} used</span>
+                                        <span>{{ formatStorage(storageTotal()) }} total</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Integrations Settings -->
+                @if (activeTab() === 'integrations') {
+                <div class="settings-panel" @slideIn>
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <mat-icon>hub</mat-icon>
+                            <h2>{{ 'admin.settings.sections.support' | translate }}</h2>
+                        </div>
+                        <p class="panel-description">{{ 'admin.settings.support.subtitle' | translate }}</p>
+                    </div>
+
+                    <div class="integrations-grid">
+                        <!-- MQTT Integration -->
+                        <div class="integration-card" [class.connected]="mqttConnected()">
+                            <div class="integration-header">
+                                <div class="integration-icon mqtt">
+                                    <mat-icon>router</mat-icon>
+                                </div>
+                                <div class="integration-info">
+                                    <h3>MQTT Broker</h3>
+                                    <span class="integration-status" [class.connected]="mqttConnected()">
+                                        {{ mqttConnected() ? ('common.online' | translate) : ('common.offline' |
+                                        translate) }}
+                                    </span>
+                                </div>
+                                <mat-slide-toggle formControlName="mqtt_enabled" color="primary"></mat-slide-toggle>
+                            </div>
+
+                            @if (settingsForm.get('mqtt_enabled')?.value) {
+                            <div class="integration-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Broker URL</mat-label>
+                                    <input matInput formControlName="mqtt_broker_url"
+                                        placeholder="mqtt://localhost:1883">
+                                    <mat-icon matPrefix>link</mat-icon>
+                                </mat-form-field>
+                                <button mat-stroked-button type="button" (click)="testMqttConnection()"
+                                    [disabled]="testingConnection()">
+                                    @if (testingConnection()) {
+                                    <mat-spinner diameter="18"></mat-spinner>
+                                    } @else {
+                                    <mat-icon>refresh</mat-icon>
+                                    }
+                                    {{ 'admin.settings.support.contactSupport' | translate }}
+                                </button>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Weather API Integration -->
+                        <div class="integration-card" [class.connected]="weatherApiStatus() === 'connected'">
+                            <div class="integration-header">
+                                <div class="integration-icon weather">
+                                    <mat-icon>cloud</mat-icon>
+                                </div>
+                                <div class="integration-info">
+                                    <h3>Weather API</h3>
+                                    <span class="integration-status"
+                                        [class.connected]="weatherApiStatus() === 'connected'">
+                                        {{ weatherApiStatus() | titlecase }}
+                                    </span>
+                                </div>
+                                <mat-slide-toggle formControlName="weather_api_enabled"
+                                    color="primary"></mat-slide-toggle>
+                            </div>
+
+                            @if (settingsForm.get('weather_api_enabled')?.value) {
+                            <div class="integration-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>API Key</mat-label>
+                                    <input matInput formControlName="weather_api_key"
+                                        [type]="showApiKey() ? 'text' : 'password'" placeholder="Enter your API key">
+                                    <mat-icon matPrefix>key</mat-icon>
+                                    <button mat-icon-button matSuffix type="button" (click)="toggleApiKeyVisibility()">
+                                        <mat-icon>{{ showApiKey() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- SMS Gateway Integration -->
+                        <div class="integration-card" [class.connected]="smsConfigured()">
+                            <div class="integration-header">
+                                <div class="integration-icon sms">
+                                    <mat-icon>sms</mat-icon>
+                                </div>
+                                <div class="integration-info">
+                                    <h3>SMS Gateway</h3>
+                                    <span class="integration-status" [class.connected]="smsConfigured()">
+                                        {{ smsConfigured() ? ('common.active' | translate) : ('common.inactive' |
+                                        translate) }}
+                                    </span>
+                                </div>
+                                <mat-slide-toggle formControlName="sms_gateway_enabled"
+                                    color="primary"></mat-slide-toggle>
+                            </div>
+
+                            @if (settingsForm.get('sms_gateway_enabled')?.value) {
+                            <div class="integration-content">
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Provider</mat-label>
+                                    <mat-select formControlName="sms_gateway_provider">
+                                        <mat-option value="twilio">Twilio</mat-option>
+                                        <mat-option value="nexmo">Nexmo</mat-option>
+                                        <mat-option value="messagebird">MessageBird</mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>business</mat-icon>
+                                </mat-form-field>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                }
+            </form>
+            }
+        </main>
+    </div>
+
+    <!-- ==================== FLOATING SAVE BAR ==================== -->
+    @if (hasUnsavedChanges()) {
+    <div class="floating-save-bar" @slideUp>
+        <div class="save-bar-content">
+            <div class="save-bar-info">
+                <mat-icon>pending</mat-icon>
+                <span>{{ 'admin.settings.saved' | translate }}</span>
+            </div>
+            <div class="save-bar-actions">
+                <button mat-stroked-button (click)="resetForm()">
+                    <mat-icon>undo</mat-icon>
+                    {{ 'admin.settings.reset' | translate }}
+                </button>
+                <button mat-flat-button color="primary" (click)="saveSettings()"
+                    [disabled]="saving() || !settingsForm.valid">
+                    @if (saving()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    } @else {
+                    <mat-icon>save</mat-icon>
+                    }
+                    {{ 'admin.settings.save' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+</div>

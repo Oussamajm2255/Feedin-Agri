@@ -1,0 +1,61 @@
+<section class="bento-section" [attr.aria-label]="'Plateforme FEEDIN'">
+    <div class="bento-container">
+
+        <div class="bento-header" appScrollReveal="fade-up">
+            <span class="bento-label">{{ 'landing.bento.label' | translate }}</span>
+            <h2 class="bento-title" [innerHTML]="'landing.bento.title' | translate"></h2>
+            <p class="bento-intro">{{ 'landing.bento.intro' | translate }}</p>
+        </div>
+
+        <div class="bento-grid" appScrollReveal="stagger" [staggerDelay]="0.1">
+            @for (card of cards; track card.title) {
+            <div #cardRef class="bento-card" [ngClass]="[card.size, card.cssClass || '']"
+                (click)="navigateTo(card.route)" (mousemove)="onMouseMove($event, cardRef)">
+
+                <div class="bento-content">
+                    <div class="bc-header">
+                        @if (card.icon) {
+                        <div class="bc-icon" [innerHTML]="card.icon"></div>
+                        }
+                    </div>
+
+                    <h3 class="bc-title">{{ card.title | translate }}</h3>
+                    <p class="bc-desc">{{ card.description | translate }}</p>
+
+                    @if (card.ctaText) {
+                    <div class="bc-cta">
+                        <span>{{ card.ctaText | translate }}</span>
+                        <div class="arrow-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </svg>
+                        </div>
+                    </div>
+                    } @else {
+                    <div class="bc-cta icon-only">
+                        <div class="arrow-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </svg>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="bento-bg-glow"></div>
+
+                @if (card.backgroundImage) {
+                <div class="bento-bg-image" [style.backgroundImage]="'url(\'' + card.backgroundImage + '\')'"></div>
+                }
+            </div>
+            }
+        </div>
+
+    </div>
+</section>

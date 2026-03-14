@@ -1,0 +1,671 @@
+// ================================
+// BENTO GRID NAVIGATION SECTION
+// ================================
+
+.bento-section {
+    position: relative;
+    padding: 6rem 2rem;
+    background: var(--light-bg);
+}
+
+.bento-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+// HEADER
+.bento-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 3.5rem;
+}
+
+.bento-label {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    padding: 0.4rem 1rem;
+    background: rgba(16, 185, 129, 0.08);
+    border-radius: 100px;
+    border: 1px solid rgba(16, 185, 129, 0.12);
+}
+
+.bento-title {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.bento-intro {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+// ================================
+// THE BENTO GRID
+// ================================
+.bento-grid {
+    display: grid;
+    // VERY IMPORTANT: Prevent GSAP from freezing the entire grid's opacity
+    // if the stagger animation targets the wrong parent
+    opacity: 1 !important;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 240px;
+    gap: 1.5rem;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: minmax(200px, auto); // Allow content to dictate height
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto; // Mobile stack
+    }
+}
+
+// ================================
+// BENTO CARD BASE
+// ================================
+.bento-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.7);
+    /* Inner Glow (Rim Lighting) - White cards (Beveled edges) */
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    border-left: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    padding: 2.25rem;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    /* Glassmorphism */
+    backdrop-filter: blur(12px);
+
+    /* Dual-Shadow System (Static) */
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        /* Tight outline */
+        0 10px 15px -3px rgba(0, 0, 0, 0.02);
+    /* Soft ambient */
+
+    /* Spotlight Radial Hover defaults */
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --spotlight-color: rgba(255, 255, 255, 0.3); // Bright reactive hover light
+
+    // Subtle surface noise overlay
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.03;
+        /* Extremely subtle */
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: overlay;
+    }
+
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+    will-change: transform,
+    box-shadow;
+
+    // Spotlight glow structure (follows mouse)
+    .bento-bg-glow {
+        position: absolute;
+        inset: 0;
+        // Radial gradient anchored to mouse coords
+        background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+                var(--spotlight-color),
+                transparent 40%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 0;
+        pointer-events: none;
+        will-change: opacity;
+    }
+
+    // Background Image Layer (Parallax on hover)
+    .bento-bg-image {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-size: cover;
+        background-position: left center;
+        background-repeat: no-repeat;
+        opacity: 0.9;
+        /* Starting slight scale down so it can scale up */
+        transform: scale(1);
+        transform-origin: center;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        will-change: transform;
+        pointer-events: none;
+    }
+
+    .bento-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    &:hover {
+        /* The Lift */
+        transform: translateY(-8px);
+
+        /* Dual-Shadow System (Hover/Lifting) */
+        box-shadow:
+            0 10px 15px -3px rgba(0, 0, 0, 0.1),
+            /* Sharp Dark shadow */
+            0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        /* Wide soft lift shadow */
+
+        border-top-color: rgba(16, 185, 129, 0.4);
+
+        .bento-bg-glow {
+            opacity: 1;
+        }
+
+        /* The Parallax Image Effect (Shift & Scale up) */
+        .bento-bg-image {
+            transform: scale(1.05) translate(calc((var(--mouse-x, 50%) - 50%) * -0.015), calc((var(--mouse-y, 50%) - 50%) * -0.015));
+            opacity: 1; // Full opacity on hover
+        }
+
+        .arrow-circle {
+            transform: translateX(4px);
+        }
+    }
+
+    /* Touch Optimizations */
+    @media (hover: none) and (pointer: coarse) {
+        &:hover {
+            transform: none;
+            /* Disable lift on touch */
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 10px 15px -3px rgba(0, 0, 0, 0.02);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .bento-bg-glow {
+            background: radial-gradient(circle at top left, var(--spotlight-color), transparent 70%);
+            opacity: 1;
+            /* Static visible glow */
+        }
+    }
+
+    &.has-bg-image {
+        .bc-cta {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-color: #15B980;
+            color: #ffffff;
+
+            .arrow-circle {
+                color: #ffffff;
+            }
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.5);
+            }
+        }
+    }
+}
+
+// Text Elements
+.bc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.bc-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--primary-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Colored glow behind icon */
+    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.15),
+        0 4px 12px rgba(16, 185, 129, 0.15);
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.bc-title {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    /* tracking-tighter */
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.bc-desc {
+    font-size: 0.875rem;
+    /* 14px */
+    color: #64748b;
+    /* text-slate-500 */
+    line-height: 1.5;
+    margin-bottom: auto; // pushes CTA to bottom
+    opacity: 0.9;
+}
+
+// Call To Action
+.bc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #15B980;
+    transition: all 0.3s ease;
+
+    // Unified Positioning using flexbox
+    margin-top: auto;
+    align-self: flex-end;
+    position: relative;
+    z-index: 5;
+
+    // Glassmorphism Styling
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #15B980;
+
+    // Pill styling for text buttons
+    border-radius: 50px;
+    padding: 0.25rem 0.25rem 0.25rem 1.25rem;
+    min-height: 48px;
+
+    .arrow-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+        color: #15B980;
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.3);
+
+        .arrow-circle {
+            transform: translateX(4px);
+        }
+    }
+
+    &.icon-only {
+        padding: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        justify-content: center;
+
+        .arrow-circle {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+// ================================
+// CARD SIZING & POSITIONING (Desktop)
+// ================================
+
+// Large Card (Span 2 cols, 2 rows)
+.large {
+    grid-column: span 2;
+    grid-row: span 2;
+    /* Mesh Gradient approximation for premium texture */
+    background:
+        radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.02) 0%, transparent 40%),
+        rgba(255, 255, 255, 0.8);
+
+    .bc-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+
+        svg {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .bc-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+    }
+
+    .bc-desc {
+        font-size: 1rem;
+        max-width: 85%;
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); // Make text pop above images
+    }
+
+    // Specific styles for background decoration
+    &.bento-hero {
+        .bento-bg-glow {
+            background: radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1), transparent 60%);
+            z-index: 1;
+        }
+
+        .bento-bg-image {
+            left: -20px;
+            top: -20px;
+            bottom: -20px;
+            right: -20px;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to right, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.5) 45%, transparent 85%);
+                z-index: 1;
+            }
+        }
+    }
+}
+
+// Small Card (Span 1 col, 1 row)
+.small {
+    grid-column: span 1;
+    grid-row: span 1;
+    padding: 1.75rem;
+
+    &.has-bg-image {
+        .bento-bg-image {
+            // Apply frosted glass blur overlay directly in CSS so we don't edit original images
+            filter: blur(2px) brightness(1.1);
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to right, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.6) 50%, transparent 90%);
+                z-index: 1;
+            }
+        }
+
+        .bc-title {
+            color: #ffffff;
+        }
+
+        .bc-desc {
+            font-weight: 500;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    &.bg-glass {
+        background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* Faint blueprint grid pattern */
+            background-image:
+                linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+    }
+
+    .bc-title {
+        font-size: 1.25rem;
+    }
+
+    .bc-desc {
+        font-size: 0.875rem;
+    }
+
+    .bc-cta.icon-only {
+        margin-top: auto;
+    }
+}
+
+// Closer Card (Card 6)
+.bento-closer {
+    background: var(--primary-green);
+    /* Inner Glow for Dark Card */
+    border: 1px solid rgba(167, 243, 208, 0.3);
+    /* Emerald 200 / 30% */
+
+    // Outer Glow - makes the card feel like it's illuminating the page
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 0 40px -10px rgba(16, 185, 129, 0.4);
+
+    --spotlight-color: rgba(255, 255, 255, 0.1); // White spotlight for dark card
+
+    // Noise overlay stronger for the green card
+    &::after {
+        opacity: 0.05;
+    }
+
+    // Retina adjust
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
+        &::after {
+            opacity: 0.08;
+        }
+    }
+
+    .bc-icon {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+            0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .bc-title {
+        color: white;
+    }
+
+    .bc-desc {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .bc-cta {
+        border-color: white;
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+
+        .arrow-circle {
+            background: transparent;
+            color: white;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            color: white;
+
+            .arrow-circle {
+                transform: translateX(4px);
+            }
+        }
+    }
+
+    &:hover {
+        border-color: rgba(167, 243, 208, 0.6);
+        /* Stronger outer glow on lift */
+        box-shadow:
+            0 10px 15px -3px rgba(0, 0, 0, 0.2),
+            0 0 60px -15px rgba(16, 185, 129, 0.6);
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+        &:hover {
+            border-color: rgba(167, 243, 208, 0.3);
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 0 40px -10px rgba(16, 185, 129, 0.4);
+        }
+    }
+}
+
+// ================================
+// MOBILE RESPONSIVENESS
+// ================================
+
+@media (max-width: 1024px) {
+
+    // Large Card still spans 2 on tablet, smalls remain 1 if possible
+    .large {
+        grid-column: span 2;
+        grid-row: span 1;
+        min-height: 280px;
+
+        .bc-title {
+            font-size: 2rem;
+        }
+    }
+
+    .small {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 640px) {
+    .bento-section {
+        padding: 4rem 1rem;
+    }
+
+    .bento-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .bento-grid {
+        grid-template-columns: 1fr !important;
+        grid-auto-rows: auto;
+        gap: 1rem;
+    }
+
+    .bento-card {
+        border-radius: 18px;
+        /* Touch optimization */
+        padding: 1.25rem;
+    }
+
+    // Solutions (Hero) -> Full width stack
+    .large {
+        grid-column: span 1;
+        grid-row: auto;
+        min-height: auto;
+
+        .bc-icon {
+            width: 48px;
+            height: 48px;
+
+            svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        .bc-title {
+            font-size: 1.75rem;
+        }
+
+        .bc-desc {
+            font-size: 1rem;
+            max-width: 100%;
+        }
+    }
+
+    // Stacked small cards
+    .small {
+        grid-column: span 1;
+        grid-row: auto;
+        min-height: 200px;
+        padding: 1.25rem;
+
+        .bc-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 0.5rem;
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        .bc-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.35rem;
+            line-height: 1.3;
+        }
+
+        .bc-desc {
+            font-size: 0.8125rem;
+            line-height: 1.4;
+        }
+    }
+
+    // Contact -> Full width at bottom
+    .bento-closer.small {
+        grid-column: span 1;
+        min-height: auto;
+    }
+}
+
+// ================================
+// DARK THEME
+// ================================
+:host-context(body.dark-theme) {
+    .bento-label {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.18);
+    }
+
+    .bento-card {
+        border-color: var(--glass-border);
+        background: var(--glass-bg);
+
+        &.large {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+        }
+    }
+}

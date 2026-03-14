@@ -1,0 +1,819 @@
+<!-- Farm Dialog: CREATE + VIEW + EDIT Mode -->
+<div class="farm-dialog-container" [class.view-mode]="isViewMode()" [class.edit-mode]="isEditMode()"
+    [class.create-mode]="isCreateMode()">
+
+    <!-- Header Section - Always visible immediately -->
+    <div class="dialog-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="farm-icon">
+                    <mat-icon>agriculture</mat-icon>
+                </div>
+                <div class="header-info">
+                    <h2 mat-dialog-title>{{ dialogTitle() }}</h2>
+                    @if (farm() && !isLoadingDetails()) {
+                    <div class="farm-meta">
+                        <span class="farm-id">ID: {{ farm()!.farm_id }}</span>
+                        <span class="status-badge" [ngClass]="statusBadgeClass()">
+                            <mat-icon>{{ getStatusIcon(farm()!.status) }}</mat-icon>
+                            {{ farm()!.status || 'Unknown' }}
+                        </span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="header-actions">
+                @if (isViewMode() && !isLoadingDetails()) {
+                <button mat-flat-button color="primary" (click)="switchToEditMode()" class="edit-btn">
+                    <mat-icon>edit</mat-icon>
+                    Edit Farm
+                </button>
+                }
+                <button mat-icon-button mat-dialog-close class="close-btn">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State with Skeleton - Only for content area -->
+    @if (isLoadingDetails()) {
+    <div mat-dialog-content class="dialog-content skeleton-content-wrapper">
+        <!-- Skeleton Tabs matching real tabs -->
+        <div class="skeleton-dialog-tabs">
+            <div class="skeleton-tab active">
+                <div class="skeleton-tab-icon"></div>
+                <div class="skeleton-tab-label"></div>
+            </div>
+            <div class="skeleton-tab">
+                <div class="skeleton-tab-icon"></div>
+                <div class="skeleton-tab-label"></div>
+            </div>
+            <div class="skeleton-tab">
+                <div class="skeleton-tab-icon"></div>
+                <div class="skeleton-tab-label"></div>
+            </div>
+            <div class="skeleton-tab">
+                <div class="skeleton-tab-icon"></div>
+                <div class="skeleton-tab-label"></div>
+            </div>
+            <div class="skeleton-tab">
+                <div class="skeleton-tab-icon"></div>
+                <div class="skeleton-tab-label"></div>
+            </div>
+        </div>
+
+        <!-- Skeleton Content matching Overview tab structure -->
+        <div class="tab-content skeleton-tab-content">
+            <!-- Stats Grid (4 cards) - Matching exact structure -->
+            <div class="stats-grid skeleton-stats-grid">
+                @for (stat of [1,2,3,4]; track stat) {
+                <div class="stat-card skeleton-stat-card">
+                    <div class="stat-icon skeleton-stat-icon"></div>
+                    <div class="stat-info skeleton-stat-info">
+                        <span class="stat-label skeleton-stat-label"></span>
+                        <span class="stat-value skeleton-stat-value"></span>
+                    </div>
+                </div>
+                }
+            </div>
+
+            <!-- Location Details Section - Matching exact structure -->
+            <div class="info-section skeleton-info-section">
+                <div class="section-header skeleton-section-header">
+                    <div class="section-icon skeleton-section-icon"></div>
+                    <h3 class="skeleton-section-title"></h3>
+                </div>
+                <div class="skeleton-divider"></div>
+                <div class="info-grid skeleton-info-grid">
+                    @for (item of [1,2,3,4,5]; track item) {
+                    <div class="info-item skeleton-info-item">
+                        <span class="label skeleton-info-label"></span>
+                        <span class="value skeleton-info-value"></span>
+                    </div>
+                    }
+                </div>
+                <div class="skeleton-map-button"></div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Main Content -->
+    @if (!isLoadingDetails() && (farm() || isCreateMode())) {
+    <div mat-dialog-content class="dialog-content">
+
+        <!-- Tab Group (hidden in create mode) -->
+        @if (!isCreateMode()) {
+        <mat-tab-group (selectedIndexChange)="onTabChange($event)" class="farm-tabs">
+
+            <!-- Overview Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>dashboard</mat-icon>
+                    Overview
+                </ng-template>
+
+                <div class="tab-content">
+
+                    <!-- VIEW MODE: Read-only cards -->
+                    @if (isViewMode()) {
+                    <div class="overview-view-mode">
+
+                        <!-- Stats Cards -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <mat-icon class="stat-icon area">square_foot</mat-icon>
+                                <div class="stat-info">
+                                    <span class="stat-label">Farm Area</span>
+                                    <span class="stat-value">{{ farm()!.area_hectares || 0 }} ha</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <mat-icon class="stat-icon devices">devices</mat-icon>
+                                <div class="stat-info">
+                                    <span class="stat-label">Connected Devices</span>
+                                    <span class="stat-value">{{ farm()!.device_count || 0 }} devices</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <mat-icon class="stat-icon owner">person</mat-icon>
+                                <div class="stat-info">
+                                    <span class="stat-label">Farm Owner</span>
+                                    <span class="stat-value">{{ farm()!.owner_name || 'Unknown' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <mat-icon class="stat-icon created">event</mat-icon>
+                                <div class="stat-info">
+                                    <span class="stat-label">Created On</span>
+                                    <span class="stat-value">{{ formatDate(farm()!.created_at) }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location Details Section -->
+                        <div class="info-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">place</mat-icon>
+                                <h3>Location Details</h3>
+                            </div>
+                            <mat-divider></mat-divider>
+
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">Latitude:</span>
+                                    <span class="value">{{ farm()!.latitude || farm()!.location?.lat || 'N/A' }}°</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Longitude:</span>
+                                    <span class="value">{{ farm()!.longitude || farm()!.location?.lng || 'N/A'
+                                        }}°</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">City:</span>
+                                    <span class="value">{{ farm()!.city || 'N/A' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Region:</span>
+                                    <span class="value">{{ farm()!.region || 'N/A' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Country:</span>
+                                    <span class="value">{{ farm()!.country || 'N/A' }}</span>
+                                </div>
+                            </div>
+
+                            @if (farm()!.latitude && farm()!.longitude) {
+                            <button mat-stroked-button color="primary" class="map-btn">
+                                <mat-icon>map</mat-icon>
+                                Open in Google Maps
+                            </button>
+                            }
+                        </div>
+
+                        <!-- Additional Information Section -->
+                        <div class="info-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">info</mat-icon>
+                                <h3>Additional Information</h3>
+                            </div>
+                            <mat-divider></mat-divider>
+
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">Farm ID:</span>
+                                    <span class="value">{{ farm()!.farm_id }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Owner ID:</span>
+                                    <span class="value">{{ farm()!.owner_id }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Sensor Count:</span>
+                                    <span class="value">{{ farm()!.sensor_count || 0 }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Health Score:</span>
+                                    <span class="value">
+                                        <span class="health-badge" [ngClass]="healthScoreBadgeClass()">
+                                            {{ farm()!.health_score || 0 }}%
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="info-item full-width">
+                                    <span class="label">Last Activity:</span>
+                                    <span class="value">{{ formatDate(farm()!.last_activity) }}</span>
+                                </div>
+                            </div>
+
+                            @if (farm()!.description) {
+                            <div class="description-box">
+                                <span class="label">Description:</span>
+                                <p>{{ farm()!.description }}</p>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Alerts Summary -->
+                        @if (farm()!.alerts_summary) {
+                        <div class="info-section alerts-section">
+                            <div class="section-header">
+                                <mat-icon class="section-icon">notifications</mat-icon>
+                                <h3>Alerts Summary</h3>
+                            </div>
+                            <mat-divider></mat-divider>
+
+                            <div class="alerts-grid">
+                                <div class="alert-card critical">
+                                    <mat-icon>error</mat-icon>
+                                    <span class="alert-count">{{ farm()!.alerts_summary!.critical }}</span>
+                                    <span class="alert-label">Critical</span>
+                                </div>
+                                <div class="alert-card warning">
+                                    <mat-icon>warning</mat-icon>
+                                    <span class="alert-count">{{ farm()!.alerts_summary!.warning }}</span>
+                                    <span class="alert-label">Warning</span>
+                                </div>
+                                <div class="alert-card info">
+                                    <mat-icon>info</mat-icon>
+                                    <span class="alert-count">{{ farm()!.alerts_summary!.info }}</span>
+                                    <span class="alert-label">Info</span>
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                    </div>
+                    }
+
+                    <!-- EDIT MODE: Form fields -->
+                    @if (isEditMode()) {
+                    <div class="overview-edit-mode">
+                        <form [formGroup]="farmForm" class="farm-form">
+
+                            <!-- Basic Information -->
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <mat-icon>info</mat-icon>
+                                    Basic Information
+                                </h3>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Farm Name</mat-label>
+                                    <input matInput formControlName="farm_name" placeholder="e.g. Green Valley Farm">
+                                    <mat-icon matPrefix>agriculture</mat-icon>
+                                    <mat-error>{{ getErrorMessage('farm_name') }}</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Farm Owner</mat-label>
+                                    <mat-select formControlName="owner_id">
+                                        @for (farmer of farmers(); track farmer.user_id) {
+                                        <mat-option [value]="farmer.user_id">
+                                            {{ farmer.first_name }} {{ farmer.last_name }} ({{ farmer.email }})
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-icon matPrefix>person</mat-icon>
+                                    <mat-error>{{ getErrorMessage('owner_id') }}</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Description</mat-label>
+                                    <textarea matInput formControlName="description" rows="3"
+                                        placeholder="Optional description of the farm"></textarea>
+                                    <mat-icon matPrefix>description</mat-icon>
+                                    <mat-error>{{ getErrorMessage('description') }}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Location Information -->
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <mat-icon>place</mat-icon>
+                                    Location Information
+                                </h3>
+
+                                <div class="row">
+                                    <mat-form-field appearance="outline" class="half-width">
+                                        <mat-label>Latitude</mat-label>
+                                        <input matInput type="number" formControlName="latitude"
+                                            placeholder="e.g. 34.05">
+                                        <mat-icon matPrefix>location_on</mat-icon>
+                                        <mat-error>{{ getErrorMessage('latitude') }}</mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="half-width">
+                                        <mat-label>Longitude</mat-label>
+                                        <input matInput type="number" formControlName="longitude"
+                                            placeholder="e.g. -118.24">
+                                        <mat-icon matPrefix>location_on</mat-icon>
+                                        <mat-error>{{ getErrorMessage('longitude') }}</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row">
+                                    <mat-form-field appearance="outline" class="half-width">
+                                        <mat-label>City</mat-label>
+                                        <input matInput formControlName="city" placeholder="e.g. Los Angeles">
+                                        <mat-icon matPrefix>location_city</mat-icon>
+                                        <mat-error>{{ getErrorMessage('city') }}</mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="half-width">
+                                        <mat-label>Region</mat-label>
+                                        <input matInput formControlName="region" placeholder="e.g. California">
+                                        <mat-icon matPrefix>public</mat-icon>
+                                        <mat-error>{{ getErrorMessage('region') }}</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row">
+                                    <mat-form-field appearance="outline" class="half-width">
+                                        <mat-label>Country</mat-label>
+                                        <input matInput formControlName="country" placeholder="e.g. United States">
+                                        <mat-icon matPrefix>flag</mat-icon>
+                                        <mat-error>{{ getErrorMessage('country') }}</mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="half-width">
+                                        <mat-label>Area (Hectares)</mat-label>
+                                        <input matInput type="number" formControlName="area_hectares"
+                                            placeholder="e.g. 250">
+                                        <mat-icon matPrefix>square_foot</mat-icon>
+                                        <mat-error>{{ getErrorMessage('area_hectares') }}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- Moderators Assignment -->
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <mat-icon>admin_panel_settings</mat-icon>
+                                    Assign Moderators
+                                </h3>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Moderators</mat-label>
+                                    <mat-select formControlName="moderator_ids" multiple>
+                                        @for (moderator of moderators(); track moderator.user_id) {
+                                        <mat-option [value]="moderator.user_id">
+                                            {{ moderator.first_name }} {{ moderator.last_name }} ({{ moderator.email }})
+                                        </mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-icon matPrefix>group</mat-icon>
+                                    <mat-hint>Select one or more moderators to assign to this farm</mat-hint>
+                                </mat-form-field>
+                            </div>
+
+                        </form>
+                    </div>
+                    }
+
+                </div>
+            </mat-tab>
+
+            <!-- Devices Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>devices</mat-icon>
+                    Devices ({{ farm()!.device_count || 0 }})
+                </ng-template>
+
+                <div class="tab-content">
+                    @if (loadingDevices()) {
+                    <div class="loading-state">
+                        <mat-spinner diameter="40"></mat-spinner>
+                        <p>Loading devices...</p>
+                    </div>
+                    } @else if (devices().length === 0) {
+                    <div class="empty-state">
+                        <mat-icon>devices_other</mat-icon>
+                        <p>No devices found for this farm</p>
+                    </div>
+                    } @else {
+                    <div class="table-container">
+                        <table mat-table [dataSource]="devices()" class="devices-table">
+
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef>Device Name</th>
+                                <td mat-cell *matCellDef="let device">
+                                    <div class="device-cell">
+                                        <mat-icon>router</mat-icon>
+                                        <span>{{ device.name }}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef>Type</th>
+                                <td mat-cell *matCellDef="let device">{{ device.device_type || 'N/A' }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let device">
+                                    <span class="status-badge" [class.status-active]="device.status === 'online'"
+                                        [class.status-inactive]="device.status === 'offline'">
+                                        <mat-icon>{{ getStatusIcon(device.status) }}</mat-icon>
+                                        {{ device.status }}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="last_seen">
+                                <th mat-header-cell *matHeaderCellDef>Last Seen</th>
+                                <td mat-cell *matCellDef="let device">{{ getRelativeTime(device.last_seen) }}</td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="deviceColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: deviceColumns;"></tr>
+                        </table>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+
+            <!-- Sensors Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>sensors</mat-icon>
+                    Sensors ({{ farm()!.sensor_count || 0 }})
+                </ng-template>
+
+                <div class="tab-content">
+                    @if (loadingSensors()) {
+                    <div class="loading-state">
+                        <mat-spinner diameter="40"></mat-spinner>
+                        <p>Loading sensors...</p>
+                    </div>
+                    } @else if (sensors().length === 0) {
+                    <div class="empty-state">
+                        <mat-icon>sensors_off</mat-icon>
+                        <p>No sensors found for this farm</p>
+                    </div>
+                    } @else {
+                    <div class="table-container">
+                        <table mat-table [dataSource]="sensors()" class="sensors-table">
+
+                            <ng-container matColumnDef="sensor_id">
+                                <th mat-header-cell *matHeaderCellDef>Sensor ID</th>
+                                <td mat-cell *matCellDef="let sensor">{{ sensor.sensor_id }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef>Type</th>
+                                <td mat-cell *matCellDef="let sensor">{{ sensor.type }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="device">
+                                <th mat-header-cell *matHeaderCellDef>Device</th>
+                                <td mat-cell *matCellDef="let sensor">{{ sensor.device_id }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let sensor">
+                                    <span class="status-badge status-active">
+                                        <mat-icon>check_circle</mat-icon>
+                                        Active
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="sensorColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: sensorColumns;"></tr>
+                        </table>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+
+            <!-- Moderators Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>admin_panel_settings</mat-icon>
+                    Moderators
+                </ng-template>
+
+                <div class="tab-content">
+                    @if (farm()!.assigned_moderators && farm()!.assigned_moderators!.length > 0) {
+                    <div class="moderators-list">
+                        @for (moderator of farm()!.assigned_moderators; track moderator.user_id) {
+                        <div class="moderator-card">
+                            <div class="moderator-avatar">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="moderator-info">
+                                <h4>{{ moderator.first_name }} {{ moderator.last_name }}</h4>
+                                <p>{{ moderator.email }}</p>
+                            </div>
+                            <mat-icon class="moderator-badge">verified_user</mat-icon>
+                        </div>
+                        }
+                    </div>
+                    } @else {
+                    <div class="empty-state">
+                        <mat-icon>group_off</mat-icon>
+                        <p>No moderators assigned to this farm</p>
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+
+            <!-- Activity Log Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>history</mat-icon>
+                    Activity Log
+                </ng-template>
+
+                <div class="tab-content">
+                    @if (loadingActivity()) {
+                    <div class="loading-state">
+                        <mat-spinner diameter="40"></mat-spinner>
+                        <p>Loading activity logs...</p>
+                    </div>
+                    } @else if (activityLogs().length === 0) {
+                    <div class="empty-state">
+                        <mat-icon>history_toggle_off</mat-icon>
+                        <p>No activity logs found</p>
+                    </div>
+                    } @else {
+                    <div class="activity-timeline">
+                        @for (log of activityLogs(); track log.id) {
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <mat-icon>{{ getStatusIcon(log.status) }}</mat-icon>
+                            </div>
+                            <div class="activity-content">
+                                <h4>{{ log.action }}</h4>
+                                <p>Source: {{ log.trigger_source }}</p>
+                                <span class="activity-time">{{ getRelativeTime(log.timestamp) }}</span>
+                            </div>
+                            <span class="activity-status" [class]="'status-' + log.status">
+                                {{ log.status }}
+                            </span>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+        }
+
+        <!-- CREATE MODE: Stepper Wizard -->
+        @if (isCreateMode()) {
+        <div class="create-mode-content stepper-mode">
+            <div class="create-header-simple">
+                <div class="header-icon">
+                    <mat-icon>add_location_alt</mat-icon>
+                </div>
+                <div class="header-text">
+                    <h3>Create New Farm</h3>
+                    <p>Follow the steps to register a new farm in the system</p>
+                </div>
+            </div>
+
+            <form [formGroup]="farmForm" class="stepper-form">
+                <mat-stepper [linear]="true" #stepper class="farm-stepper" orientation="vertical">
+
+                    <!-- Step 1: Basic Information -->
+                    <mat-step [completed]="isStepValid('basic')">
+                        <ng-template matStepLabel>Basic Information</ng-template>
+                        <div class="step-content">
+                            <p class="step-description">Enter the essential details about the farm.</p>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Farm Name <span class="required-indicator">*</span></mat-label>
+                                <input matInput formControlName="farm_name" placeholder="e.g. Green Valley Farm"
+                                    maxlength="100">
+                                <mat-icon matPrefix>agriculture</mat-icon>
+                                <mat-error>{{ getErrorMessage('farm_name') }}</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Farm Owner <span class="required-indicator">*</span></mat-label>
+                                <mat-select formControlName="owner_id" placeholder="Select a farmer">
+                                    @for (farmer of farmers(); track farmer.user_id) {
+                                    <mat-option [value]="farmer.user_id">
+                                        {{ farmer.first_name }} {{ farmer.last_name }} ({{ farmer.email }})
+                                    </mat-option>
+                                    }
+                                </mat-select>
+                                <mat-icon matPrefix>person</mat-icon>
+                                <mat-error>{{ getErrorMessage('owner_id') }}</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Description</mat-label>
+                                <textarea matInput formControlName="description" rows="3"
+                                    placeholder="Optional description..."></textarea>
+                                <mat-icon matPrefix>description</mat-icon>
+                                <mat-error>{{ getErrorMessage('description') }}</mat-error>
+                            </mat-form-field>
+
+                            <div class="step-actions">
+                                <button mat-flat-button color="primary" matStepperNext
+                                    [disabled]="!isStepValid('basic')">
+                                    Next
+                                    <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-step>
+
+                    <!-- Step 2: Location -->
+                    <mat-step [completed]="isStepValid('location')">
+                        <ng-template matStepLabel>Location</ng-template>
+                        <div class="step-content">
+                            <p class="step-description">Specify where the farm is located.</p>
+
+                            <div class="location-helper-bar">
+                                <button type="button" mat-stroked-button color="primary" (click)="useCurrentLocation()"
+                                    [disabled]="isLoading()">
+                                    <mat-icon>my_location</mat-icon>
+                                    Use My Location
+                                </button>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline" class="half-width">
+                                    <mat-label>Latitude</mat-label>
+                                    <input matInput type="number" formControlName="latitude" placeholder="e.g. 34.05">
+                                    <mat-icon matPrefix>location_on</mat-icon>
+                                    <mat-error>{{ getErrorMessage('latitude') }}</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="half-width">
+                                    <mat-label>Longitude</mat-label>
+                                    <input matInput type="number" formControlName="longitude"
+                                        placeholder="e.g. -118.24">
+                                    <mat-icon matPrefix>location_on</mat-icon>
+                                    <mat-error>{{ getErrorMessage('longitude') }}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline" class="half-width">
+                                    <mat-label>City</mat-label>
+                                    <input matInput formControlName="city" placeholder="e.g. Los Angeles">
+                                    <mat-icon matPrefix>location_city</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="half-width">
+                                    <mat-label>Region</mat-label>
+                                    <input matInput formControlName="region" placeholder="e.g. California">
+                                    <mat-icon matPrefix>public</mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Country</mat-label>
+                                <input matInput formControlName="country" placeholder="e.g. USA">
+                                <mat-icon matPrefix>flag</mat-icon>
+                            </mat-form-field>
+
+                            <div class="step-actions">
+                                <button mat-button matStepperPrevious>Back</button>
+                                <button mat-flat-button color="primary" matStepperNext
+                                    [disabled]="!isStepValid('location')">
+                                    Next
+                                    <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-step>
+
+                    <!-- Step 3: Details -->
+                    <mat-step [completed]="isStepValid('details')">
+                        <ng-template matStepLabel>Details & Moderators</ng-template>
+                        <div class="step-content">
+                            <p class="step-description">Add final details and assign moderators.</p>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Area (Hectares)</mat-label>
+                                <input matInput type="number" formControlName="area_hectares" placeholder="e.g. 100">
+                                <mat-icon matPrefix>square_foot</mat-icon>
+                                <mat-error>{{ getErrorMessage('area_hectares') }}</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Assign Moderators</mat-label>
+                                <mat-select formControlName="moderator_ids" multiple>
+                                    @for (mod of moderators(); track mod.user_id) {
+                                    <mat-option [value]="mod.user_id">
+                                        {{ mod.first_name }} {{ mod.last_name }}
+                                    </mat-option>
+                                    }
+                                </mat-select>
+                                <mat-icon matPrefix>admin_panel_settings</mat-icon>
+                            </mat-form-field>
+
+                            <div class="step-actions">
+                                <button mat-button matStepperPrevious>Back</button>
+                                <button mat-flat-button color="primary" matStepperNext
+                                    [disabled]="!isStepValid('details')">
+                                    Review
+                                    <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-step>
+
+                    <!-- Step 4: Review -->
+                    <mat-step>
+                        <ng-template matStepLabel>Review & Submit</ng-template>
+                        <div class="step-content">
+                            <div class="review-card">
+                                <h4>Summary</h4>
+                                <div class="review-item">
+                                    <span class="label">Name:</span>
+                                    <span class="value">{{ farmForm.get('farm_name')?.value }}</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="label">Owner:</span>
+                                    <span class="value">
+                                        {{ getOwnerName(farmForm.get('owner_id')?.value) }}
+                                    </span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="label">Location:</span>
+                                    <span class="value">
+                                        {{ farmForm.get('city')?.value || 'N/A' }}, {{ farmForm.get('country')?.value ||
+                                        'N/A' }}
+                                    </span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="label">Area:</span>
+                                    <span class="value">{{ farmForm.get('area_hectares')?.value || 0 }} ha</span>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button mat-button matStepperPrevious>Back</button>
+                                <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="isLoading()">
+                                    @if (isLoading()) {
+                                    <mat-spinner diameter="20"></mat-spinner>
+                                    } @else {
+                                    <ng-container>
+                                        <mat-icon>check</mat-icon>
+                                        Create Farm
+                                    </ng-container>
+                                    }
+                                </button>
+                            </div>
+                        </div>
+                    </mat-step>
+                </mat-stepper>
+            </form>
+        </div>
+        }
+
+    </div> <!-- End of mat-dialog-content -->
+    } <!-- End of @if (!isLoadingDetails...) -->
+
+    <!-- Footer Actions (Only for Edit/View mode) -->
+    @if (!isCreateMode()) {
+    <div mat-dialog-actions class="dialog-actions">
+        <button mat-button (click)="onCancel()" [disabled]="isLoading()">
+            Cancel
+        </button>
+
+        @if (isEditMode()) {
+        <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="farmForm.invalid || isLoading()">
+            <mat-icon>{{ isLoading() ? 'hourglass_empty' : 'save' }}</mat-icon>
+            {{ isLoading() ? 'Saving...' : 'Save Changes' }}
+        </button>
+        }
+    </div>
+    }
+
+</div> <!-- End of farm-dialog-container -->

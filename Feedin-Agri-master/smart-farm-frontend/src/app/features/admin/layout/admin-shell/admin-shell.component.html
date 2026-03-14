@@ -1,0 +1,23 @@
+<div class="admin-shell" [class.sidebar-drawer-open]="isSidebarDrawerOpen"
+  [class.sidebar-collapsed]="isSidebarCollapsed" [class.sidebar-hovered]="isSidebarHovered" [class.rtl]="isRTL()"
+  [attr.dir]="isRTL() ? 'rtl' : 'ltr'">
+  <!-- Backdrop for mobile/tablet overlays -->
+  <div class="admin-backdrop" [class.visible]="shouldShowBackdrop" (click)="onBackdropClick()"
+    [style.pointer-events]="shouldShowBackdrop ? 'auto' : 'none'"></div>
+
+  <!-- Left Sidebar -->
+  <app-admin-sidebar [isCollapsed]="isSidebarCollapsed" [isDrawerOpen]="isSidebarDrawerOpen" [isMobile]="isMobile"
+    [isTablet]="isTablet" (closeSidebar)="closeSidebarDrawer()"
+    (sidebarHover)="onSidebarHover($event)"></app-admin-sidebar>
+
+  <!-- Main Content Area -->
+  <div class="admin-main-content">
+    <!-- Top Header -->
+    <app-admin-header [isMobile]="isMobile" (toggleSidebar)="toggleSidebarDrawer()"></app-admin-header>
+
+    <!-- Workspace (scrollable content) -->
+    <app-admin-workspace>
+      <router-outlet></router-outlet>
+    </app-admin-workspace>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+@use '../../../../../styles.scss' as *;
+
+// CRITICAL: Host element must fill its container
+// The router-outlet renders this component, and the host needs proper sizing
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.admin-shell {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-primary);
+  transition: all var(--duration-normal) var(--ease-in-out);
+  position: relative;
+  // Prevent layout shifts
+  will-change: auto;
+
+  // Smooth scrolling
+  -webkit-overflow-scrolling: touch;
+}
+
+// ================================
+// Main Content Area
+// ================================
+.admin-main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; // Critical: allows flex child to shrink and enable scrolling
+  overflow: hidden; // Prevent main content from scrolling (workspace handles it)
+  margin-left: 80px; // Sidebar width
+  transition: margin-left var(--duration-normal) var(--ease-in-out);
+
+  @media (max-width: 1023px) {
+    margin-left: 0; // No margin on mobile/tablet
+  }
+}
+
+// ================================
+// Backdrop Overlay
+// ================================
+.admin-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  // Reduced blur intensity and only apply when visible
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  // Ensure backdrop is below sidebar but above main content
+  z-index: calc(var(--z-fixed) - 1); // 1029, below sidebar (1030)
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; // Allow clicks to pass through when hidden
+  transition: opacity var(--duration-normal) var(--ease-in-out),
+    visibility var(--duration-normal) var(--ease-in-out),
+    backdrop-filter var(--duration-normal) var(--ease-in-out);
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; // Block clicks when visible
+    // Slightly increase blur when visible for better focus
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+body.dark-theme .admin-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+
+  &.visible {
+    background: rgba(0, 0, 0, 0.65);
+  }
+}
+
+// ================================
+// Right Panel Open State
+// ================================
+.admin-shell.right-panel-open {
+  @media (min-width: 1024px) {
+    .admin-main-content {
+      margin-right: 420px; // Right panel width
+      transition: margin-right var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+}
+
+// ================================
+// Responsive Adjustments
+// ================================
+
+// Mobile (≤ 767px)
+@media (max-width: 767px) {
+  .admin-shell {
+    .admin-main-content {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+    }
+
+    // Ensure backdrop doesn't interfere on mobile
+    .admin-backdrop.visible {
+      z-index: calc(var(--z-fixed) - 1); // Below sidebar
+    }
+  }
+}
+
+// Tablet (768px - 1023px)
+@media (min-width: 768px) and (max-width: 1023px) {
+  .admin-shell {
+    .admin-main-content {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+    }
+  }
+}
+
+// Desktop (≥ 1024px)
+@media (min-width: 1024px) {
+  .admin-shell {
+    .admin-main-content {
+      margin-left: 80px;
+      transition: margin-left var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1),
+        margin-right var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &.sidebar-hovered .admin-main-content {
+      margin-left: 280px;
+    }
+
+    // Hide backdrop on desktop when sidebar is not in drawer mode
+    .admin-backdrop {
+      display: none;
+    }
+  }
+}
+
+// ================================
+// RTL Support
+// ================================
+.admin-shell.rtl {
+  direction: rtl;
+
+  .admin-main-content {
+    margin-left: 0;
+    margin-right: 80px;
+    transition: margin-right var(--duration-normal) var(--ease-in-out);
+
+    @media (max-width: 1023px) {
+      margin-right: 0;
+    }
+  }
+
+  &.sidebar-hovered .admin-main-content {
+    @media (min-width: 1024px) {
+      margin-right: 280px;
+    }
+  }
+
+  &.right-panel-open {
+    @media (min-width: 1024px) {
+      .admin-main-content {
+        margin-left: 420px; // Right panel on left in RTL
+        margin-right: 80px;
+      }
+    }
+  }
+}
+
+// RTL: Flip backdrop
+.admin-shell.rtl .admin-backdrop {
+  left: auto;
+  right: 0;
+}

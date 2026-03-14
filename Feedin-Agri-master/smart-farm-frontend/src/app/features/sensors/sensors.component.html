@@ -1,0 +1,165 @@
+<div class="sensors-container">
+  <!-- Epic Header Section -->
+  <header class="sensors-header">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>{{ languageService.t()('sensors.title') }}</h1>
+        <p>{{ languageService.t()('sensors.subtitle') }}</p>
+      </div>
+      <div class="header-actions">
+        <button mat-icon-button (click)="refreshData()" [disabled]="isLoading"
+          [matTooltip]="languageService.t()('common.refresh')" class="action-btn">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="sensors-content" *ngIf="!isLoading; else loadingTemplate">
+    <mat-tab-group class="sensors-tabs" (selectedTabChange)="onTabChange($event)">
+      <!-- Sensors Tab -->
+      <mat-tab [label]="languageService.t()('sensors.title')">
+        <div class="tab-content">
+          <div class="content-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <mat-icon>sensors</mat-icon>
+                <span>{{ languageService.t()('sensors.title') }}</span>
+              </div>
+              <div class="panel-subtitle">{{ sensors.length }} {{ languageService.t()('sensors.title') }}</div>
+            </div>
+
+            <div class="panel-content">
+              <!-- Orphaned Sensors Warning -->
+              <div class="orphaned-sensors-warning" *ngIf="hasOrphanedSensors()">
+                <mat-icon>warning</mat-icon>
+                <span>{{ languageService.t()('sensors.orphanedSensorsWarning') }}: {{ getOrphanedSensors().length }} {{
+                  languageService.t()('sensors.orphanedSensorsMessage') }}</span>
+              </div>
+
+              <div class="table-wrapper" *ngIf="sensors.length > 0; else noSensors">
+                <div class="table-container">
+                  <table mat-table [dataSource]="sensors" class="sensors-table">
+                    <ng-container matColumnDef="sensor_id">
+                      <th mat-header-cell *matHeaderCellDef>{{ languageService.t()('sensors.sensorId') }}</th>
+                      <td mat-cell *matCellDef="let sensor">
+                        <div class="sensor-id">
+                          <mat-icon>sensors</mat-icon>
+                          <span>{{ sensor.sensor_id }}</span>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                      <th mat-header-cell *matHeaderCellDef>{{ languageService.t()('sensors.sensorType') }}</th>
+                      <td mat-cell *matCellDef="let sensor">
+                        <mat-chip [color]="getSensorTypeColor(sensor.type)" selected>
+                          <mat-icon class="sensor-type-icon">{{ getSensorTypeIcon(sensor.type) }}</mat-icon>
+                          <span class="chip-text">{{ getSensorTypeTranslation(sensor.type) }}</span>
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unit">
+                      <th mat-header-cell *matHeaderCellDef>{{ languageService.t()('sensors.unit') }}</th>
+                      <td mat-cell *matCellDef="let sensor">
+                        <span class="sensor-unit">{{ getUnitTranslation(sensor.unit) }}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="location">
+                      <th mat-header-cell *matHeaderCellDef>{{ languageService.t()('sensors.location') }}</th>
+                      <td mat-cell *matCellDef="let sensor">
+                        <div class="location-info">
+                          <mat-icon>location_on</mat-icon>
+                          <span>{{ sensor.location || languageService.t()('common.none') }}</span>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="device">
+                      <th mat-header-cell *matHeaderCellDef>{{ languageService.t()('sensors.parentDevice') }}</th>
+                      <td mat-cell *matCellDef="let sensor">
+                        <mat-chip [class.orphaned]="!hasValidDevice(sensor.device_id)" [matTooltip]="sensor.device_id"
+                          class="device-chip">
+                          <mat-icon>{{ hasValidDevice(sensor.device_id) ? 'developer_board' : 'warning' }}</mat-icon>
+                          <span class="chip-text">{{ getDeviceName(sensor.device_id) }}</span>
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="sensor-row"></tr>
+                  </table>
+                </div>
+              </div>
+              <ng-template #noSensors>
+                <div class="no-data">
+                  <mat-icon>sensors_off</mat-icon>
+                  <h3>{{ languageService.t()('sensors.noSensorsFound') }}</h3>
+                  <p>{{ languageService.t()('sensors.adjustFilters') }}</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Sensor Analytics Tab -->
+      <mat-tab [label]="languageService.t()('sensorAnalytics.title')">
+        <div class="tab-content">
+          <div class="content-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <mat-icon>insights</mat-icon>
+                <span>{{ languageService.t()('sensorAnalytics.title') }}</span>
+              </div>
+              <div class="panel-subtitle">{{ languageService.t()('sensorAnalytics.tabSubtitle') }}</div>
+            </div>
+
+            <div class="panel-content">
+              <div class="analytics-redirect-prompt">
+                <mat-icon class="redirect-icon">insights</mat-icon>
+                <h3>{{ languageService.t()('sensorAnalytics.dashboardTitle') }}</h3>
+                <p>{{ languageService.t()('sensorAnalytics.dashboardDesc') }}</p>
+                <button mat-raised-button color="primary" (click)="router.navigate(['/sensors/analytics'])">
+                  <mat-icon>open_in_new</mat-icon>
+                  {{ languageService.t()('sensorAnalytics.openDashboard') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </main>
+
+  <!-- Loading Template with Skeleton -->
+  <ng-template #loadingTemplate>
+    <div class="loading-skeleton">
+      <!-- Skeleton Tabs Header -->
+      <div class="skeleton-tabs-header">
+        <div class="skeleton-tab"></div>
+        <div class="skeleton-tab"></div>
+      </div>
+
+      <!-- Skeleton Content -->
+      <div class="skeleton-content">
+        <div class="skeleton-panel-header">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-title"></div>
+        </div>
+
+        <div class="skeleton-table">
+          <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
+            <div class="skeleton-cell"></div>
+            <div class="skeleton-cell"></div>
+            <div class="skeleton-cell"></div>
+            <div class="skeleton-cell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

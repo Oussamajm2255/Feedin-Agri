@@ -1,0 +1,450 @@
+@use '../../../../../styles.scss' as *;
+
+// ================================
+// Admin Sidebar - Feedin Theme (Matched to Header)
+// ================================
+
+:host {
+    display: block;
+    position: relative;
+    z-index: 1030;
+}
+
+// Glassmorphism Mixin (Matching Header)
+@mixin glass-effect($opacity: 0.85, $blur: 20px) {
+    background: var(--glass-bg, rgba(255, 255, 255, $opacity));
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    border-right: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.06);
+
+    body.dark-theme & {
+        background: var(--glass-bg, rgba(30, 41, 59, $opacity));
+        border-right: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80px; // Default collapsed width
+    @include glass-effect(0.85, 20px);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    z-index: 1030;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+    margin-right: 10px; // Visual separation if needed, but fixed position ignores this.
+    // Actually, let's keep it flush left but rounded corners on the right side look nice.
+
+    // Hover Expansion
+    &:hover {
+        width: 280px;
+        box-shadow: 10px 0 50px rgba(0, 0, 0, 0.1);
+
+        .logo-text,
+        .version-text {
+            opacity: 1;
+            transform: translateX(0);
+            transition-delay: 0.1s;
+        }
+
+        .nav-link .nav-text,
+        .sub-nav-link .sub-nav-text {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+            transition-delay: 0.1s;
+        }
+
+        .logo-icon {
+            transform: rotate(360deg);
+        }
+    }
+
+    // Mobile/Tablet Drawer Mode
+    &.mobile,
+    &.tablet {
+        width: 280px;
+        transform: translateX(-105%);
+        border-right: none;
+        border-radius: 0 2rem 2rem 0;
+        box-shadow: 10px 0 50px rgba(0, 0, 0, 0.2);
+
+        &.drawer-open {
+            transform: translateX(0);
+        }
+
+        .logo-text,
+        .version-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-link .nav-text,
+        .sub-nav-link .sub-nav-text {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+        }
+    }
+}
+
+// ================================
+// Sidebar Header
+// ================================
+.sidebar-header {
+    height: 80px; // Match header height
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    body.dark-theme & {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        flex-shrink: 0;
+    }
+
+    .logo-text {
+        font-size: 24px;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+        &.feedin-brand {
+            font-family: 'Therilo', 'Poppins', sans-serif;
+            letter-spacing: 1px;
+        }
+    }
+}
+
+// ================================
+// Navigation
+// ================================
+.sidebar-nav {
+    flex: 1;
+    padding: 20px 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(16, 185, 129, 0.2);
+        border-radius: 4px;
+    }
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-item {
+    position: relative;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 12px 14px; // Compact padding
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+        height: 48px;
+        white-space: nowrap; // Prevent wrapping
+
+        .nav-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            transition: all 0.3s ease;
+            z-index: 2;
+            color: var(--text-secondary);
+        }
+
+        .nav-text {
+            margin-left: 16px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            z-index: 2;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        // Hover Effect
+        &:hover {
+            background: rgba(16, 185, 129, 0.08); // Match header hover
+            color: #10b981;
+            transform: translateX(4px);
+
+            .nav-icon {
+                color: #10b981;
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    // Active State - "Floating Glass Pill"
+    &.active {
+        .nav-link {
+            background: rgba(16, 185, 129, 0.15); // Match header active
+            color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+
+            body.dark-theme & {
+                background: rgba(16, 185, 129, 0.2);
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: #10b981;
+                border-radius: 4px;
+                box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            }
+
+            .nav-icon {
+                color: #10b981;
+                transform: scale(1.1);
+            }
+
+            .nav-text {
+                font-weight: 700;
+                background: linear-gradient(135deg, #10b981, var(--primary-green));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    }
+
+    // Sub-navigation
+    .sub-nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 0 0;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform: translateY(-10px);
+
+        &.expanded {
+            max-height: 200px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .sub-nav-item {
+        position: relative;
+        border-radius: 12px;
+        margin-left: 24px;
+        transition: all 0.3s ease;
+
+        .sub-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            height: 40px;
+            white-space: nowrap;
+
+            .sub-nav-icon {
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+                min-width: 20px;
+                transition: all 0.3s ease;
+                color: var(--text-secondary);
+            }
+
+            .sub-nav-text {
+                margin-left: 12px;
+                font-weight: 400;
+                font-size: 14px;
+                opacity: 0;
+                transform: translateX(-10px);
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            &:hover {
+                background: rgba(16, 185, 129, 0.08);
+                color: #10b981;
+
+                .sub-nav-icon {
+                    color: #10b981;
+                }
+            }
+        }
+
+        &.active {
+            .sub-nav-link {
+                background: rgba(16, 185, 129, 0.12);
+                color: #10b981;
+
+                body.dark-theme & {
+                    background: rgba(16, 185, 129, 0.18);
+                }
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 3px;
+                    background: #10b981;
+                    border-radius: 3px;
+                }
+
+                .sub-nav-icon {
+                    color: #10b981;
+                }
+
+                .sub-nav-text {
+                    font-weight: 600;
+                    background: linear-gradient(135deg, #10b981, var(--primary-green));
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+        }
+    }
+
+    // Show sub-nav text when sidebar is expanded
+    &.expanded,
+    .admin-sidebar:hover & {
+        .sub-nav-link .sub-nav-text {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+        }
+    }
+}
+
+// ================================
+// Footer
+// ================================
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
+
+    body.dark-theme & {
+        border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .version-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-tertiary);
+        font-size: 12px;
+        gap: 8px;
+
+        .version-text {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+    }
+}
+
+// ================================
+// RTL Support
+// ================================
+.admin-sidebar.rtl {
+    left: auto;
+    right: 0;
+    border-right: none;
+    border-left: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
+    border-radius: 2rem 0 0 2rem;
+
+    body.dark-theme & {
+        border-left-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &.mobile,
+    &.tablet {
+        transform: translateX(105%);
+        border-radius: 2rem 0 0 2rem;
+
+        &.drawer-open {
+            transform: translateX(0);
+        }
+    }
+
+    .nav-link {
+        .nav-text {
+            margin-left: 0;
+            margin-right: 16px;
+            transform: translateX(10px);
+        }
+
+        &:hover {
+            transform: translateX(-4px);
+        }
+    }
+
+    .nav-item.active .nav-link::before {
+        left: auto;
+        right: 0;
+    }
+}

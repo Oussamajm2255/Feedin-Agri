@@ -1,0 +1,503 @@
+<!-- Modal Backdrop for tablet/mobile -->
+<div class="drawer-backdrop" [class.visible]="isOpen" (click)="closeDrawer()" aria-hidden="true"></div>
+
+<div class="user-drawer" [@slideIn]="isOpen ? 'open' : 'closed'" [class.open]="isOpen"
+    [class.rtl]="languageService.isRTL()" role="dialog" aria-modal="true" [attr.aria-label]="drawerTitle() | translate">
+
+    <!-- Drawer Header -->
+    <header class="drawer-header">
+        <div class="drawer-header-content">
+            <div class="header-icon-wrapper">
+                <mat-icon class="header-icon">{{ drawerIcon() }}</mat-icon>
+                <div class="icon-glow"></div>
+            </div>
+            <div class="header-text">
+                <h2 class="drawer-title">{{ drawerTitle() | translate }}</h2>
+                @if (mode === 'view' && user()) {
+                <p class="drawer-subtitle">
+                    <mat-icon class="subtitle-icon">email</mat-icon>
+                    {{ user()!.email }}
+                </p>
+                }
+                @if (mode === 'create') {
+                <p class="drawer-subtitle">{{ 'admin.users.drawer.createSubtitle' | translate }}</p>
+                }
+                @if (mode === 'edit' && user()) {
+                <p class="drawer-subtitle">{{ 'admin.users.drawer.editSubtitle' | translate }}</p>
+                }
+            </div>
+        </div>
+        <div class="header-actions">
+            @if (mode === 'view' && user()) {
+            <button mat-icon-button class="edit-btn" (click)="switchToEditMode()"
+                [matTooltip]="'admin.users.actions.edit' | translate">
+                <mat-icon>edit</mat-icon>
+            </button>
+            }
+            @if (mode === 'edit') {
+            <button mat-icon-button class="cancel-edit-btn" (click)="switchToViewMode()"
+                [matTooltip]="'common.cancel' | translate">
+                <mat-icon>close</mat-icon>
+            </button>
+            }
+            <button mat-icon-button class="close-btn" (click)="closeDrawer()" [matTooltip]="'common.close' | translate"
+                aria-label="Close drawer">
+                <mat-icon class="close-icon-desktop">chevron_right</mat-icon>
+                <mat-icon class="close-icon-mobile">expand_more</mat-icon>
+            </button>
+        </div>
+    </header>
+
+    <!-- Drawer Body -->
+    <div class="drawer-body" (scroll)="onBodyScroll($event)">
+        @if (loading()) {
+        <!-- Skeleton Loader -->
+        <div class="skeleton-container" @fadeIn>
+            <div class="skeleton-avatar shimmer"></div>
+            <div class="skeleton-fields">
+                @for (field of skeletonFields; track field) {
+                <div class="skeleton-field shimmer"></div>
+                }
+            </div>
+        </div>
+        } @else {
+        <!-- VIEW MODE -->
+        @if (mode === 'view' && user()) {
+        <div class="view-mode" @slideUp>
+            <!-- User Overview Card -->
+            <section class="user-overview-card">
+                <div class="overview-avatar-wrapper">
+                    <div class="overview-avatar">
+                        <span class="avatar-initials">
+                            {{ user()!.first_name.charAt(0) }}{{ user()!.last_name.charAt(0) }}
+                        </span>
+                        <div class="avatar-glow"></div>
+                    </div>
+                    <div class="avatar-status" [attr.data-status]="user()!.status"></div>
+                </div>
+                <div class="overview-info">
+                    <h3 class="overview-name">{{ user()!.first_name }} {{ user()!.last_name }}</h3>
+                    <div class="overview-badges">
+                        <span class="role-badge" [attr.data-role]="user()!.role">
+                            <mat-icon>{{ getRoleIcon(user()!.role) }}</mat-icon>
+                            {{ getRoleLabel(user()!.role) }}
+                        </span>
+                        <span class="status-badge" [attr.data-status]="user()!.status">
+                            <span class="status-dot"></span>
+                            {{ user()!.status | titlecase }}
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Navigation -->
+            <mat-tab-group [selectedIndex]="activeTab()" (selectedIndexChange)="onTabChange($event)"
+                class="drawer-tabs">
+                <!-- Profile Tab -->
+                <mat-tab label="{{ 'admin.users.tabs.profile' | translate }}">
+                    <div class="tab-content">
+                        <section class="info-section">
+                            <h4 class="section-title">
+                                <mat-icon>contact_mail</mat-icon>
+                                {{ 'admin.users.drawer.contactInfo' | translate }}
+                            </h4>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-icon"><mat-icon>email</mat-icon></div>
+                                    <div class="info-content">
+                                        <label>{{ 'admin.users.fields.email' | translate }}</label>
+                                        <a [href]="'mailto:' + user()!.email" class="info-link">{{ user()!.email }}</a>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon"><mat-icon>phone</mat-icon></div>
+                                    <div class="info-content">
+                                        <label>{{ 'admin.users.fields.phone' | translate }}</label>
+                                        @if (user()!.phone) {
+                                        <a [href]="'tel:' + user()!.phone" class="info-link">{{ user()!.phone }}</a>
+                                        } @else {
+                                        <span class="info-empty">{{ 'common.notProvided' | translate }}</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon"><mat-icon>location_on</mat-icon></div>
+                                    <div class="info-content">
+                                        <label>{{ 'admin.users.fields.location' | translate }}</label>
+                                        @if (user()!.city || user()!.country) {
+                                        <span>{{ user()!.city }}{{ user()!.city && user()!.country ? ', ' : '' }}{{
+                                            user()!.country }}</span>
+                                        } @else {
+                                        <span class="info-empty">{{ 'common.notProvided' | translate }}</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Metadata Section -->
+                        <section class="info-section metadata-section">
+                            <h4 class="section-title">
+                                <mat-icon>info</mat-icon>
+                                {{ 'admin.users.drawer.metadata' | translate }}
+                            </h4>
+                            <div class="metadata-grid">
+                                <div class="metadata-item">
+                                    <mat-icon class="meta-icon">calendar_today</mat-icon>
+                                    <div class="meta-content">
+                                        <label>{{ 'admin.users.fields.createdAt' | translate }}</label>
+                                        <span>{{ formatDateTime(user()!.created_at) }}</span>
+                                    </div>
+                                </div>
+                                <div class="metadata-item">
+                                    <mat-icon class="meta-icon">update</mat-icon>
+                                    <div class="meta-content">
+                                        <label>{{ 'admin.users.fields.updatedAt' | translate }}</label>
+                                        <span>{{ formatDateTime(user()!.updated_at) }}</span>
+                                    </div>
+                                </div>
+                                <div class="metadata-item">
+                                    <mat-icon class="meta-icon">login</mat-icon>
+                                    <div class="meta-content">
+                                        <label>{{ 'admin.users.fields.lastLogin' | translate }}</label>
+                                        @if (user()!.last_login) {
+                                        <span>{{ formatDateTime(user()!.last_login) }}</span>
+                                        } @else {
+                                        <span class="info-empty">{{ 'common.never' | translate }}</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </mat-tab>
+
+                <!-- Farms Tab -->
+                <mat-tab label="{{ 'admin.users.tabs.farms' | translate }}">
+                    <div class="tab-content">
+                        @if (loadingFarms()) {
+                        <div class="loading-state">
+                            <mat-spinner diameter="40"></mat-spinner>
+                        </div>
+                        } @else if (userFarms().length === 0) {
+                        <div class="empty-state">
+                            <mat-icon>agriculture</mat-icon>
+                            <p>{{ 'admin.users.noFarms' | translate }}</p>
+                        </div>
+                        } @else {
+                        <div class="farms-list">
+                            @for (farm of userFarms(); track farm.farm_id; let i = $index) {
+                            <div class="farm-card" [style.animation-delay]="(i * 0.08) + 's'">
+                                <div class="farm-icon">
+                                    <mat-icon>agriculture</mat-icon>
+                                </div>
+                                <div class="farm-info">
+                                    <h5 class="farm-name">{{ farm.name }}</h5>
+                                    <span class="farm-location">
+                                        <mat-icon>place</mat-icon>
+                                        {{ farm.location || ('common.notProvided' | translate) }}
+                                    </span>
+                                </div>
+                                <button mat-icon-button class="farm-action">
+                                    <mat-icon>arrow_forward</mat-icon>
+                                </button>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+
+            <!-- View Mode Actions -->
+            <div class="drawer-actions view-actions">
+                <button mat-stroked-button class="action-btn secondary" (click)="switchToEditMode()">
+                    <mat-icon>edit</mat-icon>
+                    {{ 'admin.users.actions.edit' | translate }}
+                </button>
+                <button mat-stroked-button class="action-btn warning" [disabled]="user()!.status !== 'active'">
+                    <mat-icon>block</mat-icon>
+                    {{ 'admin.users.actions.deactivate' | translate }}
+                </button>
+            </div>
+        </div>
+        }
+
+        <!-- EDIT MODE -->
+        @if (mode === 'edit' && user()) {
+        <div class="edit-mode" @slideUp>
+            <!-- User Overview (Read-only) -->
+            <section class="user-overview-mini">
+                <div class="mini-avatar">
+                    <span>{{ user()!.first_name.charAt(0) }}{{ user()!.last_name.charAt(0) }}</span>
+                </div>
+                <div class="mini-info">
+                    <span class="mini-name">{{ user()!.first_name }} {{ user()!.last_name }}</span>
+                    <span class="mini-email">{{ user()!.email }}</span>
+                </div>
+            </section>
+
+            <!-- Edit Form -->
+            <form [formGroup]="userForm" class="user-form">
+                <section class="form-section">
+                    <h4 class="section-title">
+                        <mat-icon>person</mat-icon>
+                        {{ 'admin.users.drawer.personalInfo' | translate }}
+                    </h4>
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.firstName' | translate }}</mat-label>
+                            <input matInput formControlName="first_name" required />
+                            <mat-icon matPrefix>person</mat-icon>
+                            @if (userForm.get('first_name')?.hasError('required') &&
+                            userForm.get('first_name')?.touched) {
+                            <mat-error>{{ getErrorMessage('first_name') }}</mat-error>
+                            }
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.lastName' | translate }}</mat-label>
+                            <input matInput formControlName="last_name" required />
+                            <mat-icon matPrefix>person</mat-icon>
+                            @if (userForm.get('last_name')?.hasError('required') && userForm.get('last_name')?.touched)
+                            {
+                            <mat-error>{{ getErrorMessage('last_name') }}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>{{ 'admin.users.dialog.fields.email' | translate }}</mat-label>
+                        <input matInput type="email" formControlName="email" required />
+                        <mat-icon matPrefix>email</mat-icon>
+                        @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+                        <mat-error>{{ getErrorMessage('email') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>{{ 'admin.users.dialog.fields.phone' | translate }}</mat-label>
+                        <input matInput type="tel" formControlName="phone" />
+                        <mat-icon matPrefix>phone</mat-icon>
+                    </mat-form-field>
+                </section>
+
+                <section class="form-section">
+                    <h4 class="section-title">
+                        <mat-icon>badge</mat-icon>
+                        {{ 'admin.users.drawer.roleStatus' | translate }}
+                    </h4>
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.role' | translate }}</mat-label>
+                            <mat-select formControlName="role" required>
+                                @for (role of roleOptions; track role.value) {
+                                <mat-option [value]="role.value">
+                                    <mat-icon class="option-icon">{{ role.icon }}</mat-icon>
+                                    {{ role.label }}
+                                </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.status' | translate }}</mat-label>
+                            <mat-select formControlName="status" required>
+                                @for (status of statusOptions; track status.value) {
+                                <mat-option [value]="status.value">{{ status.label }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h4 class="section-title">
+                        <mat-icon>location_on</mat-icon>
+                        {{ 'admin.users.drawer.locationInfo' | translate }}
+                    </h4>
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.city' | translate }}</mat-label>
+                            <input matInput formControlName="city" />
+                            <mat-icon matPrefix>location_city</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.country' | translate }}</mat-label>
+                            <input matInput formControlName="country" />
+                            <mat-icon matPrefix>public</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </section>
+
+                <!-- Read-only Metadata -->
+                <section class="metadata-readonly">
+                    <div class="meta-row">
+                        <span class="meta-label">{{ 'admin.users.fields.createdAt' | translate }}:</span>
+                        <span class="meta-value">{{ formatDateTime(user()!.created_at) }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">{{ 'admin.users.fields.updatedAt' | translate }}:</span>
+                        <span class="meta-value">{{ formatDateTime(user()!.updated_at) }}</span>
+                    </div>
+                </section>
+            </form>
+
+            <!-- Scroll Hint (visible until scrolled to bottom) -->
+            @if (!hasScrolledToBottom()) {
+            <div class="scroll-hint" @fadeIn>
+                <mat-icon>keyboard_double_arrow_down</mat-icon>
+                <span>{{ 'common.scrollToSave' | translate }}</span>
+            </div>
+            }
+
+            <!-- Edit Actions -->
+            <div class="drawer-actions edit-actions" [class.visible]="hasScrolledToBottom()">
+                <button mat-stroked-button class="action-btn cancel" (click)="switchToViewMode()">
+                    <mat-icon>close</mat-icon>
+                    {{ 'common.cancel' | translate }}
+                </button>
+                <button mat-flat-button class="action-btn save" (click)="onSave()"
+                    [disabled]="!userForm.valid || saving()">
+                    @if (saving()) {
+                    <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+                    } @else {
+                    <mat-icon>save</mat-icon>
+                    }
+                    {{ 'common.save' | translate }}
+                </button>
+            </div>
+        </div>
+        }
+
+        <!-- CREATE MODE -->
+        @if (mode === 'create') {
+        <div class="create-mode" @slideUp>
+            <form [formGroup]="userForm" class="user-form">
+                <section class="form-section">
+                    <h4 class="section-title">
+                        <mat-icon>person</mat-icon>
+                        {{ 'admin.users.drawer.personalInfo' | translate }}
+                    </h4>
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.firstName' | translate }}</mat-label>
+                            <input matInput formControlName="first_name" required />
+                            <mat-icon matPrefix>person</mat-icon>
+                            @if (userForm.get('first_name')?.hasError('required') &&
+                            userForm.get('first_name')?.touched) {
+                            <mat-error>{{ getErrorMessage('first_name') }}</mat-error>
+                            }
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.lastName' | translate }}</mat-label>
+                            <input matInput formControlName="last_name" required />
+                            <mat-icon matPrefix>person</mat-icon>
+                            @if (userForm.get('last_name')?.hasError('required') && userForm.get('last_name')?.touched)
+                            {
+                            <mat-error>{{ getErrorMessage('last_name') }}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>{{ 'admin.users.dialog.fields.email' | translate }}</mat-label>
+                        <input matInput type="email" formControlName="email" required autocomplete="email" />
+                        <mat-icon matPrefix>email</mat-icon>
+                        @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+                        <mat-error>{{ getErrorMessage('email') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>{{ 'admin.users.dialog.fields.password' | translate }}</mat-label>
+                        <input matInput type="password" formControlName="password" required
+                            autocomplete="new-password" />
+                        <mat-icon matPrefix>lock</mat-icon>
+                        @if (userForm.get('password')?.invalid && userForm.get('password')?.touched) {
+                        <mat-error>{{ getErrorMessage('password') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>{{ 'admin.users.dialog.fields.phone' | translate }}</mat-label>
+                        <input matInput type="tel" formControlName="phone" />
+                        <mat-icon matPrefix>phone</mat-icon>
+                    </mat-form-field>
+                </section>
+
+                <section class="form-section">
+                    <h4 class="section-title">
+                        <mat-icon>badge</mat-icon>
+                        {{ 'admin.users.drawer.roleStatus' | translate }}
+                    </h4>
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.role' | translate }}</mat-label>
+                            <mat-select formControlName="role" required>
+                                @for (role of roleOptions; track role.value) {
+                                <mat-option [value]="role.value">
+                                    <mat-icon class="option-icon">{{ role.icon }}</mat-icon>
+                                    {{ role.label }}
+                                </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.status' | translate }}</mat-label>
+                            <mat-select formControlName="status" required>
+                                @for (status of statusOptions; track status.value) {
+                                <mat-option [value]="status.value">{{ status.label }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h4 class="section-title">
+                        <mat-icon>location_on</mat-icon>
+                        {{ 'admin.users.drawer.locationInfo' | translate }}
+                    </h4>
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.city' | translate }}</mat-label>
+                            <input matInput formControlName="city" />
+                            <mat-icon matPrefix>location_city</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>{{ 'admin.users.dialog.fields.country' | translate }}</mat-label>
+                            <input matInput formControlName="country" />
+                            <mat-icon matPrefix>public</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </section>
+            </form>
+
+            <!-- Scroll Hint (visible until scrolled to bottom) -->
+            @if (!hasScrolledToBottom()) {
+            <div class="scroll-hint" @fadeIn>
+                <mat-icon>keyboard_double_arrow_down</mat-icon>
+                <span>{{ 'common.scrollToCreate' | translate }}</span>
+            </div>
+            }
+
+            <!-- Create Actions -->
+            <div class="drawer-actions create-actions" [class.visible]="hasScrolledToBottom()">
+                <button mat-stroked-button class="action-btn cancel" (click)="closeDrawer()">
+                    <mat-icon>close</mat-icon>
+                    {{ 'common.cancel' | translate }}
+                </button>
+                <button mat-flat-button class="action-btn create" (click)="onSave()"
+                    [disabled]="!userForm.valid || saving()">
+                    @if (saving()) {
+                    <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+                    } @else {
+                    <mat-icon>person_add</mat-icon>
+                    }
+                    {{ 'common.create' | translate }}
+                </button>
+            </div>
+        </div>
+        }
+        }
+    </div>
+</div>

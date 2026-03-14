@@ -1,0 +1,265 @@
+<div class="farmer-dialog">
+    <!-- Premium Dialog Header -->
+    <div class="dialog-header">
+        <div class="header-left">
+            @if (isLoadingDetails()) {
+            <!-- Skeleton Avatar -->
+            <div class="farmer-avatar skeleton-avatar shimmer"></div>
+            <div class="header-info">
+                <div class="skeleton-title shimmer"></div>
+                <div class="skeleton-subtitle shimmer"></div>
+            </div>
+            } @else if (farmer()) {
+            <div class="farmer-avatar" [class]="getStatusBadgeClass()">
+                <span>{{ farmer()!.first_name.charAt(0) }}{{ farmer()!.last_name.charAt(0) }}</span>
+            </div>
+            <div class="header-info">
+                <h2 mat-dialog-title>{{ dialogTitle() }}</h2>
+                @if (farmer()?.email) {
+                <p class="subtitle">{{ farmer()!.email }}</p>
+                }
+                <div class="header-meta">
+                    <mat-chip class="status-badge" [ngClass]="getStatusBadgeClass()">
+                        {{ getStatusLabel() }}
+                    </mat-chip>
+                    @if (farmer()?.city || farmer()?.country) {
+                    <span class="location-meta">
+                        <mat-icon>location_on</mat-icon>
+                        {{ farmer()!.city }}{{ farmer()!.city && farmer()!.country ? ', ' : '' }}{{ farmer()!.country }}
+                    </span>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+        <div class="header-actions">
+            @if (isViewMode() && !isLoadingDetails()) {
+            <button mat-stroked-button (click)="switchToEditMode()" class="btn-secondary">
+                <mat-icon>edit</mat-icon>
+                {{ t('admin.farmers.dialog.actions.edit') }}
+            </button>
+            }
+            <button mat-icon-button (click)="onCancel()" [matTooltip]="t('common.close')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State with Skeleton -->
+    @if (isLoadingDetails()) {
+    <mat-dialog-content class="skeleton-content">
+        <div class="skeleton-form">
+            <!-- Skeleton Form Fields -->
+            <div class="skeleton-section">
+                <div class="skeleton-section-title shimmer"></div>
+                <div class="skeleton-form-grid">
+                    <div class="skeleton-field shimmer"></div>
+                    <div class="skeleton-field shimmer"></div>
+                    <div class="skeleton-field shimmer"></div>
+                    <div class="skeleton-field shimmer"></div>
+                </div>
+            </div>
+            <div class="skeleton-section">
+                <div class="skeleton-section-title shimmer"></div>
+                <div class="skeleton-form-grid">
+                    <div class="skeleton-field shimmer"></div>
+                    <div class="skeleton-field shimmer"></div>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    } @else {
+
+    <mat-dialog-content>
+        <form [formGroup]="farmerForm" class="farmer-form" [class.edit-mode]="isEditMode()">
+            <!-- Quick Actions (View Mode Only) -->
+            @if (isViewMode() && farmer()) {
+            <div class="quick-actions-section">
+                <h3 class="section-title">
+                    <mat-icon>flash_on</mat-icon>
+                    {{ t('admin.farmers.dialog.quickActions.title') }}
+                </h3>
+                <div class="quick-actions-grid">
+                    <button mat-stroked-button (click)="onAssignFarm()" class="quick-action-btn">
+                        <mat-icon>add_business</mat-icon>
+                        {{ t('admin.farmers.dialog.quickActions.assignFarm') }}
+                    </button>
+                    <button mat-stroked-button (click)="onViewAllFarms()" class="quick-action-btn">
+                        <mat-icon>agriculture</mat-icon>
+                        {{ t('admin.farmers.dialog.quickActions.viewFarms') }}
+                    </button>
+                    <button mat-stroked-button (click)="onImpersonateFarmer()" class="quick-action-btn">
+                        <mat-icon>person_pin</mat-icon>
+                        {{ t('admin.farmers.dialog.quickActions.impersonate') }}
+                    </button>
+                    <button mat-stroked-button (click)="onSendResetLink()" class="quick-action-btn">
+                        <mat-icon>lock_reset</mat-icon>
+                        {{ t('admin.farmers.dialog.quickActions.resetLink') }}
+                    </button>
+                </div>
+            </div>
+            <mat-divider class="animated-divider"></mat-divider>
+            }
+
+            <!-- Personal Information -->
+            <div class="form-section" [class.animated-section]="isEditMode()">
+                <h3 class="section-title">
+                    <mat-icon>person</mat-icon>
+                    {{ t('admin.farmers.dialog.sections.personalInfo') }}
+                </h3>
+
+                <div class="form-grid">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.firstName') }}</mat-label>
+                        <input matInput formControlName="first_name" 
+                            [placeholder]="t('admin.farmers.dialog.placeholders.firstName')" />
+                        <mat-icon matPrefix>badge</mat-icon>
+                        @if (farmerForm.get('first_name')?.errors && farmerForm.get('first_name')?.touched) {
+                        <mat-error>{{ getErrorMessage('first_name') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.lastName') }}</mat-label>
+                        <input matInput formControlName="last_name" 
+                            [placeholder]="t('admin.farmers.dialog.placeholders.lastName')" />
+                        <mat-icon matPrefix>badge</mat-icon>
+                        @if (farmerForm.get('last_name')?.errors && farmerForm.get('last_name')?.touched) {
+                        <mat-error>{{ getErrorMessage('last_name') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.email') }}</mat-label>
+                        <input matInput formControlName="email" 
+                            [placeholder]="t('admin.farmers.dialog.placeholders.email')" />
+                        <mat-icon matPrefix>email</mat-icon>
+                        <mat-hint>{{ t('admin.farmers.dialog.hints.emailReadonly') }}</mat-hint>
+                        @if (farmerForm.get('email')?.errors && farmerForm.get('email')?.touched) {
+                        <mat-error>{{ getErrorMessage('email') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.phone') }}</mat-label>
+                        <input matInput formControlName="phone" 
+                            [placeholder]="t('admin.farmers.dialog.placeholders.phone')" />
+                        <mat-icon matPrefix>phone</mat-icon>
+                        @if (farmerForm.get('phone')?.errors && farmerForm.get('phone')?.touched) {
+                        <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.status') }}</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option value="active">{{ t('admin.farmers.dialog.status.active') }}</mat-option>
+                            <mat-option value="inactive">{{ t('admin.farmers.dialog.status.inactive') }}</mat-option>
+                            <mat-option value="suspended">{{ t('admin.farmers.dialog.status.suspended') }}</mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>toggle_on</mat-icon>
+                    </mat-form-field>
+
+                    @if (hasDeviceId()) {
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.deviceId') }}</mat-label>
+                        <input matInput formControlName="device_id" readonly />
+                        <mat-icon matPrefix>devices</mat-icon>
+                        <mat-hint>{{ t('admin.farmers.dialog.hints.deviceIdReadonly') }}</mat-hint>
+                    </mat-form-field>
+                    }
+                </div>
+            </div>
+
+            <mat-divider class="animated-divider"></mat-divider>
+
+            <!-- Location Information -->
+            <div class="form-section" [class.animated-section]="isEditMode()">
+                <h3 class="section-title">
+                    <mat-icon>location_on</mat-icon>
+                    {{ t('admin.farmers.dialog.sections.location') }}
+                </h3>
+
+                <div class="form-grid">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.city') }}</mat-label>
+                        <input matInput formControlName="city" 
+                            [placeholder]="t('admin.farmers.dialog.placeholders.city')" />
+                        <mat-icon matPrefix>location_city</mat-icon>
+                        @if (farmerForm.get('city')?.errors && farmerForm.get('city')?.touched) {
+                        <mat-error>{{ getErrorMessage('city') }}</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>{{ t('admin.farmers.dialog.fields.country') }}</mat-label>
+                        <input matInput formControlName="country" 
+                            [placeholder]="t('admin.farmers.dialog.placeholders.country')" />
+                        <mat-icon matPrefix>public</mat-icon>
+                        @if (farmerForm.get('country')?.errors && farmerForm.get('country')?.touched) {
+                        <mat-error>{{ getErrorMessage('country') }}</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Metadata (View Mode Only) -->
+            @if (isViewMode() && farmer()) {
+            <mat-divider class="animated-divider"></mat-divider>
+            <div class="form-section metadata-section">
+                <h3 class="section-title">
+                    <mat-icon>info</mat-icon>
+                    {{ t('admin.farmers.dialog.sections.accountInfo') }}
+                </h3>
+
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <span class="metadata-label">{{ t('admin.farmers.dialog.metadata.userId') }}</span>
+                        <span class="metadata-value">{{ farmer()!.user_id }}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">{{ t('admin.farmers.dialog.metadata.role') }}</span>
+                        <span class="metadata-value">{{ farmer()!.role }}</span>
+                    </div>
+                    @if (farmer()!.created_at) {
+                    <div class="metadata-item">
+                        <span class="metadata-label">{{ t('admin.farmers.dialog.metadata.createdAt') }}</span>
+                        <span class="metadata-value">{{ formatDate(farmer()!.created_at) }}</span>
+                    </div>
+                    }
+                    @if (farmer()!.updated_at) {
+                    <div class="metadata-item">
+                        <span class="metadata-label">{{ t('admin.farmers.dialog.metadata.updatedAt') }}</span>
+                        <span class="metadata-value">{{ formatDate(farmer()!.updated_at) }}</span>
+                    </div>
+                    }
+                    @if (farmer()!.last_login) {
+                    <div class="metadata-item">
+                        <span class="metadata-label">{{ t('admin.farmers.dialog.metadata.lastLogin') }}</span>
+                        <span class="metadata-value">{{ formatDate(farmer()!.last_login) }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </form>
+    </mat-dialog-content>
+
+    <!-- Dialog Actions -->
+    @if (isEditMode()) {
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="onCancel()" [disabled]="isLoading()">
+            {{ t('common.cancel') }}
+        </button>
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isLoading()">
+            @if (isLoading()) {
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+            } @else {
+            <mat-icon>save</mat-icon>
+            }
+            {{ t('admin.farmers.dialog.actions.save') }}
+        </button>
+    </mat-dialog-actions>
+    }
+    }
+</div>

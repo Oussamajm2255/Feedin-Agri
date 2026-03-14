@@ -1,0 +1,600 @@
+<div class="users-page" [class.rtl]="languageService.isRTL()" [class.drawer-open]="drawerOpen()">
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <div class="users-main-content">
+    <!-- ==================== HEADER ZONE ==================== -->
+    <!-- Premium Page Header with Glass Effect -->
+    <header class="page-header glass-header">
+      <div class="header-gradient-overlay"></div>
+      <div class="header-content">
+        <div class="header-left">
+          <div class="title-row">
+            <div class="title-icon-wrapper">
+              <mat-icon class="title-icon">group</mat-icon>
+              <div class="icon-pulse"></div>
+            </div>
+            <div class="title-text">
+              <h1 class="page-title" @fadeInUp>
+                {{ 'admin.users.title' | translate }}
+                <span class="title-badge" @scaleIn>
+                  <mat-icon>verified</mat-icon>
+                  {{ totalUsers() }}
+                </span>
+              </h1>
+              <p class="page-subtitle" @fadeInUp>{{ 'admin.users.subtitle' | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions" @fadeInUp>
+          <app-export-button title="User Management Report" sectionName="Users"
+            subtitle="All system users and their details" filename="users_export" [columns]="exportColumns"
+            [data]="users()" [disabled]="loading()">
+          </app-export-button>
+
+          <button mat-flat-button class="btn-primary premium-btn" (click)="openCreateUser()" [disabled]="loading()">
+            <mat-icon>add_circle</mat-icon>
+            <span>{{ 'admin.users.newUser' | translate }}</span>
+            <div class="btn-shine"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Premium Interactive Stats KPI Bar with Visualizations -->
+      <div class="stats-bar premium-stats" @fadeInUp>
+        <div class="stat-chip premium-stat-card glass-effect" [class.loading]="loadingStats()"
+          [attr.data-stat]="'total'" [style.--stat-percentage]="stats().total > 0 ? '100' : '0'">
+          @if (loadingStats()) {
+          <div class="skeleton-chip shimmer"></div>
+          } @else {
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon-bg gradient-bg pulse-animation">
+              <mat-icon class="stat-icon">groups</mat-icon>
+            </div>
+            <div class="stat-glow"></div>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">{{ 'admin.users.stats.total' | translate }}</span>
+            <div class="stat-value-wrapper">
+              <span class="stat-value counter" [attr.data-target]="stats().total">0</span>
+              <span class="stat-trend">
+                <mat-icon>trending_up</mat-icon>
+              </span>
+            </div>
+            <div class="stat-progress">
+              <div class="progress-bar" [style.width.%]="100"></div>
+            </div>
+            <div class="stat-sparkline">
+              <svg class="sparkline-chart" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <polyline points="0,15 20,12 40,8 60,10 80,5 100,7" fill="none" stroke="currentColor"
+                  stroke-width="2" />
+              </svg>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="stat-chip premium-stat-card glass-effect" [class.loading]="loadingStats()"
+          [attr.data-stat]="'farmers'"
+          [style.--stat-percentage]="stats().total > 0 ? (stats().farmers / stats().total * 100) : '0'">
+          @if (loadingStats()) {
+          <div class="skeleton-chip shimmer"></div>
+          } @else {
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon-bg gradient-bg pulse-animation"
+              style="background: linear-gradient(135deg, #10b981, #059669);">
+              <mat-icon class="stat-icon">agriculture</mat-icon>
+            </div>
+            <div class="stat-glow" style="background: radial-gradient(circle, rgba(16, 185, 129, 0.3), transparent);">
+            </div>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">{{ 'admin.users.stats.farmers' | translate }}</span>
+            <div class="stat-value-wrapper">
+              <span class="stat-value counter" [attr.data-target]="stats().farmers">0</span>
+              <span class="stat-percentage">{{ stats().total > 0 ? ((stats().farmers / stats().total * 100).toFixed(0))
+                :
+                '0' }}%</span>
+            </div>
+            <div class="stat-progress">
+              <div class="progress-bar"
+                [style.width.%]="stats().total > 0 ? (stats().farmers / stats().total * 100) : 0"
+                style="background: linear-gradient(90deg, #10b981, #34d399);"></div>
+            </div>
+            <div class="stat-sparkline">
+              <svg class="sparkline-chart" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <polyline points="0,18 20,15 40,10 60,8 80,6 100,5" fill="none" stroke="currentColor"
+                  stroke-width="2" />
+              </svg>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="stat-chip premium-stat-card glass-effect" [class.loading]="loadingStats()"
+          [attr.data-stat]="'moderators'"
+          [style.--stat-percentage]="stats().total > 0 ? (stats().moderators / stats().total * 100) : '0'">
+          @if (loadingStats()) {
+          <div class="skeleton-chip shimmer"></div>
+          } @else {
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon-bg gradient-bg pulse-animation"
+              style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+              <mat-icon class="stat-icon">supervisor_account</mat-icon>
+            </div>
+            <div class="stat-glow" style="background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent);">
+            </div>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">{{ 'admin.users.stats.moderators' | translate }}</span>
+            <div class="stat-value-wrapper">
+              <span class="stat-value counter" [attr.data-target]="stats().moderators">0</span>
+              <span class="stat-percentage">{{ stats().total > 0 ? ((stats().moderators / stats().total *
+                100).toFixed(0))
+                : '0' }}%</span>
+            </div>
+            <div class="stat-progress">
+              <div class="progress-bar"
+                [style.width.%]="stats().total > 0 ? (stats().moderators / stats().total * 100) : 0"
+                style="background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+            </div>
+            <div class="stat-sparkline">
+              <svg class="sparkline-chart" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <polyline points="0,15 20,14 40,12 60,10 80,8 100,7" fill="none" stroke="currentColor"
+                  stroke-width="2" />
+              </svg>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="stat-chip premium-stat-card glass-effect" [class.loading]="loadingStats()"
+          [attr.data-stat]="'admins'"
+          [style.--stat-percentage]="stats().total > 0 ? (stats().admins / stats().total * 100) : '0'">
+          @if (loadingStats()) {
+          <div class="skeleton-chip shimmer"></div>
+          } @else {
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon-bg gradient-bg pulse-animation"
+              style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+              <mat-icon class="stat-icon">admin_panel_settings</mat-icon>
+            </div>
+            <div class="stat-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);">
+            </div>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">{{ 'admin.users.stats.admins' | translate }}</span>
+            <div class="stat-value-wrapper">
+              <span class="stat-value counter" [attr.data-target]="stats().admins">0</span>
+              <span class="stat-percentage">{{ stats().total > 0 ? ((stats().admins / stats().total * 100).toFixed(0)) :
+                '0' }}%</span>
+            </div>
+            <div class="stat-progress">
+              <div class="progress-bar" [style.width.%]="stats().total > 0 ? (stats().admins / stats().total * 100) : 0"
+                style="background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
+            </div>
+            <div class="stat-sparkline">
+              <svg class="sparkline-chart" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <polyline points="0,18 20,16 40,14 60,12 80,10 100,8" fill="none" stroke="currentColor"
+                  stroke-width="2" />
+              </svg>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== FILTERS AND SEARCH STRIP ==================== -->
+    <div class="filters-strip" [@fadeInDown]>
+      <div class="filters-left">
+        <!-- Role Filter -->
+        <div class="filter-group premium-filter-group">
+          <label class="filter-label enhanced-label">
+            <div class="label-icon-wrapper">
+              <mat-icon class="label-icon">badge</mat-icon>
+            </div>
+            <span class="label-text">{{ 'admin.users.filters.role' | translate }}</span>
+          </label>
+          <div class="chip-group premium-chip-group">
+            @for (role of roleOptions; track role.value) {
+            <button mat-chip-button class="premium-filter-chip" [class.selected]="selectedRoles().includes(role.value)"
+              [attr.data-role]="role.value" (click)="toggleRoleFilter(role.value)">
+              <div class="chip-content">
+                <mat-icon class="chip-icon">{{ role.icon }}</mat-icon>
+                <span class="chip-text">{{ role.label }}</span>
+              </div>
+              @if (selectedRoles().includes(role.value)) {
+              <mat-icon class="chip-check">check_circle</mat-icon>
+              }
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="filter-group premium-filter-group">
+          <label class="filter-label enhanced-label">
+            <div class="label-icon-wrapper">
+              <mat-icon class="label-icon">toggle_on</mat-icon>
+            </div>
+            <span class="label-text">{{ 'admin.users.filters.status' | translate }}</span>
+          </label>
+          <div class="chip-group premium-chip-group">
+            @for (status of statusOptions; track status.value) {
+            <button mat-chip-button class="premium-filter-chip"
+              [class.selected]="selectedStatuses().includes(status.value)" [attr.data-status]="status.value"
+              (click)="toggleStatusFilter(status.value)">
+              <div class="chip-content">
+                <span class="status-indicator" [attr.data-status]="status.value"></span>
+                <span class="chip-text">{{ status.label }}</span>
+              </div>
+              @if (selectedStatuses().includes(status.value)) {
+              <mat-icon class="chip-check">check_circle</mat-icon>
+              }
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="filters-middle">
+        <!-- Farm Filter -->
+        <mat-form-field appearance="outline" class="farm-filter">
+          <mat-label>
+            <mat-icon>cottage</mat-icon>
+            {{ 'admin.users.filters.farm' | translate }}
+          </mat-label>
+          <mat-select [value]="selectedFarmId()" (selectionChange)="onFarmFilterChange($event.value)"
+            [attr.aria-label]="'admin.users.filters.farm' | translate"
+            [attr.title]="'admin.users.filters.farm' | translate">
+            <mat-option [value]="null">
+              {{ 'admin.users.filters.allFarms' | translate }}
+            </mat-option>
+            @for (farm of farms(); track farm.farm_id) {
+            <mat-option [value]="farm.farm_id">
+              {{ farm.name }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filters-right">
+        <!-- Search -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>{{ 'admin.users.filters.search' | translate }}</mat-label>
+          <input matInput [formControl]="searchControl"
+            [placeholder]="'admin.users.filters.searchPlaceholder' | translate" />
+          <mat-icon matPrefix>search</mat-icon>
+          @if (searchControl.value) {
+          <button matSuffix mat-icon-button (click)="searchControl.setValue('')">
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+
+        <!-- Clear Filters -->
+        @if (hasActiveFilters()) {
+        <button mat-stroked-button class="clear-filters-btn" (click)="clearAllFilters()"
+          [matBadge]="activeFiltersCount()" matBadgeSize="small" matBadgeColor="warn">
+          <mat-icon>filter_alt_off</mat-icon>
+          {{ 'admin.users.filters.clear' | translate }}
+        </button>
+        }
+      </div>
+    </div>
+
+    <!-- ==================== VIEW CONTROLS BAR ==================== -->
+    <section class="view-controls-bar glass-panel" [@fadeIn]>
+      <div class="controls-left">
+        <!-- View Mode Toggle -->
+        <div class="view-toggle">
+          <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'table'"
+            (click)="setViewMode('table')" [matTooltip]="'common.view' | translate">
+            <mat-icon>table_rows</mat-icon>
+          </button>
+          <button mat-icon-button class="view-btn" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')"
+            [matTooltip]="'common.view' | translate">
+            <mat-icon>grid_view</mat-icon>
+          </button>
+        </div>
+
+        <!-- Results Count -->
+        <div class="results-count">
+          <mat-icon>group</mat-icon>
+          <span>{{ users().length }} {{ 'common.of' | translate }} {{ totalUsers() }} {{ 'admin.users.title' | translate
+            }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="content-container" [@fadeIn]>
+
+      <!-- ==================== TABLE VIEW ==================== -->
+      @if (viewMode() === 'table') {
+      <div class="table-card">
+        @if (loading()) {
+        <!-- Skeleton Loader -->
+        <div class="skeleton-table">
+          @for (row of skeletonRows; track row) {
+          <div class="skeleton-row" [style.animation-delay]="animationDelay(row)">
+            <div class="skeleton-cell skeleton-avatar"></div>
+            <div class="skeleton-cell skeleton-text"></div>
+            <div class="skeleton-cell skeleton-text"></div>
+            <div class="skeleton-cell skeleton-badge"></div>
+            <div class="skeleton-cell skeleton-text"></div>
+            <div class="skeleton-cell skeleton-text"></div>
+            <div class="skeleton-cell skeleton-actions"></div>
+          </div>
+          }
+        </div>
+        } @else if (users().length === 0) {
+        <!-- Empty State -->
+        <div class="empty-state" [@floatIn]>
+          <div class="empty-icon-wrapper">
+            <mat-icon class="empty-icon">person_off</mat-icon>
+          </div>
+          <h3>{{ 'admin.users.empty.title' | translate }}</h3>
+          <p>{{ 'admin.users.empty.message' | translate }}</p>
+          <button mat-flat-button color="primary" (click)="openCreateUser()">
+            <mat-icon>add</mat-icon>
+            {{ 'admin.users.empty.action' | translate }}
+          </button>
+        </div>
+        } @else {
+        <!-- Users Table -->
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="users()" matSort (matSortChange)="onSortChange($event)" class="users-table">
+            <!-- Name Column -->
+            <ng-container matColumnDef="full_name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ 'admin.users.table.name' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)"
+                class="name-cell">
+                <div class="user-avatar">
+                  <span class="avatar-text">
+                    {{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}
+                  </span>
+                </div>
+                <div class="user-info">
+                  <span class="user-name">{{ user.full_name }}</span>
+                  @if (user.city || user.country) {
+                  <span class="user-location">
+                    <mat-icon class="location-icon">location_on</mat-icon>
+                    {{ user.city }}{{ user.city && user.country ? ', ' : '' }}{{ user.country }}
+                  </span>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ 'admin.users.table.email' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)">
+                <div class="email-cell">
+                  <mat-icon class="email-icon">email</mat-icon>
+                  <span>{{ user.email }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Role Column -->
+            <ng-container matColumnDef="role">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ 'admin.users.table.role' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)">
+                <span class="role-badge" [attr.data-role]="user.role">
+                  <mat-icon>{{ getRoleIcon(user.role) }}</mat-icon>
+                  {{ getRoleLabel(user.role) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ 'admin.users.table.status' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)">
+                <span class="status-badge" [attr.data-status]="user.status">
+                  <span class="status-dot"></span>
+                  {{ user.status | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Farm Count Column -->
+            <ng-container matColumnDef="farm_count">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'admin.users.table.farms' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)">
+                <div class="farm-count">
+                  <mat-icon class="farm-icon">cottage</mat-icon>
+                  <span>{{ user.farm_count }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Last Login Column -->
+            <ng-container matColumnDef="last_login">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ 'admin.users.table.lastLogin' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)">
+                <div class="date-cell">
+                  <mat-icon class="date-icon">schedule</mat-icon>
+                  <span>{{ formatDate(user.last_login) }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'admin.users.table.actions' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let user; let i = index" [style.animation-delay]="animationDelay(i)">
+                <div class="table-actions">
+                  <button mat-icon-button class="action-btn btn-view" (click)="onViewDetails(user, $event)"
+                    [matTooltip]="'admin.users.actions.viewDetails' | translate">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn btn-edit" (click)="onEditUser(user, $event)"
+                    [matTooltip]="'admin.users.actions.edit' | translate">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn btn-impersonate" (click)="onImpersonateUser(user, $event)"
+                    [matTooltip]="'admin.users.actions.impersonate' | translate" [disabled]="user.status !== 'active'">
+                    <mat-icon>person_pin</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick(row)" class="table-row">
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator [length]="totalUsers()" [pageSize]="pageSize()" [pageIndex]="pageIndex()"
+          [pageSizeOptions]="[10, 20, 50, 100]" (page)="onPageChange($event)"
+          [showFirstLastButtons]="true"></mat-paginator>
+        }
+      </div>
+      }
+
+      <!-- ==================== GRID VIEW ==================== -->
+      @if (viewMode() === 'grid') {
+      <div class="grid-view" [@fadeIn]>
+        @if (loading()) {
+        <!-- Skeleton Grid Loader -->
+        <div class="users-grid">
+          @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="user-card skeleton-card shimmer">
+            <div class="skeleton-card-header"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          </div>
+          }
+        </div>
+        } @else if (users().length === 0) {
+        <!-- Empty State -->
+        <div class="empty-state" [@floatIn]>
+          <div class="empty-icon-wrapper">
+            <mat-icon class="empty-icon">person_off</mat-icon>
+          </div>
+          <h3>{{ 'admin.users.empty.title' | translate }}</h3>
+          <p>{{ 'admin.users.empty.message' | translate }}</p>
+          <button mat-flat-button color="primary" (click)="openCreateUser()">
+            <mat-icon>add</mat-icon>
+            {{ 'admin.users.empty.action' | translate }}
+          </button>
+        </div>
+        } @else {
+        <!-- Premium User Cards Grid -->
+        <div class="users-grid">
+          @for (user of users(); track user.user_id; let i = $index) {
+          <article class="user-card glass-card" [attr.data-status]="user.status" [attr.data-role]="user.role"
+            [style.animation-delay]="(i * 50) + 'ms'" [@fadeIn]>
+
+            <!-- Card Role Indicator -->
+            <div class="card-role-indicator" [attr.data-role]="user.role"></div>
+
+            <!-- Card Status Badge -->
+            <span class="card-status-badge" [attr.data-status]="user.status">
+              <span class="status-dot-small"></span>
+              {{ user.status | titlecase }}
+            </span>
+
+            <!-- Card Header -->
+            <div class="card-header" (click)="onViewDetails(user, $event)">
+              <div class="user-avatar-large" [attr.data-role]="user.role">
+                <span class="avatar-text-large">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
+                <div class="avatar-ring"></div>
+              </div>
+              <div class="user-title-section">
+                <h3 class="user-title">{{ user.full_name }}</h3>
+                <p class="user-subtitle">
+                  <mat-icon class="subtitle-icon">email</mat-icon>
+                  {{ user.email }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card Role Badge -->
+            <div class="card-role-badge" [attr.data-role]="user.role">
+              <mat-icon>{{ getRoleIcon(user.role) }}</mat-icon>
+              <span>{{ getRoleLabel(user.role) }}</span>
+            </div>
+
+            <!-- Card Stats -->
+            <div class="card-stats">
+              <div class="stat-item">
+                <mat-icon>cottage</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-value">{{ user.farm_count }}</span>
+                  <span class="stat-label">{{ 'admin.users.table.farms' | translate }}</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <mat-icon>schedule</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-value">{{ formatDate(user.last_login) }}</span>
+                  <span class="stat-label">{{ 'admin.users.table.lastLogin' | translate }}</span>
+                </div>
+              </div>
+              @if (user.city || user.country) {
+              <div class="stat-item">
+                <mat-icon>location_on</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-value">{{ user.city || user.country }}</span>
+                  <span class="stat-label">{{ 'admin.users.fields.location' | translate }}</span>
+                </div>
+              </div>
+              }
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card-actions">
+              <button mat-icon-button class="card-action-btn view" (click)="onViewDetails(user, $event)"
+                [matTooltip]="'admin.users.actions.viewDetails' | translate">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button class="card-action-btn edit" (click)="onEditUser(user, $event)"
+                [matTooltip]="'admin.users.actions.edit' | translate">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="card-action-btn impersonate" (click)="onImpersonateUser(user, $event)"
+                [matTooltip]="'admin.users.actions.impersonate' | translate" [disabled]="user.status !== 'active'">
+                <mat-icon>person_pin</mat-icon>
+              </button>
+            </div>
+          </article>
+          }
+        </div>
+
+        <!-- Grid Paginator -->
+        <mat-paginator [length]="totalUsers()" [pageSize]="pageSize()" [pageIndex]="pageIndex()"
+          [pageSizeOptions]="[10, 20, 50, 100]" (page)="onPageChange($event)" [showFirstLastButtons]="true"
+          class="grid-paginator"></mat-paginator>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- ==================== USER DRAWER ==================== -->
+  <app-user-drawer [isOpen]="drawerOpen()" [mode]="drawerMode()" [userId]="selectedUserId()"
+    (closed)="onDrawerClosed($event)" (modeChanged)="onDrawerModeChanged($event)">
+  </app-user-drawer>
+</div>
