@@ -33,9 +33,9 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1400px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem var(--section-gutter);
   position: relative;
   z-index: 2;
 }
@@ -344,7 +344,7 @@
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
-    padding: 1rem 1rem;
+    padding: 1rem var(--section-gutter);
   }
 
   .footer-section {
@@ -385,7 +385,7 @@
   }
 
   .footer-content {
-    padding: 1rem 0.75rem;
+    padding: 1rem var(--section-gutter);
     gap: 0.75rem;
   }
 
@@ -440,7 +440,7 @@
   }
 
   .footer-content {
-    padding: 0.75rem 0.5rem;
+    padding: 0.75rem var(--section-gutter);
   }
 
   .footer-title {

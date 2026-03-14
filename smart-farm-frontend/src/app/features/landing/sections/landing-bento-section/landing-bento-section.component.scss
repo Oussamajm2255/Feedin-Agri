@@ -4,12 +4,12 @@
 
 .bento-section {
     position: relative;
-    padding: 6rem 2rem;
+    padding: 6rem var(--section-gutter);
     background: var(--light-bg);
 }
 
 .bento-container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
 }
 
@@ -569,7 +569,7 @@
 
 @media (max-width: 640px) {
     .bento-section {
-        padding: 4rem 1rem;
+        padding: 3rem var(--section-gutter);
     }
 
     .bento-header {

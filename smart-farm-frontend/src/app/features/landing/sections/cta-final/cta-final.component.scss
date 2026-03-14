@@ -5,7 +5,7 @@
 
 .cta-final-section {
     position: relative;
-    padding: 10rem 2rem;
+    padding: 10rem var(--section-gutter);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -28,7 +28,7 @@
 .cta-final-container {
     position: relative;
     z-index: 1;
-    max-width: 700px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
 }
 
@@ -329,7 +329,7 @@
 // ================================
 @media (max-width: 480px) {
     .cta-final-section {
-        padding: 5rem 1.25rem;
+        padding: 5rem var(--section-gutter);
         min-height: auto;
     }
 

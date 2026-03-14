@@ -83,7 +83,10 @@ body {
   // Smooth font rendering
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  button:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 4px;
+  }
 }
 
 // Language transition animations
@@ -332,7 +335,24 @@ body.dark-theme .cdk-overlay-backdrop.date-range-picker-backdrop {
   --user-menu-border: rgba(0, 0, 0, 0.08);
   --user-menu-item-hover: rgba(16, 185, 129, 0.08);
   --user-menu-item-active: rgba(16, 185, 129, 0.12);
+  --user-menu-item-active: rgba(16, 185, 129, 0.12);
   --divider-color: rgba(0, 0, 0, 0.08);
+
+  // Pro Layout System
+  --section-gutter: 2rem;
+  --container-max-width: 1280px;
+
+  @media (max-width: 1024px) {
+    --section-gutter: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    --section-gutter: 1.25rem;
+  }
+
+  @media (max-width: 380px) {
+    --section-gutter: 1rem;
+  }
 }
 
 body.dark-theme {

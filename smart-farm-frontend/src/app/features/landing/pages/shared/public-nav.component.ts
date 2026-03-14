@@ -145,12 +145,12 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
 
     .nav-inner {
-      max-width: 1200px;
+      max-width: var(--container-max-width);
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.625rem 1.25rem;
+      padding: 0.625rem var(--section-gutter);
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: 100px;
@@ -490,13 +490,13 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     /* Small Mobile Tweaks (< 380px) */
     @media (max-width: 380px) {
       .brand-text { display: none; }
-      .nav-inner { padding: 0.5rem 0.75rem; }
+      .nav-inner { padding: 0.5rem var(--section-gutter); }
       .nav-actions { gap: 0.25rem; }
     }
 
     /* Ultra Small (< 340px) */
     @media (max-width: 340px) {
-      .nav-inner { padding: 0.4rem 0.51rem; }
+      .nav-inner { padding: 0.4rem var(--section-gutter); }
       .brand-icon { width: 30px; height: 30px; }
     }
 

@@ -7,7 +7,7 @@
 
 .premium-about-section {
     position: relative;
-    padding: 8rem 2rem;
+    padding: 8rem var(--section-gutter);
     background: #ffffff;
     overflow: hidden;
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -15,7 +15,7 @@
 }
 
 .about-container {
-    max-width: 1280px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
     position: relative;
     z-index: 2;

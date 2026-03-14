@@ -184,8 +184,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      width: calc(100% - 1.5rem);
-      max-width: 1200px;
+      width: calc(100% - (2 * var(--section-gutter)));
+      max-width: var(--container-max-width);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -440,7 +440,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       position: relative;
       z-index: 10;
       text-align: center;
-      padding: 1.25rem;
+      padding: 1.25rem var(--section-gutter);
       margin-top: -2vh;
     }
 
@@ -474,9 +474,15 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
 
     @keyframes headlineReveal {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+        filter: blur(8px);
+      }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
+        filter: blur(0);
       }
     }
 
