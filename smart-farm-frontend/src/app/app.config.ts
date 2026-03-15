@@ -74,7 +74,7 @@ export const appConfig: ApplicationConfig = {
       routes,
       withPreloading(PreloadAllModules),       // Pre-fetch lazy chunks after initial load
       withInMemoryScrolling({
-        scrollPositionRestoration: 'enabled',  // Restore scroll on back/forward navigation
+        scrollPositionRestoration: 'top',  // Always start at top on new navigation
         anchorScrolling: 'enabled',            // Support #anchor links
       }),
       withComponentInputBinding(),             // Bind route params to @Input() automatically

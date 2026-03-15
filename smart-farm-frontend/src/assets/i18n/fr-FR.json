@@ -3061,7 +3061,40 @@
             "Intégration capteurs avancés",
             "Tableau de bord centralisé"
           ]
+        },
+        {
+          "tag": "Géolocalisation",
+          "title": "Traçabilité & Logistique",
+          "desc": "Suivez vos produits de la récolte jusqu'au client final avec une précision absolue.",
+          "points": [
+            "Suivi GPS en temps réel",
+            "Historique des déplacements",
+            "Optimisation des itinéraires"
+          ]
+        },
+        {
+          "tag": "Matériel",
+          "title": "Maintenance Prédictive",
+          "desc": "Anticipez les pannes de vos équipements avant qu'elles ne surviennent.",
+          "points": [
+            "Analyse vibratoire & thermique",
+            "Alertes de maintenance",
+            "Suivi d'usure des pièces",
+            "Carnet d'entretien digital"
+          ]
+        },
+        {
+          "tag": "Modulaire",
+          "title": "Systèmes Sur Mesure",
+          "desc": "Des solutions qui s'adaptent à vos besoins spécifiques et à votre budget.",
+          "points": [
+            "Architecture évolutive",
+            "Intégration tierce",
+            "Protocoles standards",
+            "Personnalisation totale"
+          ]
         }
+
       ],
       "approach": {
         "label": "Notre différence",
@@ -3181,6 +3214,55 @@
             "Disponibilité maximale",
             "Tranquillité d'esprit",
             "Experts locaux"
+          ]
+        },
+        {
+          "tag": "International",
+          "title": "Solutions Export",
+          "desc": "Accompagnement pour l'adaptation de vos cultures aux standards internationaux et marchés d'export.",
+          "includes": [
+            "Audit conformité export",
+            "Certification qualité",
+            "Suivi logistique froid",
+            "Conseil marchés cibles"
+          ],
+          "benefits": [
+            "Nouveaux marchés",
+            "Valeur ajoutée",
+            "Conformité garantie"
+          ]
+        },
+        {
+          "tag": "Écologie",
+          "title": "Régénération des Sols",
+          "desc": "Programmes avancés pour restaurer la fertilité de vos terres et optimiser l'usage des intrants naturels.",
+          "includes": [
+            "Analyse microbiologique",
+            "Plan de régénération",
+            "Suivi carbone",
+            "Conseil engrais verts"
+          ],
+          "benefits": [
+            "Sols fertiles",
+            "Moins d'intrants",
+            "Durable"
+          ]
+        },
+        {
+          "tag": "Formation",
+          "title": "Académie Feedin",
+          "desc": "Formations pratiques pour maîtriser les outils digitaux et les nouvelles techniques agronomiques.",
+          "includes": [
+            "Ateliers sur site",
+            "Webinaires experts",
+            "Support pédagogique",
+            "Certification technique",
+            "Suivi post-formation"
+          ],
+          "benefits": [
+            "Autonomie",
+            "Compétences clés",
+            "Certifié"
           ]
         }
       ],
@@ -3399,6 +3481,17 @@
         "title": "Parlons de votre projet",
         "sub": "Notre équipe d'experts est disponible pour étudier votre situation et vous proposer la solution la plus adaptée à votre exploitation."
       },
+      "badges": [
+        "Expertise 24/7",
+        "Consultation Gratuite",
+        "Accompagnement terrain"
+      ],
+      "channels": [
+        { "label": "Email", "note": "Réponse sous 24h" },
+        { "label": "Téléphone", "note": "Lun - Ven, 08h - 18h" },
+        { "label": "WhatsApp", "note": "Support direct & rapide" },
+        { "label": "Bureaux", "note": "Venez nous rencontrer" }
+      ],
       "info": {
         "title": "Nos coordonnées",
         "sub": "Multiple façons de nous joindre selon vos préférences."
@@ -3407,7 +3500,14 @@
         "title": "Suivez-nous"
       },
       "projects": {
-        "title": "Types de projets"
+        "title": "Types de projets",
+        "projectsItems": [
+          "Serres connectées & intelligentes",
+          "Agriculture verticale & hydroponie",
+          "Automatisation & monitoring",
+          "Formation & conseil technique",
+          "Audit & étude de faisabilité"
+        ]
       },
       "sw": {
         "write": "Écrire un message",

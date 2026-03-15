@@ -3499,7 +3499,40 @@
             "Advanced sensor integration",
             "Centralized dashboard"
           ]
+        },
+        {
+          "tag": "Traceability",
+          "title": "Traceability & Logistics",
+          "desc": "Track products from harvest to final customer with absolute precision.",
+          "points": [
+            "Real-time GPS tracking",
+            "Movement history",
+            "Route optimization"
+          ]
+        },
+        {
+          "tag": "Equipment",
+          "title": "Predictive Maintenance",
+          "desc": "Anticipate equipment failures before they happen.",
+          "points": [
+            "Vibration & thermal analysis",
+            "Maintenance alerts",
+            "Parts wear tracking",
+            "Digital maintenance log"
+          ]
+        },
+        {
+          "tag": "Modular",
+          "title": "Tailor-made Systems",
+          "desc": "Solutions that adapt to your specific needs and budget.",
+          "points": [
+            "Scalable architecture",
+            "Third-party integration",
+            "Standard protocols",
+            "Full customization"
+          ]
         }
+
       ],
       "approach": {
         "label": "Our difference",
@@ -3833,10 +3866,21 @@
     },
     "contact": {
       "hero": {
-        "label": "Contact us",
+        "label": "Contact Us",
         "title": "Let's talk about your project",
         "sub": "Our team of experts is available to study your situation and propose the solution best suited to your farm."
       },
+      "badges": [
+        "24/7 Expertise",
+        "Free Consultation",
+        "Field Support"
+      ],
+      "channels": [
+        { "label": "Email", "note": "Response under 24h" },
+        { "label": "Phone", "note": "Mon - Fri, 08:00 - 18:00" },
+        { "label": "WhatsApp", "note": "Direct & quick support" },
+        { "label": "Offices", "note": "Come meet us" }
+      ],
       "info": {
         "title": "Our contact details",
         "sub": "Multiple ways to reach us based on your preferences."
@@ -3845,7 +3889,14 @@
         "title": "Follow us"
       },
       "projects": {
-        "title": "Project types"
+        "title": "Project types",
+        "projectsItems": [
+          "Connected & smart greenhouses",
+          "Vertical farming & hydroponics",
+          "Automation & monitoring",
+          "Training & tech consulting",
+          "Audit & feasibility study"
+        ]
       },
       "sw": {
         "write": "Write a message",

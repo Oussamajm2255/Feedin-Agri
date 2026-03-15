@@ -524,7 +524,7 @@ interface ContactForm {
     }
 
     .hero-content h1 {
-      font-size: clamp(2rem, 5.5vw, 3.75rem);
+      font-size: clamp(1.75rem, 5vw, 3.75rem);
       font-weight: 800;
       color: white;
       line-height: 1.1;
@@ -605,7 +605,7 @@ interface ContactForm {
     }
 
     .info-header h2 {
-      font-size: 1.5rem;
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
       font-weight: 800;
       color: #1f2937;
       margin-bottom: 0.5rem;
@@ -654,7 +654,7 @@ interface ContactForm {
 
     .ic-body { flex: 1; min-width: 0; }
     .ic-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #9ca3af; margin-bottom: 0.25rem; }
-    .ic-value { font-size: 0.9375rem; font-weight: 600; color: #1f2937; margin-bottom: 0.125rem; word-break: break-word; overflow-wrap: break-word; }
+    .ic-value { font-size: 0.9375rem; font-weight: 600; color: #1f2937; margin-bottom: 0.125rem; word-break: break-all; overflow-wrap: anywhere; }
     .ic-note { font-size: 0.8125rem; color: #6b7280; }
 
     /* Socials */
@@ -730,6 +730,12 @@ interface ContactForm {
     @media (min-width: 768px) {
       .form-card { padding: 2.5rem; }
     }
+    
+    @media (max-width: 480px) {
+      .form-card { padding: 1rem; border-radius: 20px; }
+      .form-header h2 { font-size: 1.35rem; }
+      .form-header p { font-size: 0.875rem; }
+    }
 
     /* Switcher Toggle */
     .form-switcher {
@@ -737,8 +743,13 @@ interface ContactForm {
       background: #f3f4f6;
       border-radius: 100px;
       display: flex;
-      padding: 6px;
-      margin-bottom: 2rem;
+      padding: 4px;
+      margin-bottom: 1.5rem;
+    }
+    
+    @media (max-width: 400px) {
+      .form-switcher { border-radius: 12px; }
+      .switcher-glider { border-radius: 10px; }
     }
 
     .switcher-glider {
@@ -764,17 +775,21 @@ interface ContactForm {
       z-index: 2;
       background: transparent;
       border: none;
-      padding: 0.875rem 0.5rem;
-      font-size: clamp(0.75rem, 3vw, 0.9375rem);
+      padding: 0.75rem 0.25rem;
+      font-size: clamp(0.7rem, 2.8vw, 0.9rem);
       font-weight: 600;
       color: #6b7280;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      transition: color 0.3s ease;
+      gap: 0.35rem;
+      transition: all 0.3s ease;
       font-family: 'Inter', system-ui, sans-serif;
+    }
+    
+    @media (max-width: 360px) {
+      .sw-icon { display: none; }
     }
 
     .switcher-btn.active { color: white; }
