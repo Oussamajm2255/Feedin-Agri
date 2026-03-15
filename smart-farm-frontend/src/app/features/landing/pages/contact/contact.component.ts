@@ -580,8 +580,8 @@ interface ContactForm {
       display: grid;
       grid-template-columns: 1fr;
       gap: 2.5rem;
-      padding-top: 4rem;
-      padding-bottom: 5rem;
+      padding-top: 2rem;
+      padding-bottom: 4rem;
     }
 
     @media (min-width: 1024px) {
@@ -597,6 +597,11 @@ interface ContactForm {
       display: flex;
       flex-direction: column;
       gap: 2rem;
+      text-align: center;
+    }
+
+    @media (min-width: 1024px) {
+      .contact-info { text-align: left; }
     }
 
     .info-header h2 {
@@ -716,10 +721,14 @@ interface ContactForm {
     .form-card {
       background: white;
       border-radius: 28px;
-      padding: 2.5rem;
+      padding: 1.5rem;
       box-shadow: 0 8px 40px rgba(0,0,0,0.08);
       border: 1px solid rgba(16,185,129,0.08);
       overflow: hidden; /* For sliding panes */
+    }
+
+    @media (min-width: 768px) {
+      .form-card { padding: 2.5rem; }
     }
 
     /* Switcher Toggle */
@@ -755,8 +764,8 @@ interface ContactForm {
       z-index: 2;
       background: transparent;
       border: none;
-      padding: 0.875rem 0;
-      font-size: 0.9375rem;
+      padding: 0.875rem 0.5rem;
+      font-size: clamp(0.75rem, 3vw, 0.9375rem);
       font-weight: 600;
       color: #6b7280;
       cursor: pointer;

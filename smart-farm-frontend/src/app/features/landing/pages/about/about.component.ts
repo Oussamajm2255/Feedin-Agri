@@ -301,6 +301,12 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
     @media (min-width: 900px) {
       .two-col { grid-template-columns: 1fr 1fr; }
+      .col-text { text-align: left; }
+      .col-text p { margin-left: 0; margin-right: 0; }
+    }
+
+    .col-text {
+      text-align: center;
     }
 
     .col-text p {
@@ -308,12 +314,16 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       line-height: 1.7;
       margin-bottom: 1rem;
       font-size: 1.0625rem;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
     }
 
     .stat-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
+      justify-content: center;
     }
 
     .stat-card {

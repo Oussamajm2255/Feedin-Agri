@@ -333,16 +333,9 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     /* SOLUTIONS GRID */
     .solutions-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
-    }
-
-    @media (min-width: 640px) {
-      .solutions-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (min-width: 1024px) {
-      .solutions-grid { grid-template-columns: repeat(3, 1fr); }
+      justify-content: center;
     }
 
     .sol-card {
@@ -411,10 +404,25 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
 
     /* TECH APPROACH */
-    .two-col { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center; }
-    @media (min-width: 900px) { .two-col { grid-template-columns: 1fr 1fr; } }
+    .col-text {
+      text-align: center;
+    }
 
-    .col-text p { color: #4b5563; line-height: 1.7; margin-bottom: 1rem; font-size: 1.0625rem; }
+    .col-text p { 
+      color: #4b5563; 
+      line-height: 1.7; 
+      margin-bottom: 1rem; 
+      font-size: 1.0625rem; 
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+    }
+
+    @media (min-width: 900px) {
+      .two-col { grid-template-columns: 1fr 1fr; }
+      .col-text { text-align: left; }
+      .col-text p { margin-left: 0; margin-right: 0; }
+    }
 
     .tech-tags {
       display: flex;

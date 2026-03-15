@@ -258,19 +258,11 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       font-family: 'Outfit', 'Inter', system-ui, sans-serif;
     }
 
-    /* Services Grid */
     .services-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
-    }
-
-    @media (min-width: 640px) {
-      .services-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (min-width: 1024px) {
-      .services-grid { grid-template-columns: repeat(3, 1fr); }
+      justify-content: center;
     }
 
     .service-card {
@@ -384,18 +376,25 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     /* Farmers Section */
     .farmers-section { background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%); }
 
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 3rem;
-      align-items: center;
+    .col-text {
+      text-align: center;
+    }
+
+    .col-text p { 
+      color: #4b5563; 
+      line-height: 1.7; 
+      margin-bottom: 1rem; 
+      font-size: 1.0625rem; 
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
     }
 
     @media (min-width: 900px) {
       .two-col { grid-template-columns: 1fr 1fr; }
+      .col-text { text-align: left; }
+      .col-text p { margin-left: 0; margin-right: 0; }
     }
-
-    .col-text p { color: #4b5563; line-height: 1.7; margin-bottom: 1rem; font-size: 1.0625rem; }
 
     .farmer-benefits {
       display: flex;
