@@ -3861,7 +3861,7 @@
         "email": "Email",
         "emailPl": "your@email.com",
         "phone": "Phone",
-        "phonePl": "+216 XX XXX XXX",
+        "phonePl": "26 213 304",
         "type": "Project type",
         "typePl": "Select a type",
         "type1": "Connected greenhouse",
@@ -3891,7 +3891,7 @@
         "email": "Email",
         "emailPl": "your@email.com",
         "phone": "Phone",
-        "phonePl": "+216 XX XXX XXX",
+        "phonePl": "26 213 304",
         "pwd": "Password",
         "pwdPl": "Minimum 6 characters",
         "pwdErr": "Password is required (minimum 6 characters)",
@@ -3915,7 +3915,7 @@
       "locations": [
         {
           "title": "Head Office",
-          "desc": "Tunis, Tunisia"
+          "desc": "Technopôle Manouba, 2010 Manouba - Tunisie"
         },
         {
           "title": "Southern Agency",

@@ -3423,7 +3423,7 @@
         "email": "Email",
         "emailPl": "votre@email.com",
         "phone": "Téléphone",
-        "phonePl": "+216 XX XXX XXX",
+        "phonePl": "26 213 304",
         "type": "Type de projet",
         "typePl": "Sélectionnez un type",
         "type1": "Serre connectée",
@@ -3453,7 +3453,7 @@
         "email": "Email",
         "emailPl": "votre@email.com",
         "phone": "Téléphone",
-        "phonePl": "+216 XX XXX XXX",
+        "phonePl": "26 213 304",
         "pwd": "Mot de passe",
         "pwdPl": "Minimum 6 caractères",
         "pwdErr": "Le mot de passe est requis (minimum 6 caractères)",
@@ -3477,7 +3477,7 @@
       "locations": [
         {
           "title": "Siège Social",
-          "desc": "Tunis, Tunisie"
+          "desc": "Technopôle Manouba, 2010 Manouba - Tunisie"
         },
         {
           "title": "Agence Sud",

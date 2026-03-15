@@ -652,9 +652,9 @@ interface ContactForm {
 
     .ic-icon { font-size: 1.5rem; color: #10b981; }
 
-    .ic-body { flex: 1; }
+    .ic-body { flex: 1; min-width: 0; }
     .ic-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #9ca3af; margin-bottom: 0.25rem; }
-    .ic-value { font-size: 0.9375rem; font-weight: 600; color: #1f2937; margin-bottom: 0.125rem; }
+    .ic-value { font-size: 0.9375rem; font-weight: 600; color: #1f2937; margin-bottom: 0.125rem; word-break: break-word; overflow-wrap: break-word; }
     .ic-note { font-size: 0.8125rem; color: #6b7280; }
 
     /* Socials */
@@ -1237,19 +1237,19 @@ export class ContactComponent implements OnInit {
     },
     {
       icon: 'phone', label: 'landing.contact.channels.1.label',
-      value: '+216 xx xxx xxx',
+      value: '26 213 304',
       note: 'landing.contact.channels.1.note',
       bg: 'rgba(59,130,246,0.08)'
     },
     {
       icon: 'chat', label: 'landing.contact.channels.2.label',
-      value: '+216 xx xxx xxx',
+      value: '26 213 304',
       note: 'landing.contact.channels.2.note',
       bg: 'rgba(37,211,102,0.08)'
     },
     {
       icon: 'location_on', label: 'landing.contact.channels.3.label',
-      value: 'Technopôle Manouba, 2010 Manouba - Tunisie',
+      value: 'technopôle manouba, 2010 Manouba - Tunisie',
       note: 'landing.contact.channels.3.note',
       bg: 'rgba(245,158,11,0.08)'
     }
