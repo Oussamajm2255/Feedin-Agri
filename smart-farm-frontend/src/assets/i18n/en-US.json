@@ -3653,6 +3653,55 @@
             "Peace of mind",
             "Local experts"
           ]
+        },
+        {
+          "tag": "International",
+          "title": "Export Solutions",
+          "desc": "Support for adapting your crops to international standards and export markets.",
+          "includes": [
+            "Export compliance audit",
+            "Quality certification",
+            "Cold chain tracking",
+            "Target market consulting"
+          ],
+          "benefits": [
+            "New markets",
+            "Added value",
+            "Guaranteed compliance"
+          ]
+        },
+        {
+          "tag": "Ecology",
+          "title": "Soil Regeneration",
+          "desc": "Advanced programs to restore your land's fertility and optimize the use of natural inputs.",
+          "includes": [
+            "Microbiological analysis",
+            "Regeneration plan",
+            "Carbon tracking",
+            "Green manure consulting"
+          ],
+          "benefits": [
+            "Fertile soils",
+            "Fewer inputs",
+            "Sustainable"
+          ]
+        },
+        {
+          "tag": "Training",
+          "title": "Feedin Academy",
+          "desc": "Practical training to master digital tools and new agronomic techniques.",
+          "includes": [
+            "On-site workshops",
+            "Expert webinars",
+            "Educational materials",
+            "Technical certification",
+            "Post-training follow-up"
+          ],
+          "benefits": [
+            "Autonomy",
+            "Key skills",
+            "Certified"
+          ]
         }
       ],
       "farmers": {
