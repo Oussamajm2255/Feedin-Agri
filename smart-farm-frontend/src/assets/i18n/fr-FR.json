@@ -3500,15 +3500,15 @@
         "title": "Suivez-nous"
       },
       "projects": {
-        "title": "Types de projets",
-        "projectsItems": [
-          "Serres connectées & intelligentes",
-          "Agriculture verticale & hydroponie",
-          "Automatisation & monitoring",
-          "Formation & conseil technique",
-          "Audit & étude de faisabilité"
-        ]
+        "title": "Types de projets"
       },
+      "projectsItems": [
+        "Serres connectées & intelligentes",
+        "Agriculture verticale & hydroponie",
+        "Automatisation & monitoring",
+        "Formation & conseil technique",
+        "Audit & étude de faisabilité"
+      ],
       "sw": {
         "write": "Écrire un message",
         "access": "Demander un accès"
@@ -3608,6 +3608,10 @@
         {
           "q": "Vos solutions fonctionnent-elles sans internet ?",
           "a": "Nos systèmes sont conçus pour fonctionner en mode local même sans connexion internet. Les données sont synchronisées dès que la connexion est rétablie."
+        },
+        {
+          "q": "Quels types de projets traitez-vous en priorité ?",
+          "a": "Nous accompagnons tous types de projets : des petites serres individuelles aux installations industrielles, en passant par les projets d'urban farming et les formations collectives. Chaque demande est étudiée avec la même attention."
         }
       ]
     }

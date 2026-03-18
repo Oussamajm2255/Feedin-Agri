@@ -3938,15 +3938,15 @@
         "title": "Follow us"
       },
       "projects": {
-        "title": "Project types",
-        "projectsItems": [
-          "Connected & smart greenhouses",
-          "Vertical farming & hydroponics",
-          "Automation & monitoring",
-          "Training & tech consulting",
-          "Audit & feasibility study"
-        ]
+        "title": "Project types"
       },
+      "projectsItems": [
+        "Connected & smart greenhouses",
+        "Vertical farming & hydroponics",
+        "Automation & monitoring",
+        "Training & tech consulting",
+        "Audit & feasibility study"
+      ],
       "sw": {
         "write": "Write a message",
         "access": "Request access"
@@ -4046,6 +4046,10 @@
         {
           "q": "Do your solutions work without internet?",
           "a": "Our systems are designed to work in local mode even without an internet connection. Data is synchronized as soon as the connection is restored."
+        },
+        {
+          "q": "What types of projects do you prioritize?",
+          "a": "We support all types of projects: from small individual greenhouses to industrial installations, including urban farming projects and collective training. Every request is studied with the same attention."
         }
       ]
     }
