@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -68,6 +68,14 @@ import configuration from './config/configuration';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     // Apply CSRF middleware
-    consumer.apply(CsrfMiddleware).forRoutes('*');
+    consumer
+      .apply(CsrfMiddleware)
+      .exclude(
+        { path: 'api/v1/auth/csrf', method: RequestMethod.GET },
+        { path: 'api/v1/auth/login', method: RequestMethod.POST },
+        { path: 'api/v1/auth/me', method: RequestMethod.GET },
+        { path: 'api/v1/auth/register', method: RequestMethod.POST },
+      )
+      .forRoutes('*');
   }
 }

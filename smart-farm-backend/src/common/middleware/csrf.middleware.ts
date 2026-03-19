@@ -13,7 +13,7 @@ export class CsrfMiddleware implements NestMiddleware {
       res.cookie(cookieName, token, {
         httpOnly: false, // must be readable by frontend
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 1000 * 60 * 60 * 24, // 1 day
         path: '/',
       });

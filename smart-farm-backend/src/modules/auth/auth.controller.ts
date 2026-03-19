@@ -21,7 +21,7 @@ export class AuthController {
     res.cookie('sf_auth', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000, 
       path: '/',
     });
@@ -30,7 +30,7 @@ export class AuthController {
     res.cookie('sf_refresh', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: refreshMaxAgeMs,
       path: '/api/v1/auth/refresh',
     });
@@ -52,7 +52,7 @@ export class AuthController {
     res.cookie('sf_auth', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000, 
       path: '/',
     });
@@ -61,7 +61,7 @@ export class AuthController {
     res.cookie('sf_refresh', newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: refreshMaxAgeMs,
       path: '/api/v1/auth/refresh',
     });
@@ -91,7 +91,7 @@ export class AuthController {
     res.cookie('sf_csrf', token, {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 1000 * 60 * 60 * 24,
       path: '/',
     });
