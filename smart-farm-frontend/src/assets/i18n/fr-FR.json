@@ -2859,139 +2859,93 @@
       "secondaryLink": "Découvrir le fonctionnement →",
       "tertiaryLink": "Une question ? Contactez notre équipe",
       "stats": [
-        {
-          "label": "Projets réalisés"
-        },
-        {
-          "label": "Satisfaction client"
-        },
-        {
-          "label": "Support disponible"
-        }
+        { "label": "Projets réalisés" },
+        { "label": "Satisfaction client" },
+        { "label": "Support disponible" }
       ]
     },
     "about": {
       "hero": {
-        "label": "Notre histoire",
-        "title": "Feedin, l'agriculture intelligente made in Tunisia",
-        "sub": "Depuis plus d'une décennie, nous accompagnons les agriculteurs et les investisseurs agricoles vers une exploitation plus efficace, plus durable et plus rentable."
+        "label": "À propos de Feedin",
+        "title": "Une entreprise née du <span class=\"accent\">terrain</span>",
+        "sub": "Nous sommes des passionnés d'agriculture et de technologie dédiés à construire l'avenir de l'agriculture africaine."
       },
       "who": {
         "label": "Qui sommes-nous",
         "title": "Une entreprise née du terrain",
-        "content": "Feedin a été fondée par des passionnés d'agriculture et de technologie avec une conviction : la technologie doit être au service de ceux qui font pousser. Nous concevons, fabriquons et installons des solutions agricoles intelligentes adaptées aux réalités tunisiennes."
+        "content": "<p>Feedin a été fondée par des passionnés d'agriculture et de technologie avec une conviction : la technologie doit être au service de ceux qui font pousser. Nous concevons, fabriquons et installons des solutions agricoles intelligentes adaptées aux réalités tunisiennes.</p><p>Notre équipe réconcilie la précision de l'IoT avec les contraintes du terrain pour offrir des outils simples, robustes et efficaces.</p>"
       },
       "stats": [
-        {
-          "value": "150+",
-          "label": "Projets livrés"
-        },
-        {
-          "value": "12",
-          "label": "Années d'expérience"
-        },
-        {
-          "value": "98%",
-          "label": "Satisfaction client"
-        },
-        {
-          "value": "24/7",
-          "label": "Support disponible"
-        }
+        "Fermes équipées",
+        "Capteurs actifs",
+        "Années de R&D",
+        "Satisfaction client"
       ],
       "mv": {
         "mission": {
           "title": "Notre Mission",
-          "content": "Rendre la technologie agricole accessible à tous les agriculteurs tunisiens, des petites exploitations familiales aux grandes fermes commerciales, pour une agriculture plus productive et plus durable."
+          "content": "<p>Démocratiser l'agriculture connectée en offrant des solutions technologiques accessibles et robustes permettant à chaque agriculteur d'optimiser ses ressources et d'améliorer ses rendements tout en préservant l'environnement.</p>"
         },
         "vision": {
           "title": "Notre Vision",
-          "desc": "Nous croyons en un avenir où chaque ferme tunisienne est équipée des meilleurs outils pour :",
+          "desc": "Être le leader tunisien et africain de la technologie agricole d'ici 2030, en contribuant à une agriculture plus résiliente, productive et durable.",
           "list": [
-            "Optimiser l'utilisation des ressources naturelles",
-            "Réduire les pertes et augmenter les rendements",
-            "S'adapter aux défis climatiques",
-            "Créer une agriculture durable pour les générations futures"
+            "Expansion régionale",
+            "Innovation continue",
+            "Impact social",
+            "Agriculture durable"
           ]
         }
       },
       "approach": {
         "label": "Notre approche",
         "title": "Comment nous travaillons",
-        "sub": "Un processus éprouvé pour garantir le succès de chaque projet agricole."
+        "sub": "Une méthodologie orientée vers le concret et le durable."
       },
       "steps": [
-        {
-          "title": "Analyse & Diagnostic",
-          "desc": "Nous commençons par comprendre votre exploitation, vos défis et vos objectifs."
-        },
-        {
-          "title": "Conception Sur-Mesure",
-          "desc": "Chaque solution est conçue spécifiquement pour votre contexte agricole."
-        },
-        {
-          "title": "Installation Professionnelle",
-          "desc": "Nos techniciens qualifiés installent et configurent tous les équipements."
-        },
-        {
-          "title": "Formation & Transfert",
-          "desc": "Nous formons vos équipes pour une autonomie complète."
-        },
-        {
-          "title": "Suivi & Optimisation",
-          "desc": "Un accompagnement continu pour maximiser votre retour sur investissement."
-        }
+        { "title": "Diagnostic & Audit", "desc": "Nous analysons vos besoins spécifiques sur site." },
+        { "title": "Solution Sur-Mesure", "desc": "Nous concevons une configuration adaptée à votre exploitation." },
+        { "title": "Installation Terrain", "desc": "Nos techniciens déploient les équipements et testent la connectivité." },
+        { "title": "Formation & Support", "desc": "Nous formons vos équipes pour une autonomie complète." }
       ],
       "values": {
         "label": "Nos valeurs",
-        "title": "Ce qui nous guide"
+        "title": "Ce qui nous anime"
       },
       "valuesItem": [
-        {
-          "title": "Innovation",
-          "desc": "Nous intégrons les dernières technologies agricoles pour vous offrir des solutions à la pointe."
-        },
-        {
-          "title": "Proximité",
-          "desc": "Nous sommes présents sur le terrain, disponibles et à l'écoute de vos besoins."
-        },
-        {
-          "title": "Durabilité",
-          "desc": "Nos solutions favorisent une agriculture respectueuse de l'environnement."
-        },
-        {
-          "title": "Excellence",
-          "desc": "Nous exigeons la meilleure qualité dans chaque projet que nous livrons."
-        }
+        { "title": "Innovation", "desc": "Construire les outils de demain pour les agriculteurs d'aujourd'hui." },
+        { "title": "Durabilité", "desc": "Préserver les ressources pour les générations futures." },
+        { "title": "Proximité", "desc": "Toujours à l'écoute de nos clients sur le terrain." },
+        { "title": "Fiabilité", "desc": "Des équipements robustes qui résistent à l'épreuve du temps." }
       ],
       "expertise": {
-        "label": "Notre expertise",
-        "title": "Domaines d'excellence"
+        "label": "Expertise",
+        "title": "Notre expertise métier"
       },
       "expertiseItems": [
-        "Serres connectées & intelligentes",
-        "Systèmes d'irrigation automatisés",
-        "Capteurs IoT agricoles",
-        "Serres verticales & hydroponiques",
-        "Formation & accompagnement",
-        "Intégration de plateformes digitales"
+        "Systèmes Embarqués & IoT",
+        "Gestion Intelligente de l'Irrigation",
+        "Analyse de Données de Précision",
+        "Solutions de Culture Verticale",
+        "Énergie Renouvelable en Agriculture",
+        "Fabrication de Matériel Sur-Mesure"
       ],
       "target": {
-        "label": "Nos clients",
-        "title": "Qui fait confiance à Feedin ?"
+        "label": "Cible",
+        "title": "Qui nous servons"
       },
       "audienceItems": [
-        "Agriculteurs & exploitants agricoles",
-        "Investisseurs dans l'agri-tech",
-        "Coopératives agricoles",
-        "Établissements d'enseignement agricole",
-        "Institutions & organisations"
+        "Agriculteurs Individuels",
+        "Startups Agri-Tech",
+        "Fermes Industrielles en Serre",
+        "Coopératives Agricoles",
+        "Institutions de Recherche"
       ],
       "trust": {
         "title": "Prêt à transformer votre exploitation ?",
-        "content": "Découvrez comment Feedin peut adapter ses solutions à vos besoins spécifiques. Notre équipe est prête à vous accompagner.",
-        "cta1": "Contactez-nous",
-        "cta2": "Voir nos solutions"
+        "content": "<p>Rejoignez la communauté grandissante d'agriculteurs qui font confiance à Feedin pour optimiser leur production.</p>",
+        "cta1": "Demander un accès",
+        "cta2": "Nos services"
       }
     },
     "solutions": {
