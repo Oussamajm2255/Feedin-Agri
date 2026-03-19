@@ -24,11 +24,68 @@ async function bootstrap() {
         ? ['error', 'warn', 'log']
         : ['error', 'warn', 'log', 'debug', 'verbose'],
     });
-    
+
+    // ─── CORS — Must be registered FIRST, before helmet and any other middleware ───
+    // Note: When credentials: true, we cannot use '*' - must specify exact origins
+    const corsOrigin = process.env.CORS_ORIGIN?.trim();
+    let allowedOrigins: string[] | ((origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void);
+
+    // Default origins that should always be included
+    const defaultOrigins = [
+      'http://127.0.0.1:4200',
+      'http://localhost:4200',
+      'http://localhost:4000',
+      'https://feedin.up.railway.app',
+      'https://feedingreen.up.railway.app',
+      'https://feedingreen.com',
+      'https://www.feedingreen.com',
+    ];
+
+    if (corsOrigin) {
+      if (corsOrigin === '*') {
+        if (process.env.NODE_ENV === 'production') {
+          // 🔒 SECURITY: Never allow wildcard CORS in production with credentials
+          logger.warn('⚠️ CORS_ORIGIN=* is NOT allowed in production. Falling back to default origins.');
+          allowedOrigins = defaultOrigins;
+        } else {
+          // Allow all origins only in development
+          allowedOrigins = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+            callback(null, true);
+          };
+          logger.warn('⚠️ CORS: Allowing all origins — DEVELOPMENT ONLY');
+        }
+      } else {
+        // Split by comma and trim each origin, merge with defaults
+        const envOrigins = corsOrigin.split(',').map(origin => origin.trim()).filter(Boolean);
+        allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])]; // Remove duplicates
+        logger.log(`🌐 CORS: Allowing origins: ${(allowedOrigins as string[]).join(', ')}`);
+      }
+    } else {
+      // Default fallback origins - include the frontend domain
+      allowedOrigins = defaultOrigins;
+      logger.log(`🌐 CORS: Using default origins: ${(allowedOrigins as string[]).join(', ')}`);
+    }
+
+    app.enableCors({
+      origin: allowedOrigins,
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'Origin', 'X-Requested-With'],
+      exposedHeaders: ['Set-Cookie'],
+      credentials: true,
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+      maxAge: 86400, // 24 hours
+    });
+
+    logger.log(`✅ CORS configured successfully`);
+    logger.log(`📋 CORS_ORIGIN env: ${corsOrigin || 'not set'}`);
+    // ─────────────────────────────────────────────────────────────────────────────
+
     // ✅ Gzip/Brotli compression — reduces transfer sizes by ~60-80%
     app.use(compression());
 
     // ✅ Security headers
+    // NOTE: crossOriginResourcePolicy is intentionally omitted — it conflicts with CORS
     app.use(helmet({
       contentSecurityPolicy: {
         directives: {
@@ -45,7 +102,7 @@ async function bootstrap() {
         maxAge: 31536000,
         includeSubDomains: true,
       },
-      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginResourcePolicy: false, // ← disabled: conflicts with CORS allowedOrigins
     }));
     app.use(cookieParser());
 
@@ -70,60 +127,6 @@ async function bootstrap() {
 
     // ✅ Global prefix for all routes
     app.setGlobalPrefix('api/v1');
-
-    // ✅ CORS Configuration
-    // Note: When credentials: true, we cannot use '*' - must specify exact origins
-    const corsOrigin = process.env.CORS_ORIGIN?.trim();
-    let allowedOrigins: string[] | ((origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void);
-    
-    // Default origins that should always be included
-    const defaultOrigins = [
-      'http://127.0.0.1:4200',
-      'http://localhost:4200',
-      'https://feedin.up.railway.app',
-      'https://feedingreen.up.railway.app',
-      'https://feedingreen.com',
-      'https://www.feedingreen.com',
-    ];
-    
-    if (corsOrigin) {
-      if (corsOrigin === '*') {
-        if (process.env.NODE_ENV === 'production') {
-          // 🔒 SECURITY: Never allow wildcard CORS in production with credentials
-          logger.warn('⚠️ CORS_ORIGIN=* is NOT allowed in production. Falling back to default origins.');
-          allowedOrigins = defaultOrigins;
-        } else {
-          // Allow all origins only in development
-          allowedOrigins = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-            callback(null, true);
-          };
-          logger.warn('⚠️ CORS: Allowing all origins — DEVELOPMENT ONLY');
-        }
-      } else {
-        // Split by comma and trim each origin, merge with defaults
-        const envOrigins = corsOrigin.split(',').map(origin => origin.trim()).filter(Boolean);
-        allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])]; // Remove duplicates
-        logger.log(`🌐 CORS: Allowing origins: ${allowedOrigins.join(', ')}`);
-      }
-    } else {
-      // Default fallback origins - include the frontend domain
-      allowedOrigins = defaultOrigins;
-      logger.log(`🌐 CORS: Using default origins: ${allowedOrigins.join(', ')}`);
-    }
-
-    app.enableCors({
-      origin: allowedOrigins,
-      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'Origin', 'X-Requested-With'],
-      exposedHeaders: ['Set-Cookie'],
-      credentials: true,
-      preflightContinue: false,
-      optionsSuccessStatus: 204,
-      maxAge: 86400, // 24 hours
-    });
-    
-    logger.log(`✅ CORS configured successfully`);
-    logger.log(`📋 CORS_ORIGIN env: ${corsOrigin || 'not set'}`);
 
     // ✅ Trust Railway's reverse proxy for correct IP/HTTPS detection
     const httpAdapter = app.getHttpAdapter();
