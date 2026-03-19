@@ -47,7 +47,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
           <app-language-switcher></app-language-switcher>
           <button class="nav-btn secondary desktop-only" (click)="go('/login')">{{ 'landing.nav.login' | translate }}</button>
           <button class="nav-btn primary cta-expert" (click)="goToContactRegister()" aria-label="Contact Expert">
-            <span class="cta-sparkle material-icons">auto_awesome</span>
+            <span class="cta-sparkle material-icons">support_agent</span>
             <span class="cta-label desktop-content">{{ 'landing.nav.contactExpert' | translate }}</span>
             <span class="cta-arrow material-icons desktop-content">arrow_forward</span>
           </button>
@@ -102,7 +102,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         <div class="mobile-action-section">
           <span class="mobile-nav-label">{{ 'landing.nav.actions' | translate }}</span>
           <button class="mobile-cta-btn primary cta-expert-mobile" (click)="goToContactRegister(); closeMenu()">
-            <span class="cta-sparkle material-icons">auto_awesome</span>
+            <span class="cta-sparkle material-icons">support_agent</span>
             <span class="cta-label">{{ 'landing.nav.contactExpert' | translate }}</span>
             <span class="cta-arrow material-icons">arrow_forward</span>
           </button>
