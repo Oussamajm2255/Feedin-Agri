@@ -12,6 +12,8 @@
     <!-- The Bento Grid Ecosystem Section (Deferred for performance) -->
     @defer (on viewport; prefetch on idle) {
     <app-landing-bento-section id="bento-section"></app-landing-bento-section>
+    } @loading (minimum 400ms) {
+    <app-skeleton-section [cards]="4" [cols]="2" />
     } @placeholder {
     <app-skeleton-section [cards]="4" [cols]="2" />
     }
@@ -19,6 +21,8 @@
     <!-- 2. À propos Teaser (Deferred — loads on viewport) -->
     @defer (on viewport; prefetch on idle) {
     <app-a-propos id="about-section" />
+    } @loading (minimum 400ms) {
+    <app-skeleton-section [cards]="3" [cols]="3" />
     } @placeholder {
     <app-skeleton-section [cards]="3" [cols]="3" />
     }
@@ -26,6 +30,8 @@
     <!-- 3. Valeur & Services Teaser (Deferred — loads on viewport) -->
     @defer (on viewport; prefetch on idle) {
     <app-valeur-agricole id="valeur-section" />
+    } @loading (minimum 400ms) {
+    <app-skeleton-section [cards]="3" [cols]="3" />
     } @placeholder {
     <app-skeleton-section [cards]="3" [cols]="3" />
     }
@@ -33,6 +39,8 @@
     <!-- 4. Appel à l'action final (Deferred — loads on viewport) -->
     @defer (on viewport; prefetch on idle) {
     <app-cta-final id="cta-final-section" />
+    } @loading (minimum 400ms) {
+    <app-skeleton-section [cards]="3" [cols]="3" />
     } @placeholder {
     <app-skeleton-section [cards]="3" [cols]="3" />
     }
