@@ -70,6 +70,71 @@
     "scrollToSave": "Faites défiler pour enregistrer",
     "scrollToCreate": "Faites défiler pour créer"
   },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "loginSuccess": "Connexion réussie",
+    "loginError": "Erreur de connexion",
+    "registerSuccess": "Compte créé avec succès",
+    "registerError": "Erreur de création de compte",
+    "invalidCredentials": "Identifiants invalides",
+    "emailRequired": "L'e-mail est requis",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "weakPassword": "Le mot de passe est trop faible",
+    "sessionExpired": "Session expirée. Veuillez vous reconnecter",
+    "authenticationRequired": "Authentification requise",
+    "loginToViewActions": "Veuillez vous connecter pour voir les actions récentes",
+    "signingIn": "Connexion en cours...",
+    "loggingIn": "Connexion en cours...",
+    "invalidEmailFormat": "Format d'e-mail invalide",
+    "networkError": "Problème de connexion, veuillez réessayer plus tard",
+    "tooManyAttempts": "Trop de tentatives de connexion. Veuillez patienter",
+    "welcomeBack": "Bon retour",
+    "welcomeBackUser": "Bon retour !",
+    "loginSubtitle": "Connectez-vous pour continuer vers votre tableau de bord",
+    "emailPlaceholder": "Entrez votre e-mail",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "success": "Succès !",
+    "or": "Ou",
+    "registerNow": "S'inscrire maintenant",
+    "rateLimitTitle": "Trop de tentatives",
+    "rateLimitMessage": "Vous avez dépassé le nombre maximum de tentatives de connexion. Veuillez patienter 15 minutes avant de réessayer.",
+    "rateLimited": "Trop de tentatives",
+    "pleaseWait15Minutes": "Veuillez patienter 15 minutes avant de réessayer",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "clearEmail": "Effacer l'e-mail",
+    "fullName": "Nom complet",
+    "phoneOptional": "Numéro de téléphone (Optionnel)",
+    "farmType": "Type d'exploitation",
+    "farmType_small": "Petite exploitation",
+    "farmType_commercial": "Exploitation commerciale",
+    "farmType_cooperative": "Coopérative",
+    "areaHectares": "Surface à couvrir (ha)",
+    "region": "Pays / Région",
+    "registerSubtitle": "Parlez-nous de votre exploitation et nous configurerons votre espace de travail",
+    "requestAccess": "Demander l'accès",
+    "invalidEmail": "Veuillez entrer une adresse e-mail valide",
+    "stepAccount": "Compte",
+    "stepFarm": "Exploitation",
+    "nextStep": "Suivant : Détails de l'exploitation",
+    "back": "Retour",
+    "backToHome": "Retour à l'accueil"
+  },
   "pending": {
     "title": "Votre demande est en cours d'examen",
     "subtitle": "Nous préparons votre espace de travail en fonction de votre profil agricole.",
@@ -2866,91 +2931,6 @@
         { "label": "Support disponible" }
       ]
     },
-    "about": {
-      "title": "À propos de Feedin",
-      "hero": {
-        "label": "À propos de Feedin",
-        "title": "Une entreprise née du <span class=\"accent\">terrain</span>",
-        "sub": "Nous sommes des passionnés d'agriculture et de technologie dédiés à construire l'avenir de l'agriculture africaine."
-      },
-      "who": {
-        "label": "Qui sommes-nous",
-        "title": "Une entreprise née du terrain",
-        "content": "<p>Feedin a été fondée par des passionnés d'agriculture et de technologie avec une conviction : la technologie doit être au service de ceux qui font pousser. Nous concevons, fabriquons et installons des solutions agricoles intelligentes adaptées aux réalités tunisiennes.</p><p>Notre équipe réconcilie la précision de l'IoT avec les contraintes du terrain pour offrir des outils simples, robustes et efficaces.</p>"
-      },
-      "stats": [
-        "Fermes équipées",
-        "Capteurs actifs",
-        "Années de R&D",
-        "Satisfaction client"
-      ],
-      "mv": {
-        "mission": {
-          "title": "Notre Mission",
-          "content": "<p>Démocratiser l'agriculture connectée en offrant des solutions technologiques accessibles et robustes permettant à chaque agriculteur d'optimiser ses ressources et d'améliorer ses rendements tout en préservant l'environnement.</p>"
-        },
-        "vision": {
-          "title": "Notre Vision",
-          "desc": "Être le leader tunisien et africain de la technologie agricole d'ici 2030, en contribuant à une agriculture plus résiliente, productive et durable.",
-          "list": [
-            "Expansion régionale",
-            "Innovation continue",
-            "Impact social",
-            "Agriculture durable"
-          ]
-        }
-      },
-      "approach": {
-        "label": "Notre approche",
-        "title": "Comment nous travaillons",
-        "sub": "Une méthodologie orientée vers le concret et le durable."
-      },
-      "steps": [
-        { "title": "Diagnostic & Audit", "desc": "Nous analysons vos besoins spécifiques sur site." },
-        { "title": "Solution Sur-Mesure", "desc": "Nous concevons une configuration adaptée à votre exploitation." },
-        { "title": "Installation Terrain", "desc": "Nos techniciens déploient les équipements et testent la connectivité." },
-        { "title": "Formation & Support", "desc": "Nous formons vos équipes pour une autonomie complète." }
-      ],
-      "values": {
-        "label": "Nos valeurs",
-        "title": "Ce qui nous anime"
-      },
-      "valuesItem": [
-        { "title": "Innovation", "desc": "Construire les outils de demain pour les agriculteurs d'aujourd'hui." },
-        { "title": "Durabilité", "desc": "Préserver les ressources pour les générations futures." },
-        { "title": "Proximité", "desc": "Toujours à l'écoute de nos clients sur le terrain." },
-        { "title": "Fiabilité", "desc": "Des équipements robustes qui résistent à l'épreuve du temps." }
-      ],
-      "expertise": {
-        "label": "Expertise",
-        "title": "Notre expertise métier"
-      },
-      "expertiseItems": [
-        "Systèmes Embarqués & IoT",
-        "Gestion Intelligente de l'Irrigation",
-        "Analyse de Données de Précision",
-        "Solutions de Culture Verticale",
-        "Énergie Renouvelable en Agriculture",
-        "Fabrication de Matériel Sur-Mesure"
-      ],
-      "target": {
-        "label": "Cible",
-        "title": "Qui nous servons"
-      },
-      "audienceItems": [
-        "Agriculteurs Individuels",
-        "Startups Agri-Tech",
-        "Fermes Industrielles en Serre",
-        "Coopératives Agricoles",
-        "Institutions de Recherche"
-      ],
-      "trust": {
-        "title": "Prêt à transformer votre exploitation ?",
-        "content": "<p>Rejoignez la communauté grandissante d'agriculteurs qui font confiance à Feedin pour optimiser leur production.</p>",
-        "cta1": "Demander un accès",
-        "cta2": "Nos services"
-      }
-    },
     "solutions": {
       "hero": {
         "label": "Nos Solutions",
@@ -3428,6 +3408,91 @@
         "desc": "Contactez-nous pour organiser une session de formation adaptée à votre calendrier et vos besoins.",
         "btn1": "Réserver une formation",
         "btn2": "Voir nos services"
+      }
+    },
+    "about": {
+      "title": "À propos de Feedin",
+      "hero": {
+        "label": "À propos de Feedin",
+        "title": "Une entreprise née du <span class=\"accent\">terrain</span>",
+        "sub": "Nous sommes des passionnés d'agriculture et de technologie dédiés à la construction de l'avenir de l'agriculture africaine."
+      },
+      "who": {
+        "label": "Qui sommes-nous",
+        "title": "Une entreprise née du terrain",
+        "content": "<p>Feedin a été fondée par des passionnés d'agriculture et de technologie avec une conviction : la technologie doit servir ceux qui cultivent. Nous concevons, fabriquons et installons des solutions agricoles intelligentes adaptées aux réalités tunisiennes.</p><p>Notre équipe concilie la précision de l'IoT avec les contraintes du terrain pour proposer des outils simples, robustes et efficaces.</p>"
+      },
+      "stats": [
+        "Exploitations équipées",
+        "Capteurs actifs",
+        "Années de R&D",
+        "Satisfaction client"
+      ],
+      "mv": {
+        "mission": {
+          "title": "Notre Mission",
+          "content": "<p>Démocratiser l'agriculture connectée en proposant des solutions technologiques accessibles et robustes qui permettent à chaque agriculteur d'optimiser ses ressources et d'améliorer ses rendements tout en préservant l'environnement.</p>"
+        },
+        "vision": {
+          "title": "Notre Vision",
+          "desc": "Être le leader tunisien et africain de la technologie agricole d'ici 2030, en contribuant à une agriculture plus résiliente, productive et durable.",
+          "list": [
+            "Expansion régionale",
+            "Innovation continue",
+            "Impact social",
+            "Agriculture durable"
+          ]
+        }
+      },
+      "approach": {
+        "label": "Notre approche",
+        "title": "Comment nous travaillons",
+        "sub": "Une méthodologie orientée vers le concret et le durable."
+      },
+      "steps": [
+        { "title": "Diagnostic & Audit", "desc": "Nous analysons vos besoins spécifiques sur place." },
+        { "title": "Solution sur Mesure", "desc": "Nous concevons une configuration adaptée à votre exploitation." },
+        { "title": "Installation Terrain", "desc": "Nos techniciens déploient le matériel et testent la connectivité." },
+        { "title": "Formation & Support", "desc": "Nous formons vos équipes pour une autonomie complète." }
+      ],
+      "values": {
+        "label": "Nos valeurs",
+        "title": "Ce qui nous anime"
+      },
+      "valuesItem": [
+        { "title": "Innovation", "desc": "Construire les outils de demain pour les agriculteurs d'aujourd'hui." },
+        { "title": "Durabilité", "desc": "Préserver les ressources pour les générations futures." },
+        { "title": "Proximité", "desc": "Être toujours à l'écoute de nos clients sur le terrain." },
+        { "title": "Fiabilité", "desc": "Du matériel robuste qui résiste à l'épreuve du temps." }
+      ],
+      "expertise": {
+        "label": "Expertise",
+        "title": "Notre expertise domaine"
+      },
+      "expertiseItems": [
+        "Systèmes Embarqués & IoT",
+        "Gestion Intelligente de l'Irrigation",
+        "Analyse de Données de Précision",
+        "Solutions d'Agriculture Verticale",
+        "Énergie Renouvelable en Agriculture",
+        "Fabrication de Matériel sur Mesure"
+      ],
+      "target": {
+        "label": "Cible",
+        "title": "Qui nous servons"
+      },
+      "audienceItems": [
+        "Agriculteurs Individuels",
+        "Startups Agri-Tech",
+        "Exploitations de Serres Industrielles",
+        "Coopératives Agricoles",
+        "Institutions de Recherche"
+      ],
+      "trust": {
+        "title": "Prêt à transformer votre exploitation ?",
+        "content": "<p>Rejoignez la communauté croissante d'agriculteurs qui font confiance à Feedin pour optimiser leur production.</p>",
+        "cta1": "Demander l'accès",
+        "cta2": "Nos services"
       }
     },
     "contact": {

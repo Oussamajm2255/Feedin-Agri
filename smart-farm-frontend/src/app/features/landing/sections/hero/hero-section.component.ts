@@ -63,22 +63,24 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       
       <!-- Hero Content -->
       <div class="hero-content" [class.animate]="contentReady()" [class.dark-mode]="theme() === 'dark'">
-        <h1 class="hero-headline">
-          <span class="headline-line">{{ 'landing.hero.title1' | translate }}</span>
-          <span class="headline-line">{{ 'landing.hero.title2' | translate }}</span>
-        </h1>
-        
-        <div class="hero-cta-block">
-          <div class="cta-row">
-            <button class="hero-cta primary" (click)="onGetStarted()">
-              <span class="cta-text">{{ 'landing.hero.cta1' | translate }}</span>
-              <span class="cta-shine"></span>
-            </button>
-            <button class="hero-cta secondary" (click)="navigateTo('/solutions')">
-              <span class="cta-text">{{ 'landing.hero.cta2' | translate }}</span>
-            </button>
+        <div class="hero-glass-card">
+          <h1 class="hero-headline">
+            <span class="headline-line">{{ 'landing.hero.title1' | translate }}</span>
+            <span class="headline-line">{{ 'landing.hero.title2' | translate }}</span>
+          </h1>
+          
+          <div class="hero-cta-block">
+            <div class="cta-row">
+              <button class="hero-cta primary" (click)="onGetStarted()">
+                <span class="cta-text">{{ 'landing.hero.cta1' | translate }}</span>
+                <span class="cta-shine"></span>
+              </button>
+              <button class="hero-cta secondary" (click)="navigateTo('/solutions')">
+                <span class="cta-text">{{ 'landing.hero.cta2' | translate }}</span>
+              </button>
+            </div>
+            <p class="cta-helper-text">{{ 'landing.hero.helper' | translate }}</p>
           </div>
-          <p class="cta-helper-text">{{ 'landing.hero.helper' | translate }}</p>
         </div>
       </div>
       
@@ -441,16 +443,32 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       z-index: 10;
       text-align: center;
       padding: 1.25rem var(--section-gutter);
-      margin-top: -2vh;
+      margin-top: -6vh; /* Moved higher */
+    }
+
+    .hero-glass-card {
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 40px;
+      padding: 4rem 2rem;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+      max-width: 800px;
+      margin: 0 auto;
+      transition: all 0.5s ease;
     }
 
     .hero-headline {
-      font-family: 'Georgia', 'Playfair Display', serif;
-      font-size: clamp(1.75rem, 12vw, 2.5rem);
-      font-weight: 700;
+      font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: clamp(2rem, 15vw, 3.75rem); /* Increased size */
+      font-weight: 800;
       line-height: 1.1;
-      margin: 0 0 2rem;
-      letter-spacing: -0.02em;
+      margin: 0 0 2.5rem;
+      letter-spacing: -0.03em;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
     }
 
     .headline-line {
@@ -458,7 +476,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       opacity: 0;
       transform: translateY(40px);
       animation: headlineReveal 1s ease-out forwards;
-      background: linear-gradient(135deg, #17C6BC 0%, #052952 100%);
+      background: linear-gradient(135deg, #6EE7B7 0%, #FBBF24 100%); /* Warmer, more positive gradient */
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -520,16 +538,16 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
 
     .hero-cta.secondary {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.4); /* Stronger border for visibility */
       animation-delay: 0.8s;
     }
 
     .hero-cta.secondary:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
       transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.8);
     }
 
     .hero-cta.secondary .cta-text {
@@ -593,18 +611,19 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
     /* Helper Text under CTA */
     .cta-helper-text {
-      margin: 10px 0 0;
-      font-family: system-ui, -apple-system, sans-serif;
-      font-size: 0.8125rem;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.65);
+      margin: 15px 0 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 1.125rem; /* Increased size */
+      font-weight: 500; /* Increased weight */
+      color: #FFFFFF; /* High contrast white */
       text-align: center;
       letter-spacing: 0.01em;
-      line-height: 1.4;
-      max-width: 320px;
+      line-height: 1.5;
+      max-width: 480px; /* Increased width */
       opacity: 0;
       transform: translateY(12px);
       animation: ctaReveal 0.7s ease-out 0.95s forwards;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Strong shadow for readability */
     }
 
     /* =========================================
@@ -685,14 +704,14 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     .ambient-glow--left {
       top: -10%;
       left: -10%;
-      background: radial-gradient(circle, #6d8b53 0%, transparent 70%);
+      background: radial-gradient(circle, #10b981 0%, transparent 70%); /* Organic Green */
       animation: glowPulseLeft 8s ease-in-out infinite;
     }
 
     .ambient-glow--right {
       bottom: -20%;
       right: -10%;
-      background: radial-gradient(circle, #c9a86c 0%, transparent 70%);
+      background: radial-gradient(circle, #fbbf24 0%, transparent 70%); /* Sunlight Gold */
       animation: glowPulseRight 10s ease-in-out infinite;
     }
 

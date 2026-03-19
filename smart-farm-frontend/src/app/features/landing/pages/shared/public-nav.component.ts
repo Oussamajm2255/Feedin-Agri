@@ -197,11 +197,11 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
     /* Shared nav-link style (desktop row) */
     .nav-link {
-      color: var(--text-secondary);
+      color: #06283D; /* Darker, more contrasty color */
       text-decoration: none;
       font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600; /* Increased weight */
       padding: 0.5rem 0.75rem;
       border-radius: 10px;
       transition: all 0.25s ease;
