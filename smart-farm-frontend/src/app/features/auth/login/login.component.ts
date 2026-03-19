@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,8 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { MatTooltipModule } from '@angular/material/tooltip'; // F6
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest, UserRole, UserStatus } from '../../../core/models/user.model';
@@ -42,7 +41,8 @@ import { environment } from '../../../../environments/environment';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule, // F6
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -66,9 +66,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   public readonly languageService = inject(LanguageService);
 
-  // FIX 10: Store references for proper cleanup
+  // Store references for proper cleanup
   private keyboardHandler!: (e: KeyboardEvent) => void;
   private autofillInterval: ReturnType<typeof setInterval> | null = null;
+  private videoAbortController: AbortController | null = null; // F7
 
   // Reference to video element
   @ViewChild('bgVideo', { static: false }) bgVideo!: ElementRef<HTMLVideoElement>;
@@ -94,22 +95,40 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   readonly isFormValid = computed(() => this.loginForm?.valid ?? false);
   readonly canSubmit = computed(() => !this.isLoading() && this.isFormValid() && !this.isRateLimited());
 
+  // F10: Password strength computed signals
+  readonly passwordStrength = computed(() => {
+    const pw = this.loginForm.get('password')?.value || '';
+    if (!pw) return 0;
+    let score = 0;
+    if (pw.length >= 8)  score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    return score;
+  });
+
+  readonly passwordStrengthLabel = computed(() => {
+    const s = this.passwordStrength();
+    if (s === 0) return '';
+    if (s <= 2) return this.languageService.t()('auth.strengthWeak')   || 'Weak';
+    if (s <= 3) return this.languageService.t()('auth.strengthFair')   || 'Fair';
+    if (s <= 4) return this.languageService.t()('auth.strengthGood')   || 'Good';
+    return       this.languageService.t()('auth.strengthStrong') || 'Strong';
+  });
+
   constructor() {
     this.loginForm = this.createLoginForm();
     this.initializeFormState();
   }
 
-  // Form initialization
+  // Form initialization — F9: no async validator, updateOn: 'blur'
   private createLoginForm(): FormGroup {
     return this.fb.group({
-      email: this.fb.control(
-        '',
-        {
-          validators: [Validators.required, Validators.email],
-          asyncValidators: [this.emailExistsValidator()],
-          updateOn: 'blur' // FIX 9: run async validation only on blur
-        }
-      ),
+      email: this.fb.control('', {
+        validators: [Validators.required, Validators.email],
+        updateOn: 'blur'
+      }),
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
@@ -143,14 +162,13 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.videoAbortController?.abort(); // F7
     this.cleanupVideoListeners();
 
-    // FIX 10: Remove keyboard listener
     if (this.keyboardHandler) {
       document.removeEventListener('keydown', this.keyboardHandler);
     }
 
-    // FIX 10: Clear autofill interval
     if (this.autofillInterval) {
       clearInterval(this.autofillInterval);
       this.autofillInterval = null;
@@ -168,25 +186,35 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     video.removeEventListener('error', this.onVideoError);
   }
 
-  // Video playback setup
+  // F7: Video playback — deferred load with AbortController
   private setupVideoPlayback(): void {
-    // Skip video on slow connections (2G, slow-3G, data-saver)
     const connection = (navigator as any)?.connection;
-    if (connection?.effectiveType === '2g' || connection?.saveData) {
-      console.info('Slow connection detected — skipping video background');
-      this.videoError.set(true); // Triggers CSS fallback background
+    const isSlow = connection?.effectiveType === '2g'
+      || connection?.effectiveType === 'slow-2g'
+      || connection?.saveData;
+
+    if (isSlow) {
+      this.videoError.set(true);
       return;
     }
 
     const video = this.bgVideo?.nativeElement;
     if (!video) {
-      this.handleVideoNotFound();
+      this.videoError.set(true);
       return;
     }
 
-    this.attachVideoListeners(video);
-    video.muted = true; // Required for autoplay
-    this.playVideo();
+    // Defer video network request by 300ms so Angular renders the card first
+    this.videoAbortController = new AbortController();
+
+    setTimeout(() => {
+      if (this.videoAbortController?.signal.aborted) return;
+      video.preload = 'metadata';
+      this.attachVideoListeners(video);
+      video.muted = true;
+      video.load();
+      this.playVideo();
+    }, 300);
   }
 
   private handleVideoNotFound(): void {
@@ -400,41 +428,32 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.showFallbackIcon.set(true);
   }
 
-  // FIX 9: Simplified async email validator — no debounce/timer needed,
-  // updateOn: 'blur' handles the timing
-  private emailExistsValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      if (!control.value || control.hasError('email')) {
-        return of(null);
-      }
-      return this.authService.checkEmailExists(control.value).pipe(
-        map(exists => exists ? null : { emailNotExists: true }),
-        catchError(() => of(null))
-      );
-    };
-  }
-
-  // Error handling
+  // F10: Improved error messages with i18n and network awareness
   private getSpecificErrorMessage(error: any): string {
-    // Only show error messages for login attempts (not for /auth/me)
-    if (error.status === 400 || error.status === 401) {
-      return 'Invalid email or password';
-    }
-
     if (error.status === 0) {
-      return 'Connection error. Try again.';
+      return navigator.onLine
+        ? 'Unable to reach the server. Please try again in a moment.'
+        : 'You appear to be offline. Please check your connection.';
     }
-
-    if (error.status >= 500) {
-      return 'Connection error. Try again.';
+    if (error.status === 400 || error.status === 401) {
+      return this.languageService.t()('auth.invalidCredentials')
+        || 'Invalid email or password.';
     }
-
+    if (error.status === 403) {
+      const code = error.error?.code;
+      if (code === 'PENDING') {
+        return this.languageService.t()('auth.pendingApproval')
+          || 'Your account is pending approval. You will be notified by email.';
+      }
+    }
     if (error.status === 429) {
-      return 'Too many attempts. Please try again later.';
+      return this.languageService.t()('auth.tooManyAttempts')
+        || 'Too many attempts. Please wait before trying again.';
     }
-
-    // Default error message
-    return 'Login failed. Please try again.';
+    if (error.status >= 500) {
+      return 'Server error. Please try again later.';
+    }
+    return this.languageService.t()('auth.loginFailed') || 'Login failed. Please try again.';
   }
 
   // Form persistence (sessionStorage)
@@ -446,13 +465,14 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.setStorageItem('session', 'loginFormData', formData);
   }
 
+  // F9: emitEvent: false prevents triggering validators on restore
   private loadFormData(): void {
     const formData = this.getStorageItem('session', 'loginFormData');
-    if (formData) {
-      this.loginForm.patchValue({
-        email: formData.email || '',
-        rememberMe: formData.rememberMe || false
-      });
+    if (formData?.email) {
+      this.loginForm.patchValue(
+        { email: formData.email, rememberMe: formData.rememberMe || false },
+        { emitEvent: false }
+      );
     }
   }
 
@@ -635,12 +655,12 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     }, 100);
   }
 
+  // F9: emitEvent: false prevents cascading validation
   private syncInputToForm(controlName: 'email' | 'password', value: string): void {
     const control = this.loginForm.get(controlName);
-    if (control && value !== control.value) {
-      control.setValue(value, { emitEvent: true });
+    if (control && value && value !== control.value) {
+      control.setValue(value, { emitEvent: false });
       control.markAsTouched();
-      control.updateValueAndValidity({ emitEvent: true });
       this.cdr.markForCheck();
     }
   }

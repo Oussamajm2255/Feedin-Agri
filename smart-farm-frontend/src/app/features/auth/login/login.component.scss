@@ -58,69 +58,77 @@ $transition-neumorphic: 0.3s cubic-bezier(0.4, 0, 0.2, 1); // Smooth
     inset -2px -2px 5px rgba(255, 255, 255, 0.3);
 }
 
-// Container
+// F13: Container always visible, poster as CSS background
 .login-container {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   overflow: hidden;
-  opacity: 0;
-  transition: opacity 1s ease-in;
 
-  &.video-loaded {
-    opacity: 1;
-  }
+  // Show poster immediately as CSS background (ultimate fallback)
+  background-color: #0a1a10;
+  background-image: url('/assets/vids/login-poster.webp');
+  background-size: cover;
+  background-position: center;
+
+  // Always visible — no opacity:0 flash
+  opacity: 1;
 
   &.video-error {
     background:
-      linear-gradient(135deg, rgba(5, 20, 10, 0.85) 0%, rgba(10, 30, 18, 0.75) 100%),
+      linear-gradient(135deg, rgba(5, 20, 10, 0.9) 0%, rgba(10, 30, 18, 0.8) 100%),
       url('/assets/vids/login-poster.webp') center / cover no-repeat;
-    background-color: #0a1a10; // solid fallback if image also fails
-    opacity: 1;
-    transition: none; // show immediately, no fade needed
+    background-color: #0a1a10;
   }
 }
 
-// Video background
+// F12: Video — fixed position, full viewport cover, no transform hack
 .video-background {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  z-index: 0;
-  transform: translate(-50%, -50%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center center;
+  z-index: 0;
+  will-change: transform;
+  pointer-events: none;
 }
 
-// Glassmorphism overlay
+// F14: Glass overlay — fixed, stronger gradient
 .glass-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
-  background-color: rgba(0, 0, 0, 0.4);
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.52) 0%,
+      rgba(0, 0, 0, 0.38) 50%,
+      rgba(0, 0, 0, 0.58) 100%);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  pointer-events: none;
 }
 
-// Layout wrapper for mobile stacking (FIX 3)
+// F15: Layout wrapper — full viewport, centred
 .login-layout {
   position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  padding: 24px 16px 40px;
+  min-height: 100dvh;
+  padding: 20px 16px;
+  box-sizing: border-box;
 }
 
 // Back to Landing Button
@@ -186,92 +194,68 @@ $transition-neumorphic: 0.3s cubic-bezier(0.4, 0, 0.2, 1); // Smooth
   }
 }
 
-// Login card - Neumorphic Press & Lift Effect
+// F16: Login card — compact, no overflow, no transform on hover
 .login-card {
   font-family: 'DM Sans', 'Tajawal', sans-serif;
   z-index: 10;
-  padding: 32px 36px;
+  width: min(95%, 440px);
+  padding: clamp(20px, 3.5vh, 32px) clamp(20px, 4vw, 36px);
   border-radius: 18px;
-  max-width: 420px;
-  width: 90%;
   text-align: center;
-  // Add vertical spacing (up and down)
-  margin-top: clamp(40px, 8vh, 80px);
-  margin-bottom: clamp(40px, 8vh, 80px);
-  // MORE SOLID background for shadow visibility
-  background: linear-gradient(145deg,
-      rgba(255, 255, 255, 0.25) 0%,
-      rgba(255, 255, 255, 0.15) 100%);
-  // VISIBLE border
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
 
-  // 🟢 Idle state - No movement, just colors and shadows
+  // Compact margins
+  margin-top: clamp(8px, 2vh, 20px);
+  margin-bottom: clamp(8px, 2vh, 20px);
+
+  // Prevent card from overflowing viewport
+  max-height: calc(100dvh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-padding: 16px;
+
+  // Glass card — 1px border
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.12) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+
+  // Shadows — neumorphic idle
   box-shadow: var(--neumorphic-idle-shadow);
   transition:
-    box-shadow $transition-neumorphic,
-    background $transition-neumorphic,
-    border $transition-neumorphic;
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  // cardBreathing animation removed (FIX 13) — hover/active states provide feedback
-
-  // 🟢 Hover state - Just green color, no movement
   &:hover {
-    animation: none; // Stop breathing animation on hover
+    // NO transform — card must not move vertically
+    transform: none !important;
+    border-color: rgba(16, 185, 129, 0.3);
     box-shadow: var(--neumorphic-hover-shadow);
-    // NO transform - keep card in place!
-    // Subtle glowing background
-    background: linear-gradient(145deg,
-        rgba(16, 185, 129, 0.15) 0%,
-        rgba(255, 255, 255, 0.2) 100%);
-    // Subtle green border
-    border: 1px solid rgba(16, 185, 129, 0.35);
-
-    // Subtle inner glow
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      background: radial-gradient(circle at center,
-          rgba(16, 185, 129, 0.15) 0%,
-          rgba(16, 185, 129, 0.08) 30%,
-          transparent 70%);
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity $transition-neumorphic;
-    }
   }
 
-  // 🟢 Active state (when form inputs are focused) - Subtle glow
   &[data-state="active"] {
+    transform: none !important;
+    border-color: rgba(16, 185, 129, 0.4);
     box-shadow: var(--neumorphic-active-shadow);
-    // NO transform - keep card in place!
-    // Subtle green background
-    background: linear-gradient(145deg,
-        rgba(16, 185, 129, 0.2) 0%,
-        rgba(255, 255, 255, 0.2) 100%);
-    // Subtle green border
-    border: 1px solid rgba(16, 185, 129, 0.45);
   }
 
-  // Position relative for pseudo-element glow
   position: relative;
 
   &::before {
     opacity: 0;
-    transition: opacity $transition-neumorphic;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-// Logo section
+// F17: Logo section — compact
 .logo-section {
-  margin-bottom: 24px;
+  margin-bottom: clamp(12px, 2.5vh, 20px);
   color: white;
 
   img {
-    max-width: 120px;
+    max-width: clamp(80px, 20vw, 110px);
     height: auto;
     margin-bottom: 8px;
     object-fit: contain;
@@ -2108,5 +2092,176 @@ $breakpoint-4xl: 2560px; // Ultra-wide
       margin-right: 0;
       text-align: center;
     }
+  }
+}
+
+// ============================================
+// F19: Password strength bar
+// ============================================
+.strength-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 0 4px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.3s ease;
+
+  &[data-score="1"] {
+    width: 20%;
+    background: #ef4444;
+  }
+
+  &[data-score="2"] {
+    width: 40%;
+    background: #f97316;
+  }
+
+  &[data-score="3"] {
+    width: 60%;
+    background: #eab308;
+  }
+
+  &[data-score="4"] {
+    width: 80%;
+    background: #84cc16;
+  }
+
+  &[data-score="5"] {
+    width: 100%;
+    background: #10b981;
+  }
+}
+
+.strength-label {
+  font-size: 11px;
+  min-width: 40px;
+  text-align: end;
+
+  &[data-score="1"],
+  &[data-score="2"] {
+    color: #f97316;
+  }
+
+  &[data-score="3"] {
+    color: #eab308;
+  }
+
+  &[data-score="4"],
+  &[data-score="5"] {
+    color: #10b981;
+  }
+}
+
+// F19: Login button — dim when fields empty
+.login-button:not(.btn-ready):not([disabled]) {
+  opacity: 0.65;
+  cursor: default;
+  animation: none;
+  box-shadow: none;
+}
+
+// F19: Register prompt separator
+.register-prompt {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: 600;
+    margin-inline-start: 5px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      color: color.adjust($primary-color, $lightness: 10%);
+      border-bottom-color: $primary-color;
+    }
+  }
+}
+
+// Screen reader only utility
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// F19: Landscape compact mode
+@media (max-height: 500px) and (orientation: landscape) {
+  .login-layout {
+    justify-content: flex-start;
+    padding-top: 12px;
+  }
+
+  .back-to-landing {
+    display: none;
+  }
+
+  .login-card {
+    padding: 14px 20px;
+    margin: 0;
+  }
+
+  .logo-section {
+    display: none;
+  }
+
+  .login-form .full-width {
+    margin-bottom: 8px;
+  }
+
+  .options-row {
+    margin-bottom: 10px;
+    min-height: 36px;
+  }
+
+  .login-button {
+    height: 42px;
+  }
+
+  .register-prompt {
+    margin-top: 8px;
+    font-size: 0.8rem;
+  }
+}
+
+// F19: Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .login-card {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .login-button {
+    animation: none !important;
+  }
+
+  .login-button::after,
+  .login-button::before {
+    transition: none !important;
   }
 }

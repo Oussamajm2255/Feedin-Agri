@@ -20,10 +20,12 @@
 
   <!-- Preload LCP hero image for faster rendering -->
   <link rel="preload" as="image" type="image/webp" href="/assets/images/logos/landing-bg.webp">
+  <!-- F2: Preload login poster for instant display -->
+  <link rel="preload" as="image" href="assets/vids/login-poster.webp" fetchpriority="high">
 
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' http://localhost:3000 ws://localhost:3000 https://api.smartfarm.com wss://api.smartfarm.com https://thorough-optimism-production.up.railway.app wss://thorough-optimism-production.up.railway.app https://*.railway.app wss://*.railway.app https://api.openweathermap.org; worker-src 'self' blob:;">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' http://localhost:3000 ws://localhost:3000 https://feedingreen.com https://www.feedingreen.com https://thorough-optimism-production.up.railway.app wss://thorough-optimism-production.up.railway.app https://*.railway.app wss://*.railway.app https://api.openweathermap.org https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'self' blob:; worker-src 'self' blob:;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -74,9 +76,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"
     media="print" onload="this.media='all'">
 
-  <!-- Tajawal (Arabic) + DM Sans (English) — for login card typography (FIX 7) -->
+  <!-- Tajawal (Arabic) + DM Sans (English) — for login card typography -->
+  <!-- F2: Preload as style for faster font availability -->
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">
   <link
-    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap"
     rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
     <link
@@ -384,8 +389,13 @@
     }
 
     @keyframes logo-float {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-12px); }
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-12px);
+      }
     }
 
     @keyframes logo-fade-in {
@@ -393,6 +403,7 @@
         opacity: 0;
         transform: translateY(-20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
