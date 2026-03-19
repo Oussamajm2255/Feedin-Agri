@@ -9,8 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Observable, of, timer } from 'rxjs';
-import { map, switchMap, catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest, UserRole, UserStatus } from '../../../core/models/user.model';
@@ -66,6 +66,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   public readonly languageService = inject(LanguageService);
 
+  // FIX 10: Store references for proper cleanup
+  private keyboardHandler!: (e: KeyboardEvent) => void;
+  private autofillInterval: ReturnType<typeof setInterval> | null = null;
+
   // Reference to video element
   @ViewChild('bgVideo', { static: false }) bgVideo!: ElementRef<HTMLVideoElement>;
 
@@ -98,7 +102,14 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   // Form initialization
   private createLoginForm(): FormGroup {
     return this.fb.group({
-      email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
+      email: this.fb.control(
+        '',
+        {
+          validators: [Validators.required, Validators.email],
+          asyncValidators: [this.emailExistsValidator()],
+          updateOn: 'blur' // FIX 9: run async validation only on blur
+        }
+      ),
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
@@ -133,6 +144,17 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.cleanupVideoListeners();
+
+    // FIX 10: Remove keyboard listener
+    if (this.keyboardHandler) {
+      document.removeEventListener('keydown', this.keyboardHandler);
+    }
+
+    // FIX 10: Clear autofill interval
+    if (this.autofillInterval) {
+      clearInterval(this.autofillInterval);
+      this.autofillInterval = null;
+    }
   }
 
 
@@ -272,6 +294,15 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
     this.showErrorMessage(error);
 
+    // FIX 11: Announce to screen readers via ARIA live region
+    const statusEl = document.getElementById('login-status');
+    if (statusEl) {
+      statusEl.textContent = ''; // reset first to re-trigger announcement
+      requestAnimationFrame(() => {
+        statusEl.textContent = this.getSpecificErrorMessage(error);
+      });
+    }
+
     console.error('Login error:', error);
   }
 
@@ -369,17 +400,14 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.showFallbackIcon.set(true);
   }
 
-  // Async email validation
+  // FIX 9: Simplified async email validator — no debounce/timer needed,
+  // updateOn: 'blur' handles the timing
   private emailExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      if (!control.value || control.errors?.['email']) {
+      if (!control.value || control.hasError('email')) {
         return of(null);
       }
-
-      return timer(this.config.auth.emailValidationDelay).pipe(
-        debounceTime(this.config.auth.emailValidationDebounce),
-        distinctUntilChanged(),
-        switchMap(() => this.authService.checkEmailExists(control.value)),
+      return this.authService.checkEmailExists(control.value).pipe(
         map(exists => exists ? null : { emailNotExists: true }),
         catchError(() => of(null))
       );
@@ -444,9 +472,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  // Keyboard shortcuts
+  // FIX 10: Store keyboard handler reference for cleanup
   private setupKeyboardShortcuts(): void {
-    document.addEventListener('keydown', this.handleKeyboardShortcut.bind(this));
+    this.keyboardHandler = this.handleKeyboardShortcut.bind(this);
+    document.addEventListener('keydown', this.keyboardHandler);
   }
 
   private handleKeyboardShortcut(event: KeyboardEvent): void {
@@ -586,15 +615,22 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     }
 
     // Method 3: Periodic check for autofilled values (faster checks initially)
+    // FIX 10: Store interval reference as class property for cleanup
     let checkCount = 0;
     const maxChecks = 30; // 3 seconds total (30 * 100ms)
-    const autofillCheckInterval = setInterval(() => {
+    this.autofillInterval = setInterval(() => {
       checkCount++;
       if (this.hasAutofilledValues()) {
         this.checkAndUpdateAutofill();
-        clearInterval(autofillCheckInterval);
+        if (this.autofillInterval) {
+          clearInterval(this.autofillInterval);
+          this.autofillInterval = null;
+        }
       } else if (checkCount >= maxChecks) {
-        clearInterval(autofillCheckInterval);
+        if (this.autofillInterval) {
+          clearInterval(this.autofillInterval);
+          this.autofillInterval = null;
+        }
       }
     }, 100);
   }
