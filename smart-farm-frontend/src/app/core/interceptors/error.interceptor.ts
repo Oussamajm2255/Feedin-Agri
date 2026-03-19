@@ -24,7 +24,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, EMPTY } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { clearHttpCache } from './caching.interceptor';
@@ -160,6 +160,19 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      // ── Aborted requests (navigation cancellation) — silently swallow ───
+      // When a component is destroyed mid-request (e.g., route change),
+      // the browser's Fetch API aborts the in-flight request. This produces
+      // a status-0 HttpErrorResponse whose inner error is a DOMException
+      // with name 'AbortError'. This is expected behaviour, not an error.
+      if (
+        error.status === 0 &&
+        error.error instanceof DOMException &&
+        error.error.name === 'AbortError'
+      ) {
+        return EMPTY;
+      }
+
       // ── External API requests — propagate without any side-effect ────────
       // Errors from third-party APIs (e.g. OpenWeatherMap 401 for a bad key)
       // must never invalidate the user's internal session.

@@ -9,6 +9,19 @@ export class GlobalErrorHandler implements ErrorHandler {
   private alertService = inject(AlertService);
 
   handleError(error: any): void {
+    // ── Silently ignore aborted HTTP requests ────────────────────────────
+    // During route navigation, the browser cancels in-flight fetch calls.
+    // These produce AbortError DOMExceptions that are benign — the user
+    // simply navigated away. Suppress them to keep the console clean.
+    const inner = error?.rejection ?? error;
+    if (
+      inner instanceof DOMException && inner.name === 'AbortError' ||
+      inner?.error instanceof DOMException && inner.error.name === 'AbortError' ||
+      inner?.message === 'The user aborted a request.'
+    ) {
+      return; // Nothing to log, report, or show
+    }
+
     console.error('Global Error:', error);
 
     // In production, send error to monitoring service
