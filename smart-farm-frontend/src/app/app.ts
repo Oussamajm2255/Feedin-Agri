@@ -57,6 +57,9 @@ export class AppComponent implements OnInit {
       .subscribe((event) => {
         this.isAdminRoute.set(event.url.startsWith('/admin'));
         this.isPendingRoute.set(event.url.startsWith('/onboarding/pending'));
+        
+        // Ensure we always start at the top of the new page
+        window.scrollTo({ top: 0, behavior: 'instant' });
       });
 
     // ✅ Check initial route before auth fetch
