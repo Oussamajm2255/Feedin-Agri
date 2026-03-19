@@ -46,10 +46,10 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         <div class="nav-actions">
           <app-language-switcher></app-language-switcher>
           <button class="nav-btn secondary desktop-only" (click)="go('/login')">{{ 'landing.nav.login' | translate }}</button>
-          <button class="nav-btn primary cta-expert desktop-only" (click)="goToContactRegister()">
+          <button class="nav-btn primary cta-expert" (click)="goToContactRegister()" aria-label="Contact Expert">
             <span class="cta-sparkle material-icons">auto_awesome</span>
-            <span class="cta-label">{{ 'landing.nav.contactExpert' | translate }}</span>
-            <span class="cta-arrow material-icons">arrow_forward</span>
+            <span class="cta-label desktop-content">{{ 'landing.nav.contactExpert' | translate }}</span>
+            <span class="cta-arrow material-icons desktop-content">arrow_forward</span>
           </button>
           <!-- Hamburger — mobile only -->
           <button class="hamburger mobile-only" (click)="toggleMenu()" [class.active]="mobileOpen()" aria-label="Menu">
@@ -280,7 +280,29 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
     .nav-btn.secondary { padding: 0.625rem 1rem; background: transparent; color: var(--text-primary); }
     .nav-btn.secondary:hover { color: var(--primary-green); }
-    .desktop-only { display: none; }
+    
+    /* Mobile CTA Icon style */
+    @media (max-width: 1023px) {
+      .nav-btn.primary.cta-expert {
+        padding: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0;
+      }
+      .nav-btn.primary.cta-expert .cta-sparkle {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+    }
+
+    /* hide specific content on mobile inside the CTA */
+    .desktop-content {
+      display: none;
+    }
 
     /* Hamburger */
     .hamburger {
@@ -487,6 +509,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     @media (min-width: 1024px) {
       .desktop-links  { display: flex; }
       .desktop-only   { display: inline-flex; }
+      .desktop-content { display: inline-flex; }
       .hamburger      { display: none; }
     }
 
