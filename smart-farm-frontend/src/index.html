@@ -357,31 +357,35 @@
     }
 
     .loader-logo {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
       z-index: 5;
-      width: 100px;
+      width: 200px;
       height: auto;
-      animation: logo-pulse 2s ease-in-out infinite alternate;
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+      margin-bottom: 3rem;
+      animation: logo-fade-in 0.8s ease-out 0.2s backwards, logo-float 4s ease-in-out infinite alternate;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.4));
     }
 
     @media (min-width: 768px) {
       .loader-logo {
-        width: 140px;
+        width: 280px;
+        margin-bottom: 4rem;
       }
     }
 
-    @keyframes logo-pulse {
-      0% {
-        opacity: 0.8;
-        transform: translate(-50%, -50%) scale(0.95);
+    @keyframes logo-float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-12px); }
+    }
+
+    @keyframes logo-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
       }
-      100% {
+      to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.05);
+        transform: translateY(0);
       }
     }
 
@@ -567,11 +571,11 @@
       <div class="particle" style="--particle-index: 7"></div>
     </div>
 
+    <!-- App Logo Prominently Displayed Above SVG Loader -->
+    <img src="/assets/images/logos/Feedin_pnglogo.webp" alt="FEEDIN Logo" class="loader-logo">
+
     <!-- Main Loader Container -->
     <div class="loader-container">
-      <!-- App Logo centered inside the loader SVG -->
-      <img src="/assets/images/logos/Feedin_pnglogo.webp" alt="FEEDIN Logo" class="loader-logo">
-
       <svg class="agriculture-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"
         aria-label="Loading animation" role="img">
         <g class="loader-circle">
