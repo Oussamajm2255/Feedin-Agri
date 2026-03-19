@@ -2734,7 +2734,9 @@
       "login": "Se connecter",
       "contactExpert": "Contactez un expert",
       "responseUnder24h": "Réponse sous 24h",
-      "allRightsReserved": "Tous droits réservés"
+      "allRightsReserved": "Tous droits réservés",
+      "navigation": "Navigation",
+      "actions": "Actions"
     },
     "hero": {
       "title1": "L'agriculture,",
@@ -2865,6 +2867,7 @@
       ]
     },
     "about": {
+      "title": "À propos de Feedin",
       "hero": {
         "label": "À propos de Feedin",
         "title": "Une entreprise née du <span class=\"accent\">terrain</span>",
@@ -3065,21 +3068,14 @@
         "Automatisation",
         "Cloud & Data",
         "Mobile Ready",
-        "API Ouverte"
+        "API Ouverte",
+        "Apprentissage Automatique",
+        "Edge Computing"
       ],
       "gauges": [
-        {
-          "val": "40%",
-          "label": "Économie d'eau"
-        },
-        {
-          "val": "35%",
-          "label": "Gain de rendement"
-        },
-        {
-          "val": "60%",
-          "label": "Réduction des pertes"
-        }
+        "Économie d'eau",
+        "Gain de rendement",
+        "Réduction des pertes"
       ],
       "modular": {
         "label": "Modulaire & Évolutif",
@@ -3098,6 +3094,10 @@
         {
           "title": "Module Enterprise",
           "desc": "Solution complète pour les grandes exploitations et coopératives."
+        },
+        {
+          "title": "Module Sécurité",
+          "desc": "Protection des données et accès sécurisé pour tout votre réseau."
         }
       ],
       "cta": {
@@ -3130,7 +3130,8 @@
             "Audit technique complet",
             "Analyse sol & eau",
             "Recommandations personnalisées",
-            "Plan d'action détaillé"
+            "Plan d'action détaillé",
+            "Rapport de suivi"
           ],
           "benefits": [
             "ROI optimisé",
@@ -3453,6 +3454,13 @@
       "social": {
         "title": "Suivez-nous"
       },
+      "socialLinks": [
+        "LinkedIn",
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "WhatsApp"
+      ],
       "projects": {
         "title": "Types de projets"
       },

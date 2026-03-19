@@ -3172,7 +3172,9 @@
       "login": "Sign in",
       "contactExpert": "Contact an Expert",
       "responseUnder24h": "Response within 24h",
-      "allRightsReserved": "All rights reserved"
+      "allRightsReserved": "All rights reserved",
+      "navigation": "Navigation",
+      "actions": "Actions"
     },
     "hero": {
       "title1": "Agriculture,",
@@ -3426,21 +3428,14 @@
         "Automation",
         "Cloud & Data",
         "Mobile Ready",
-        "Open API"
+        "Open API",
+        "Machine Learning",
+        "Edge Computing"
       ],
       "gauges": [
-        {
-          "val": "40%",
-          "label": "Water savings"
-        },
-        {
-          "val": "35%",
-          "label": "Yield increase"
-        },
-        {
-          "val": "60%",
-          "label": "Loss reduction"
-        }
+        "Water savings",
+        "Yield increase",
+        "Loss reduction"
       ],
       "modular": {
         "label": "Modular & Scalable",
@@ -3459,6 +3454,10 @@
         {
           "title": "Enterprise Module",
           "desc": "Complete solution for large farms and cooperatives."
+        },
+        {
+          "title": "Security Module",
+          "desc": "Data protection and secure access for your entire network."
         }
       ],
       "cta": {
@@ -3491,7 +3490,8 @@
             "Complete technical audit",
             "Soil & water analysis",
             "Personalized recommendations",
-            "Detailed action plan"
+            "Detailed action plan",
+            "Follow-up report"
           ],
           "benefits": [
             "Optimized ROI",
@@ -3791,6 +3791,7 @@
       }
     },
     "about": {
+      "title": "About Feedin",
       "hero": {
         "label": "About Feedin",
         "title": "A company born from <span class=\"accent\">the field</span>",
@@ -3898,6 +3899,13 @@
       "social": {
         "title": "Follow us"
       },
+      "socialLinks": [
+        "LinkedIn",
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "WhatsApp"
+      ],
       "projects": {
         "title": "Project types"
       },
