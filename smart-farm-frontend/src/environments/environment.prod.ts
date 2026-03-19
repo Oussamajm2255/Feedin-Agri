@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://thorough-optimism-production.up.railway.app/api/v1',
-  wsUrl: 'https://thorough-optimism-production.up.railway.app',
+  apiUrl: 'https://feedingreen.com/api/v1',
+  wsUrl: 'https://feedingreen.com',
   appName: 'FEEDIN',
   version: '1.0.0',
   enableAnalytics: true,
