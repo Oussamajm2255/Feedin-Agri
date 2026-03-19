@@ -17,11 +17,13 @@ export class AuthController {
     const user = await this.authService.validateUser(loginDto);
     const { accessToken, refreshToken, user: safeUser, refreshMaxAgeMs } = await this.authService.login(user);
 
+    const isProd = process.env.NODE_ENV === 'production' || !!process.env.RAILWAY_ENVIRONMENT_ID || !!process.env.PORT;
+
     // Access token cookie — short-lived (15 minutes)
     res.cookie('sf_auth', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000, 
       path: '/',
     });
@@ -29,8 +31,8 @@ export class AuthController {
     // Refresh token cookie — role-based lifespan (24h for admin, 7d for field workers)
     res.cookie('sf_refresh', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: refreshMaxAgeMs,
       path: '/api/v1/auth/refresh',
     });
@@ -48,11 +50,13 @@ export class AuthController {
 
     const { accessToken, refreshToken: newRefreshToken, refreshMaxAgeMs } = await this.authService.refreshAccessToken(currentRefreshToken);
 
+    const isProd = process.env.NODE_ENV === 'production' || !!process.env.RAILWAY_ENVIRONMENT_ID || !!process.env.PORT;
+
     // Set new short-lived access token
     res.cookie('sf_auth', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000, 
       path: '/',
     });
@@ -60,8 +64,8 @@ export class AuthController {
     // Set new refreshed access token for rolling session
     res.cookie('sf_refresh', newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: refreshMaxAgeMs,
       path: '/api/v1/auth/refresh',
     });
@@ -88,10 +92,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async csrf(@Res({ passthrough: true }) res: Response) {
     const token = randomBytes(32).toString('hex');
+    const isProd = process.env.NODE_ENV === 'production' || !!process.env.RAILWAY_ENVIRONMENT_ID || !!process.env.PORT;
     res.cookie('sf_csrf', token, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 1000 * 60 * 60 * 24,
       path: '/',
     });
