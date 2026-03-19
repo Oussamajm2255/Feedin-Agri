@@ -157,6 +157,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       backdrop-filter: blur(20px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       gap: 0.5rem;
+      flex-wrap: nowrap;
+      white-space: nowrap;
       transition: all 0.3s ease;
     }
 
@@ -167,7 +169,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       gap: 0.5rem;
       text-decoration: none;
       cursor: pointer;
-      flex-shrink: 0;
+      flex-shrink: 1;
+      min-width: 0;
     }
     .brand-icon {
       width: 34px; height: 34px;
@@ -223,6 +226,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
        ================================ */
     .nav-actions {
       display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;
+      flex-wrap: nowrap; white-space: nowrap;
     }
     .nav-btn {
       border: none; border-radius: 100px;
@@ -308,7 +312,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     .hamburger {
       display: flex; flex-direction: column; gap: 4px;
       background: none; border: none; cursor: pointer; padding: 8px;
-      min-height: auto; min-width: auto;
+      min-height: auto; min-width: auto; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
     .hamburger span {
       display: block; width: 20px; height: 2px;
@@ -522,8 +527,13 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
     /* Ultra Small (< 340px) */
     @media (max-width: 340px) {
-      .nav-inner { padding: 0.4rem var(--section-gutter); }
+      .nav-inner { padding: 0.4rem 0.5rem; gap: 0.25rem; }
       .brand-icon { width: 30px; height: 30px; }
+      .nav-actions { gap: 0.15rem; }
+      .nav-btn.primary.cta-expert { 
+        width: 34px; height: 34px; 
+      }
+      .hamburger { padding: 6px; }
     }
 
     /* ================================
