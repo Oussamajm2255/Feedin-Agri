@@ -44,6 +44,21 @@ const SILENT_ENDPOINTS: readonly string[] = [
 ];
 
 /**
+ * Domains considered external — their errors must never trigger
+ * session-invalidation or logout behaviour.
+ */
+const EXTERNAL_DOMAINS: readonly string[] = [
+  'api.openweathermap.org',
+  'fonts.googleapis.com',
+  'fonts.gstatic.com',
+  'unpkg.com',
+];
+
+function isExternalUrl(url: string): boolean {
+  return EXTERNAL_DOMAINS.some((domain) => url.includes(domain));
+}
+
+/**
  * URL fragments for authentication form requests.
  * These get specific, user-friendly copy instead of generic error messages.
  */
@@ -145,6 +160,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      // ── External API requests — propagate without any side-effect ────────
+      // Errors from third-party APIs (e.g. OpenWeatherMap 401 for a bad key)
+      // must never invalidate the user's internal session.
+      if (isExternalUrl(req.url)) {
+        return throwError(() => error);
+      }
+
       // ── Silent endpoints — propagate without any UI side-effect ──────────
       if (isSilent(req.url)) {
         return throwError(() => error);
