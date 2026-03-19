@@ -53,13 +53,13 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent),
-    canActivate: [guestGuard]
+    redirectTo: '/login',
+    pathMatch: 'full'
   },
-  // Alias: /request-access → same as /register (semantic URL for CTA links)
+  // Alias: /request-access → sent to contact for manual account requests
   {
     path: 'request-access',
-    redirectTo: '/register',
+    redirectTo: '/contact',
     pathMatch: 'full'
   },
   // ================================
