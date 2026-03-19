@@ -304,7 +304,10 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
        ================================ */
     .mobile-panel {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      height: 100dvh;
+      width: 100%;
       z-index: 2000;
       display: flex;
       flex-direction: column;

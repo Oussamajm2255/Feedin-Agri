@@ -341,9 +341,11 @@ body.dark-theme .cdk-overlay-backdrop.date-range-picker-backdrop {
   // Pro Layout System
   --section-gutter: 2rem;
   --container-max-width: 1280px;
+  --nav-height: 80px;
 
   @media (max-width: 1024px) {
     --section-gutter: 1.5rem;
+    --nav-height: 70px;
   }
 
   @media (max-width: 640px) {

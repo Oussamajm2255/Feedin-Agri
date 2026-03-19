@@ -142,6 +142,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
   styles: [`
     .page-wrapper {
       min-height: 100vh;
+      min-height: 100dvh;
       background: #f8faf8;
       font-family: 'Inter', 'Roboto', system-ui, sans-serif;
     }
@@ -149,12 +150,13 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     .page-hero {
       position: relative;
       min-height: 50vh;
+      min-height: 50dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #052952;
       overflow: hidden;
-      padding-top: 100px;
+      padding-top: var(--nav-height);
     }
 
     .page-hero::before {

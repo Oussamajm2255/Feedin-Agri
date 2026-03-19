@@ -102,7 +102,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
        HERO SECTION - IMMERSIVE EXPERIENCE
        Mobile-First Approach
        ========================================= */
-    .hero {
+     .hero {
       position: relative;
       min-height: 100vh;
       min-height: 100dvh;
@@ -110,6 +110,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       display: flex;
       align-items: center;
       justify-content: center;
+      padding-top: var(--nav-height);
       overflow: hidden;
       contain: layout style paint;
     }

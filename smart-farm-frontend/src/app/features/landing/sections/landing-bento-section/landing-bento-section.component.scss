@@ -60,17 +60,18 @@
     opacity: 1 !important;
 
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 240px;
+    grid-auto-rows: minmax(240px, auto);
     gap: 1.5rem;
 
     @media (max-width: 1024px) {
         grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: minmax(200px, auto); // Allow content to dictate height
+        grid-auto-rows: minmax(200px, auto);
     }
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
-        grid-auto-rows: auto; // Mobile stack
+        grid-auto-rows: auto;
+        gap: 1rem;
     }
 }
 
@@ -548,8 +549,6 @@
 // ================================
 
 @media (max-width: 1024px) {
-
-    // Large Card still spans 2 on tablet, smalls remain 1 if possible
     .large {
         grid-column: span 2;
         grid-row: span 1;
@@ -567,9 +566,9 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .bento-section {
-        padding: 3rem var(--section-gutter);
+        padding: 4rem var(--section-gutter);
     }
 
     .bento-header {
@@ -583,12 +582,10 @@
     }
 
     .bento-card {
-        border-radius: 18px;
-        /* Touch optimization */
-        padding: 1.25rem;
+        border-radius: 20px;
+        padding: 1.5rem;
     }
 
-    // Solutions (Hero) -> Full width stack
     .large {
         grid-column: span 1;
         grid-row: auto;
@@ -597,11 +594,7 @@
         .bc-icon {
             width: 48px;
             height: 48px;
-
-            svg {
-                width: 24px;
-                height: 24px;
-            }
+            svg { width: 24px; height: 24px; }
         }
 
         .bc-title {
@@ -614,66 +607,40 @@
         }
     }
 
-    // Stacked small cards
     .small {
         grid-column: span 1;
         grid-row: auto;
-        min-height: 200px;
-        padding: 1.25rem;
+        min-height: auto;
+        padding: 1.5rem;
 
         .bc-icon {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             margin-bottom: 0.5rem;
-
-            svg {
-                width: 20px;
-                height: 20px;
-            }
+            svg { width: 22px; height: 22px; }
         }
 
-        .bc-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.35rem;
-            line-height: 1.3;
-        }
-
-        .bc-desc {
-            font-size: 0.8125rem;
-            line-height: 1.4;
-        }
-    }
-
-    // Contact -> Full width at bottom
-    .bento-closer.small {
-        grid-column: span 1;
-        min-height: auto;
-    }
-
-    /* Small Mobile Bento Tweaks (< 480px) */
-    @media (max-width: 480px) {
-        .bento-section {
-            padding: 3rem 0.75rem;
-        }
-        .bento-card {
-            padding: 1.25rem;
-            border-radius: 20px;
-        }
         .bc-title {
             font-size: 1.25rem;
+            margin-bottom: 0.5rem;
         }
+
         .bc-desc {
-            font-size: 0.8125rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
         }
-        .bc-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            svg { width: 20px; height: 20px; }
-        }
-        .large .bc-title {
-            font-size: 1.5rem;
-        }
+    }
+}
+
+@media (max-width: 480px) {
+    .bento-section {
+        padding: 3rem var(--section-gutter);
+    }
+    .bento-card {
+        padding: 1.25rem;
+    }
+    .large .bc-title {
+        font-size: 1.5rem;
     }
 }
 

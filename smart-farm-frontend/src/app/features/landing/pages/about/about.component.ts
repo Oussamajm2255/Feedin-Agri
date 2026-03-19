@@ -173,13 +173,14 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     /* ---- HERO ---- */
     .page-hero {
       position: relative;
-      min-height: 55vh;
+      min-height: 50vh;
+      min-height: 50dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #052952;
       overflow: hidden;
-      padding-top: 100px;
+      padding-top: var(--nav-height);
     }
 
     .page-hero::before {
@@ -299,7 +300,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
     .two-col.gap-lg { gap: 4rem; }
 
-    @media (min-width: 900px) {
+    @media (min-width: 1024px) {
       .two-col { grid-template-columns: 1fr 1fr; }
       .col-text { text-align: left; }
       .col-text p { margin-left: 0; margin-right: 0; }

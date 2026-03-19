@@ -444,6 +444,7 @@ interface ContactForm {
 
     .page-wrapper {
       min-height: 100vh;
+      min-height: 100dvh;
       background: #f3f7f3;
       font-family: 'Inter', 'Roboto', system-ui, sans-serif;
     }
@@ -452,12 +453,13 @@ interface ContactForm {
     .contact-hero {
       position: relative;
       min-height: 56vh;
+      min-height: 56dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #052952;
       overflow: hidden;
-      padding-top: 100px;
+      padding-top: var(--nav-height);
       padding-bottom: 3rem;
     }
 

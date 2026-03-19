@@ -161,6 +161,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
   styles: [`
     .page-wrapper {
       min-height: 100vh;
+      min-height: 100dvh;
       background: #f8faf8;
       font-family: 'Inter', 'Roboto', system-ui, sans-serif;
     }
@@ -168,13 +169,14 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     .page-hero {
       position: relative;
       min-height: 60vh;
+      min-height: 60dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       background: #052952;
       overflow: hidden;
-      padding-top: 100px;
+      padding-top: var(--nav-height);
       padding-bottom: 3rem;
     }
 
