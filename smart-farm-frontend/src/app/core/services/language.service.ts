@@ -19,7 +19,8 @@ export interface Translation {
   providedIn: 'root'
 })
 export class LanguageService {
-  private readonly STORAGE_KEY = 'smart-farm-language';
+  private readonly STORAGE_KEY = 'smart-farm-language-v2';
+  private readonly OLD_STORAGE_KEY = 'smart-farm-language';
   private readonly DEFAULT_LANGUAGE = 'fr-FR';
 
   private currentLanguageSubject = new BehaviorSubject<string>(this.DEFAULT_LANGUAGE);
@@ -79,9 +80,22 @@ export class LanguageService {
   }
 
   private initializeLanguage(): void {
-    const savedLanguage = localStorage.getItem(this.STORAGE_KEY);
-    const language = savedLanguage || this.DEFAULT_LANGUAGE;
-    this.setLanguage(language);
+    let savedLanguage = localStorage.getItem(this.STORAGE_KEY);
+    
+    // Migration logic: if no new key, check old key
+    if (!savedLanguage) {
+      const oldLanguage = localStorage.getItem(this.OLD_STORAGE_KEY);
+      // If it was the old default 'ar-TN' or nothing, use the new default 'fr-FR'
+      if (!oldLanguage || oldLanguage === 'ar-TN') {
+        savedLanguage = this.DEFAULT_LANGUAGE;
+      } else {
+        savedLanguage = oldLanguage;
+      }
+      // Migrate to new key
+      localStorage.setItem(this.STORAGE_KEY, savedLanguage);
+    }
+
+    this.setLanguage(savedLanguage);
   }
 
   private loadEnglishFallback(): void {
