@@ -13,11 +13,12 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: '/landing',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'landing',
-    loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
+    loadComponent: () =>
+      import('./features/landing/landing.component').then((m) => m.LandingComponent),
   },
   // ================================
   // PUBLIC PAGES (Multi-page nav structure)
@@ -25,42 +26,54 @@ export const routes: Routes = [
   // ================================
   {
     path: 'about',
-    loadComponent: () => import('./features/landing/pages/about/about.component').then(m => m.AboutComponent)
+    loadComponent: () =>
+      import('./features/landing/pages/about/about.component').then((m) => m.AboutComponent),
   },
   {
     path: 'services',
-    loadComponent: () => import('./features/landing/pages/services/services-page.component').then(m => m.ServicesComponent)
+    loadComponent: () =>
+      import('./features/landing/pages/services/services-page.component').then(
+        (m) => m.ServicesComponent,
+      ),
   },
   {
     path: 'solutions',
-    loadComponent: () => import('./features/landing/pages/solutions/solutions.component').then(m => m.SolutionsComponent)
+    loadComponent: () =>
+      import('./features/landing/pages/solutions/solutions.component').then(
+        (m) => m.SolutionsComponent,
+      ),
   },
   {
     path: 'formation',
-    loadComponent: () => import('./features/landing/pages/formation/formation.component').then(m => m.FormationComponent)
+    loadComponent: () =>
+      import('./features/landing/pages/formation/formation.component').then(
+        (m) => m.FormationComponent,
+      ),
   },
   {
     path: 'contact',
-    loadComponent: () => import('./features/landing/pages/contact/contact.component').then(m => m.ContactComponent)
+    loadComponent: () =>
+      import('./features/landing/pages/contact/contact.component').then((m) => m.ContactComponent),
   },
   // ================================
   // AUTHENTICATION ROUTES
   // ================================
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
-    canActivate: [guestGuard]
+    loadComponent: () =>
+      import('./features/auth/login/login.component').then((m) => m.LoginComponent),
+    canActivate: [guestGuard],
   },
   {
     path: 'register',
     redirectTo: '/login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   // Alias: /request-access → sent to contact for manual account requests
   {
     path: 'request-access',
     redirectTo: '/contact',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   // ================================
   // ONBOARDING / PENDING APPROVAL
@@ -68,63 +81,98 @@ export const routes: Routes = [
   // ================================
   {
     path: 'onboarding/pending',
-    loadComponent: () => import('./features/landing/pending/pending').then(m => m.Pending),
-    canActivate: [pendingGuard]
+    loadComponent: () => import('./features/landing/pending/pending').then((m) => m.Pending),
+    canActivate: [pendingGuard],
   },
   // ================================
   // ADMIN DASHBOARD ROUTES
   // ================================
   {
     path: 'admin',
-    loadComponent: () => import('./features/admin/layout/admin-shell/admin-shell.component').then(m => m.AdminShellComponent),
+    loadComponent: () =>
+      import('./features/admin/layout/admin-shell/admin-shell.component').then(
+        (m) => m.AdminShellComponent,
+      ),
     canActivate: [authGuard, adminGuard],
     children: [
       {
         path: '',
         redirectTo: 'overview',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'overview',
-        loadComponent: () => import('./features/admin/pages/overview/overview.component').then(m => m.OverviewComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/overview/overview.component').then(
+            (m) => m.OverviewComponent,
+          ),
       },
       {
         path: 'devices',
-        loadComponent: () => import('./features/admin/pages/admin-devices/admin-devices.component').then(m => m.AdminDevicesComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/admin-devices/admin-devices.component').then(
+            (m) => m.AdminDevicesComponent,
+          ),
       },
       {
         path: 'system-health',
-        loadComponent: () => import('./features/admin/pages/system-health/system-health.component').then(m => m.SystemHealthComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/system-health/system-health.component').then(
+            (m) => m.SystemHealthComponent,
+          ),
       },
       {
         path: 'logs',
-        loadComponent: () => import('./features/admin/pages/logs/logs.component').then(m => m.LogsComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/logs/logs.component').then((m) => m.LogsComponent),
       },
       {
         path: 'users',
-        loadComponent: () => import('./features/admin/pages/users/users.component').then(m => m.UsersComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/users/users.component').then((m) => m.UsersComponent),
       },
       {
         path: 'farms',
-        loadComponent: () => import('./features/admin/pages/admin-farms/admin-farms.component').then(m => m.AdminFarmsComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/admin-farms/admin-farms.component').then(
+            (m) => m.AdminFarmsComponent,
+          ),
       },
       {
         path: 'farmers',
-        loadComponent: () => import('./features/admin/pages/farmers/farmers.component').then(m => m.FarmersComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/farmers/farmers.component').then(
+            (m) => m.FarmersComponent,
+          ),
       },
       {
         path: 'settings',
-        loadComponent: () => import('./features/admin/pages/admin-settings/admin-settings.component').then(m => m.AdminSettingsComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/admin-settings/admin-settings.component').then(
+            (m) => m.AdminSettingsComponent,
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+        data: { shell: 'admin' },
       },
       {
         path: 'notifications',
-        loadComponent: () => import('./features/admin/pages/admin-notifications/admin-notifications.component').then(m => m.AdminNotificationsComponent)
+        loadComponent: () =>
+          import('./features/admin/pages/admin-notifications/admin-notifications.component').then(
+            (m) => m.AdminNotificationsComponent,
+          ),
       },
       {
         path: 'sensor-analytics',
-        loadComponent: () => import('./features/sensor-analytics/sensor-analytics.component').then(m => m.SensorAnalyticsComponent)
-      }
-    ]
+        loadComponent: () =>
+          import('./features/sensor-analytics/sensor-analytics.component').then(
+            (m) => m.SensorAnalyticsComponent,
+          ),
+      },
+    ],
   },
   // ================================
   // FARMER DASHBOARD ROUTES
@@ -133,49 +181,62 @@ export const routes: Routes = [
   // ================================
   {
     path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+    canActivate: [farmerGuard],
   },
   {
     path: 'farms',
-    loadComponent: () => import('./features/farms/farms.component').then(m => m.FarmsComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () => import('./features/farms/farms.component').then((m) => m.FarmsComponent),
+    canActivate: [farmerGuard],
   },
   {
     path: 'devices',
-    loadComponent: () => import('./features/devices/devices.component').then(m => m.DevicesComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/devices/devices.component').then((m) => m.DevicesComponent),
+    canActivate: [farmerGuard],
   },
   {
     path: 'sensors',
-    loadComponent: () => import('./features/sensors/sensors.component').then(m => m.SensorsComponent),
+    loadComponent: () =>
+      import('./features/sensors/sensors.component').then((m) => m.SensorsComponent),
     canActivate: [farmerGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'sensors/analytics',
-    loadComponent: () => import('./features/sensor-analytics/sensor-analytics.component').then(m => m.SensorAnalyticsComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/sensor-analytics/sensor-analytics.component').then(
+        (m) => m.SensorAnalyticsComponent,
+      ),
+    canActivate: [farmerGuard],
   },
   {
     path: 'sensor-readings',
-    loadComponent: () => import('./features/sensors/sensor-readings/sensor-readings.component').then(m => m.SensorReadingsComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/sensors/sensor-readings/sensor-readings.component').then(
+        (m) => m.SensorReadingsComponent,
+      ),
+    canActivate: [farmerGuard],
   },
   {
     path: 'actions',
-    loadComponent: () => import('./features/actions/actions.component').then(m => m.ActionsComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/actions/actions.component').then((m) => m.ActionsComponent),
+    canActivate: [farmerGuard],
   },
   {
     path: 'zones',
-    loadComponent: () => import('./features/zones/zones.component').then(m => m.ZonesComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () => import('./features/zones/zones.component').then((m) => m.ZonesComponent),
+    canActivate: [farmerGuard],
   },
   {
     path: 'zones/:id',
-    loadComponent: () => import('./features/zones/zone-detail/zone-detail.component').then(m => m.ZoneDetailComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/zones/zone-detail/zone-detail.component').then(
+        (m) => m.ZoneDetailComponent,
+      ),
+    canActivate: [farmerGuard],
   },
   {
     path: 'crops',
@@ -183,44 +244,57 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/crops/crops-dashboard').then(m => m.CropDashboardComponent)
+        loadComponent: () =>
+          import('./features/crops/crops-dashboard').then((m) => m.CropDashboardComponent),
       },
       {
         path: 'create',
-        loadComponent: () => import('./features/crops/crop-form/crop-form.component').then(m => m.CropFormComponent)
+        loadComponent: () =>
+          import('./features/crops/crop-form/crop-form.component').then((m) => m.CropFormComponent),
       },
       {
         path: ':id/dashboard',
-        loadComponent: () => import('./features/crops/crops-dashboard').then(m => m.CropDashboardComponent)
+        loadComponent: () =>
+          import('./features/crops/crops-dashboard').then((m) => m.CropDashboardComponent),
       },
       {
         path: ':id/edit',
-        loadComponent: () => import('./features/crops/crop-form/crop-form.component').then(m => m.CropFormComponent)
-      }
-    ]
+        loadComponent: () =>
+          import('./features/crops/crop-form/crop-form.component').then((m) => m.CropFormComponent),
+      },
+    ],
   },
   {
     path: 'profile',
-    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent),
-    canActivate: [authGuard]
+    loadComponent: () =>
+      import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'settings',
-    loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent),
-    canActivate: [authGuard]
+    loadComponent: () =>
+      import('./features/settings/settings.component').then((m) => m.SettingsComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'notifications',
-    loadComponent: () => import('./features/notifications/notifications.component').then(m => m.NotificationsComponent),
-    canActivate: [farmerGuard]
+    loadComponent: () =>
+      import('./features/notifications/notifications.component').then(
+        (m) => m.NotificationsComponent,
+      ),
+    canActivate: [farmerGuard],
   },
   {
     path: 'settings/notifications',
-    loadComponent: () => import('./features/settings/notification-settings/notification-settings.component').then(m => m.NotificationSettingsComponent),
-    canActivate: [authGuard]
+    loadComponent: () =>
+      import('./features/settings/notification-settings/notification-settings.component').then(
+        (m) => m.NotificationSettingsComponent,
+      ),
+    canActivate: [authGuard],
   },
   {
     path: '**',
-    loadComponent: () => import('./shared/components/not-found/not-found.component').then(m => m.NotFoundComponent)
-  }
+    loadComponent: () =>
+      import('./shared/components/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];

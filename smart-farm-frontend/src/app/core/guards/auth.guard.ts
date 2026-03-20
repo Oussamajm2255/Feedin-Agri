@@ -22,5 +22,13 @@ export const authGuard: CanActivateFn = async (route, state) => {
     return false;
   }
 
+  // Redirect admins accessing standard farmer routes to their admin equivalent
+  if (currentUser?.role === 'admin') {
+    if (state.url === '/profile') {
+      router.navigate(['/admin/profile']);
+      return false;
+    }
+  }
+
   return true;
 };
