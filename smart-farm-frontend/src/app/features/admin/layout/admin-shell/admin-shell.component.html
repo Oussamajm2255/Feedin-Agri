@@ -21,7 +21,7 @@
     <div class="bento-overlay" [class.visible]="isBentoOpen">
       <div class="bento-grid" [@staggeredPopIn]="isBentoOpen ? 'visible' : 'hidden'">
         <!-- Card 1: Header / Admin Shield -->
-        <div class="bento-card bento-header">
+        <a class="bento-card bento-header" matRipple (click)="navigateTo('/admin/profile')">
           <div class="bento-profile">
             <div class="bento-avatar">
               <mat-icon>admin_panel_settings</mat-icon>
@@ -36,7 +36,16 @@
             <span class="dot"></span>
             <span class="text">Online</span>
           </div>
-        </div>
+        </a>
+
+        <!-- Card 2: Vue d'ensemble (Full Width) -->
+        <a class="bento-card bento-overview" matRipple (click)="navigateTo('/admin/overview')">
+          <div class="overview-content">
+            <mat-icon>dashboard</mat-icon>
+            <span class="label">Vue d'ensemble</span>
+          </div>
+          <mat-icon class="arrow-icon">arrow_forward_ios</mat-icon>
+        </a>
 
         <!-- Cards 2 & 3: Priority Metrics (Farms, Devices) -->
         <a class="bento-card bento-priority" (click)="navigateTo('/admin/farms')">
@@ -51,13 +60,7 @@
           <span class="label">Appareils</span>
         </a>
 
-        <!-- Cards 4-8: Secondary Focus -->
-        <a class="bento-card bento-secondary" (click)="navigateTo('/admin/overview')">
-          <mat-icon>dashboard</mat-icon>
-          <span class="label">Vue d'ensemble</span>
-        </a>
-
-        <a class="bento-card bento-secondary" (click)="navigateTo('/admin/users')">
+        <a class="bento-card bento-secondary" matRipple (click)="navigateTo('/admin/users')">
           <mat-icon>group</mat-icon>
           <span class="label">Utilisateurs</span>
         </a>

@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data) => {
-      this.isAdminShell = data['shell'] === 'admin' || this.user()?.role === 'admin';
+      this.isAdminShell = data['shell'] === 'admin';
     });
     this.loadUserProfile();
   }

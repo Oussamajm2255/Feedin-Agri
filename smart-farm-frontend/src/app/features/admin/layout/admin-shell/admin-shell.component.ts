@@ -26,22 +26,29 @@ import { User } from '../../../../core/models/user.model';
     MatButtonModule,
     AdminSidebar,
     AdminHeader,
-    AdminWorkspace
+    AdminWorkspace,
   ],
   templateUrl: './admin-shell.component.html',
   styleUrl: './admin-shell.component.scss',
   animations: [
     trigger('staggeredPopIn', [
       transition('* => visible', [
-        query('.bento-card', [
-          style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }),
-          stagger('50ms', [
-            animate('0.5s cubic-bezier(0.34, 1.56, 0.64, 1)', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
-          ])
-        ], { optional: true })
-      ])
-    ])
-  ]
+        query(
+          '.bento-card',
+          [
+            style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }),
+            stagger('50ms', [
+              animate(
+                '0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                style({ opacity: 1, transform: 'translateY(0) scale(1)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
+      ]),
+    ]),
+  ],
 })
 export class AdminShellComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -83,9 +90,13 @@ export class AdminShellComponent implements OnInit, OnDestroy {
 
   private observeBreakpoints(): void {
     this.breakpointObserver
-      .observe(['(max-width: 767px)', '(min-width: 768px) and (max-width: 1023px)', '(min-width: 1024px)'])
+      .observe([
+        '(max-width: 767px)',
+        '(min-width: 768px) and (max-width: 1023px)',
+        '(min-width: 1024px)',
+      ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
+      .subscribe((result) => {
         this.isMobile = result.breakpoints['(max-width: 767px)'];
         this.isTablet = result.breakpoints['(min-width: 768px) and (max-width: 1023px)'];
         this.isDesktop = result.breakpoints['(min-width: 1024px)'];
@@ -100,18 +111,30 @@ export class AdminShellComponent implements OnInit, OnDestroy {
     // Reactive user assignment
     this.currentUser = this.authService.user();
 
-    // Fire and forget simple data load for the mobile bento dashboard
-    firstValueFrom(this.adminApiService.getFarms()).then(response => {
-      if (response && response.total !== undefined) {
-        this.farmCount = response.total;
-      }
-    }).catch(() => {});
+    // Load simple data for the mobile bento dashboard
+    this.adminApiService
+      .getFarms()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response && response.total !== undefined) {
+            this.farmCount = response.total;
+          }
+        },
+        error: () => {},
+      });
 
-    firstValueFrom(this.adminApiService.getDevices()).then(response => {
-      if (response && response.total !== undefined) {
-        this.deviceCount = response.total;
-      }
-    }).catch(() => {});
+    this.adminApiService
+      .getDevices()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response && response.total !== undefined) {
+            this.deviceCount = response.total;
+          }
+        },
+        error: () => {},
+      });
   }
 
   toggleMobileBento(): void {
