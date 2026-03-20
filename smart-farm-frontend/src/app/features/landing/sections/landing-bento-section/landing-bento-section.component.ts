@@ -43,6 +43,19 @@ export class LandingBentoSectionComponent implements OnInit {
     return this.isLoading() || isTransLoading || !hasTranslations;
   });
 
+  constructor() {
+    // Monitor translation availability to stop loading
+    // MUST be in constructor or field initializer (injection context)
+    effect(() => {
+      const translations = this.languageService.translations();
+      if (translations && Object.keys(translations).length > 0) {
+        // Add a tiny artificial delay for smooth transition even if cache hits
+        // Use NgZone if needed, but setTimeout is usually fine for simple signal updates
+        setTimeout(() => this.isLoading.set(false), 300);
+      }
+    }, { allowSignalWrites: true });
+  }
+
   cards: BentoCard[] = [
     {
       title: 'landing.bento.cards.0.title',
@@ -108,15 +121,6 @@ export class LandingBentoSectionComponent implements OnInit {
       ...card,
       icon: card.icon ? this.sanitizer.bypassSecurityTrustHtml(card.icon as string) : undefined
     }));
-
-    // Monitor translation availability to stop loading
-    effect(() => {
-      const translations = this.languageService.translations();
-      if (translations && Object.keys(translations).length > 0) {
-        // Add a tiny artificial delay for smooth transition even if cache hits
-        setTimeout(() => this.isLoading.set(false), 300);
-      }
-    }, { allowSignalWrites: true });
   }
 
   onMouseMove(event: MouseEvent, element: HTMLElement): void {
