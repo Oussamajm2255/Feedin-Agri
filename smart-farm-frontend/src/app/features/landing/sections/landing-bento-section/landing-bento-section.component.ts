@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ScrollRevealDirective } from '../../animations/directives/scroll-reveal.directive';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
 interface BentoCard {
   title: string;
@@ -27,6 +28,33 @@ interface BentoCard {
 export class LandingBentoSectionComponent implements OnInit {
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
+  private languageService = inject(LanguageService);
+
+  // Skeleton loading state
+  public isLoading = signal<boolean>(true);
+  
+  // Also expose the LanguageService isLoading for broader coverage
+  public isLanguageLoading = this.languageService.isLoading;
+  
+  // Combine both: loading until initialized AND until translations are received
+  public showSkeleton = computed(() => {
+    const isTransLoading = this.isLanguageLoading();
+    const hasTranslations = Object.keys(this.languageService.translations()).length > 0;
+    return this.isLoading() || isTransLoading || !hasTranslations;
+  });
+
+  constructor() {
+    // Monitor translation availability to stop loading
+    // MUST be in constructor or field initializer (injection context)
+    effect(() => {
+      const translations = this.languageService.translations();
+      if (translations && Object.keys(translations).length > 0) {
+        // Add a tiny artificial delay for smooth transition even if cache hits
+        // Use NgZone if needed, but setTimeout is usually fine for simple signal updates
+        setTimeout(() => this.isLoading.set(false), 300);
+      }
+    }, { allowSignalWrites: true });
+  }
 
   cards: BentoCard[] = [
     {

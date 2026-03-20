@@ -4,55 +4,52 @@
    ========================================= */
 
 /* Shimmer keyframes — directional gradient sweep */
+/* Shimmer keyframes — directional gradient sweep */
 @keyframes shimmer {
-    0% {
-        background-position: -800px 0;
-    }
-
-    100% {
-        background-position: 800px 0;
-    }
+    100% { background-position: 100% 0; }
 }
 
 /* Shared shimmer mixin via class */
 .shimmer {
-    background: linear-gradient(90deg,
-            #f0f0f0 25%,
-            #e0e0e0 50%,
-            #f0f0f0 75%);
-    background-size: 800px 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
+    background: linear-gradient(
+        90deg,
+        rgba(241, 245, 249, 1) 0%,
+        rgba(226, 232, 240, 1) 50%,
+        rgba(241, 245, 249, 1) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
 }
 
 /* Section container */
 .skeleton-section {
-    max-width: 1200px;
+    max-width: var(--container-max-width, 1200px);
     margin: 0 auto;
-    padding: 3rem 1.5rem;
+    padding: 6rem var(--section-gutter, 1.5rem);
 }
 
 /* ---- Header bars ---- */
 .skeleton-bar {
-    border-radius: 6px;
+    border-radius: 100px;
     margin: 0 auto;
 }
 
 .skeleton-label {
     width: 120px;
-    height: 14px;
+    height: 24px;
     margin-bottom: 1rem;
 }
 
 .skeleton-title {
-    width: 320px;
-    height: 24px;
-    margin-bottom: 0.75rem;
+    width: min(100%, 400px);
+    height: 48px;
+    margin-bottom: 1.5rem;
 }
 
 .skeleton-subtitle {
-    width: 240px;
-    height: 16px;
-    margin-bottom: 2.5rem;
+    width: min(100%, 300px);
+    height: 24px;
+    margin-bottom: 3.5rem;
 }
 
 /* ---- Card grid ---- */
@@ -64,25 +61,26 @@
 
 /* ---- Individual card ---- */
 .skeleton-card {
-    padding: 1.5rem;
-    border-radius: 12px;
-    background: #fafafa;
-    border: 1px solid #f0f0f0;
+    padding: 2.25rem;
+    border-radius: 24px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 /* Icon circle placeholder */
 .skeleton-icon {
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 14px;
     margin-bottom: 1.25rem;
 }
 
 /* Text line placeholders */
 .skeleton-line {
-    height: 12px;
-    border-radius: 4px;
-    margin-bottom: 0.75rem;
+    height: 18px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
 
     &--long {
         width: 100%;
@@ -98,32 +96,18 @@
     }
 }
 
-/* =========================================
-   RESPONSIVE BREAKPOINTS
-   ========================================= */
-
-/* Tablet — 2 columns max */
-@media (max-width: 900px) {
-    .skeleton-grid {
-        grid-template-columns: repeat(2, 1fr);
+:host-context(body.dark-theme) {
+    .shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(30, 41, 59, 0.5) 0%,
+            rgba(51, 65, 85, 0.5) 50%,
+            rgba(30, 41, 59, 0.5) 100%
+        );
+        background-size: 200% 100%;
     }
-}
-
-/* Mobile — single column */
-@media (max-width: 600px) {
-    .skeleton-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .skeleton-section {
-        padding: 2rem 1rem;
-    }
-
-    .skeleton-title {
-        width: 240px;
-    }
-
-    .skeleton-subtitle {
-        width: 180px;
+    .skeleton-card {
+        background: rgba(30, 41, 59, 0.5);
+        border-color: rgba(255, 255, 255, 0.05);
     }
 }
