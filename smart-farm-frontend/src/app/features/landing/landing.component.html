@@ -9,14 +9,8 @@
     <!-- 1. Hero -->
     <app-hero-section id="hero-section" />
 
-    <!-- The Bento Grid Ecosystem Section (Deferred for performance) -->
-    @defer (on viewport; prefetch on idle) {
+    <!-- The Bento Grid Ecosystem Section (Eagerly loaded for zero-gap experience) -->
     <app-landing-bento-section id="bento-section"></app-landing-bento-section>
-    } @loading (minimum 400ms) {
-    <app-skeleton-section [cards]="4" [cols]="2" />
-    } @placeholder {
-    <app-skeleton-section [cards]="4" [cols]="2" />
-    }
 
     <!-- 2. À propos Teaser (Deferred — loads on viewport) -->
     @defer (on viewport; prefetch on idle) {
