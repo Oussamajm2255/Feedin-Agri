@@ -1,23 +1,82 @@
-<div class="admin-shell" [class.sidebar-drawer-open]="isSidebarDrawerOpen"
-  [class.sidebar-collapsed]="isSidebarCollapsed" [class.sidebar-hovered]="isSidebarHovered" [class.rtl]="isRTL()"
-  [attr.dir]="isRTL() ? 'rtl' : 'ltr'">
-  <!-- Backdrop for mobile/tablet overlays -->
-  <div class="admin-backdrop" [class.visible]="shouldShowBackdrop" (click)="onBackdropClick()"
-    [style.pointer-events]="shouldShowBackdrop ? 'auto' : 'none'"></div>
+<mat-sidenav-container class="admin-shell" [class.rtl]="isRTL()" [attr.dir]="isRTL() ? 'rtl' : 'ltr'"
+  hasBackdrop="false">
 
-  <!-- Left Sidebar -->
-  <app-admin-sidebar [isCollapsed]="isSidebarCollapsed" [isDrawerOpen]="isSidebarDrawerOpen" [isMobile]="isMobile"
-    [isTablet]="isTablet" (closeSidebar)="closeSidebarDrawer()"
-    (sidebarHover)="onSidebarHover($event)"></app-admin-sidebar>
+  <!-- Left Sidebar inside MatSidenav (Desktop only) -->
+  <mat-sidenav #sidenav [mode]="'side'" [opened]="isDesktop" class="admin-sidenav">
+    <app-admin-sidebar [isCollapsed]="isSidebarCollapsed" [isDrawerOpen]="false" [isMobile]="isMobile"
+      [isTablet]="isTablet" (sidebarHover)="onSidebarHover($event)">
+    </app-admin-sidebar>
+  </mat-sidenav>
 
   <!-- Main Content Area -->
-  <div class="admin-main-content">
+  <mat-sidenav-content class="admin-main-content" [class.sidebar-hovered]="isSidebarHovered && isDesktop">
     <!-- Top Header -->
-    <app-admin-header [isMobile]="isMobile" (toggleSidebar)="toggleSidebarDrawer()"></app-admin-header>
+    <app-admin-header [isMobile]="isMobile" (toggleSidebar)="toggleMobileBento()"></app-admin-header>
 
     <!-- Workspace (scrollable content) -->
     <app-admin-workspace>
       <router-outlet></router-outlet>
     </app-admin-workspace>
-  </div>
-</div>
+    <!-- Full-Screen Mobile Bento Overlay -->
+    <div class="bento-overlay" [class.visible]="isBentoOpen">
+      <div class="bento-grid" [@staggeredPopIn]="isBentoOpen ? 'visible' : 'hidden'">
+        <!-- Card 1: Header / Admin Shield -->
+        <div class="bento-card bento-header">
+          <div class="bento-profile">
+            <div class="bento-avatar">
+              <mat-icon>admin_panel_settings</mat-icon>
+            </div>
+            <div class="bento-user-info">
+              <span class="role">{{ (currentUser?.role || 'SUPER ADMIN') | uppercase }}</span>
+              <span class="name">{{ currentUser?.first_name ? currentUser?.first_name + ' ' + currentUser?.last_name :
+                'Admin' }}</span>
+            </div>
+          </div>
+          <div class="bento-system-status">
+            <span class="dot"></span>
+            <span class="text">Online</span>
+          </div>
+        </div>
+
+        <!-- Cards 2 & 3: Priority Metrics (Farms, Devices) -->
+        <a class="bento-card bento-priority" (click)="navigateTo('/admin/farms')">
+          <mat-icon>agriculture</mat-icon>
+          <span class="count">{{ farmCount }}</span>
+          <span class="label">Fermes</span>
+        </a>
+
+        <a class="bento-card bento-priority" (click)="navigateTo('/admin/devices')">
+          <mat-icon>memory</mat-icon>
+          <span class="count">{{ deviceCount }}</span>
+          <span class="label">Appareils</span>
+        </a>
+
+        <!-- Cards 4-7: Secondary Focus -->
+        <a class="bento-card bento-secondary" (click)="navigateTo('/admin/users')">
+          <mat-icon>group</mat-icon>
+          <span class="label">Utilisateurs</span>
+        </a>
+
+        <a class="bento-card bento-secondary" (click)="navigateTo('/admin/logs')">
+          <mat-icon>receipt_long</mat-icon>
+          <span class="label">Journaux</span>
+        </a>
+
+        <a class="bento-card bento-secondary" (click)="navigateTo('/admin/sensor-analytics')">
+          <mat-icon>insights</mat-icon>
+          <span class="label">Analytics</span>
+        </a>
+
+        <a class="bento-card bento-secondary" (click)="navigateTo('/admin/notifications')">
+          <mat-icon>notifications_active</mat-icon>
+          <span class="label">Notifications</span>
+        </a>
+      </div>
+
+      <!-- Centered Close FAB -->
+      <button mat-fab class="bento-close-btn" (click)="toggleMobileBento()" aria-label="Close menu">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

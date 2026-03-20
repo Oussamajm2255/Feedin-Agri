@@ -59,6 +59,16 @@ export class AdminHeader implements OnInit, OnDestroy {
   breadcrumbs: Breadcrumb[] = [];
   notificationCount = 0;
   pendingAccessCount = 0;
+
+  /** @returns Formatted notification count, capped at '99+' */
+  get formattedNotificationCount(): string | number {
+    return this.notificationCount > 99 ? '99+' : this.notificationCount;
+  }
+
+  /** @returns Formatted pending access count, capped at '99+' */
+  get formattedPendingAccessCount(): string | number {
+    return this.pendingAccessCount > 99 ? '99+' : this.pendingAccessCount;
+  }
   isDarkTheme = false;
   currentUser: any = null;
   private destroy$ = new Subject<void>();

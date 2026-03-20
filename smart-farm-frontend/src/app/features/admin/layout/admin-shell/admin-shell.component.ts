@@ -1,54 +1,79 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Subject, takeUntil } from 'rxjs';
+import { RouterOutlet, Router } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Subject, takeUntil, firstValueFrom } from 'rxjs';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { AdminSidebar } from '../admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../admin-header/admin-header';
 import { AdminWorkspace } from '../admin-workspace/admin-workspace';
 import { LanguageService } from '../../../../core/services/language.service';
+import { AdminApiService } from '../../../../admin/core/services/admin-api.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { User } from '../../../../core/models/user.model';
 
-/**
- * Admin Shell Component
- * Root container for the Admin Dashboard layout
- * Orchestrates sidebar, header, and workspace
- */
 @Component({
   selector: 'app-admin-shell',
   standalone: true,
   imports: [
     CommonModule,
     RouterOutlet,
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
     AdminSidebar,
     AdminHeader,
     AdminWorkspace
   ],
   templateUrl: './admin-shell.component.html',
-  styleUrl: './admin-shell.component.scss'
+  styleUrl: './admin-shell.component.scss',
+  animations: [
+    trigger('staggeredPopIn', [
+      transition('* => visible', [
+        query('.bento-card', [
+          style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }),
+          stagger('50ms', [
+            animate('0.5s cubic-bezier(0.34, 1.56, 0.64, 1)', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ]
 })
 export class AdminShellComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   public languageService = inject(LanguageService);
+  private router = inject(Router);
+  private adminApiService = inject(AdminApiService);
+  private authService = inject(AuthService);
 
   // Layout state
-  isSidebarCollapsed = true; // Default to collapsed (icon-only)
-  isSidebarDrawerOpen = false;
+  isSidebarCollapsed = true;
   isSidebarHovered = false;
   isMobile = false;
   isTablet = false;
   isDesktop = true;
 
+  // Mobile Bento state
+  isBentoOpen = false;
+
+  // Data for Bento
+  currentUser: User | null = null;
+  farmCount = 0;
+  deviceCount = 0;
+
   constructor(private breakpointObserver: BreakpointObserver) {}
 
-  /**
-   * Check if current language is RTL
-   */
   isRTL(): boolean {
     return this.languageService.isRTL();
   }
 
   ngOnInit(): void {
     this.observeBreakpoints();
+    this.loadBentoData();
   }
 
   ngOnDestroy(): void {
@@ -56,9 +81,6 @@ export class AdminShellComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Observe responsive breakpoints and adjust layout
-   */
   private observeBreakpoints(): void {
     this.breakpointObserver
       .observe(['(max-width: 767px)', '(min-width: 768px) and (max-width: 1023px)', '(min-width: 1024px)'])
@@ -68,50 +90,41 @@ export class AdminShellComponent implements OnInit, OnDestroy {
         this.isTablet = result.breakpoints['(min-width: 768px) and (max-width: 1023px)'];
         this.isDesktop = result.breakpoints['(min-width: 1024px)'];
 
-        // Auto-close drawer on desktop
         if (this.isDesktop) {
-          this.isSidebarDrawerOpen = false;
+          this.isBentoOpen = false;
         }
       });
   }
 
-  /**
-   * Toggle sidebar drawer (mobile/tablet)
-   */
-  toggleSidebarDrawer(): void {
-    this.isSidebarDrawerOpen = !this.isSidebarDrawerOpen;
+  private loadBentoData(): void {
+    // Reactive user assignment
+    this.currentUser = this.authService.user();
+
+    // Fire and forget simple data load for the mobile bento dashboard
+    firstValueFrom(this.adminApiService.getFarms()).then(response => {
+      if (response && response.total !== undefined) {
+        this.farmCount = response.total;
+      }
+    }).catch(() => {});
+
+    firstValueFrom(this.adminApiService.getDevices()).then(response => {
+      if (response && response.total !== undefined) {
+        this.deviceCount = response.total;
+      }
+    }).catch(() => {});
   }
 
-  /**
-   * Close sidebar drawer
-   */
-  closeSidebarDrawer(): void {
-    this.isSidebarDrawerOpen = false;
+  toggleMobileBento(): void {
+    if (this.isDesktop) return;
+    this.isBentoOpen = !this.isBentoOpen;
   }
 
-  /**
-   * Handle sidebar hover state
-   */
   onSidebarHover(isHovered: boolean): void {
     this.isSidebarHovered = isHovered;
   }
 
-  /**
-   * Handle backdrop click (mobile/tablet)
-   */
-  onBackdropClick(): void {
-    // Only close if backdrop is actually visible and blocking
-    if (this.isSidebarDrawerOpen) {
-      this.closeSidebarDrawer();
-    }
-  }
-
-  /**
-   * Check if backdrop should be visible
-   */
-  get shouldShowBackdrop(): boolean {
-    // Only show backdrop on mobile/tablet when drawer is open
-    return this.isSidebarDrawerOpen && !this.isDesktop;
+  navigateTo(route: string): void {
+    this.isBentoOpen = false;
+    this.router.navigate([route]);
   }
 }
-

@@ -38,7 +38,8 @@
           <mat-icon class="filter-icon">date_range</mat-icon>
           {{ 'common.date' | translate }}
         </mat-label>
-        <mat-select [value]="dateRange()" (selectionChange)="onDateRangeChange($event.value)">
+        <mat-select [value]="dateRange()" (selectionChange)="onDateRangeChange($event.value)"
+          hideSingleSelectionIndicator="true" panelClass="premium-dropdown">
           <mat-option value="today">
             <mat-icon>today</mat-icon>
             <span>{{ 'admin.logs.today' | translate }}</span>
@@ -60,7 +61,8 @@
           <mat-icon class="filter-icon">person</mat-icon>
           {{ 'admin.farmers.filters.status' | translate }}
         </mat-label>
-        <mat-select [value]="selectedFarmerId()" (selectionChange)="onFarmerFilterChange($event.value)">
+        <mat-select [value]="selectedFarmerId()" (selectionChange)="onFarmerFilterChange($event.value)"
+          hideSingleSelectionIndicator="true" panelClass="premium-dropdown">
           <mat-option [value]="null">
             <mat-icon>people</mat-icon>
             <span>{{ 'admin.sidebar.farmers' | translate }} ({{ availableFarmers().length }})</span>
@@ -80,7 +82,7 @@
           {{ 'admin.devices.filters.farm' | translate }}
         </mat-label>
         <mat-select [value]="selectedFarmId()" (selectionChange)="onFarmFilterChange($event.value)"
-          [disabled]="!!selectedFarmerId()">
+          [disabled]="!!selectedFarmerId()" hideSingleSelectionIndicator="true" panelClass="premium-dropdown">
           <mat-option [value]="null">
             <mat-icon>apps</mat-icon>
             <span>{{ 'admin.sidebar.farms' | translate }} ({{ filteredFarms().length }})</span>
@@ -95,14 +97,32 @@
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading()" class="loading-overlay">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>{{ 'admin.overview.loading' | translate }}</p>
+  <!-- Unauthorized State -->
+  <div *ngIf="isUnauthorized()" class="unauthorized-state">
+    <mat-icon>gpp_bad</mat-icon>
+    <p>Unauthorized Access</p>
+    <p class="subtitle">You do not have permission to view this dashboard. Please contact a Super Admin or login again.
+    </p>
+  </div>
+
+  <!-- Loading State (Skeleton UI) -->
+  <div *ngIf="isLoading() && !isUnauthorized()" class="overview-kpi-row">
+    <div class="kpi-card skeleton" *ngFor="let i of [1,2,3,4,5,6]" style="height: 88px;"></div>
+  </div>
+
+  <div *ngIf="isLoading() && !isUnauthorized()" class="overview-main-grid">
+    <div class="overview-main-column">
+      <div class="card skeleton chart" style="height: 380px;"></div>
+      <div class="card skeleton" style="height: 420px;"></div>
+    </div>
+    <div class="overview-side-column">
+      <div class="card skeleton" style="height: 280px;"></div>
+      <div class="card skeleton" style="height: 320px;"></div>
+    </div>
   </div>
 
   <!-- KPI Row -->
-  <div class="overview-kpi-row" *ngIf="!isLoading()">
+  <div class="overview-kpi-row" *ngIf="!isLoading() && !isUnauthorized()">
     <div *ngFor="let kpi of kpiCards(); trackBy: trackByKpiLabel" class="kpi-card" [class.clickable]="kpi.route"
       [class.has-trend]="kpi.trend !== null && kpi.trend !== undefined" [class]="kpi.performanceClass || 'perf-neutral'"
       (click)="kpi.route && navigateTo(kpi.route)" [matTooltip]="kpi.subtitle || ''" matTooltipPosition="above">
@@ -130,7 +150,7 @@
   </div>
 
   <!-- Main Grid -->
-  <div class="overview-main-grid" *ngIf="!isLoading()">
+  <div class="overview-main-grid" *ngIf="!isLoading() && !isUnauthorized()">
     <!-- Left Column -->
     <div class="overview-main-column">
       <!-- Usage Trend Card -->

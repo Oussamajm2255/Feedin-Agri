@@ -1,7 +1,8 @@
 @use '../../../../../styles.scss' as *;
 
 // ================================
-// Admin Sidebar - Feedin Theme (Matched to Header)
+// Admin Sidebar — Fluid Rail v2.0
+// 64px (mini) → 260px (expanded)
 // ================================
 
 :host {
@@ -10,55 +11,62 @@
     z-index: 1030;
 }
 
-// Glassmorphism Mixin (Matching Header)
-@mixin glass-effect($opacity: 0.85, $blur: 20px) {
-    background: var(--glass-bg, rgba(255, 255, 255, $opacity));
-    backdrop-filter: blur($blur);
-    -webkit-backdrop-filter: blur($blur);
-    border-right: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.06);
+// ---- Glass Mixin ----
+@mixin glass-panel($blur: 10px) {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur($blur) saturate(180%);
+    -webkit-backdrop-filter: blur($blur) saturate(180%);
+    border-right: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
 
     body.dark-theme & {
-        background: var(--glass-bg, rgba(30, 41, 59, $opacity));
-        border-right: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+        background: rgba(15, 23, 42, 0.92);
+        border-right-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.45);
     }
 }
 
+// ================================
+// Main Sidebar Container
+// ================================
 .admin-sidebar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
-    width: 80px; // Default collapsed width
-    @include glass-effect(0.85, 20px);
+    width: 64px; // Mini state
+    @include glass-panel(10px);
     display: flex;
     flex-direction: column;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition:
+        width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease;
     overflow: hidden;
     z-index: 1030;
-    border-top-right-radius: 2rem;
-    border-bottom-right-radius: 2rem;
-    margin-right: 10px; // Visual separation if needed, but fixed position ignores this.
-    // Actually, let's keep it flush left but rounded corners on the right side look nice.
+    border-top-right-radius: 1.75rem;
+    border-bottom-right-radius: 1.75rem;
 
-    // Hover Expansion
+    // Hover → Expanded (desktop)
     &:hover {
-        width: 280px;
-        box-shadow: 10px 0 50px rgba(0, 0, 0, 0.1);
+        width: 260px;
+        box-shadow: 8px 0 40px rgba(0, 0, 0, 0.1);
+
+        body.dark-theme & {
+            box-shadow: 8px 0 48px rgba(0, 0, 0, 0.5);
+        }
 
         .logo-text,
         .version-text {
             opacity: 1;
             transform: translateX(0);
-            transition-delay: 0.1s;
+            transition-delay: 0.08s;
         }
 
         .nav-link .nav-text,
         .sub-nav-link .sub-nav-text {
             opacity: 1 !important;
             transform: translateX(0) !important;
-            transition-delay: 0.1s;
+            transition-delay: 0.08s;
         }
 
         .logo-icon {
@@ -66,13 +74,12 @@
         }
     }
 
-    // Mobile/Tablet Drawer Mode
+    // Mobile / Tablet drawer mode
     &.mobile,
     &.tablet {
-        width: 280px;
+        width: 260px;
         transform: translateX(-105%);
-        border-right: none;
-        border-radius: 0 2rem 2rem 0;
+        border-radius: 0 1.75rem 1.75rem 0;
         box-shadow: 10px 0 50px rgba(0, 0, 0, 0.2);
 
         &.drawer-open {
@@ -94,51 +101,51 @@
 }
 
 // ================================
-// Sidebar Header
+// Sidebar Header (Logo)
 // ================================
 .sidebar-header {
-    height: 80px; // Match header height
+    height: 72px;
     display: flex;
     align-items: center;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
-    position: relative;
-    overflow: hidden;
+    padding: 0 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     flex-shrink: 0;
+    overflow: hidden;
 
     body.dark-theme & {
-        border-bottom-color: rgba(255, 255, 255, 0.1);
+        border-bottom-color: rgba(255, 255, 255, 0.08);
     }
 }
 
 .sidebar-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    width: 100%;
+    gap: 10px;
     overflow: hidden;
     cursor: pointer;
+    width: 100%;
 
     .logo-icon {
         width: 40px;
         height: 40px;
+        min-width: 40px;
         object-fit: contain;
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        filter: drop-shadow(0 2px 6px rgba(16, 185, 129, 0.3));
         transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         flex-shrink: 0;
     }
 
     .logo-text {
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 800;
-        background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
+        background: linear-gradient(135deg, var(--text-primary, #1e293b), #22C55E);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         white-space: nowrap;
         opacity: 0;
-        transform: translateX(-20px);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform: translateX(-16px);
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 
         &.feedin-brand {
             font-family: 'Therilo', 'Poppins', sans-serif;
@@ -152,17 +159,17 @@
 // ================================
 .sidebar-nav {
     flex: 1;
-    padding: 20px 12px;
+    padding: 16px 8px;
     overflow-y: auto;
     overflow-x: hidden;
 
     &::-webkit-scrollbar {
-        width: 4px;
+        width: 3px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba(16, 185, 129, 0.2);
-        border-radius: 4px;
+        background: rgba(34, 197, 94, 0.25);
+        border-radius: 3px;
     }
 }
 
@@ -172,97 +179,108 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .nav-item {
     position: relative;
-    border-radius: 16px;
-    transition: all 0.3s ease;
+    border-radius: 14px;
 
     .nav-link {
         display: flex;
         align-items: center;
-        padding: 12px 14px; // Compact padding
-        color: var(--text-secondary);
+        padding: 10px 12px;
+        color: var(--text-secondary, #64748b);
         text-decoration: none;
-        border-radius: 16px;
+        border-radius: 14px;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
         overflow: hidden;
-        height: 48px;
-        white-space: nowrap; // Prevent wrapping
+        height: 46px;
+        white-space: nowrap;
+        cursor: pointer;
+
+        // LEFT ACCENT — only visible on active
+        .active-accent {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scaleY(0);
+            width: 4px;
+            height: 60%;
+            background: #22C55E;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            opacity: 0;
+        }
 
         .nav-icon {
-            font-size: 24px;
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
+            font-size: 22px;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
             transition: all 0.3s ease;
             z-index: 2;
-            color: var(--text-secondary);
+            color: var(--text-secondary, #64748b);
+            flex-shrink: 0;
         }
 
         .nav-text {
-            margin-left: 16px;
+            margin-left: 14px;
+            font-size: clamp(13px, 1.1vw, 15px);
             font-weight: 500;
             opacity: 0;
             transform: translateX(-10px);
             transition: all 0.3s ease;
             z-index: 2;
-            background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-primary, #1e293b);
+            white-space: nowrap;
+
+            body.dark-theme & {
+                color: #e2e8f0;
+            }
         }
 
-        // Hover Effect
         &:hover {
-            background: rgba(16, 185, 129, 0.08); // Match header hover
-            color: #10b981;
-            transform: translateX(4px);
+            background: rgba(34, 197, 94, 0.08);
+
+            body.dark-theme & {
+                background: rgba(34, 197, 94, 0.12);
+            }
 
             .nav-icon {
-                color: #10b981;
+                color: #22C55E;
                 transform: scale(1.1);
             }
         }
     }
 
-    // Active State - "Floating Glass Pill"
+    // ★ ACTIVE STATE — Pill with green glow
     &.active {
         .nav-link {
-            background: rgba(16, 185, 129, 0.15); // Match header active
-            color: #10b981;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            background: rgba(34, 197, 94, 0.12);
+            box-shadow: 0 2px 16px rgba(34, 197, 94, 0.15);
 
             body.dark-theme & {
-                background: rgba(16, 185, 129, 0.2);
+                background: rgba(34, 197, 94, 0.18);
+                box-shadow: 0 2px 20px rgba(34, 197, 94, 0.2);
             }
 
-            &::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 4px;
-                background: #10b981;
-                border-radius: 4px;
-                box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            .active-accent {
+                transform: translateY(-50%) scaleY(1);
+                opacity: 1;
             }
 
             .nav-icon {
-                color: #10b981;
-                transform: scale(1.1);
+                color: #22C55E;
+                transform: scale(1.05);
             }
 
             .nav-text {
                 font-weight: 700;
-                background: linear-gradient(135deg, #10b981, var(--primary-green));
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
+                color: #22C55E;
+                -webkit-text-fill-color: #22C55E;
             }
         }
     }
@@ -271,12 +289,12 @@
     .sub-nav-list {
         list-style: none;
         padding: 0;
-        margin: 8px 0 0 0;
+        margin: 4px 0 0 0;
         max-height: 0;
         overflow: hidden;
         opacity: 0;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        transform: translateY(-10px);
+        transform: translateY(-8px);
 
         &.expanded {
             max-height: 200px;
@@ -286,90 +304,85 @@
     }
 
     .sub-nav-item {
-        position: relative;
-        border-radius: 12px;
-        margin-left: 24px;
-        transition: all 0.3s ease;
+        border-radius: 10px;
+        margin-left: 20px;
 
         .sub-nav-link {
             display: flex;
             align-items: center;
-            padding: 10px 14px;
-            color: var(--text-secondary);
+            padding: 8px 12px;
+            color: var(--text-secondary, #64748b);
             text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            height: 40px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            height: 38px;
             white-space: nowrap;
+            cursor: pointer;
+            position: relative;
 
             .sub-nav-icon {
-                font-size: 20px;
-                width: 20px;
-                height: 20px;
-                min-width: 20px;
-                transition: all 0.3s ease;
-                color: var(--text-secondary);
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+                min-width: 18px;
+                color: var(--text-secondary, #64748b);
+                flex-shrink: 0;
             }
 
             .sub-nav-text {
-                margin-left: 12px;
+                margin-left: 10px;
+                font-size: 13px;
                 font-weight: 400;
-                font-size: 14px;
                 opacity: 0;
-                transform: translateX(-10px);
-                transition: all 0.3s ease;
-                background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
+                transform: translateX(-8px);
+                transition: all 0.25s ease;
+                color: var(--text-primary, #1e293b);
+
+                body.dark-theme & {
+                    color: #cbd5e1;
+                }
             }
 
             &:hover {
-                background: rgba(16, 185, 129, 0.08);
-                color: #10b981;
+                background: rgba(34, 197, 94, 0.08);
 
                 .sub-nav-icon {
-                    color: #10b981;
+                    color: #22C55E;
                 }
             }
         }
 
-        &.active {
-            .sub-nav-link {
-                background: rgba(16, 185, 129, 0.12);
-                color: #10b981;
+        &.active .sub-nav-link {
+            background: rgba(34, 197, 94, 0.1);
 
-                body.dark-theme & {
-                    background: rgba(16, 185, 129, 0.18);
-                }
+            body.dark-theme & {
+                background: rgba(34, 197, 94, 0.15);
+            }
 
-                &::before {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    bottom: 0;
-                    width: 3px;
-                    background: #10b981;
-                    border-radius: 3px;
-                }
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 25%;
+                height: 50%;
+                width: 3px;
+                background: #22C55E;
+                border-radius: 0 3px 3px 0;
+            }
 
-                .sub-nav-icon {
-                    color: #10b981;
-                }
+            .sub-nav-icon {
+                color: #22C55E;
+            }
 
-                .sub-nav-text {
-                    font-weight: 600;
-                    background: linear-gradient(135deg, #10b981, var(--primary-green));
-                    -webkit-background-clip: text;
-                    background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
+            .sub-nav-text {
+                font-weight: 600;
+                color: #22C55E;
+                -webkit-text-fill-color: #22C55E;
             }
         }
     }
 
-    // Show sub-nav text when sidebar is expanded
+    // Show sub-nav text when expanded/hovered
     &.expanded,
     .admin-sidebar:hover & {
         .sub-nav-link .sub-nav-text {
@@ -383,28 +396,47 @@
 // Footer
 // ================================
 .sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
+    padding: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
 
     body.dark-theme & {
-        border-top-color: rgba(255, 255, 255, 0.1);
+        border-top-color: rgba(255, 255, 255, 0.08);
     }
 
     .version-info {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--text-tertiary);
-        font-size: 12px;
-        gap: 8px;
+        gap: 6px;
+        color: var(--text-tertiary, #94a3b8);
+        font-size: 11px;
+
+        mat-icon.version-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+            color: #22C55E;
+        }
 
         .version-text {
             opacity: 0;
-            transform: translateX(-10px);
+            transform: translateX(-8px);
             transition: all 0.3s ease;
             white-space: nowrap;
         }
     }
+}
+
+.admin-sidebar:hover .version-text {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.admin-sidebar.mobile .version-text,
+.admin-sidebar.tablet .version-text {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 // ================================
@@ -414,17 +446,17 @@
     left: auto;
     right: 0;
     border-right: none;
-    border-left: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
-    border-radius: 2rem 0 0 2rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 1.75rem 0 0 1.75rem;
 
     body.dark-theme & {
-        border-left-color: rgba(255, 255, 255, 0.1);
+        border-left-color: rgba(255, 255, 255, 0.08);
     }
 
     &.mobile,
     &.tablet {
         transform: translateX(105%);
-        border-radius: 2rem 0 0 2rem;
+        border-radius: 1.75rem 0 0 1.75rem;
 
         &.drawer-open {
             transform: translateX(0);
@@ -432,19 +464,16 @@
     }
 
     .nav-link {
+        .active-accent {
+            left: auto;
+            right: 0;
+            border-radius: 4px 0 0 4px;
+        }
+
         .nav-text {
             margin-left: 0;
-            margin-right: 16px;
+            margin-right: 14px;
             transform: translateX(10px);
         }
-
-        &:hover {
-            transform: translateX(-4px);
-        }
-    }
-
-    .nav-item.active .nav-link::before {
-        left: auto;
-        right: 0;
     }
 }

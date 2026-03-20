@@ -1,5 +1,6 @@
 <aside class="admin-sidebar" [class.drawer-open]="isDrawerOpen" [class.mobile]="isMobile" [class.tablet]="isTablet"
   [class.rtl]="isRTL()">
+
   <!-- Logo / Brand Area -->
   <div class="sidebar-header">
     <div class="sidebar-logo">
@@ -15,6 +16,7 @@
       <li *ngFor="let item of navItems" class="nav-item" [class.active]="isActive(item.route) || hasActiveChild(item)"
         [class.has-children]="item.children && item.children.length > 0" [class.expanded]="isExpanded(item)"
         role="listitem">
+
         <a class="nav-link" [attr.aria-label]="getNavLabel(item.label)"
           [attr.aria-current]="isActive(item.route) ? 'page' : null"
           [attr.aria-expanded]="item.children ? isExpanded(item) : null"
@@ -22,9 +24,9 @@
           (click)="navigate(item.route)" (keydown.enter)="navigate(item.route)"
           (keydown.space)="navigate(item.route); $event.preventDefault()" [matTooltip]="getNavLabel(item.label)"
           [matTooltipPosition]="isRTL() ? 'left' : 'right'" [matTooltipDisabled]="isDrawerOpen || isMobile || isTablet">
-          <!-- Magic Curved Elements -->
-          <b class="curve-top"></b>
-          <b class="curve-bottom"></b>
+
+          <!-- Active Pill Accent -->
+          <span class="active-accent"></span>
 
           <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
           <span class="nav-text">{{ getNavLabel(item.label) }}</span>
@@ -49,10 +51,10 @@
     </ul>
   </nav>
 
-  <!-- Sidebar Footer (optional) -->
+  <!-- Sidebar Footer -->
   <div class="sidebar-footer">
     <div class="version-info">
-      <mat-icon class="version-icon">info</mat-icon>
+      <mat-icon class="version-icon">verified</mat-icon>
       <span class="version-text">v2.0.0</span>
     </div>
   </div>

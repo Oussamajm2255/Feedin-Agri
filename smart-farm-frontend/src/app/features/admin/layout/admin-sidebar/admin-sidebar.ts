@@ -1,8 +1,17 @@
-import { Component, Input, Output, EventEmitter, inject, HostListener } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  inject,
+  HostListener
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Subject } from 'rxjs';
 import { LanguageService } from '../../../../core/services/language.service';
 
 interface NavItem {
@@ -14,8 +23,8 @@ interface NavItem {
 
 /**
  * Admin Sidebar Component
- * Curved active navigation with icon-only design
- * Expands on hover (desktop), drawer mode (mobile/tablet)
+ * Fluid-Rail design: 64px icon-only mini-state, 260px expanded glass state.
+ * Active state: pill background with soft green glow + 4px left-accent border.
  */
 @Component({
   selector: 'app-admin-sidebar',
@@ -29,33 +38,37 @@ interface NavItem {
   templateUrl: './admin-sidebar.html',
   styleUrl: './admin-sidebar.scss'
 })
-export class AdminSidebar {
-  @Input() isCollapsed = false;
+export class AdminSidebar implements OnDestroy {
+  @Input() isCollapsed = true;
   @Input() isDrawerOpen = false;
   @Input() isMobile = false;
   @Input() isTablet = false;
   @Output() closeSidebar = new EventEmitter<void>();
   @Output() sidebarHover = new EventEmitter<boolean>();
 
+  /** Mobile Bento overlay state emitted to shell */
+  @Output() bentoOpen = new EventEmitter<boolean>();
+
+  public isBentoOpen = false;
+  private readonly destroy$ = new Subject<void>();
   public languageService = inject(LanguageService);
 
   navItems: NavItem[] = [
-    // TOP PRIORITY - Core Admin Functions
-    { icon: 'dashboard', label: 'admin.sidebar.overview', route: '/admin/overview' },
-    { icon: 'agriculture', label: 'admin.sidebar.farms', route: '/admin/farms' },
-    { icon: 'memory', label: 'admin.sidebar.devices', route: '/admin/devices' },
-    { icon: 'insights', label: 'admin.sidebar.sensorAnalytics', route: '/admin/sensor-analytics' },
-    { icon: 'group',
+    { icon: 'dashboard',            label: 'admin.sidebar.overview',        route: '/admin/overview' },
+    { icon: 'agriculture',          label: 'admin.sidebar.farms',           route: '/admin/farms' },
+    { icon: 'memory',               label: 'admin.sidebar.devices',         route: '/admin/devices' },
+    { icon: 'insights',             label: 'admin.sidebar.sensorAnalytics', route: '/admin/sensor-analytics' },
+    {
+      icon: 'group',
       label: 'admin.sidebar.users',
       route: '/admin/users',
       children: [
         { icon: 'person', label: 'admin.sidebar.farmers', route: '/admin/farmers' }
       ]
     },
-    { icon: 'receipt_long', label: 'admin.sidebar.logs', route: '/admin/logs' },
-    { icon: 'notifications_active', label: 'admin.sidebar.notifications', route: '/admin/notifications' },
-    // OPTIONAL - Low Priority
-    { icon: 'settings', label: 'admin.sidebar.settings', route: '/admin/settings' }
+    { icon: 'receipt_long',         label: 'admin.sidebar.logs',            route: '/admin/logs' },
+    { icon: 'notifications_active', label: 'admin.sidebar.notifications',   route: '/admin/notifications' },
+    { icon: 'settings',             label: 'admin.sidebar.settings',        route: '/admin/settings' }
   ];
 
   constructor(private router: Router) {}
@@ -74,57 +87,44 @@ export class AdminSidebar {
     }
   }
 
-  /**
-   * Get translated label for nav item
-   */
-  getNavLabel(translationKey: string): string {
-    return this.languageService.t()(translationKey);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  /**
-   * Check if current language is RTL
-   */
+  /** Get translated nav label */
+  getNavLabel(key: string): string {
+    return this.languageService.t()(key);
+  }
+
+  /** RTL check */
   isRTL(): boolean {
     return this.languageService.isRTL();
   }
 
-  /**
-   * Check if route is active (including sub-routes)
-   */
+  /** Route active check */
   isActive(route: string): boolean {
     return this.router.url === route || this.router.url.startsWith(route + '/');
   }
 
-  /**
-   * Check if parent item has active child
-   */
+  /** Parent has active child */
   hasActiveChild(item: NavItem): boolean {
-    if (!item.children) return false;
-    return item.children.some(child => this.isActive(child.route));
+    return item.children?.some(c => this.isActive(c.route)) ?? false;
   }
 
-  /**
-   * Check if sub-navigation should be expanded
-   */
+  /** Sub-nav expanded */
   isExpanded(item: NavItem): boolean {
     return this.isActive(item.route) || this.hasActiveChild(item);
   }
 
-  /**
-   * Navigate to route
-   */
+  /** Navigate and close on mobile */
   navigate(route: string): void {
     this.router.navigate([route]);
-
-    // Close drawer on mobile/tablet after navigation
     if (this.isMobile || this.isTablet) {
       this.closeSidebar.emit();
     }
   }
 
-  /**
-   * Handle sidebar overlay click
-   */
   onCloseSidebar(): void {
     this.closeSidebar.emit();
   }

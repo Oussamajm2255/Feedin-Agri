@@ -96,6 +96,7 @@ export class OverviewComponent implements OnInit {
 
   // State signals
   isLoading = signal(true);
+  isUnauthorized = signal(false);
   dateRange = signal<DateRange>('today');
   selectedFarmId = signal<string | null>(null);
   selectedFarmerId = signal<string | null>(null);
@@ -633,35 +634,41 @@ export class OverviewComponent implements OnInit {
     // Determine trends period based on date range
     const trendsPeriod = dateRange === 'today' ? '7days' : dateRange === '7days' ? '7days' : '30days';
 
+    const handleHttpError = (err: any, fallback: any) => {
+      if (err.status === 401 || err.status === 403) throw err;
+      return of(fallback);
+    };
+
     // Use new admin endpoints for summary and trends
     forkJoin({
       summary: this.adminApiService.getOverviewSummary().pipe(
-        catchError(() => of(null))
+        catchError((err) => handleHttpError(err, null))
       ),
       trends: this.adminApiService.getOverviewTrends(trendsPeriod).pipe(
-        catchError(() => of(null))
+        catchError((err) => handleHttpError(err, null))
       ),
       // Still fetch individual data for detailed views (farms needing attention, top farms, recent activity)
-      farms: this.apiService.getFarms().pipe(catchError(() => of([]))),
-      devices: this.apiService.getDevices().pipe(catchError(() => of([]))),
-      users: this.apiService.getUsers().pipe(catchError(() => of([]))),
+      farms: this.apiService.getFarms().pipe(catchError((err) => handleHttpError(err, []))),
+      devices: this.apiService.getDevices().pipe(catchError((err) => handleHttpError(err, []))),
+      users: this.apiService.getUsers().pipe(catchError((err) => handleHttpError(err, []))),
       actions: this.apiService.getActions({
         limit: 20,
         from: startDate.toISOString()
       }).pipe(
-        catchError(() => of({ items: [], total: 0 }))
+        catchError((err) => handleHttpError(err, { items: [], total: 0 }))
       ),
       notifications: this.apiService.getNotifications({
         limit: 20,
         from: startDate.toISOString()
       }).pipe(
-        catchError(() => of({ items: [], total: 0 }))
+        catchError((err) => handleHttpError(err, { items: [], total: 0 }))
       ),
       deviceStats: this.apiService.getDeviceStatistics().pipe(
-        catchError(() => of(null))
+        catchError((err) => handleHttpError(err, null))
       )
     }).subscribe({
       next: (data) => {
+        this.isUnauthorized.set(false);
         this.overviewSummary.set(data.summary);
         this.overviewTrends.set(data.trends);
         this.farms.set(data.farms);
@@ -672,7 +679,10 @@ export class OverviewComponent implements OnInit {
         this.deviceStats.set(data.deviceStats);
         this.isLoading.set(false);
       },
-      error: () => {
+      error: (err) => {
+        if (err.status === 401 || err.status === 403) {
+          this.isUnauthorized.set(true);
+        }
         this.isLoading.set(false);
       }
     });
