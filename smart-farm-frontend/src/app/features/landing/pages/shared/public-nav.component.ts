@@ -137,9 +137,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
 
     .public-nav.scrolled .nav-inner {
-      background: rgba(15, 23, 42, 0.88);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
     }
 
     .nav-inner {
@@ -148,17 +147,16 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.5rem var(--section-gutter);
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.625rem var(--section-gutter);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       border-radius: 100px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       gap: 0.5rem;
       flex-wrap: nowrap;
       white-space: nowrap;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
     }
 
     /* Brand */
@@ -180,9 +178,9 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
     .brand-logo { width: 100%; height: 100%; object-fit: contain; }
     .brand-text {
-      font-size: 1.125rem; font-weight: 800; letter-spacing: -0.02em;
-      color: #FFFFFF;
-      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-size: 1rem; font-weight: 800; letter-spacing: -0.01em;
+      color: var(--text-primary);
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
       white-space: nowrap;
     }
 
@@ -199,18 +197,18 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
     /* Shared nav-link style (desktop row) */
     .nav-link {
-      color: rgba(255, 255, 255, 0.85);
+      color: #06283D; /* Darker, more contrasty color */
       text-decoration: none;
       font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600; /* Increased weight */
       padding: 0.5rem 0.75rem;
       border-radius: 10px;
       transition: all 0.25s ease;
       white-space: nowrap;
     }
-    .nav-link:hover  { color: #FFFFFF; background: rgba(255, 255, 255, 0.1); }
-    .nav-link.active { color: #FFFFFF; font-weight: 600; background: rgba(16, 185, 129, 0.15); }
+    .nav-link:hover  { background: rgba(16,185,129,0.08); color: var(--primary-green, #10b981); }
+    .nav-link.active { background: rgba(16,185,129,0.08); color: var(--primary-green, #10b981); }
     .nav-link.active::before {
       content: '';
       display: block;
@@ -236,9 +234,10 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
     .nav-btn.primary  {
       padding: 0.625rem 1.25rem;
-      background: var(--green-500);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
       font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-weight: 600;
       letter-spacing: -0.01em;
@@ -280,8 +279,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       width: 1rem;
       transform: translateX(0);
     }
-    .nav-btn.secondary { padding: 0.625rem 1rem; background: transparent; color: #FFFFFF; opacity: 0.9; }
-    .nav-btn.secondary:hover { color: #FFFFFF; opacity: 1; background: rgba(255, 255, 255, 0.1); }
+    .nav-btn.secondary { padding: 0.625rem 1rem; background: transparent; color: var(--text-primary); }
+    .nav-btn.secondary:hover { color: var(--primary-green); }
     
     /* Mobile CTA Icon style */
     @media (max-width: 1023px) {
@@ -314,8 +313,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       flex-shrink: 0;
     }
     .hamburger span {
-      display: block; width: 22px; height: 2px;
-      background: #FFFFFF; border-radius: 2px;
+      display: block; width: 20px; height: 2px;
+      background: var(--text-primary); border-radius: 2px;
       transition: all 0.3s ease; transform-origin: center;
     }
     .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
