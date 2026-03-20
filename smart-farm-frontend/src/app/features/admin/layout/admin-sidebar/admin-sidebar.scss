@@ -19,7 +19,7 @@
     border-right: 1px solid rgba(0, 0, 0, 0.07);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         background: rgba(15, 23, 42, 0.92);
         border-right-color: rgba(255, 255, 255, 0.08);
         box-shadow: 4px 0 32px rgba(0, 0, 0, 0.45);
@@ -51,7 +51,7 @@
         width: 260px;
         box-shadow: 8px 0 40px rgba(0, 0, 0, 0.1);
 
-        body.dark-theme & {
+        :host-context(.dark-theme) & {
             box-shadow: 8px 0 48px rgba(0, 0, 0, 0.5);
         }
 
@@ -112,7 +112,7 @@
     flex-shrink: 0;
     overflow: hidden;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         border-bottom-color: rgba(255, 255, 255, 0.08);
     }
 }
@@ -237,7 +237,7 @@
             color: var(--text-primary, #1e293b);
             white-space: nowrap;
 
-            body.dark-theme & {
+            :host-context(.dark-theme) & {
                 color: #e2e8f0;
             }
         }
@@ -245,7 +245,7 @@
         &:hover {
             background: rgba(34, 197, 94, 0.08);
 
-            body.dark-theme & {
+            :host-context(.dark-theme) & {
                 background: rgba(34, 197, 94, 0.12);
             }
 
@@ -262,7 +262,7 @@
             background: rgba(34, 197, 94, 0.12);
             box-shadow: 0 2px 16px rgba(34, 197, 94, 0.15);
 
-            body.dark-theme & {
+            :host-context(.dark-theme) & {
                 background: rgba(34, 197, 94, 0.18);
                 box-shadow: 0 2px 20px rgba(34, 197, 94, 0.2);
             }
@@ -338,7 +338,7 @@
                 transition: all 0.25s ease;
                 color: var(--text-primary, #1e293b);
 
-                body.dark-theme & {
+                :host-context(.dark-theme) & {
                     color: #cbd5e1;
                 }
             }
@@ -355,7 +355,7 @@
         &.active .sub-nav-link {
             background: rgba(34, 197, 94, 0.1);
 
-            body.dark-theme & {
+            :host-context(.dark-theme) & {
                 background: rgba(34, 197, 94, 0.15);
             }
 
@@ -400,7 +400,7 @@
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     flex-shrink: 0;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         border-top-color: rgba(255, 255, 255, 0.08);
     }
 
@@ -449,7 +449,7 @@
     border-left: 1px solid rgba(0, 0, 0, 0.07);
     border-radius: 1.75rem 0 0 1.75rem;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         border-left-color: rgba(255, 255, 255, 0.08);
     }
 

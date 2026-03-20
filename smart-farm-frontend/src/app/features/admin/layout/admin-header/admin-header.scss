@@ -39,7 +39,7 @@
     box-sizing: border-box;
     overflow: visible;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         background: var(--glass-bg, rgba(30, 41, 59, 0.85));
         border-bottom-color: var(--glass-border, rgba(255, 255, 255, 0.1));
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
@@ -127,7 +127,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex: 1 1 auto;
+    flex: 1;
     min-width: 0;
     overflow: visible;
 
@@ -230,7 +230,7 @@
     min-width: 0;
     overflow: visible;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         background: rgba(255, 255, 255, 0.03);
     }
 
@@ -399,7 +399,7 @@
         transform: translateY(-1px);
     }
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         background: var(--card-bg, #1e293b);
         border-color: var(--border-color, #334155);
 
@@ -507,7 +507,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: 0.5rem;
-    flex: 0 0 auto;
+    flex: 1;
     min-width: 0;
     overflow: visible; // Allow dropdowns to overflow
 
@@ -726,7 +726,7 @@
         height: 24px;
     }
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
         border-color: rgba(16, 185, 129, 0.3);
 
@@ -797,7 +797,7 @@
         border-radius: 20px !important;
     }
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
         &.mat-mdc-menu-panel {
             background: var(--user-menu-bg, rgba(30, 41, 59, 0.95)) !important;
             border-color: var(--user-menu-border, rgba(255, 255, 255, 0.1)) !important;

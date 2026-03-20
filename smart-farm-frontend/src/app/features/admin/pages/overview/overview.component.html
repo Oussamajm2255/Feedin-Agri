@@ -34,10 +34,8 @@
     <div class="header-right">
       <!-- Date Range Selector -->
       <mat-form-field appearance="outline" class="date-range-selector">
-        <mat-label>
-          <mat-icon class="filter-icon">date_range</mat-icon>
-          {{ 'common.date' | translate }}
-        </mat-label>
+        <mat-icon matPrefix class="filter-icon">date_range</mat-icon>
+        <mat-label>{{ 'common.date' | translate }}</mat-label>
         <mat-select [value]="dateRange()" (selectionChange)="onDateRangeChange($event.value)"
           hideSingleSelectionIndicator="true" panelClass="premium-dropdown">
           <mat-option value="today">
@@ -57,10 +55,8 @@
 
       <!-- Farmer Filter -->
       <mat-form-field appearance="outline" class="farmer-filter">
-        <mat-label>
-          <mat-icon class="filter-icon">person</mat-icon>
-          {{ 'admin.farmers.filters.status' | translate }}
-        </mat-label>
+        <mat-icon matPrefix class="filter-icon">person</mat-icon>
+        <mat-label>{{ 'admin.farmers.filters.status' | translate }}</mat-label>
         <mat-select [value]="selectedFarmerId()" (selectionChange)="onFarmerFilterChange($event.value)"
           hideSingleSelectionIndicator="true" panelClass="premium-dropdown">
           <mat-option [value]="null">
@@ -77,10 +73,8 @@
 
       <!-- Farm Filter -->
       <mat-form-field appearance="outline" class="farm-filter">
-        <mat-label>
-          <mat-icon class="filter-icon">agriculture</mat-icon>
-          {{ 'admin.devices.filters.farm' | translate }}
-        </mat-label>
+        <mat-icon matPrefix class="filter-icon">agriculture</mat-icon>
+        <mat-label>{{ 'admin.devices.filters.farm' | translate }}</mat-label>
         <mat-select [value]="selectedFarmId()" (selectionChange)="onFarmFilterChange($event.value)"
           [disabled]="!!selectedFarmerId()" hideSingleSelectionIndicator="true" panelClass="premium-dropdown">
           <mat-option [value]="null">

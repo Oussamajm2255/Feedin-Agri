@@ -21,7 +21,7 @@
   min-height: 0; // Critical: allows flex child to shrink below content size
   overflow-y: auto; // THIS is where scrolling happens
   overflow-x: hidden;
-  background: var(--bg-primary);
+  background: transparent;
   transition: all var(--duration-normal) var(--ease-in-out);
 
   // Custom scrollbar

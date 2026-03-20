@@ -4,21 +4,9 @@
 // Admin Overview Page - Mobile First
 // ================================
 .admin-overview-page {
-  // Mobile first: base styles for smallest screens
-  padding: var(--space-3);
   min-height: 100%;
-  background: var(--bg-primary);
+  background: transparent;
   contain: layout style; // CSS containment for performance
-
-  // Tablet and up
-  @media (min-width: 768px) {
-    padding: var(--space-4);
-  }
-
-  // Desktop and up
-  @media (min-width: 1024px) {
-    padding: var(--space-6);
-  }
 }
 
 // ================================
@@ -283,90 +271,79 @@
       }
 
       ::ng-deep {
+        --mdc-outlined-text-field-container-shape: 20px;
+        --mdc-outlined-text-field-focus-outline-color: var(--primary-green, #10b981);
+        --mdc-outlined-text-field-hover-outline-color: rgba(16, 185, 129, 0.5);
+        --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.08);
 
-        // Form Field Container
+        :host-context(.dark-theme) & {
+          --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.12);
+        }
+        
         .mat-mdc-form-field-flex {
-          background-color: var(--card-bg) !important;
-          border-radius: 16px !important;
-          padding: 4px 16px !important;
-          align-items: center !important;
-          border: 1px solid var(--border-color);
-          transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+          background-color: rgba(255, 255, 255, 0.6) !important;
+          backdrop-filter: blur(16px) saturate(180%);
+          -webkit-backdrop-filter: blur(16px);
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
 
-          &:hover {
-            border-color: var(--primary-green, #10b981);
-            background-color: var(--card-bg);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.1);
-            transform: translateY(-2px);
+          :host-context(.dark-theme) & {
+             background-color: rgba(30, 41, 59, 0.5) !important;
+             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
           }
         }
 
-        // Focused State
+        &:hover .mat-mdc-form-field-flex {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+          background-color: rgba(255, 255, 255, 0.95) !important;
+
+          :host-context(.dark-theme) & {
+            background-color: rgba(30, 41, 59, 0.85) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          }
+        }
+
         .mat-focused .mat-mdc-form-field-flex {
-          border-color: var(--primary-green, #10b981);
-          box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
-          background-color: var(--card-bg) !important;
+          background-color: rgba(255, 255, 255, 1) !important;
+          box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15), inset 0 0 0 1px rgba(16, 185, 129, 0.1) !important;
+          transform: translateY(-2px);
+
+          :host-context(.dark-theme) & {
+            background-color: rgba(15, 23, 42, 0.8) !important;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2), inset 0 0 0 1px rgba(16, 185, 129, 0.2) !important;
+          }
         }
 
-        // Remove default underline/outline to use custom border
-        .mdc-line-ripple {
-          display: none;
-        }
-
-        .mdc-notched-outline {
-          display: none !important;
-        }
-
-        // Label Styling
         .mdc-floating-label {
-          top: 50% !important;
-          transform: translateY(-170%) scale(0.85) !important; // Force floating position
-          font-weight: 700 !important;
-          color: var(--text-tertiary) !important;
-          letter-spacing: 0.8px;
-          text-transform: uppercase;
-          font-size: 11px !important;
-          transition: color 0.3s ease;
+          color: var(--text-secondary) !important;
+          font-weight: 500;
+          letter-spacing: 0.2px;
         }
 
         .mat-focused .mdc-floating-label {
           color: var(--primary-green, #10b981) !important;
+          font-weight: 600;
         }
 
-        // Input/Select Value Styling
         .mat-mdc-select-value {
-          margin-top: 14px; // Space for label
           color: var(--text-primary);
           font-weight: 600;
           font-size: 14.5px;
-
-          .mat-mdc-select-value-text {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-          }
         }
 
-        // Arrow Icon
         .mat-mdc-select-arrow {
-          color: var(--primary-green, #10b981);
-          transform: scale(1.2);
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: var(--text-tertiary);
+          transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
         }
 
-        // Rotate arrow on open
         .mat-select-panel-open .mat-mdc-select-arrow {
-          transform: scale(1.2) rotate(180deg);
+          transform: rotate(180deg) scale(1.15);
+          color: var(--primary-green, #10b981);
         }
 
-        // Infix spacing fix
-        .mat-mdc-form-field-infix {
-          padding-top: 22px !important;
-          padding-bottom: 10px !important;
-          min-height: 56px !important;
-          display: flex;
-          align-items: center;
+        .mat-focused .mat-mdc-select-arrow {
+          color: var(--primary-green, #10b981);
         }
       }
     }
@@ -377,40 +354,42 @@
 // Premium Dropdown (Global Overlay)
 // ================================
 ::ng-deep .premium-dropdown {
-  margin-top: 8px !important;
-  border-radius: 16px !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-  border: 1px solid var(--border-color) !important;
-  background-color: var(--card-bg) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  margin-top: 10px !important; // Extent gap from select
+  border-radius: 20px !important; // Ultra round
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
   overflow: hidden !important;
+  padding: 8px !important;
 
   .mat-mdc-select-panel {
-    padding: 8px !important;
+    padding: 0 !important;
   }
 
   .mat-mdc-option {
     font-size: 14.5px !important;
     font-weight: 500 !important;
     color: var(--text-secondary) !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
     margin: 4px 0 !important;
     padding: 0 16px !important;
     min-height: 48px !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     border: 1px solid transparent;
 
     &:hover,
     &.mdc-list-item--selected,
     &.mat-mdc-option-active {
-      background-color: rgba(16, 185, 129, 0.08) !important;
+      background-color: rgba(16, 185, 129, 0.1) !important;
       color: var(--text-primary) !important;
-      border-color: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.2);
+      transform: translateX(6px); // Animated slide-in
 
       mat-icon {
         color: var(--primary-green, #10b981) !important;
-        transform: scale(1.15);
+        transform: scale(1.15) rotate(5deg);
       }
     }
 
@@ -420,7 +399,7 @@
       width: 20px !important;
       height: 20px !important;
       color: var(--text-tertiary) !important;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
 
     .mdc-list-item__primary-text {
@@ -433,6 +412,22 @@
         color: var(--text-tertiary);
         font-size: 12.5px;
       }
+    }
+  }
+}
+
+// Global Dark Theme explicitly for Root Overlays appended to Body
+body.dark-theme .premium-dropdown {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+
+  .mat-mdc-option {
+    &:hover,
+    &.mdc-list-item--selected,
+    &.mat-mdc-option-active {
+      background-color: rgba(16, 185, 129, 0.15) !important;
+      border-color: rgba(16, 185, 129, 0.3);
     }
   }
 }
@@ -510,7 +505,7 @@
     overflow: hidden;
     contain: layout style; // CSS containment
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
       background: rgba(30, 41, 59, 0.6);
       border-color: rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
@@ -964,7 +959,7 @@
   transition: box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   contain: layout style;
 
-  body.dark-theme & {
+  :host-context(.dark-theme) & {
     background: rgba(30, 41, 59, 0.6);
     border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.25);
@@ -991,7 +986,7 @@
     align-items: center;
     gap: 12px;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
       border-bottom-color: rgba(255, 255, 255, 0.06);
     }
 
@@ -1177,7 +1172,7 @@
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 16px;
 
-  body.dark-theme & {
+  :host-context(.dark-theme) & {
     background: rgba(239, 68, 68, 0.1);
     border-color: rgba(239, 68, 68, 0.3);
   }
@@ -1218,7 +1213,7 @@
   position: relative;
   overflow: hidden;
 
-  body.dark-theme & {
+  :host-context(.dark-theme) & {
     background: rgba(255, 255, 255, 0.06);
   }
 
@@ -1230,7 +1225,7 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     animation: shimmer 1.5s infinite;
 
-    body.dark-theme & {
+    :host-context(.dark-theme) & {
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     }
   }
