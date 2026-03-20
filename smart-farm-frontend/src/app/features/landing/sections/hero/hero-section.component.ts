@@ -53,6 +53,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
           >
         </picture>
         <div class="backdrop-overlay"></div>
+        <div class="backdrop-radial-overlay"></div>
         <div class="backdrop-vignette"></div>
       </div>
       
@@ -63,12 +64,13 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       
       <!-- Hero Content -->
       <div class="hero-content" [class.animate]="contentReady()" [class.dark-mode]="theme() === 'dark'">
-        <div class="hero-glass-card">
           <h1 class="hero-headline">
             <span class="headline-line">{{ 'landing.hero.title1' | translate }}</span>
             <span class="headline-line">{{ 'landing.hero.title2' | translate }}</span>
           </h1>
           
+          <p class="cta-helper-text">{{ 'landing.hero.helper' | translate }}</p>
+
           <div class="hero-cta-block">
             <div class="cta-row">
               <button class="hero-cta primary" (click)="onGetStarted()">
@@ -79,9 +81,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
                 <span class="cta-text">{{ 'landing.hero.cta2' | translate }}</span>
               </button>
             </div>
-            <p class="cta-helper-text">{{ 'landing.hero.helper' | translate }}</p>
           </div>
-        </div>
       </div>
       
       <!-- Scroll Indicator -->
@@ -150,9 +150,20 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.3) 0%,
+        rgba(15, 23, 42, 0.6) 0%,
         transparent 50%,
-        rgba(0, 0, 0, 0.3) 100%
+        rgba(15, 23, 42, 0.4) 100%
+      );
+      z-index: 3;
+    }
+
+    .backdrop-radial-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at center,
+        rgba(15, 23, 42, 0.5) 0%,
+        transparent 70%
       );
       z-index: 3;
     }
@@ -163,7 +174,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       background: radial-gradient(
         circle at center,
         transparent 20%,
-        rgba(0, 0, 0, 0.4) 100%
+        rgba(15, 23, 42, 0.4) 100%
       );
       z-index: 4;
     }
@@ -444,31 +455,17 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       z-index: 10;
       text-align: center;
       padding: 1.25rem var(--section-gutter);
-      margin-top: -6vh; /* Moved higher */
-    }
-
-    .hero-glass-card {
-      background: rgba(0, 0, 0, 0.15);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 40px;
-      padding: 4rem 2rem;
-      box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px rgba(255, 255, 255, 0.05);
-      max-width: 800px;
-      margin: 0 auto;
-      transition: all 0.5s ease;
+      margin-top: -4vh;
+      max-width: 1000px;
     }
 
     .hero-headline {
-      font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-      font-size: clamp(2rem, 15vw, 3.75rem); /* Increased size */
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: clamp(2.5rem, 12vw, 4.5rem);
       font-weight: 800;
-      line-height: 1.1;
-      margin: 0 0 2.5rem;
-      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin: 0 0 1.5rem;
+      letter-spacing: -0.04em;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
     }
 
@@ -477,11 +474,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       opacity: 0;
       transform: translateY(40px);
       animation: headlineReveal 1s ease-out forwards;
-      background: linear-gradient(135deg, #6EE7B7 0%, #FBBF24 100%); /* Warmer, more positive gradient */
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
+      color: #FFFFFF;
     }
 
     .headline-line:nth-child(1) {
@@ -522,37 +515,35 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
     
     .hero-cta.primary {
-      background: var(--primary-green);
+      background: var(--green-500);
       box-shadow: 
-        0 8px 24px rgba(16, 185, 129, 0.25),
-        0 4px 8px rgba(0, 0, 0, 0.1),
+        0 10px 25px rgba(16, 185, 129, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     
     .hero-cta.primary:hover {
-      transform: translateY(-3px);
+      transform: translateY(-3px) scale(1.02);
       box-shadow: 
-        0 16px 40px rgba(16, 185, 129, 0.4),
-        0 6px 12px rgba(0, 0, 0, 0.2),
+        0 15px 35px rgba(16, 185, 129, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      background: var(--primary-green);
+      background: var(--green-600);
     }
 
     .hero-cta.secondary {
-      background: rgba(255, 255, 255, 0.15);
+      background: transparent;
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.4); /* Stronger border for visibility */
+      border: 2px solid rgba(255, 255, 255, 0.8);
       animation-delay: 0.8s;
     }
 
     .hero-cta.secondary:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px) scale(1.02);
+      border-color: #FFFFFF;
     }
 
     .hero-cta.secondary .cta-text {
-      color: white;
+      color: #FFFFFF;
     }
 
     .hero-cta:active {
@@ -612,19 +603,21 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
     }
     /* Helper Text under CTA */
     .cta-helper-text {
-      margin: 15px 0 0;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      font-size: 1.125rem; /* Increased size */
-      font-weight: 500; /* Increased weight */
-      color: #FFFFFF; /* High contrast white */
+      margin: 0 0 2rem;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: clamp(1.125rem, 4vw, 1.375rem);
+      font-weight: 500;
+      color: var(--slate-200);
       text-align: center;
       letter-spacing: 0.01em;
-      line-height: 1.5;
-      max-width: 480px; /* Increased width */
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
       opacity: 0;
       transform: translateY(12px);
-      animation: ctaReveal 0.7s ease-out 0.95s forwards;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Strong shadow for readability */
+      animation: ctaReveal 0.7s ease-out 0.6s forwards;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     /* =========================================

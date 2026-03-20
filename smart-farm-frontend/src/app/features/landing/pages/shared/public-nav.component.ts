@@ -45,11 +45,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         <!-- Right Actions -->
         <div class="nav-actions">
           <app-language-switcher></app-language-switcher>
-          <button class="nav-btn secondary desktop-only" (click)="go('/login')">{{ 'landing.nav.login' | translate }}</button>
-          <button class="nav-btn primary cta-expert" (click)="goToContactRegister()" aria-label="Contact Expert">
-            <span class="cta-sparkle material-icons">support_agent</span>
-            <span class="cta-label desktop-content">{{ 'landing.nav.contactExpert' | translate }}</span>
-            <span class="cta-arrow material-icons desktop-content">arrow_forward</span>
+          <button class="nav-btn secondary cta-sign-in" (click)="go('/login')" aria-label="Sign In">
+            <span class="cta-label">{{ 'landing.nav.login' | translate }}</span>
           </button>
           <!-- Hamburger — mobile only -->
           <button class="hamburger mobile-only" (click)="toggleMenu()" [class.active]="mobileOpen()" aria-label="Menu">
