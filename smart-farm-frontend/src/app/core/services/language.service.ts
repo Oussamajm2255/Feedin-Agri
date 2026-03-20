@@ -20,7 +20,7 @@ export interface Translation {
 })
 export class LanguageService {
   private readonly STORAGE_KEY = 'smart-farm-language';
-  private readonly DEFAULT_LANGUAGE = 'ar-TN';
+  private readonly DEFAULT_LANGUAGE = 'fr-FR';
 
   private currentLanguageSubject = new BehaviorSubject<string>(this.DEFAULT_LANGUAGE);
   private translationsSubject = new BehaviorSubject<Translation>({});
