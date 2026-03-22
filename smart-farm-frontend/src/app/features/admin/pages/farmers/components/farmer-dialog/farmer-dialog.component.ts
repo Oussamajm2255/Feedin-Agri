@@ -1,24 +1,11 @@
-import {
-  Component,
-  Inject,
-  OnInit,
-  signal,
-  computed,
-  inject,
-  DestroyRef
-} from '@angular/core';
+import { Component, Inject, OnInit, signal, computed, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialogModule,
-  MatDialog
+  MatDialog,
 } from '@angular/material/dialog';
 import { AssignFarmDialogComponent } from '../assign-farm-dialog/assign-farm-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -68,7 +55,7 @@ export interface FarmerDialogData {
     MatCardModule,
   ],
   templateUrl: './farmer-dialog.component.html',
-  styleUrls: ['./farmer-dialog.component.scss']
+  styleUrls: ['./farmer-dialog.component.scss'],
 })
 export class FarmerDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -79,11 +66,13 @@ export class FarmerDialogComponent implements OnInit {
   private alertService = inject(AlertService);
   private snackBar = {
     open: (message: string, action?: string, config?: any) => {
-      const isError = message.toLowerCase().includes('fail') || message.toLowerCase().includes('error');
+      const isError =
+        message.toLowerCase().includes('fail') || message.toLowerCase().includes('error');
       if (isError) this.alertService.error('Error', message, config?.duration || 3000);
-      else if (message.toLowerCase().includes('warning')) this.alertService.warning('Warning', message, config?.duration || 3000);
+      else if (message.toLowerCase().includes('warning'))
+        this.alertService.warning('Warning', message, config?.duration || 3000);
       else this.alertService.success('Success', message, config?.duration || 3000);
-    }
+    },
   };
   private languageService = inject(LanguageService);
   private router = inject(Router);
@@ -123,7 +112,7 @@ export class FarmerDialogComponent implements OnInit {
     return {
       'status-active': status === 'active',
       'status-inactive': status === 'inactive',
-      'status-suspended': status === 'suspended'
+      'status-suspended': status === 'suspended',
     };
   });
 
@@ -166,18 +155,19 @@ export class FarmerDialogComponent implements OnInit {
       return;
     }
 
-    this.adminApiService.getUser(this.data.farmerId)
+    this.adminApiService
+      .getUser(this.data.farmerId)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((err) => {
           this.snackBar.open(
             this.t('admin.farmers.dialog.errors.loadFailed'),
             this.t('common.close'),
-            { duration: 3000 }
+            { duration: 3000 },
           );
           this.isLoadingDetails.set(false);
           return of(null);
-        })
+        }),
       )
       .subscribe((farmer) => {
         if (farmer) {
@@ -211,7 +201,7 @@ export class FarmerDialogComponent implements OnInit {
 
     // Email always disabled (can't change email)
     this.farmerForm.get('email')?.disable();
-    
+
     // Device ID always readonly
     this.farmerForm.get('device_id')?.disable();
   }
@@ -268,11 +258,9 @@ export class FarmerDialogComponent implements OnInit {
   onSubmit(): void {
     if (this.farmerForm.invalid) {
       this.markFormGroupTouched(this.farmerForm);
-      this.snackBar.open(
-        this.t('admin.farmers.dialog.errors.formErrors'),
-        this.t('common.close'),
-        { duration: 3000 }
-      );
+      this.snackBar.open(this.t('admin.farmers.dialog.errors.formErrors'), this.t('common.close'), {
+        duration: 3000,
+      });
       return;
     }
 
@@ -280,45 +268,42 @@ export class FarmerDialogComponent implements OnInit {
 
     // No changes detected
     if (Object.keys(changes).length === 0) {
-      this.snackBar.open(
-        this.t('admin.farmers.dialog.errors.noChanges'),
-        this.t('common.close'),
-        { duration: 2000 }
-      );
+      this.snackBar.open(this.t('admin.farmers.dialog.errors.noChanges'), this.t('common.close'), {
+        duration: 2000,
+      });
       this.dialogRef.close();
       return;
     }
 
     if (!this.data.farmerId) {
-      this.snackBar.open(
-        this.t('admin.farmers.dialog.errors.missingId'),
-        this.t('common.close'),
-        { duration: 3000 }
-      );
+      this.snackBar.open(this.t('admin.farmers.dialog.errors.missingId'), this.t('common.close'), {
+        duration: 3000,
+      });
       return;
     }
 
     this.isLoading.set(true);
 
-    this.adminApiService.patchUser(this.data.farmerId, changes)
+    this.adminApiService
+      .patchUser(this.data.farmerId, changes)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((err) => {
           this.snackBar.open(
             err.error?.message || this.t('admin.farmers.dialog.errors.updateFailed'),
             this.t('common.close'),
-            { duration: 3000 }
+            { duration: 3000 },
           );
           return of(null);
         }),
-        finalize(() => this.isLoading.set(false))
+        finalize(() => this.isLoading.set(false)),
       )
       .subscribe((result) => {
         if (result) {
           this.snackBar.open(
             this.t('admin.farmers.dialog.success.updated'),
             this.t('common.close'),
-            { duration: 3000 }
+            { duration: 3000 },
           );
           this.dialogRef.close({ success: true, farmer: result });
         }
@@ -371,24 +356,28 @@ export class FarmerDialogComponent implements OnInit {
   onAssignFarm(): void {
     if (!this.data.farmerId || !this.farmer()) return;
 
-    this.dialog.open(AssignFarmDialogComponent, {
-      width: '600px',
-      data: {
-        farmerId: this.data.farmerId,
-        farmerName: `${this.farmer()?.first_name} ${this.farmer()?.last_name}`
-      }
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        this.loadFarmerDetails(); // Refresh details
-      }
-    });
+    this.dialog
+      .open(AssignFarmDialogComponent, {
+        width: '600px',
+        panelClass: 'mobile-fullscreen-dialog',
+        data: {
+          farmerId: this.data.farmerId,
+          farmerName: `${this.farmer()?.first_name} ${this.farmer()?.last_name}`,
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.loadFarmerDetails(); // Refresh details
+        }
+      });
   }
 
   onViewAllFarms(): void {
     // Navigate to farms page filtered by farmer
     this.dialogRef.close();
     this.router.navigate(['/admin/farms'], {
-      queryParams: { farmer_id: this.data.farmerId }
+      queryParams: { farmer_id: this.data.farmerId },
     });
   }
 
@@ -396,25 +385,26 @@ export class FarmerDialogComponent implements OnInit {
     if (!this.data.farmerId) return;
 
     this.isLoading.set(true);
-    this.adminApiService.impersonateUser(this.data.farmerId)
+    this.adminApiService
+      .impersonateUser(this.data.farmerId)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((err) => {
           this.snackBar.open(
             err.error?.message || this.t('admin.farmers.dialog.errors.impersonateFailed'),
             this.t('common.close'),
-            { duration: 3000 }
+            { duration: 3000 },
           );
           return of(null);
         }),
-        finalize(() => this.isLoading.set(false))
+        finalize(() => this.isLoading.set(false)),
       )
       .subscribe((result) => {
         if (result) {
           this.snackBar.open(
             this.t('admin.farmers.dialog.success.impersonated'),
             this.t('common.close'),
-            { duration: 2000 }
+            { duration: 2000 },
           );
           // Reload page to apply impersonation
           window.location.href = '/';
@@ -427,7 +417,7 @@ export class FarmerDialogComponent implements OnInit {
     this.snackBar.open(
       this.t('admin.farmers.dialog.actions.resetLinkSent'),
       this.t('common.close'),
-      { duration: 2000 }
+      { duration: 2000 },
     );
   }
 

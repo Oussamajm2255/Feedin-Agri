@@ -53,11 +53,13 @@
                 <span>{{ 'admin.notifications.markAllRead' | translate }}</span>
             </button>
 
-            <button mat-stroked-button class="action-btn" (click)="exportAudit()"
-                [matTooltip]="'export.button.label' | translate">
-                <mat-icon>download</mat-icon>
-                <span>{{ 'export.button.label' | translate }}</span>
-            </button>
+            <app-export-button
+                title="Admin Notifications Export"
+                sectionName="Notifications"
+                filename="admin-notifications"
+                [columns]="exportColumns"
+                [data]="filteredNotifications()">
+            </app-export-button>
         </div>
     </div>
 

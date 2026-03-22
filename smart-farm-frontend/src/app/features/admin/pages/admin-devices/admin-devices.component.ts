@@ -1,4 +1,14 @@
-import { Component, OnInit, AfterViewInit, signal, computed, effect, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  signal,
+  computed,
+  effect,
+  inject,
+  DestroyRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,8 +47,16 @@ import { ActionLog } from '../../../../core/models/action-log.model';
 import { User } from '../../../../core/models/user.model';
 
 // Dialogs
-import { SensorRegistrationDialogComponent, SensorRegistrationResult } from './components/sensor-registration-dialog/sensor-registration-dialog.component';
-import { DeviceDialogComponent, CreateDeviceDto, UpdateDeviceDto, DialogMode } from './components/device-dialog/device-dialog.component';
+import {
+  SensorRegistrationDialogComponent,
+  SensorRegistrationResult,
+} from './components/sensor-registration-dialog/sensor-registration-dialog.component';
+import {
+  DeviceDialogComponent,
+  CreateDeviceDto,
+  UpdateDeviceDto,
+  DialogMode,
+} from './components/device-dialog/device-dialog.component';
 
 // Export Components
 import { ExportButtonComponent } from '../../../../shared/components/export-button/export-button.component';
@@ -91,7 +109,7 @@ interface KpiCard {
     MatDialogModule,
     MatTabsModule,
     TranslatePipe,
-    ExportButtonComponent
+    ExportButtonComponent,
   ],
   templateUrl: './admin-devices.component.html',
   styleUrl: './admin-devices.component.scss',
@@ -100,38 +118,38 @@ interface KpiCard {
     trigger('fadeInUp', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('fadeInDown', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(-20px)' }),
-        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('fadeIn', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('0.5s ease-in', style({ opacity: 1 }))
-      ])
+      transition(':enter', [style({ opacity: 0 }), animate('0.5s ease-in', style({ opacity: 1 }))]),
     ]),
     trigger('floatIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(30px) scale(0.9)' }),
-        animate('0.6s cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
-      ])
+        animate(
+          '0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 1, transform: 'translateY(0) scale(1)' }),
+        ),
+      ]),
     ]),
     trigger('scaleIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'scale(0.8)' }),
-        animate('0.3s ease-out', style({ opacity: 1, transform: 'scale(1)' }))
-      ])
-    ])
-  ]
+        animate('0.3s ease-out', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
+    ]),
+  ],
 })
 export class AdminDevicesComponent implements OnInit, AfterViewInit {
   // Services
-  private adminApiService = inject(AdminApiService)
+  private adminApiService = inject(AdminApiService);
   private apiService = inject(ApiService);
   private destroyRef = inject(DestroyRef);
   private dialog = inject(MatDialog);
@@ -141,7 +159,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
 
   // View mode: 'table' for large screens, 'grid' for smaller screens
   viewMode = signal<'table' | 'grid'>(
-    typeof window !== 'undefined' && window.innerWidth < 1400 ? 'grid' : 'table'
+    typeof window !== 'undefined' && window.innerWidth < 1400 ? 'grid' : 'table',
   );
 
   // State Signals
@@ -238,7 +256,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         trend: 12.5, // Simulated trend
         trendArrow: '↑',
         trendColor: 'success',
-        performanceClass: 'perf-neutral'
+        performanceClass: 'perf-neutral',
       },
       {
         label: 'Online Devices',
@@ -248,7 +266,8 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         trend: 5.2, // Simulated trend
         trendArrow: '↑',
         trendColor: 'success',
-        performanceClass: onlinePct > 80 ? 'perf-high' : onlinePct > 50 ? 'perf-medium' : 'perf-low'
+        performanceClass:
+          onlinePct > 80 ? 'perf-high' : onlinePct > 50 ? 'perf-medium' : 'perf-low',
       },
       {
         label: 'Offline Devices',
@@ -258,7 +277,8 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         trend: -2.1, // Simulated trend (negative is good for offline)
         trendArrow: '↓',
         trendColor: 'success',
-        performanceClass: offlinePct < 10 ? 'perf-high' : offlinePct < 30 ? 'perf-medium' : 'perf-critical'
+        performanceClass:
+          offlinePct < 10 ? 'perf-high' : offlinePct < 30 ? 'perf-medium' : 'perf-critical',
       },
       {
         label: 'Maintenance',
@@ -268,8 +288,8 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         trend: 0,
         trendArrow: '→',
         trendColor: 'neutral',
-        performanceClass: maintenancePct < 5 ? 'perf-high' : 'perf-medium'
-      }
+        performanceClass: maintenancePct < 5 ? 'perf-high' : 'perf-medium',
+      },
     ];
   });
 
@@ -301,24 +321,27 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
     const types = this.selectedTypes();
 
     if (search) {
-      devices = devices.filter(d =>
-        d.device_id.toLowerCase().includes(search) ||
-        d.name.toLowerCase().includes(search) ||
-        (d.location?.toLowerCase().includes(search) || false) ||
-        (d.device_type?.toLowerCase().includes(search) || false)
+      devices = devices.filter(
+        (d) =>
+          d.device_id.toLowerCase().includes(search) ||
+          d.name.toLowerCase().includes(search) ||
+          d.location?.toLowerCase().includes(search) ||
+          false ||
+          d.device_type?.toLowerCase().includes(search) ||
+          false,
       );
     }
 
     if (farmId) {
-      devices = devices.filter(d => d.farm_id === farmId);
+      devices = devices.filter((d) => d.farm_id === farmId);
     }
 
     if (statuses.length > 0) {
-      devices = devices.filter(d => statuses.includes(d.status));
+      devices = devices.filter((d) => statuses.includes(d.status));
     }
 
     if (types.length > 0) {
-      devices = devices.filter(d => types.includes(d.device_type || ''));
+      devices = devices.filter((d) => types.includes(d.device_type || ''));
     }
 
     return devices;
@@ -332,10 +355,10 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
     // Group devices by farm and owner (pure computation, no signal writes)
     const grouped = new Map<string, Device[]>();
 
-    devices.forEach(device => {
-      const farm = farms.find(f => f.farm_id === device.farm_id);
+    devices.forEach((device) => {
+      const farm = farms.find((f) => f.farm_id === device.farm_id);
       const ownerId = farm?.owner_id || 'unknown';
-      const owner = users.find(u => u.user_id === ownerId);
+      const owner = users.find((u) => u.user_id === ownerId);
       const ownerName = owner ? `${owner.first_name} ${owner.last_name}` : 'Unknown Owner';
       const farmName = farm?.name || 'Unknown Farm';
 
@@ -349,7 +372,13 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
     });
 
     // Convert Map to array format
-    const result: Array<{ key: string; farmName: string; ownerName: string; farmId: string; devices: Device[] }> = [];
+    const result: Array<{
+      key: string;
+      farmName: string;
+      ownerName: string;
+      farmId: string;
+      devices: Device[];
+    }> = [];
 
     grouped.forEach((devices, key) => {
       const [farmName, ownerName, farmId] = key.split('|');
@@ -358,7 +387,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         farmName,
         ownerName,
         farmId,
-        devices
+        devices,
       });
     });
 
@@ -388,7 +417,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
 
     // Convert array back to Map for the signal (if needed elsewhere)
     const grouped = new Map<string, Device[]>();
-    groupedArray.forEach(group => {
+    groupedArray.forEach((group) => {
       grouped.set(group.key, group.devices);
     });
     this.groupedDevices.set(grouped);
@@ -461,15 +490,18 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
    * Effect to auto-switch view mode based on breakpoint
    * Note: This needs to be called separately or use a different pattern
    */
-  private viewModeBreakpointEffect = effect(() => {
-    const isLargeDesktop = this.breakpointService.isLargeDesktop();
-    // Only auto-switch to grid when moving from large to smaller screens
-    // and user hasn't manually selected a view
-    if (!isLargeDesktop && this.viewMode() === 'table') {
-      // Auto-switch to grid on smaller screens for better UX
-      this.viewMode.set('grid');
-    }
-  }, { allowSignalWrites: true });
+  private viewModeBreakpointEffect = effect(
+    () => {
+      const isLargeDesktop = this.breakpointService.isLargeDesktop();
+      // Only auto-switch to grid when moving from large to smaller screens
+      // and user hasn't manually selected a view
+      if (!isLargeDesktop && this.viewMode() === 'table') {
+        // Auto-switch to grid on smaller screens for better UX
+        this.viewMode.set('grid');
+      }
+    },
+    { allowSignalWrites: true },
+  );
 
   /**
    * Update view mode based on current breakpoint
@@ -527,7 +559,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         finalize(() => {
           this.loading.set(false);
           console.log('✅ Device loading completed. Total devices:', this.devices().length);
-        })
+        }),
       )
       .subscribe((devices: Device[]) => {
         console.log('📊 Processed devices:', devices.length, devices);
@@ -541,7 +573,12 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
           console.warn('⚠️ Users loaded:', this.users().length);
           console.warn('⚠️ Stats total:', this.deviceStats()?.total);
         } else {
-          console.log('✅ Devices loaded successfully. Farms:', this.farms().length, 'Users:', this.users().length);
+          console.log(
+            '✅ Devices loaded successfully. Farms:',
+            this.farms().length,
+            'Users:',
+            this.users().length,
+          );
         }
       });
   }
@@ -557,7 +594,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         finalize(() => {
           this.loadingStats.set(false);
           setTimeout(() => this.animateCounters(), 100);
-        })
+        }),
       )
       .subscribe((stats: DeviceStats | null) => {
         if (stats) {
@@ -573,7 +610,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => of([])),
-        finalize(() => this.loadingFarms.set(false))
+        finalize(() => this.loadingFarms.set(false)),
       )
       .subscribe((farms: Farm[]) => {
         this.farms.set(farms);
@@ -585,7 +622,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       .getCrops()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError(() => of([]))
+        catchError(() => of([])),
       )
       .subscribe((crops: any[]) => {
         this.crops.set(crops);
@@ -602,7 +639,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
           console.error('Error loading users:', error);
           return of([]);
         }),
-        finalize(() => this.loadingUsers.set(false))
+        finalize(() => this.loadingUsers.set(false)),
       )
       .subscribe((users: User[]) => {
         this.users.set(users || []);
@@ -613,10 +650,10 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
   groupDevicesByFarmAndOwner(devices: Device[]): void {
     const grouped = new Map<string, Device[]>();
 
-    devices.forEach(device => {
-      const farm = this.farms().find(f => f.farm_id === device.farm_id);
+    devices.forEach((device) => {
+      const farm = this.farms().find((f) => f.farm_id === device.farm_id);
       const ownerId = farm?.owner_id || 'unknown';
-      const owner = this.users().find(u => u.user_id === ownerId);
+      const owner = this.users().find((u) => u.user_id === ownerId);
       const ownerName = owner ? `${owner.first_name} ${owner.last_name}` : 'Unknown Owner';
       const farmName = farm?.name || 'Unknown Farm';
 
@@ -638,9 +675,21 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getGroupedDevicesArray(): Array<{ key: string; farmName: string; ownerName: string; farmId: string; devices: Device[] }> {
+  getGroupedDevicesArray(): Array<{
+    key: string;
+    farmName: string;
+    ownerName: string;
+    farmId: string;
+    devices: Device[];
+  }> {
     const grouped = this.groupedDevices();
-    const result: Array<{ key: string; farmName: string; ownerName: string; farmId: string; devices: Device[] }> = [];
+    const result: Array<{
+      key: string;
+      farmName: string;
+      ownerName: string;
+      farmId: string;
+      devices: Device[];
+    }> = [];
 
     grouped.forEach((devices, key) => {
       const [farmName, ownerName, farmId] = key.split('|');
@@ -649,7 +698,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
         farmName,
         ownerName,
         farmId,
-        devices
+        devices,
       });
     });
 
@@ -664,11 +713,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
 
   setupSearchListener(): void {
     this.searchControl.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.pageIndex.set(0);
       });
@@ -741,7 +786,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       maxWidth: '95vw',
       maxHeight: '90vh',
       disableClose: false,
-      panelClass: 'premium-dialog',
+      panelClass: ['premium-dialog', 'mobile-fullscreen-dialog'],
       data: {
         mode: 'create' as const,
         farms: this.farms(),
@@ -749,31 +794,33 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result: { mode: 'create', data: CreateDeviceDto } | undefined) => {
-      if (result && result.mode === 'create') {
-        // Create the device via API
-        this.adminApiService
-          .createDevice(result.data)
-          .pipe(
-            takeUntilDestroyed(this.destroyRef),
-            catchError((error) => {
-              console.error('Error creating device:', error);
-              const errorMsg = error?.error?.message || 'Failed to create device';
-              this.showSnackbar(errorMsg, 'error');
-              return of(null);
-            })
-          )
-          .subscribe((device: Device | null) => {
-            if (device) {
-              this.showSnackbar(`Device "${device.name}" created successfully`, 'success');
-              
-              // Refresh devices list
-              this.loadDevices();
-              this.loadStats();
-            }
-          });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe((result: { mode: 'create'; data: CreateDeviceDto } | undefined) => {
+        if (result && result.mode === 'create') {
+          // Create the device via API
+          this.adminApiService
+            .createDevice(result.data)
+            .pipe(
+              takeUntilDestroyed(this.destroyRef),
+              catchError((error) => {
+                console.error('Error creating device:', error);
+                const errorMsg = error?.error?.message || 'Failed to create device';
+                this.showSnackbar(errorMsg, 'error');
+                return of(null);
+              }),
+            )
+            .subscribe((device: Device | null) => {
+              if (device) {
+                this.showSnackbar(`Device "${device.name}" created successfully`, 'success');
+
+                // Refresh devices list
+                this.loadDevices();
+                this.loadStats();
+              }
+            });
+        }
+      });
   }
 
   onRegisterSensor(device?: Device): void {
@@ -781,6 +828,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       width: '900px',
       maxWidth: '95vw',
       maxHeight: '90vh',
+      panelClass: 'mobile-fullscreen-dialog',
       data: {
         device: device || null,
         farms: this.farms(),
@@ -798,7 +846,7 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
               console.error('Error creating sensor:', error);
               this.showSnackbar('Failed to register sensor', 'error');
               return of(null);
-            })
+            }),
           )
           .subscribe((sensor: Sensor | null) => {
             if (sensor) {
@@ -812,13 +860,13 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
 
   onEditDevice(device: Device, event: Event): void {
     event.stopPropagation();
-    
+
     const dialogRef = this.dialog.open(DeviceDialogComponent, {
       width: '900px',
       maxWidth: '95vw',
       maxHeight: '90vh',
       disableClose: false,
-      panelClass: 'premium-dialog',
+      panelClass: ['premium-dialog', 'mobile-fullscreen-dialog'],
       data: {
         mode: 'edit' as const,
         farms: this.farms(),
@@ -827,61 +875,71 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result: { mode: 'edit', data: UpdateDeviceDto, deviceId: string } | undefined) => {
-      if (result && result.mode === 'edit') {
-        // Update the device via API (only sends changed fields)
-        this.adminApiService
-          .updateDevice(result.deviceId, result.data)
-          .pipe(
-            takeUntilDestroyed(this.destroyRef),
-            catchError((error) => {
-              console.error('Error updating device:', error);
-              const errorMsg = error?.error?.message || 'Failed to update device';
-              this.showSnackbar(errorMsg, 'error');
-              return of(null);
-            })
-          )
-          .subscribe((updatedDevice: Device | null) => {
-            if (updatedDevice) {
-              this.showSnackbar(`Device "${updatedDevice.name}" updated successfully`, 'success');
-              
-              // Refresh devices list
-              this.loadDevices();
-              this.loadStats();
-            }
-          });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe(
+        (result: { mode: 'edit'; data: UpdateDeviceDto; deviceId: string } | undefined) => {
+          if (result && result.mode === 'edit') {
+            // Update the device via API (only sends changed fields)
+            this.adminApiService
+              .updateDevice(result.deviceId, result.data)
+              .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                catchError((error) => {
+                  console.error('Error updating device:', error);
+                  const errorMsg = error?.error?.message || 'Failed to update device';
+                  this.showSnackbar(errorMsg, 'error');
+                  return of(null);
+                }),
+              )
+              .subscribe((updatedDevice: Device | null) => {
+                if (updatedDevice) {
+                  this.showSnackbar(
+                    `Device "${updatedDevice.name}" updated successfully`,
+                    'success',
+                  );
+
+                  // Refresh devices list
+                  this.loadDevices();
+                  this.loadStats();
+                }
+              });
+          }
+        },
+      );
   }
 
   onDeleteDevice(device: Device, event: Event): void {
     event.stopPropagation();
     if (confirm(`Are you sure you want to delete device "${device.name}"?`)) {
-      this.adminApiService.deleteDevice(device.device_id).pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError((error) => {
-          console.error('Error deleting device:', error);
-          this.showSnackbar('Failed to delete device', 'error');
-          return of(null);
-        })
-      ).subscribe(() => {
-        this.showSnackbar('Device deleted successfully', 'success');
-        this.loadDevices();
-      });
+      this.adminApiService
+        .deleteDevice(device.device_id)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((error) => {
+            console.error('Error deleting device:', error);
+            this.showSnackbar('Failed to delete device', 'error');
+            return of(null);
+          }),
+        )
+        .subscribe(() => {
+          this.showSnackbar('Device deleted successfully', 'success');
+          this.loadDevices();
+        });
     }
   }
 
   onViewDetails(device: Device, event: Event): void {
     event.stopPropagation();
     event.preventDefault();
-    
+
     // Open device dialog in VIEW mode
     const dialogRef = this.dialog.open(DeviceDialogComponent, {
       width: '950px',
       maxWidth: '95vw',
       maxHeight: '90vh',
       disableClose: false,
-      panelClass: 'premium-dialog',
+      panelClass: ['premium-dialog', 'mobile-fullscreen-dialog'],
       data: {
         mode: 'view' as DialogMode,
         farms: this.farms(),
@@ -891,44 +949,51 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
     });
 
     // Handle dialog close - may return edit result if user switched to edit mode
-    dialogRef.afterClosed().subscribe((result: { mode: 'edit', data: UpdateDeviceDto, deviceId: string } | undefined) => {
-      if (result && result.mode === 'edit') {
-        // Update the device via API (only sends changed fields)
-        this.adminApiService
-          .updateDevice(result.deviceId, result.data)
-          .pipe(
-            takeUntilDestroyed(this.destroyRef),
-            catchError((error) => {
-              console.error('Error updating device:', error);
-              const errorMsg = error?.error?.message || 'Failed to update device';
-              this.showSnackbar(errorMsg, 'error');
-              return of(null);
-            })
-          )
-          .subscribe((updatedDevice: Device | null) => {
-            if (updatedDevice) {
-              this.showSnackbar(`Device "${updatedDevice.name}" updated successfully`, 'success');
-              
-              // Refresh devices list
-              this.loadDevices();
-              this.loadStats();
-            }
-          });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe(
+        (result: { mode: 'edit'; data: UpdateDeviceDto; deviceId: string } | undefined) => {
+          if (result && result.mode === 'edit') {
+            // Update the device via API (only sends changed fields)
+            this.adminApiService
+              .updateDevice(result.deviceId, result.data)
+              .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                catchError((error) => {
+                  console.error('Error updating device:', error);
+                  const errorMsg = error?.error?.message || 'Failed to update device';
+                  this.showSnackbar(errorMsg, 'error');
+                  return of(null);
+                }),
+              )
+              .subscribe((updatedDevice: Device | null) => {
+                if (updatedDevice) {
+                  this.showSnackbar(
+                    `Device "${updatedDevice.name}" updated successfully`,
+                    'success',
+                  );
+
+                  // Refresh devices list
+                  this.loadDevices();
+                  this.loadStats();
+                }
+              });
+          }
+        },
+      );
   }
 
   // ==================== HELPERS ====================
 
   getFarmName(farmId: string): string {
-    const farm = this.farms().find(f => f.farm_id === farmId);
+    const farm = this.farms().find((f) => f.farm_id === farmId);
     return farm?.name || farmId;
   }
 
   getOwnerName(farmId: string): string {
-    const farm = this.farms().find(f => f.farm_id === farmId);
+    const farm = this.farms().find((f) => f.farm_id === farmId);
     if (!farm?.owner_id) return 'Unknown Owner';
-    const owner = this.users().find(u => u.user_id === farm.owner_id);
+    const owner = this.users().find((u) => u.user_id === farm.owner_id);
     return owner ? `${owner.first_name} ${owner.last_name}` : 'Unknown Owner';
   }
 
@@ -972,11 +1037,14 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
   formatDate(date: Date | string | null | undefined): string {
     if (!date) return '—';
     try {
-      return new Date(date).toLocaleDateString(this.languageService.getCurrentLanguageCode() || 'en', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
+      return new Date(date).toLocaleDateString(
+        this.languageService.getCurrentLanguageCode() || 'en',
+        {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        },
+      );
     } catch {
       return '—';
     }
@@ -1002,9 +1070,9 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
       success: 'Success',
       error: 'Error',
       warn: 'Warning',
-      info: 'Info'
+      info: 'Info',
     };
-    
+
     if (type === 'success') {
       this.alertService.success(titleMap[type], message, 4000);
     } else if (type === 'error') {
@@ -1022,4 +1090,3 @@ export class AdminDevicesComponent implements OnInit, AfterViewInit {
     return Array.from({ length: 5 }, (_, i) => i);
   }
 }
-

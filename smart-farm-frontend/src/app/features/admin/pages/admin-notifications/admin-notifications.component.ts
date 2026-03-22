@@ -28,10 +28,18 @@ import { BreakpointService } from '../../../../core/services/breakpoint.service'
 import { AlertService } from '../../../../core/services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RejectRequestDialogComponent } from './components/reject-request-dialog.component';
+import { ExportButtonComponent } from '../../../../shared/components/export-button/export-button.component';
+import { ExportColumn } from '../../../../shared/services/export.service';
 
 // Types
 export type AdminNotificationSeverity = 'critical' | 'warning' | 'info' | 'success';
-export type AdminNotificationDomain = 'system' | 'farms' | 'devices' | 'crops' | 'users' | 'automation';
+export type AdminNotificationDomain =
+  | 'system'
+  | 'farms'
+  | 'devices'
+  | 'crops'
+  | 'users'
+  | 'automation';
 export type AdminNotificationStatus = 'new' | 'acknowledged' | 'resolved';
 
 export interface AdminNotification {
@@ -88,10 +96,11 @@ export interface AdminNotificationCounts {
     MatNativeDateModule,
     MatDividerModule,
     MatBadgeModule,
-    TranslatePipe
+    TranslatePipe,
+    ExportButtonComponent,
   ],
   templateUrl: './admin-notifications.component.html',
-  styleUrl: './admin-notifications.component.scss'
+  styleUrl: './admin-notifications.component.scss',
 })
 export class AdminNotificationsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -106,7 +115,13 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   // State signals
   notifications = signal<AdminNotification[]>([]);
   counts = signal<AdminNotificationCounts>({
-    critical: 0, warning: 0, info: 0, success: 0, total: 0, unresolved: 0, newCount: 0
+    critical: 0,
+    warning: 0,
+    info: 0,
+    success: 0,
+    total: 0,
+    unresolved: 0,
+    newCount: 0,
   });
   isLoading = signal(true);
   selectedNotification = signal<AdminNotification | null>(null);
@@ -139,29 +154,30 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   // Computed filtered notifications (client-side filtering for real-time)
   filteredNotifications = computed(() => {
     let items = this.notifications();
-    
+
     const severity = this.filterSeverity();
     const domain = this.filterDomain();
     const status = this.filterStatus();
     const search = this.filterSearch().toLowerCase();
-    
-    if (severity) items = items.filter(n => n.severity === severity);
-    if (domain) items = items.filter(n => n.domain === domain);
-    if (status) items = items.filter(n => n.status === status);
+
+    if (severity) items = items.filter((n) => n.severity === severity);
+    if (domain) items = items.filter((n) => n.domain === domain);
+    if (status) items = items.filter((n) => n.status === status);
     if (search) {
-      items = items.filter(n => 
-        n.title.toLowerCase().includes(search) || 
-        n.message?.toLowerCase().includes(search) ||
-        n.type.toLowerCase().includes(search)
+      items = items.filter(
+        (n) =>
+          n.title.toLowerCase().includes(search) ||
+          n.message?.toLowerCase().includes(search) ||
+          n.type.toLowerCase().includes(search),
       );
     }
-    
+
     return items;
   });
 
   // Pinned critical (always at top)
-  pinnedCritical = computed(() => 
-    this.notifications().filter(n => n.pinned_until_resolved && n.status !== 'resolved')
+  pinnedCritical = computed(() =>
+    this.notifications().filter((n) => n.pinned_until_resolved && n.status !== 'resolved'),
   );
 
   // Available domains for filter
@@ -171,7 +187,17 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
     { value: 'devices', label: 'Devices', icon: 'memory' },
     { value: 'crops', label: 'Crops', icon: 'grass' },
     { value: 'users', label: 'Users', icon: 'people' },
-    { value: 'automation', label: 'Automation', icon: 'auto_fix_high' }
+    { value: 'automation', label: 'Automation', icon: 'auto_fix_high' },
+  ];
+
+  // Export columns definition
+  exportColumns: ExportColumn[] = [
+    { key: 'title', header: 'Title', format: 'text', width: 40 },
+    { key: 'severity', header: 'Severity', format: 'status', width: 15 },
+    { key: 'domain', header: 'Domain', format: 'text', width: 15 },
+    { key: 'status', header: 'Status', format: 'status', width: 15 },
+    { key: 'message', header: 'Message', format: 'text', width: 50 },
+    { key: 'created_at', header: 'Created At', format: 'datetime', width: 25 },
   ];
 
   ngOnInit(): void {
@@ -179,28 +205,22 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
     this.loadCounts();
     this.loadSystemHealth();
     this.loadPendingRequests();
-    
+
     // Subscribe to real-time WebSocket events
-    this.adminWs.newNotification$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        // Refresh notifications when a new one arrives
-        this.loadNotifications(false);
-        this.loadCounts();
-      });
+    this.adminWs.newNotification$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      // Refresh notifications when a new one arrives
+      this.loadNotifications(false);
+      this.loadCounts();
+    });
 
-    this.adminWs.newAccessRequest$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.loadPendingRequests();
-      });
+    this.adminWs.newAccessRequest$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.loadPendingRequests();
+    });
 
-    this.adminWs.countsUpdated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.loadPendingRequests();
-        this.loadCounts();
-      });
+    this.adminWs.countsUpdated$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.loadPendingRequests();
+      this.loadCounts();
+    });
 
     // Auto-refresh every 60 seconds (reduced from 30s since WS handles real-time)
     interval(60000)
@@ -218,10 +238,11 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   }
 
   loadSystemHealth(): void {
-    this.adminApi.getSystemHealth()
+    this.adminApi
+      .getSystemHealth()
       .pipe(
         takeUntil(this.destroy$),
-        catchError(() => of({ status: 'degraded' }))
+        catchError(() => of({ status: 'degraded' })),
       )
       .subscribe((res: any) => {
         this.systemHealthy.set(res.status === 'healthy');
@@ -233,7 +254,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
 
     const params: any = {
       page: this.currentPage(),
-      limit: this.pageSize
+      limit: this.pageSize,
     };
 
     if (this.filterSeverity()) params.severity = this.filterSeverity();
@@ -243,12 +264,13 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
     if (this.filterDateFrom()) params.from = this.filterDateFrom()?.toISOString();
     if (this.filterDateTo()) params.to = this.filterDateTo()?.toISOString();
 
-    this.adminApi.get<any>('admin/notifications', { params })
+    this.adminApi
+      .get<any>('admin/notifications', { params })
       .pipe(
         takeUntil(this.destroy$),
-        catchError(() => of({ items: [], total: 0, hasMore: false }))
+        catchError(() => of({ items: [], total: 0, hasMore: false })),
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         this.notifications.set(res.items || []);
         this.total.set(res.total || 0);
         this.hasMore.set(res.hasMore || false);
@@ -257,14 +279,23 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   }
 
   loadCounts(): void {
-    this.adminApi.get<AdminNotificationCounts>('admin/notifications/counts')
+    this.adminApi
+      .get<AdminNotificationCounts>('admin/notifications/counts')
       .pipe(
         takeUntil(this.destroy$),
-        catchError(() => of({
-          critical: 0, warning: 0, info: 0, success: 0, total: 0, unresolved: 0, newCount: 0
-        }))
+        catchError(() =>
+          of({
+            critical: 0,
+            warning: 0,
+            info: 0,
+            success: 0,
+            total: 0,
+            unresolved: 0,
+            newCount: 0,
+          }),
+        ),
       )
-      .subscribe(counts => this.counts.set(counts));
+      .subscribe((counts) => this.counts.set(counts));
   }
 
   // Filter methods
@@ -303,19 +334,20 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   }
 
   toggleFilters(): void {
-    this.filtersExpanded.update(v => !v);
+    this.filtersExpanded.update((v) => !v);
   }
 
   loadMoreNotifications(): void {
-    this.currentPage.update(p => p + 1);
+    this.currentPage.update((p) => p + 1);
     this.loadNotifications();
   }
 
   // Actions
   acknowledge(notification: AdminNotification, event?: Event): void {
     event?.stopPropagation();
-    
-    this.adminApi.patch<AdminNotification>(`admin/notifications/${notification.id}/acknowledge`, {})
+
+    this.adminApi
+      .patch<AdminNotification>(`admin/notifications/${notification.id}/acknowledge`, {})
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (updated) => {
@@ -323,14 +355,15 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
           this.loadCounts();
           this.alertService.success('Success', 'Notification acknowledged', 2000);
         },
-        error: () => this.alertService.error('Error', 'Failed to acknowledge', 3000)
+        error: () => this.alertService.error('Error', 'Failed to acknowledge', 3000),
       });
   }
 
   resolve(notification: AdminNotification, event?: Event): void {
     event?.stopPropagation();
-    
-    this.adminApi.patch<AdminNotification>(`admin/notifications/${notification.id}/resolve`, {})
+
+    this.adminApi
+      .patch<AdminNotification>(`admin/notifications/${notification.id}/resolve`, {})
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (updated) => {
@@ -338,18 +371,19 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
           this.loadCounts();
           this.alertService.success('Success', 'Notification resolved', 2000);
         },
-        error: () => this.alertService.error('Error', 'Failed to resolve', 3000)
+        error: () => this.alertService.error('Error', 'Failed to resolve', 3000),
       });
   }
 
   bulkAcknowledge(): void {
     const ids = this.filteredNotifications()
-      .filter(n => n.status === 'new')
-      .map(n => n.id);
-    
+      .filter((n) => n.status === 'new')
+      .map((n) => n.id);
+
     if (ids.length === 0) return;
 
-    this.adminApi.post<any>('admin/notifications/bulk-acknowledge', { ids })
+    this.adminApi
+      .post<any>('admin/notifications/bulk-acknowledge', { ids })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -357,18 +391,19 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
           this.loadCounts();
           this.alertService.success('Success', `${ids.length} notifications acknowledged`, 2000);
         },
-        error: () => this.alertService.error('Error', 'Bulk acknowledge failed', 3000)
+        error: () => this.alertService.error('Error', 'Bulk acknowledge failed', 3000),
       });
   }
 
   bulkResolve(): void {
     const ids = this.filteredNotifications()
-      .filter(n => n.status !== 'resolved')
-      .map(n => n.id);
-    
+      .filter((n) => n.status !== 'resolved')
+      .map((n) => n.id);
+
     if (ids.length === 0) return;
 
-    this.adminApi.post<any>('admin/notifications/bulk-resolve', { ids })
+    this.adminApi
+      .post<any>('admin/notifications/bulk-resolve', { ids })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -376,7 +411,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
           this.loadCounts();
           this.alertService.success('Success', `${ids.length} notifications resolved`, 2000);
         },
-        error: () => this.alertService.error('Error', 'Bulk resolve failed', 3000)
+        error: () => this.alertService.error('Error', 'Bulk resolve failed', 3000),
       });
   }
 
@@ -393,30 +428,35 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
 
   // Helper methods
   private updateNotificationInList(updated: AdminNotification): void {
-    this.notifications.update(list => 
-      list.map(n => n.id === updated.id ? updated : n)
-    );
+    this.notifications.update((list) => list.map((n) => (n.id === updated.id ? updated : n)));
   }
 
   getSeverityIcon(severity: AdminNotificationSeverity): string {
     switch (severity) {
-      case 'critical': return 'error';
-      case 'warning': return 'warning';
-      case 'info': return 'info';
-      case 'success': return 'check_circle';
+      case 'critical':
+        return 'error';
+      case 'warning':
+        return 'warning';
+      case 'info':
+        return 'info';
+      case 'success':
+        return 'check_circle';
     }
   }
 
   getDomainIcon(domain: AdminNotificationDomain): string {
-    const d = this.domains.find(x => x.value === domain);
+    const d = this.domains.find((x) => x.value === domain);
     return d?.icon || 'category';
   }
 
   getStatusLabel(status: AdminNotificationStatus): string {
     switch (status) {
-      case 'new': return 'New';
-      case 'acknowledged': return 'Reviewed';
-      case 'resolved': return 'Resolved';
+      case 'new':
+        return 'New';
+      case 'acknowledged':
+        return 'Reviewed';
+      case 'resolved':
+        return 'Resolved';
     }
   }
 
@@ -432,7 +472,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    
+
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
@@ -442,7 +482,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 
@@ -453,9 +493,10 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   }
 
   exportAudit(): void {
-    this.adminApi.get<any>('admin/notifications/export/audit', { 
-      params: { limit: 1000 } 
-    })
+    this.adminApi
+      .get<any>('admin/notifications/export/audit', {
+        params: { limit: 1000 },
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -467,7 +508,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
           a.click();
           window.URL.revokeObjectURL(url);
         },
-        error: () => this.alertService.error('Error', 'Export failed', 3000)
+        error: () => this.alertService.error('Error', 'Export failed', 3000),
       });
   }
 
@@ -484,10 +525,11 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
 
   loadPendingRequests(): void {
     this.isLoadingRequests.set(true);
-    this.adminApi.getPendingAccessRequests(1, 50)
+    this.adminApi
+      .getPendingAccessRequests(1, 50)
       .pipe(
         takeUntil(this.destroy$),
-        catchError(() => of({ items: [], total: 0 }))
+        catchError(() => of({ items: [], total: 0 })),
       )
       .subscribe((res: any) => {
         this.pendingRequests.set(res.items || []);
@@ -498,18 +540,27 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
 
   approveRequest(userId: string, event?: Event): void {
     event?.stopPropagation();
-    this.adminApi.approveAccessRequest(userId)
+    this.adminApi
+      .approveAccessRequest(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          this.alertService.success('Success', `${res.user.first_name} ${res.user.last_name} has been approved`, 4000);
+          this.alertService.success(
+            'Success',
+            `${res.user.first_name} ${res.user.last_name} has been approved`,
+            4000,
+          );
           this.loadPendingRequests();
           this.loadNotifications(false);
           this.loadCounts();
         },
         error: (err) => {
-          this.alertService.error('Error', err?.error?.message || 'Failed to approve request', 4000);
-        }
+          this.alertService.error(
+            'Error',
+            err?.error?.message || 'Failed to approve request',
+            4000,
+          );
+        },
       });
   }
 
@@ -517,7 +568,9 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
     event?.stopPropagation();
 
     if (!userName) {
-      const pendingUser = this.pendingRequests().find((req: any) => (req.id || req.user_id) === userId);
+      const pendingUser = this.pendingRequests().find(
+        (req: any) => (req.id || req.user_id) === userId,
+      );
       if (pendingUser) {
         userName = `${pendingUser.first_name || ''} ${pendingUser.last_name || ''}`.trim();
       }
@@ -527,13 +580,14 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
       width: '500px',
       data: { userName: userName || 'User' },
       disableClose: true,
-      panelClass: 'glass-dialog'
+      panelClass: ['glass-dialog', 'mobile-fullscreen-dialog'],
     });
 
-    dialogRef.afterClosed().subscribe(reason => {
+    dialogRef.afterClosed().subscribe((reason) => {
       if (!reason) return; // User cancelled
 
-      this.adminApi.rejectAccessRequest(userId, reason)
+      this.adminApi
+        .rejectAccessRequest(userId, reason)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => {
@@ -543,8 +597,12 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
             this.loadCounts();
           },
           error: (err) => {
-            this.alertService.error('Error', err?.error?.message || 'Failed to reject request', 4000);
-          }
+            this.alertService.error(
+              'Error',
+              err?.error?.message || 'Failed to reject request',
+              4000,
+            );
+          },
         });
     });
   }

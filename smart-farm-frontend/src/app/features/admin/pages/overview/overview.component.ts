@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -83,11 +90,11 @@ interface FarmNeedingAttention {
     MatTooltipModule,
     MatBadgeModule,
     BaseChartDirective,
-    TranslatePipe
+    TranslatePipe,
   ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent implements OnInit {
   private readonly adminApiService = inject(AdminApiService);
@@ -110,12 +117,12 @@ export class OverviewComponent implements OnInit {
 
     // Filter by farmer (owner_id) if selected
     if (farmerId) {
-      farms = farms.filter(f => f.owner_id === farmerId);
+      farms = farms.filter((f) => f.owner_id === farmerId);
     }
 
     // Filter by specific farm if selected
     if (farmId) {
-      farms = farms.filter(f => f.farm_id === farmId);
+      farms = farms.filter((f) => f.farm_id === farmId);
     }
 
     return farms;
@@ -128,13 +135,15 @@ export class OverviewComponent implements OnInit {
 
     // Filter by farmer's farms if farmer is selected
     if (farmerId && !farmId) {
-      const farmerFarms = this.farms().filter(f => f.owner_id === farmerId).map(f => f.farm_id);
-      devices = devices.filter(d => farmerFarms.includes(d.farm_id));
+      const farmerFarms = this.farms()
+        .filter((f) => f.owner_id === farmerId)
+        .map((f) => f.farm_id);
+      devices = devices.filter((d) => farmerFarms.includes(d.farm_id));
     }
 
     // Filter by specific farm if selected
     if (farmId) {
-      devices = devices.filter(d => d.farm_id === farmId);
+      devices = devices.filter((d) => d.farm_id === farmId);
     }
 
     return devices;
@@ -147,17 +156,21 @@ export class OverviewComponent implements OnInit {
 
     // Filter by farmer's farms if farmer is selected
     if (farmerId && !farmId) {
-      const farmerFarms = this.farms().filter(f => f.owner_id === farmerId).map(f => f.farm_id);
+      const farmerFarms = this.farms()
+        .filter((f) => f.owner_id === farmerId)
+        .map((f) => f.farm_id);
       const farmerDevices = this.devices()
-        .filter(d => farmerFarms.includes(d.farm_id))
-        .map(d => d.device_id);
-      actions = actions.filter(a => farmerDevices.includes(a.device_id));
+        .filter((d) => farmerFarms.includes(d.farm_id))
+        .map((d) => d.device_id);
+      actions = actions.filter((a) => farmerDevices.includes(a.device_id));
     }
 
     // Filter by specific farm if selected
     if (farmId) {
-      const farmDevices = this.devices().filter(d => d.farm_id === farmId).map(d => d.device_id);
-      actions = actions.filter(a => farmDevices.includes(a.device_id));
+      const farmDevices = this.devices()
+        .filter((d) => d.farm_id === farmId)
+        .map((d) => d.device_id);
+      actions = actions.filter((a) => farmDevices.includes(a.device_id));
     }
 
     return actions;
@@ -167,14 +180,14 @@ export class OverviewComponent implements OnInit {
   availableFarmers = computed(() => {
     const farms = this.farms();
     const users = this.users();
-    const farmerIds = new Set(farms.map(f => f.owner_id).filter(id => id));
+    const farmerIds = new Set(farms.map((f) => f.owner_id).filter((id) => id));
 
     return users
-      .filter(u => u.role === UserRole.FARMER && farmerIds.has(u.user_id))
-      .map(u => ({
+      .filter((u) => u.role === UserRole.FARMER && farmerIds.has(u.user_id))
+      .map((u) => ({
         user_id: u.user_id,
         name: `${u.first_name} ${u.last_name}`,
-        email: u.email
+        email: u.email,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
   });
@@ -183,7 +196,7 @@ export class OverviewComponent implements OnInit {
   selectedFarmerName = computed(() => {
     const farmerId = this.selectedFarmerId();
     if (!farmerId) return null;
-    const farmer = this.availableFarmers().find(f => f.user_id === farmerId);
+    const farmer = this.availableFarmers().find((f) => f.user_id === farmerId);
     return farmer?.name || 'Unknown';
   });
 
@@ -217,18 +230,18 @@ export class OverviewComponent implements OnInit {
         display: true,
         title: {
           display: true,
-          text: 'Date'
-        }
+          text: 'Date',
+        },
       },
       y: {
         display: true,
         title: {
           display: true,
-          text: 'Count'
+          text: 'Count',
         },
-        beginAtZero: true
-      }
-    }
+        beginAtZero: true,
+      },
+    },
   };
 
   // Chart data computed from trends
@@ -237,15 +250,16 @@ export class OverviewComponent implements OnInit {
     if (!trends) {
       return {
         labels: [],
-        datasets: []
+        datasets: [],
       };
     }
 
     // Extract dates from first dataset (all should have same dates)
-    const labels = trends.deviceUsage?.map((d: { date: string; value: number }) => {
-      const date = new Date(d.date);
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }) || [];
+    const labels =
+      trends.deviceUsage?.map((d: { date: string; value: number }) => {
+        const date = new Date(d.date);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }) || [];
 
     return {
       labels,
@@ -282,7 +296,7 @@ export class OverviewComponent implements OnInit {
           tension: 0.4,
           fill: true,
         },
-      ]
+      ],
     };
   });
 
@@ -293,9 +307,9 @@ export class OverviewComponent implements OnInit {
     const farmerId = this.selectedFarmerId();
 
     // Use filtered data when filters are active
-    const farmsData = (farmId || farmerId) ? this.filteredFarms() : this.farms();
-    const devicesData = (farmId || farmerId) ? this.filteredDevices() : this.devices();
-    const actionsData = (farmId || farmerId) ? this.filteredActions() : this.recentActions();
+    const farmsData = farmId || farmerId ? this.filteredFarms() : this.farms();
+    const devicesData = farmId || farmerId ? this.filteredDevices() : this.devices();
+    const actionsData = farmId || farmerId ? this.filteredActions() : this.recentActions();
     const notificationsData = this.recentNotifications();
 
     // Calculate filtered counts
@@ -313,24 +327,27 @@ export class OverviewComponent implements OnInit {
       startDate.setDate(startDate.getDate() - 30);
     }
 
-    const filteredActionsToday = actionsData.filter(a => {
+    const filteredActionsToday = actionsData.filter((a) => {
       const actionDate = new Date(a.created_at);
       return actionDate >= startDate;
     });
 
-    const filteredNotificationsToday = notificationsData.filter(n => {
+    const filteredNotificationsToday = notificationsData.filter((n) => {
       const notifDate = new Date(n.createdAt);
       return notifDate >= startDate;
     });
 
-    const onlineDevices = devicesData.filter(d => d.status === DeviceStatus.ONLINE || d.status === DeviceStatus.ACTIVE);
+    const onlineDevices = devicesData.filter(
+      (d) => d.status === DeviceStatus.ONLINE || d.status === DeviceStatus.ACTIVE,
+    );
 
     // Use summary data if available and no filter, otherwise use filtered data
     const useSummary = summary && !farmId;
 
     // Helper to determine trend direction and color with arrow symbol
     const getTrendInfo = (trend: number | null, isPositiveGood: boolean = true) => {
-      if (trend === null || trend === undefined) return { direction: undefined, color: undefined, arrow: undefined };
+      if (trend === null || trend === undefined)
+        return { direction: undefined, color: undefined, arrow: undefined };
 
       let direction: 'up' | 'down' | 'flat' | 'up-right' | 'down-right' = 'flat';
       let arrow: string = '→';
@@ -360,7 +377,12 @@ export class OverviewComponent implements OnInit {
     };
 
     // Helper to determine performance class
-    const getPerformanceClass = (value: number, thresholdLow: number, thresholdHigh: number, isHigherBetter: boolean = true) => {
+    const getPerformanceClass = (
+      value: number,
+      thresholdLow: number,
+      thresholdHigh: number,
+      isHigherBetter: boolean = true,
+    ) => {
       if (isHigherBetter) {
         if (value >= thresholdHigh) return 'perf-high';
         if (value >= thresholdLow) return 'perf-medium';
@@ -372,8 +394,10 @@ export class OverviewComponent implements OnInit {
       }
     };
 
-    const onlinePercentage = devicesData.length > 0 ? (onlineDevices.length / devicesData.length) * 100 : 0;
-    const onlineTrend = devicesData.length > 0 ? (onlineDevices.length / devicesData.length) * 100 : 0; // Placeholder for actual trend
+    const onlinePercentage =
+      devicesData.length > 0 ? (onlineDevices.length / devicesData.length) * 100 : 0;
+    const onlineTrend =
+      devicesData.length > 0 ? (onlineDevices.length / devicesData.length) * 100 : 0; // Placeholder for actual trend
     const onlineTrendInfo = getTrendInfo(onlineTrend, true);
 
     const alertsCount = filteredNotificationsToday.length;
@@ -394,18 +418,20 @@ export class OverviewComponent implements OnInit {
         hasError: false,
         trend: null,
         performanceClass: 'perf-neutral',
-        subtitle: farmId ? 'Filtered' : 'All farms'
+        subtitle: farmId ? 'Filtered' : 'All farms',
       },
       {
         label: 'Total Farmers',
-        value: useSummary ? summary.totalFarmers : this.users().filter(u => u.role === UserRole.FARMER).length,
+        value: useSummary
+          ? summary.totalFarmers
+          : this.users().filter((u) => u.role === UserRole.FARMER).length,
         icon: 'people',
         route: '/admin/farmers',
         isLoading: false,
         hasError: false,
         trend: null,
         performanceClass: 'perf-neutral',
-        subtitle: 'Active farmers'
+        subtitle: 'Active farmers',
       },
       {
         label: 'Total Devices',
@@ -416,7 +442,7 @@ export class OverviewComponent implements OnInit {
         hasError: false,
         trend: null,
         performanceClass: 'perf-neutral',
-        subtitle: `${onlineDevices.length} online`
+        subtitle: `${onlineDevices.length} online`,
       },
       {
         label: 'Online Devices',
@@ -431,7 +457,7 @@ export class OverviewComponent implements OnInit {
         trendArrow: onlineTrendInfo.arrow,
         performanceClass: getPerformanceClass(onlinePercentage, 50, 80, true),
         performanceValue: onlinePercentage,
-        subtitle: `${devicesData.length - onlineDevices.length} offline`
+        subtitle: `${devicesData.length - onlineDevices.length} offline`,
       },
       {
         label: 'Alerts Today',
@@ -444,7 +470,10 @@ export class OverviewComponent implements OnInit {
         trendArrow: null,
         performanceClass: alertsPerformance,
         performanceValue: alertsCount,
-        subtitle: filteredNotificationsToday.filter(n => !n.read).length > 0 ? `${filteredNotificationsToday.filter(n => !n.read).length} unread` : 'All read'
+        subtitle:
+          filteredNotificationsToday.filter((n) => !n.read).length > 0
+            ? `${filteredNotificationsToday.filter((n) => !n.read).length} unread`
+            : 'All read',
       },
       {
         label: 'Actions Today',
@@ -457,11 +486,10 @@ export class OverviewComponent implements OnInit {
         trendArrow: null,
         performanceClass: 'perf-neutral',
         performanceValue: actionsCount,
-        subtitle: `${filteredActionsToday.filter(a => a.status === 'ack').length} acknowledged`
-      }
+        subtitle: `${filteredActionsToday.filter((a) => a.status === 'ack').length} acknowledged`,
+      },
     ];
   });
-
 
   // Helper to format MQTT topic
   private formatMqttTopic(topic: string): string {
@@ -472,7 +500,7 @@ export class OverviewComponent implements OnInit {
     let cleanTopic = topic.replace(/^mqtt:/, '').replace(/^smartfarm\//, '');
 
     // Split parts
-    const parts = cleanTopic.split('/').filter(p => p);
+    const parts = cleanTopic.split('/').filter((p) => p);
 
     if (parts.length >= 2) {
       // Get device name (usually second to last) and action (last)
@@ -480,26 +508,27 @@ export class OverviewComponent implements OnInit {
       const action = parts[parts.length - 1];
 
       // Format action: ventilator_off -> Ventilator Off
-      const formattedAction = action.split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      const formattedAction = action
+        .split('_')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
       // Format device name if available: dht11h -> DHT11H
       const formattedDevice = deviceName
-        ? deviceName.split('_')
-            .map(word => word.toUpperCase())
+        ? deviceName
+            .split('_')
+            .map((word) => word.toUpperCase())
             .join(' ')
         : '';
 
       // Return formatted string
-      return formattedDevice
-        ? `${formattedAction} (${formattedDevice})`
-        : formattedAction;
+      return formattedDevice ? `${formattedAction} (${formattedDevice})` : formattedAction;
     }
 
     // Fallback: try to format the whole topic
-    return cleanTopic.split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    return cleanTopic
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   }
 
@@ -507,26 +536,29 @@ export class OverviewComponent implements OnInit {
   recentActivity = computed<RecentActivity[]>(() => {
     const farmId = this.selectedFarmId();
     const actions = farmId ? this.filteredActions() : this.recentActions();
-    const notifications = this.recentNotifications()
-      .filter(n => {
-        // Filter notifications by farm if farm is selected
-        if (farmId) {
-          // Try to match notification to farm via devices
-          const farmDevices = this.devices().filter(d => d.farm_id === farmId).map(d => d.device_id);
-          // For now, include all notifications if we can't match by device
-          return true;
-        }
-        return n.level === 'critical' || n.level === 'warning' || n.level === 'info';
-      });
+    const notifications = this.recentNotifications().filter((n) => {
+      // Filter notifications by farm if farm is selected
+      if (farmId) {
+        // Try to match notification to farm via devices
+        const farmDevices = this.devices()
+          .filter((d) => d.farm_id === farmId)
+          .map((d) => d.device_id);
+        // For now, include all notifications if we can't match by device
+        return true;
+      }
+      return n.level === 'critical' || n.level === 'warning' || n.level === 'info';
+    });
 
     const activities: RecentActivity[] = [];
 
     // Add actions with enhanced info
-    actions.forEach(action => {
-      const device = this.devices().find(d => d.device_id === action.device_id);
-      const farm = device ? this.farms().find(f => f.farm_id === device.farm_id) : null;
+    actions.forEach((action) => {
+      const device = this.devices().find((d) => d.device_id === action.device_id);
+      const farm = device ? this.farms().find((f) => f.farm_id === device.farm_id) : null;
 
-      const formattedTitle = this.formatMqttTopic(action.action_uri || action.topic || 'Unknown Action');
+      const formattedTitle = this.formatMqttTopic(
+        action.action_uri || action.topic || 'Unknown Action',
+      );
 
       activities.push({
         id: action.id?.toString() || '',
@@ -537,18 +569,19 @@ export class OverviewComponent implements OnInit {
           : `Device: ${action.device_id}`,
         timestamp: new Date(action.created_at),
         icon: action.trigger_source === 'auto' ? 'auto_awesome' : 'touch_app',
-        color: action.status === 'ack' ? 'success' : action.status === 'error' ? 'danger' : 'warning',
+        color:
+          action.status === 'ack' ? 'success' : action.status === 'error' ? 'danger' : 'warning',
         metadata: {
           status: action.status,
           trigger: action.trigger_source,
           deviceName: device?.name,
-          farmName: farm?.name
-        }
+          farmName: farm?.name,
+        },
       });
     });
 
     // Add notifications with enhanced info
-    notifications.forEach(notif => {
+    notifications.forEach((notif) => {
       activities.push({
         id: notif.id,
         type: 'notification',
@@ -556,11 +589,12 @@ export class OverviewComponent implements OnInit {
         description: notif.message || 'No message',
         timestamp: new Date(notif.createdAt),
         icon: this.getNotificationIcon(notif.level),
-        color: notif.level === 'critical' ? 'danger' : notif.level === 'warning' ? 'warning' : 'info',
+        color:
+          notif.level === 'critical' ? 'danger' : notif.level === 'warning' ? 'warning' : 'info',
         metadata: {
           level: notif.level,
-          read: notif.read
-        }
+          read: notif.read,
+        },
       });
     });
 
@@ -574,10 +608,10 @@ export class OverviewComponent implements OnInit {
     const devicesData = this.devices();
 
     return farmsData
-      .map(farm => {
-        const farmDevices = devicesData.filter(d => d.farm_id === farm.farm_id);
+      .map((farm) => {
+        const farmDevices = devicesData.filter((d) => d.farm_id === farm.farm_id);
         const offlineDevices = farmDevices.filter(
-          d => d.status === DeviceStatus.OFFLINE || d.status === DeviceStatus.MAINTENANCE
+          (d) => d.status === DeviceStatus.OFFLINE || d.status === DeviceStatus.MAINTENANCE,
         );
 
         if (offlineDevices.length === 0) return null;
@@ -587,7 +621,7 @@ export class OverviewComponent implements OnInit {
           name: farm.name,
           issue: `${offlineDevices.length} offline device${offlineDevices.length > 1 ? 's' : ''}`,
           deviceCount: farmDevices.length,
-          offlineDeviceCount: offlineDevices.length
+          offlineDeviceCount: offlineDevices.length,
         };
       })
       .filter((f): f is FarmNeedingAttention => f !== null)
@@ -600,10 +634,10 @@ export class OverviewComponent implements OnInit {
     const devicesData = this.devices();
 
     return farmsData
-      .map(farm => ({
+      .map((farm) => ({
         farm_id: farm.farm_id,
         name: farm.name,
-        deviceCount: devicesData.filter(d => d.farm_id === farm.farm_id).length
+        deviceCount: devicesData.filter((d) => d.farm_id === farm.farm_id).length,
       }))
       .sort((a, b) => b.deviceCount - a.deviceCount)
       .slice(0, 5);
@@ -632,7 +666,8 @@ export class OverviewComponent implements OnInit {
     }
 
     // Determine trends period based on date range
-    const trendsPeriod = dateRange === 'today' ? '7days' : dateRange === '7days' ? '7days' : '30days';
+    const trendsPeriod =
+      dateRange === 'today' ? '7days' : dateRange === '7days' ? '7days' : '30days';
 
     const handleHttpError = (err: any, fallback: any) => {
       if (err.status === 401 || err.status === 403) throw err;
@@ -641,31 +676,31 @@ export class OverviewComponent implements OnInit {
 
     // Use new admin endpoints for summary and trends
     forkJoin({
-      summary: this.adminApiService.getOverviewSummary().pipe(
-        catchError((err) => handleHttpError(err, null))
-      ),
-      trends: this.adminApiService.getOverviewTrends(trendsPeriod).pipe(
-        catchError((err) => handleHttpError(err, null))
-      ),
+      summary: this.adminApiService
+        .getOverviewSummary()
+        .pipe(catchError((err) => handleHttpError(err, null))),
+      trends: this.adminApiService
+        .getOverviewTrends(trendsPeriod)
+        .pipe(catchError((err) => handleHttpError(err, null))),
       // Still fetch individual data for detailed views (farms needing attention, top farms, recent activity)
       farms: this.apiService.getFarms().pipe(catchError((err) => handleHttpError(err, []))),
       devices: this.apiService.getDevices().pipe(catchError((err) => handleHttpError(err, []))),
       users: this.apiService.getUsers().pipe(catchError((err) => handleHttpError(err, []))),
-      actions: this.apiService.getActions({
-        limit: 20,
-        from: startDate.toISOString()
-      }).pipe(
-        catchError((err) => handleHttpError(err, { items: [], total: 0 }))
-      ),
-      notifications: this.apiService.getNotifications({
-        limit: 20,
-        from: startDate.toISOString()
-      }).pipe(
-        catchError((err) => handleHttpError(err, { items: [], total: 0 }))
-      ),
-      deviceStats: this.apiService.getDeviceStatistics().pipe(
-        catchError((err) => handleHttpError(err, null))
-      )
+      actions: this.apiService
+        .getActions({
+          limit: 20,
+          from: startDate.toISOString(),
+        })
+        .pipe(catchError((err) => handleHttpError(err, { items: [], total: 0 }))),
+      notifications: this.apiService
+        .getNotifications({
+          limit: 20,
+          from: startDate.toISOString(),
+        })
+        .pipe(catchError((err) => handleHttpError(err, { items: [], total: 0 }))),
+      deviceStats: this.apiService
+        .getDeviceStatistics()
+        .pipe(catchError((err) => handleHttpError(err, null))),
     }).subscribe({
       next: (data) => {
         this.isUnauthorized.set(false);
@@ -684,7 +719,7 @@ export class OverviewComponent implements OnInit {
           this.isUnauthorized.set(true);
         }
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -724,7 +759,7 @@ export class OverviewComponent implements OnInit {
   selectedFarmName = computed(() => {
     const farmId = this.selectedFarmId();
     if (!farmId) return null;
-    const farm = this.farms().find(f => f.farm_id === farmId);
+    const farm = this.farms().find((f) => f.farm_id === farmId);
     return farm?.name || 'Unknown';
   });
 
@@ -733,7 +768,7 @@ export class OverviewComponent implements OnInit {
   }
 
   toggleActivityExpansion(): void {
-    this.isActivityExpanded.update(v => !v);
+    this.isActivityExpanded.update((v) => !v);
   }
 
   private getNotificationIcon(level: string): string {
@@ -758,9 +793,11 @@ export class OverviewComponent implements OnInit {
     const notificationsData = this.recentNotifications();
 
     const offlineDevices = devicesData.filter(
-      d => d.status === DeviceStatus.OFFLINE || d.status === DeviceStatus.MAINTENANCE
+      (d) => d.status === DeviceStatus.OFFLINE || d.status === DeviceStatus.MAINTENANCE,
     );
-    const criticalAlerts = notificationsData.filter(n => n.level === 'critical' && !n.read).length;
+    const criticalAlerts = notificationsData.filter(
+      (n) => n.level === 'critical' && !n.read,
+    ).length;
 
     return [
       {
@@ -771,7 +808,7 @@ export class OverviewComponent implements OnInit {
         gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
         badge: null as number | null,
         tooltip: 'Add a new farmer to the system',
-        urgent: false
+        urgent: false,
       },
       {
         label: 'View All Farms',
@@ -781,7 +818,7 @@ export class OverviewComponent implements OnInit {
         gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
         badge: summary?.totalFarms || null,
         tooltip: `View all ${summary?.totalFarms || 0} farms in the system`,
-        urgent: false
+        urgent: false,
       },
       {
         label: 'Offline Devices',
@@ -791,7 +828,7 @@ export class OverviewComponent implements OnInit {
         gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
         badge: offlineDevices.length > 0 ? offlineDevices.length : null,
         tooltip: `${offlineDevices.length} device${offlineDevices.length !== 1 ? 's' : ''} need attention`,
-        urgent: offlineDevices.length > 0
+        urgent: offlineDevices.length > 0,
       },
       {
         label: 'System Health',
@@ -801,7 +838,7 @@ export class OverviewComponent implements OnInit {
         gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
         badge: null as number | null,
         tooltip: 'Monitor system performance and health metrics',
-        urgent: false
+        urgent: false,
       },
       {
         label: 'View Logs',
@@ -811,7 +848,7 @@ export class OverviewComponent implements OnInit {
         gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
         badge: summary?.actionsToday || null,
         tooltip: `View ${summary?.actionsToday || 0} actions logged today`,
-        urgent: false
+        urgent: false,
       },
       {
         label: 'Critical Alerts',
@@ -821,8 +858,8 @@ export class OverviewComponent implements OnInit {
         gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
         badge: criticalAlerts > 0 ? criticalAlerts : null,
         tooltip: `${criticalAlerts} critical alert${criticalAlerts !== 1 ? 's' : ''} require attention`,
-        urgent: criticalAlerts > 0
-      }
+        urgent: criticalAlerts > 0,
+      },
     ];
   });
 
@@ -833,4 +870,3 @@ export class OverviewComponent implements OnInit {
   trackByActionRoute = (_index: number, action: { route: string }): string => action.route;
   trackByFarmerId = (_index: number, farmer: { user_id: string }): string => farmer.user_id;
 }
-

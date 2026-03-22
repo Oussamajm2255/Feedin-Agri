@@ -125,22 +125,25 @@ export interface ActivityLog {
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
-        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('slideIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateX(20px)' }),
-        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
-      ])
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' })),
+      ]),
     ]),
     trigger('panelSlide', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateX(40px)' }),
-        animate('400ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateX(0)' }))
-      ])
-    ])
-  ]
+        animate(
+          '400ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 1, transform: 'translateX(0)' }),
+        ),
+      ]),
+    ]),
+  ],
 })
 export class FarmersComponent implements OnInit {
   private adminApiService = inject(AdminApiService);
@@ -216,7 +219,7 @@ export class FarmersComponent implements OnInit {
     // Status filter
     const status = this.selectedStatus();
     if (status) {
-      result = result.filter(farmer => {
+      result = result.filter((farmer) => {
         const farmerStatus = farmer.status?.toLowerCase() || 'active';
         return farmerStatus === status;
       });
@@ -225,15 +228,17 @@ export class FarmersComponent implements OnInit {
     // Search filter
     const query = this.searchQuery().toLowerCase().trim();
     if (query) {
-      result = result.filter(farmer => {
+      result = result.filter((farmer) => {
         const searchableText = [
           farmer.first_name,
           farmer.last_name,
           farmer.email,
           farmer.city || '',
           farmer.country || '',
-          ...farmer.assigned_farms.map(f => f.farm_name)
-        ].join(' ').toLowerCase();
+          ...farmer.assigned_farms.map((f) => f.farm_name),
+        ]
+          .join(' ')
+          .toLowerCase();
 
         return searchableText.includes(query);
       });
@@ -255,15 +260,13 @@ export class FarmersComponent implements OnInit {
 
   /** Summary statistics */
   totalFarmsCount = computed(() =>
-    this.farmers().reduce((sum, f) => sum + f.assigned_farms.length, 0)
+    this.farmers().reduce((sum, f) => sum + f.assigned_farms.length, 0),
   );
 
-  totalDevicesCount = computed(() =>
-    this.farmers().reduce((sum, f) => sum + f.total_devices, 0)
-  );
+  totalDevicesCount = computed(() => this.farmers().reduce((sum, f) => sum + f.total_devices, 0));
 
-  activeFarmersCount = computed(() =>
-    this.farmers().filter(f => (f.status?.toLowerCase() || 'active') === 'active').length
+  activeFarmersCount = computed(
+    () => this.farmers().filter((f) => (f.status?.toLowerCase() || 'active') === 'active').length,
   );
 
   // ========================================
@@ -293,13 +296,13 @@ export class FarmersComponent implements OnInit {
       .getFarmers(this.pageIndex() + 1, this.pageSize())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError(err => {
+        catchError((err) => {
           this.error.set(err.message || 'Failed to load farmers');
           return of({ items: [], total: 0, page: 1, limit: 100, totalPages: 0 });
         }),
-        finalize(() => this.loading.set(false))
+        finalize(() => this.loading.set(false)),
       )
-      .subscribe(result => {
+      .subscribe((result) => {
         this.farmers.set(result.items as Farmer[]);
         this.totalFarmers.set(result.total);
       });
@@ -308,7 +311,7 @@ export class FarmersComponent implements OnInit {
   private setupSearchDebounce(): void {
     this.searchSubject
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-      .subscribe(query => {
+      .subscribe((query) => {
         this.searchQuery.set(query);
       });
   }
@@ -401,9 +404,9 @@ export class FarmersComponent implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => of([])),
-        finalize(() => this.loadingFarms.set(false))
+        finalize(() => this.loadingFarms.set(false)),
       )
-      .subscribe(farms => {
+      .subscribe((farms) => {
         this.farmerFarms.set(farms as FarmerFarm[]);
       });
   }
@@ -417,19 +420,19 @@ export class FarmersComponent implements OnInit {
     this.loadingDevices.set(true);
 
     // Load devices for all farms
-    const deviceRequests = farmer.assigned_farms.map(farm =>
-      this.adminApiService.getDevices({ farm_id: farm.farm_id, limit: 100 }).pipe(
-        catchError(() => of({ devices: [], total: 0, page: 1, limit: 100, totalPages: 0 }))
-      )
+    const deviceRequests = farmer.assigned_farms.map((farm) =>
+      this.adminApiService
+        .getDevices({ farm_id: farm.farm_id, limit: 100 })
+        .pipe(catchError(() => of({ devices: [], total: 0, page: 1, limit: 100, totalPages: 0 }))),
     );
 
     forkJoin(deviceRequests)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loadingDevices.set(false))
+        finalize(() => this.loadingDevices.set(false)),
       )
-      .subscribe(results => {
-        const allDevices = results.flatMap(r => r.devices);
+      .subscribe((results) => {
+        const allDevices = results.flatMap((r) => r.devices);
         this.farmerDevices.set(allDevices);
       });
   }
@@ -443,19 +446,19 @@ export class FarmersComponent implements OnInit {
     this.loadingSensors.set(true);
 
     // Load sensors for all farms
-    const sensorRequests = farmer.assigned_farms.map(farm =>
-      this.adminApiService.getSensors({ farm_id: farm.farm_id, limit: 100 }).pipe(
-        catchError(() => of({ sensors: [], total: 0, page: 1, limit: 100, totalPages: 0 }))
-      )
+    const sensorRequests = farmer.assigned_farms.map((farm) =>
+      this.adminApiService
+        .getSensors({ farm_id: farm.farm_id, limit: 100 })
+        .pipe(catchError(() => of({ sensors: [], total: 0, page: 1, limit: 100, totalPages: 0 }))),
     );
 
     forkJoin(sensorRequests)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loadingSensors.set(false))
+        finalize(() => this.loadingSensors.set(false)),
       )
-      .subscribe(results => {
-        const allSensors = results.flatMap(r => r.sensors);
+      .subscribe((results) => {
+        const allSensors = results.flatMap((r) => r.sensors);
         this.farmerSensors.set(allSensors);
       });
   }
@@ -469,21 +472,21 @@ export class FarmersComponent implements OnInit {
     this.loadingModerators.set(true);
 
     // First get all farms with their details, then get moderators for each
-    const farmIds = farmer.assigned_farms.map(f => f.farm_id);
+    const farmIds = farmer.assigned_farms.map((f) => f.farm_id);
 
     // Load moderators for each farm
-    const moderatorRequests = farmer.assigned_farms.map(farm =>
-      this.adminApiService.getUsers({ role: 'moderator', farm_id: farm.farm_id, limit: 100 }).pipe(
-        catchError(() => of({ items: [], total: 0, page: 1, limit: 100, totalPages: 0 }))
-      )
+    const moderatorRequests = farmer.assigned_farms.map((farm) =>
+      this.adminApiService
+        .getUsers({ role: 'moderator', farm_id: farm.farm_id, limit: 100 })
+        .pipe(catchError(() => of({ items: [], total: 0, page: 1, limit: 100, totalPages: 0 }))),
     );
 
     forkJoin(moderatorRequests)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loadingModerators.set(false))
+        finalize(() => this.loadingModerators.set(false)),
       )
-      .subscribe(results => {
+      .subscribe((results) => {
         const moderatorsMap = new Map<string, FarmModerator>();
 
         results.forEach((result, index) => {
@@ -496,7 +499,7 @@ export class FarmersComponent implements OnInit {
                 first_name: mod.first_name,
                 last_name: mod.last_name,
                 farm_id: farm.farm_id,
-                farm_name: farm.farm_name
+                farm_name: farm.farm_name,
               });
             }
           });
@@ -515,19 +518,17 @@ export class FarmersComponent implements OnInit {
     this.loadingActivity.set(true);
 
     // Load activity for all farms
-    const activityRequests = farmer.assigned_farms.map(farm =>
-      this.adminApiService.getFarmActivity(farm.farm_id, 20).pipe(
-        catchError(() => of([]))
-      )
+    const activityRequests = farmer.assigned_farms.map((farm) =>
+      this.adminApiService.getFarmActivity(farm.farm_id, 20).pipe(catchError(() => of([]))),
     );
 
     forkJoin(activityRequests)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loadingActivity.set(false))
+        finalize(() => this.loadingActivity.set(false)),
       )
-      .subscribe(results => {
-        const allActivity = results.flatMap(r => r as ActivityLog[]);
+      .subscribe((results) => {
+        const allActivity = results.flatMap((r) => r as ActivityLog[]);
         // Sort by timestamp descending
         allActivity.sort((a, b) => {
           const dateA = new Date(a.timestamp).getTime();
@@ -569,12 +570,12 @@ export class FarmersComponent implements OnInit {
       maxHeight: '90vh',
       data: {
         mode: 'edit',
-        farmerId: farmer.user_id
+        farmerId: farmer.user_id,
       },
-      panelClass: 'farmer-dialog-panel'
+      panelClass: ['farmer-dialog-panel', 'mobile-fullscreen-dialog'],
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.alertService.success('Success', 'Farmer updated successfully', 3000);
         this.loadFarmers();
@@ -591,15 +592,16 @@ export class FarmersComponent implements OnInit {
     // Simple prompt for farm ID - could be enhanced with a dialog
     const farmId = prompt('Enter Farm ID to assign:');
     if (farmId) {
-      this.adminApiService.assignFarmToFarmer(farmer.user_id, farmId)
+      this.adminApiService
+        .assignFarmToFarmer(farmer.user_id, farmId)
         .pipe(
           takeUntilDestroyed(this.destroyRef),
-          catchError(err => {
+          catchError((err) => {
             this.alertService.error('Error', err.error?.message || 'Failed to assign farm', 3000);
             return of(null);
-          })
+          }),
         )
-        .subscribe(result => {
+        .subscribe((result) => {
           if (result) {
             this.alertService.success('Success', 'Farm assigned successfully', 3000);
             this.loadFarmers();
@@ -645,7 +647,7 @@ export class FarmersComponent implements OnInit {
     return d.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
@@ -657,7 +659,7 @@ export class FarmersComponent implements OnInit {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 

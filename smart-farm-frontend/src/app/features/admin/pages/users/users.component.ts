@@ -1,4 +1,13 @@
-import { Component, OnInit, AfterViewInit, signal, computed, effect, inject, DestroyRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  signal,
+  computed,
+  effect,
+  inject,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -41,7 +50,11 @@ import { ActionLog } from '../../../../core/models/action-log.model';
 import { ConfirmImpersonateDialogComponent } from './components/dialogs/confirm-impersonate-dialog/confirm-impersonate-dialog.component';
 
 // New Drawer Component
-import { UserDrawerComponent, DrawerMode, DrawerCloseEvent } from './components/user-drawer/user-drawer.component';
+import {
+  UserDrawerComponent,
+  DrawerMode,
+  DrawerCloseEvent,
+} from './components/user-drawer/user-drawer.component';
 
 // Export Components
 import { ExportButtonComponent } from '../../../../shared/components/export-button/export-button.component';
@@ -103,34 +116,34 @@ interface UserStats {
     trigger('fadeInUp', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('fadeInDown', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(-20px)' }),
-        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('fadeIn', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('0.5s ease-in', style({ opacity: 1 }))
-      ])
+      transition(':enter', [style({ opacity: 0 }), animate('0.5s ease-in', style({ opacity: 1 }))]),
     ]),
     trigger('floatIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(30px) scale(0.9)' }),
-        animate('0.6s cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
-      ])
+        animate(
+          '0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 1, transform: 'translateY(0) scale(1)' }),
+        ),
+      ]),
     ]),
     trigger('scaleIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'scale(0.8)' }),
-        animate('0.3s ease-out', style({ opacity: 1, transform: 'scale(1)' }))
-      ])
-    ])
-  ]
+        animate('0.3s ease-out', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
+    ]),
+  ],
 })
 export class UsersComponent implements OnInit, AfterViewInit {
   // Services
@@ -145,24 +158,24 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   // View mode: 'table' for large screens, 'grid' for smaller screens
   viewMode = signal<'table' | 'grid'>(
-    typeof window !== 'undefined' && window.innerWidth < 1400 ? 'grid' : 'table'
+    typeof window !== 'undefined' && window.innerWidth < 1400 ? 'grid' : 'table',
   );
 
   /**
    * Effect to auto-switch view mode based on breakpoint
    */
-  private viewModeBreakpointEffect = effect(() => {
-    const isLargeDesktop = this.breakpointService.isLargeDesktop();
-    // Only auto-switch to grid when moving from large to smaller screens
-    if (!isLargeDesktop && this.viewMode() === 'table') {
-      this.viewMode.set('grid');
-    }
-  }, { allowSignalWrites: true });
+  private viewModeBreakpointEffect = effect(
+    () => {
+      const isLargeDesktop = this.breakpointService.isLargeDesktop();
+      // Only auto-switch to grid when moving from large to smaller screens
+      if (!isLargeDesktop && this.viewMode() === 'table') {
+        this.viewMode.set('grid');
+      }
+    },
+    { allowSignalWrites: true },
+  );
 
   // ... (rest of the class)
-
-
-
 
   // State Signals
   loading = signal<boolean>(true);
@@ -354,57 +367,61 @@ export class UsersComponent implements OnInit, AfterViewInit {
               catchError((retryError) => {
                 this.showSnackbar('Failed to load users', 'error');
                 return of({ items: [], total: 0, page: 1, limit: 20, totalPages: 0 });
-              })
+              }),
             );
           }
 
           this.showSnackbar('Failed to load users', 'error');
           return of({ items: [], total: 0, page: 1, limit: 20, totalPages: 0 });
         }),
-        finalize(() => this.loading.set(false))
+        finalize(() => this.loading.set(false)),
       )
-      .subscribe((response: {
-        items: Array<{
-          user_id: string;
-          email: string;
-          first_name: string;
-          last_name: string;
-          phone: string | null;
-          role: string;
-          status: string;
-          city: string | null;
-          country: string | null;
-          last_login: Date | null;
-          created_at: Date;
-          updated_at: Date;
-          farm_count: number;
-        }>;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-      }) => {
-        const mappedUsers: UserTableRow[] = response.items.map((user: {
-          user_id: string;
-          email: string;
-          first_name: string;
-          last_name: string;
-          phone: string | null;
-          role: string;
-          status: string;
-          city: string | null;
-          country: string | null;
-          last_login: Date | null;
-          created_at: Date;
-          updated_at: Date;
-          farm_count: number;
-        }) => ({
-          ...user,
-          full_name: `${user.first_name} ${user.last_name}`.trim(),
-        }));
-        this.users.set(mappedUsers);
-        this.totalUsers.set(response.total);
-      });
+      .subscribe(
+        (response: {
+          items: Array<{
+            user_id: string;
+            email: string;
+            first_name: string;
+            last_name: string;
+            phone: string | null;
+            role: string;
+            status: string;
+            city: string | null;
+            country: string | null;
+            last_login: Date | null;
+            created_at: Date;
+            updated_at: Date;
+            farm_count: number;
+          }>;
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        }) => {
+          const mappedUsers: UserTableRow[] = response.items.map(
+            (user: {
+              user_id: string;
+              email: string;
+              first_name: string;
+              last_name: string;
+              phone: string | null;
+              role: string;
+              status: string;
+              city: string | null;
+              country: string | null;
+              last_login: Date | null;
+              created_at: Date;
+              updated_at: Date;
+              farm_count: number;
+            }) => ({
+              ...user,
+              full_name: `${user.first_name} ${user.last_name}`.trim(),
+            }),
+          );
+          this.users.set(mappedUsers);
+          this.totalUsers.set(response.total);
+        },
+      );
   }
 
   loadStats(): void {
@@ -420,34 +437,38 @@ export class UsersComponent implements OnInit, AfterViewInit {
           this.loadingStats.set(false);
           // Trigger counter animation after stats load
           setTimeout(() => this.animateCounters(), 100);
-        })
+        }),
       )
-      .subscribe((summary: {
-        totalFarms: number;
-        totalDevices: number;
-        onlineDevices: number;
-        offlineDevices: number;
-        maintenanceDevices: number;
-        totalSensors: number;
-        totalUsers: number;
-        totalFarmers: number;
-        totalAdmins: number;
-        activeUsers: number;
-        alertsToday: number;
-        criticalAlertsUnread: number;
-        actionsToday: number;
-        autoActionsToday: number;
-        manualActionsToday: number;
-      } | null) => {
-        if (summary) {
-          this.stats.set({
-            total: summary.totalUsers,
-            farmers: summary.totalFarmers,
-            moderators: 0, // Not available in summary yet
-            admins: summary.totalAdmins,
-          });
-        }
-      });
+      .subscribe(
+        (
+          summary: {
+            totalFarms: number;
+            totalDevices: number;
+            onlineDevices: number;
+            offlineDevices: number;
+            maintenanceDevices: number;
+            totalSensors: number;
+            totalUsers: number;
+            totalFarmers: number;
+            totalAdmins: number;
+            activeUsers: number;
+            alertsToday: number;
+            criticalAlertsUnread: number;
+            actionsToday: number;
+            autoActionsToday: number;
+            manualActionsToday: number;
+          } | null,
+        ) => {
+          if (summary) {
+            this.stats.set({
+              total: summary.totalUsers,
+              farmers: summary.totalFarmers,
+              moderators: 0, // Not available in summary yet
+              admins: summary.totalAdmins,
+            });
+          }
+        },
+      );
   }
 
   loadFarms(): void {
@@ -457,7 +478,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => of([])),
-        finalize(() => this.loadingFarms.set(false))
+        finalize(() => this.loadingFarms.set(false)),
       )
       .subscribe((farms: Farm[]) => {
         this.farms.set(farms);
@@ -466,11 +487,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   setupSearchListener(): void {
     this.searchControl.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.pageIndex.set(0);
         this.loadUsers();
@@ -511,7 +528,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (event.action === 'saved' || event.action === 'created') {
       this.showSnackbar(
         event.action === 'created' ? 'User created successfully' : 'User updated successfully',
-        'success'
+        'success',
       );
       this.loadUsers();
       this.loadStats();
@@ -551,7 +568,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
 
     const userId = 'user_id' in user ? user.user_id : (user as any).user_id;
-    const userName = 'full_name' in user ? user.full_name : `${(user as User).first_name} ${(user as User).last_name}`;
+    const userName =
+      'full_name' in user
+        ? user.full_name
+        : `${(user as User).first_name} ${(user as User).last_name}`;
     const userEmail = 'email' in user ? user.email : (user as User).email;
     const userStatus = 'status' in user ? user.status : (user as User).status;
 
@@ -563,6 +583,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     // Show confirmation dialog
     const confirmDialogRef = this.dialog.open(ConfirmImpersonateDialogComponent, {
       width: '500px',
+      panelClass: 'mobile-fullscreen-dialog',
       data: {
         userName,
         userEmail,
@@ -583,36 +604,43 @@ export class UsersComponent implements OnInit, AfterViewInit {
             console.error('Impersonation failed:', error);
             this.showSnackbar('Impersonation failed', 'error');
             return of(null);
-          })
+          }),
         )
-        .subscribe((result: {
-          user: User;
-          impersonated: boolean;
-          originalAdmin: {
-            user_id: string;
-            email: string;
-            role: string;
-          };
-        } | null) => {
-          if (result) {
-            // Store original admin info in sessionStorage
-            sessionStorage.setItem('impersonation_original_admin', JSON.stringify(result.originalAdmin));
-            sessionStorage.setItem('impersonation_active', 'true');
-            sessionStorage.setItem('impersonation_user', JSON.stringify(result.user));
+        .subscribe(
+          (
+            result: {
+              user: User;
+              impersonated: boolean;
+              originalAdmin: {
+                user_id: string;
+                email: string;
+                role: string;
+              };
+            } | null,
+          ) => {
+            if (result) {
+              // Store original admin info in sessionStorage
+              sessionStorage.setItem(
+                'impersonation_original_admin',
+                JSON.stringify(result.originalAdmin),
+              );
+              sessionStorage.setItem('impersonation_active', 'true');
+              sessionStorage.setItem('impersonation_user', JSON.stringify(result.user));
 
-            this.showSnackbar(`Now impersonating: ${userName}`, 'success');
+              this.showSnackbar(`Now impersonating: ${userName}`, 'success');
 
-            // Redirect to appropriate dashboard based on role
-            setTimeout(() => {
-              if (result.user.role === 'farmer') {
-                window.location.href = '/dashboard';
-              } else {
-                // For other roles, redirect to their default page
-                window.location.href = '/dashboard';
-              }
-            }, 1000);
-          }
-        });
+              // Redirect to appropriate dashboard based on role
+              setTimeout(() => {
+                if (result.user.role === 'farmer') {
+                  window.location.href = '/dashboard';
+                } else {
+                  // For other roles, redirect to their default page
+                  window.location.href = '/dashboard';
+                }
+              }, 1000);
+            }
+          },
+        );
     });
   }
 
@@ -695,11 +723,14 @@ export class UsersComponent implements OnInit, AfterViewInit {
   formatDate(date: Date | null | undefined): string {
     if (!date) return '—';
     try {
-      return new Date(date).toLocaleDateString(this.languageService.getCurrentLanguageCode() || 'en', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
+      return new Date(date).toLocaleDateString(
+        this.languageService.getCurrentLanguageCode() || 'en',
+        {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        },
+      );
     } catch {
       return '—';
     }
@@ -725,9 +756,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
       success: 'Success',
       error: 'Error',
       warn: 'Warning',
-      info: 'Info'
+      info: 'Info',
     };
-    
+
     if (type === 'success') {
       this.alertService.success(titleMap[type], message, 4000);
     } else if (type === 'error') {
@@ -744,7 +775,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (error?.error) {
       // NestJS error format: error.error.message or error.error.error.message
       const errorObj = error.error;
-      
+
       // Check for nested error object (NestJS format)
       if (errorObj.error) {
         if (errorObj.error.message) {
@@ -760,7 +791,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
           return errorObj.error;
         }
       }
-      
+
       // Check for direct message property
       if (errorObj.message) {
         // Handle array of messages (validation errors)
@@ -770,18 +801,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
         // Handle single message string
         return errorObj.message;
       }
-      
+
       // If error.error is a string directly
       if (typeof errorObj === 'string') {
         return errorObj;
       }
     }
-    
+
     // Handle network errors
     if (error?.status === 0) {
       return 'Network error. Please check your connection.';
     }
-    
+
     // Handle specific HTTP status codes with default messages
     if (error?.status === 400) {
       return 'Invalid user data. Please check all fields.';
@@ -800,7 +831,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (error?.status === 500) {
       return 'Server error. Please try again later.';
     }
-    
+
     // Default error message
     return error?.message || 'Failed to create user. Please try again.';
   }

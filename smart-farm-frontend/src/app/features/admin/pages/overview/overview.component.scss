@@ -453,26 +453,26 @@ body.dark-theme .premium-dropdown {
 // KPI Row - Mobile First 
 // ================================
 .overview-kpi-row {
-  // Mobile first: 2-column compact grid
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-2);
+  // Mobile first: horizontal scroll strip
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: var(--space-3);
   margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2); // Space for scrollbar
   contain: layout style; // CSS containment for performance
-
-  // Very small screens: single column
-  @media (max-width: 359px) {
-    grid-template-columns: 1fr;
+  scrollbar-width: none; // Firefox
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome/Safari
   }
 
-  // Larger mobile/small tablet: 2-column with more gap
-  @media (min-width: 480px) {
-    gap: var(--space-3);
-  }
-
-  // Tablet: 3 columns
+  // Tablet: 3 columns grid
   @media (min-width: 768px) {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
+    overflow-x: visible;
     gap: var(--space-4);
     margin-bottom: var(--space-5);
   }
@@ -503,7 +503,17 @@ body.dark-theme .premium-dropdown {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     position: relative;
     overflow: hidden;
-    contain: layout style; // CSS containment
+    contain: layout style;
+    
+    // Mobile specific: fixed width for horizontal scrolling
+    flex: 0 0 calc(100% - 48px);
+    min-width: 240px;
+    scroll-snap-align: center;
+    
+    @media (min-width: 768px) {
+      flex: auto; // Reset to grid behavior on tablet
+      min-width: 0;
+    }
 
     :host-context(.dark-theme) & {
       background: rgba(30, 41, 59, 0.6);

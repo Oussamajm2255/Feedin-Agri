@@ -1,4 +1,14 @@
-import { Component, OnInit, signal, inject, DestroyRef, computed, effect, AfterViewInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  inject,
+  DestroyRef,
+  computed,
+  effect,
+  AfterViewInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -70,37 +80,38 @@ type ViewMode = 'table' | 'grid' | 'map';
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
-        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('fadeInUp', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
     ]),
     trigger('slideDown', [
       transition(':enter', [
         style({ height: 0, opacity: 0, overflow: 'hidden' }),
-        animate('300ms ease-out', style({ height: '*', opacity: 1 }))
+        animate('300ms ease-out', style({ height: '*', opacity: 1 })),
       ]),
-      transition(':leave', [
-        animate('300ms ease-in', style({ height: 0, opacity: 0 }))
-      ])
+      transition(':leave', [animate('300ms ease-in', style({ height: 0, opacity: 0 }))]),
     ]),
     trigger('scaleIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'scale(0.8)' }),
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'scale(1)' }))
-      ])
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
     ]),
     trigger('staggerFadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(15px)' }),
-        animate('400ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
-    ])
-  ]
+        animate(
+          '400ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 1, transform: 'translateY(0)' }),
+        ),
+      ]),
+    ]),
+  ],
 })
 export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
   private adminApiService = inject(AdminApiService);
@@ -109,11 +120,13 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
   private alertService = inject(AlertService);
   private snackBar = {
     open: (message: string, action?: string, config?: any) => {
-      const isError = message.toLowerCase().includes('fail') || message.toLowerCase().includes('cannot');
+      const isError =
+        message.toLowerCase().includes('fail') || message.toLowerCase().includes('cannot');
       if (isError) this.alertService.error('Error', message, config?.duration || 3000);
-      else if (message.toLowerCase().includes('warning')) this.alertService.warning('Warning', message, config?.duration || 3000);
+      else if (message.toLowerCase().includes('warning'))
+        this.alertService.warning('Warning', message, config?.duration || 3000);
       else this.alertService.success('Success', message, config?.duration || 3000);
-    }
+    },
   };
 
   // State signals
@@ -128,7 +141,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
   sortBy = 'name';
   showFilters = signal<boolean>(false);
   viewMode = signal<ViewMode>(
-    (typeof window !== 'undefined' && window.innerWidth < 1400) ? 'grid' : 'table'
+    typeof window !== 'undefined' && window.innerWidth < 1400 ? 'grid' : 'table',
   );
   selectedFarms = signal<AdminFarm[]>([]);
   selectedMapFarm = signal<AdminFarm | null>(null);
@@ -148,7 +161,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     totalFarms: 0,
     activeFarms: 0,
     totalDevices: 0,
-    totalArea: 0
+    totalArea: 0,
   });
 
   // Export columns configuration
@@ -162,16 +175,14 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   // Computed values
-  activeFarms = computed(() =>
-    this.farms().filter(f => f.status === 'active').length
-  );
+  activeFarms = computed(() => this.farms().filter((f) => f.status === 'active').length);
 
   totalDevices = computed(() =>
-    this.farms().reduce((sum, farm) => sum + (farm.device_count || 0), 0)
+    this.farms().reduce((sum, farm) => sum + (farm.device_count || 0), 0),
   );
 
   totalArea = computed(() =>
-    this.farms().reduce((sum, farm) => sum + (farm.area_hectares || 0), 0)
+    this.farms().reduce((sum, farm) => sum + (farm.area_hectares || 0), 0),
   );
 
   // KPI Cards Configuration (Matching Admin Devices)
@@ -191,7 +202,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
         performanceClass: 'perf-neutral',
         trend: this.calculateTrend(total, prev.totalFarms),
         trendArrow: this.getTrendArrowSimple(total, prev.totalFarms),
-        trendColor: this.getTrendColorSimple(total, prev.totalFarms)
+        trendColor: this.getTrendColorSimple(total, prev.totalFarms),
       },
       {
         label: 'Active Farms',
@@ -201,7 +212,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
         performanceClass: 'perf-high',
         trend: this.calculateTrend(active, prev.activeFarms),
         trendArrow: this.getTrendArrowSimple(active, prev.activeFarms),
-        trendColor: this.getTrendColorSimple(active, prev.activeFarms)
+        trendColor: this.getTrendColorSimple(active, prev.activeFarms),
       },
       {
         label: 'Connected Devices',
@@ -211,7 +222,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
         performanceClass: 'perf-medium',
         trend: this.calculateTrend(devices, prev.totalDevices),
         trendArrow: this.getTrendArrowSimple(devices, prev.totalDevices),
-        trendColor: this.getTrendColorSimple(devices, prev.totalDevices)
+        trendColor: this.getTrendColorSimple(devices, prev.totalDevices),
       },
       {
         label: 'Total Coverage',
@@ -221,17 +232,17 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
         performanceClass: 'perf-low',
         trend: this.calculateTrend(area, prev.totalArea),
         trendArrow: this.getTrendArrowSimple(area, prev.totalArea),
-        trendColor: this.getTrendColorSimple(area, prev.totalArea)
-      }
+        trendColor: this.getTrendColorSimple(area, prev.totalArea),
+      },
     ];
   });
 
-  allFarmsSelected = computed(() =>
-    this.farms().length > 0 && this.selectedFarms().length === this.farms().length
+  allFarmsSelected = computed(
+    () => this.farms().length > 0 && this.selectedFarms().length === this.farms().length,
   );
 
-  someFarmsSelected = computed(() =>
-    this.selectedFarms().length > 0 && this.selectedFarms().length < this.farms().length
+  someFarmsSelected = computed(
+    () => this.selectedFarms().length > 0 && this.selectedFarms().length < this.farms().length,
   );
 
   // Theme detection for UI
@@ -246,7 +257,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     'devices',
     'status',
     'created_at',
-    'actions'
+    'actions',
   ];
 
   constructor() {
@@ -290,25 +301,26 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
 
-    this.adminApiService.getFarms({
-      page: this.pageIndex() + 1,
-      limit: this.pageSize(),
-      search: this.searchQuery || undefined,
-    })
+    this.adminApiService
+      .getFarms({
+        page: this.pageIndex() + 1,
+        limit: this.pageSize(),
+        search: this.searchQuery || undefined,
+      })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError(err => {
+        catchError((err) => {
           this.error.set(err.message || 'Failed to load farms');
           return of({ items: [], total: 0, page: 1, limit: 25, totalPages: 0 });
         }),
-        finalize(() => this.loading.set(false))
+        finalize(() => this.loading.set(false)),
       )
-      .subscribe(result => {
+      .subscribe((result) => {
         let farms: AdminFarm[] = result.items;
 
         // Apply status filter
         if (this.statusFilter) {
-          farms = farms.filter(f => f.status === this.statusFilter);
+          farms = farms.filter((f) => f.status === this.statusFilter);
         }
 
         // Apply sorting
@@ -319,7 +331,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
           totalFarms: this.totalFarms(),
           activeFarms: this.activeFarms(),
           totalDevices: this.totalDevices(),
-          totalArea: this.totalArea()
+          totalArea: this.totalArea(),
         };
 
         this.farms.set(farms);
@@ -331,7 +343,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
             totalFarms: this.totalFarms(),
             activeFarms: this.activeFarms(),
             totalDevices: this.totalDevices(),
-            totalArea: this.totalArea()
+            totalArea: this.totalArea(),
           });
         }, 100);
       });
@@ -381,7 +393,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleFilters() {
-    this.showFilters.update(v => !v);
+    this.showFilters.update((v) => !v);
   }
 
   /**
@@ -435,8 +447,9 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     let zoom = 2;
 
     if (farms.length > 0 && farms[0].location) {
-      const validFarms = farms.filter((f): f is AdminFarm & { location: { lat: number; lng: number } } =>
-        f.location !== undefined && f.location.lat !== undefined && f.location.lng !== undefined
+      const validFarms = farms.filter(
+        (f): f is AdminFarm & { location: { lat: number; lng: number } } =>
+          f.location !== undefined && f.location.lat !== undefined && f.location.lng !== undefined,
       );
       if (validFarms.length > 0) {
         const avgLat = validFarms.reduce((sum, f) => sum + f.location.lat, 0) / validFarms.length;
@@ -456,7 +469,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
-      maxZoom: 19
+      maxZoom: 19,
     }).addTo(this.map);
 
     this.mapInitialized = true;
@@ -470,11 +483,11 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     const isDarkTheme = document.body.classList.contains('dark-theme');
 
     // Clear existing markers
-    this.markers.forEach(marker => this.map.removeLayer(marker));
+    this.markers.forEach((marker) => this.map.removeLayer(marker));
     this.markers = [];
 
     // Add markers for each farm
-    this.farms().forEach(farm => {
+    this.farms().forEach((farm) => {
       if (!farm.location?.lat || !farm.location?.lng) return;
 
       const isActive = farm.status === 'active';
@@ -510,7 +523,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
         `,
         iconSize: [36, 36],
         iconAnchor: [18, 36],
-        popupAnchor: [0, -36]
+        popupAnchor: [0, -36],
       });
 
       // Create styled popup content
@@ -596,7 +609,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
         .addTo(this.map)
         .bindPopup(popupContent, {
           className: 'farm-popup-container',
-          maxWidth: 250
+          maxWidth: 250,
         });
 
       marker.on('click', () => {
@@ -650,10 +663,11 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedMapFarm.set(farm);
 
     // Highlight the marker
-    const marker = this.markers.find(m => {
+    const marker = this.markers.find((m) => {
       const latlng = m.getLatLng();
-      return Math.abs(latlng.lat - location.lat) < 0.0001 &&
-             Math.abs(latlng.lng - location.lng) < 0.0001;
+      return (
+        Math.abs(latlng.lat - location.lat) < 0.0001 && Math.abs(latlng.lng - location.lng) < 0.0001
+      );
     });
 
     if (marker) {
@@ -687,10 +701,10 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
       event.stopPropagation();
     }
     const selected = this.selectedFarms();
-    const index = selected.findIndex(f => f.farm_id === farm.farm_id);
+    const index = selected.findIndex((f) => f.farm_id === farm.farm_id);
 
     if (index >= 0) {
-      this.selectedFarms.set(selected.filter(f => f.farm_id !== farm.farm_id));
+      this.selectedFarms.set(selected.filter((f) => f.farm_id !== farm.farm_id));
     } else {
       this.selectedFarms.set([...selected, farm]);
     }
@@ -705,7 +719,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isFarmSelected(farm: AdminFarm): boolean {
-    return this.selectedFarms().some(f => f.farm_id === farm.farm_id);
+    return this.selectedFarms().some((f) => f.farm_id === farm.farm_id);
   }
 
   // ==================== Farm Actions ====================
@@ -721,12 +735,12 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
       maxHeight: '90vh',
       data: {
         mode: 'view',
-        farmId: farm.farm_id
+        farmId: farm.farm_id,
       },
-      panelClass: 'farm-dialog-panel'
+      panelClass: ['farm-dialog-panel', 'mobile-fullscreen-dialog'],
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.snackBar.open('Farm updated successfully', 'Close', { duration: 3000 });
         this.loadFarms();
@@ -750,12 +764,12 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
       maxHeight: '90vh',
       data: {
         mode: 'edit',
-        farmId: farm.farm_id
+        farmId: farm.farm_id,
       },
-      panelClass: 'farm-dialog-panel'
+      panelClass: ['farm-dialog-panel', 'mobile-fullscreen-dialog'],
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.snackBar.open('Farm updated successfully', 'Close', { duration: 3000 });
         this.loadFarms();
@@ -770,19 +784,22 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (confirm(`Are you sure you want to delete "${farm.farm_name}"?`)) {
-      this.adminApiService.deleteFarm(farm.farm_id)
+      this.adminApiService
+        .deleteFarm(farm.farm_id)
         .pipe(
           takeUntilDestroyed(this.destroyRef),
-          catchError(err => {
-            this.snackBar.open(err.error?.message || 'Failed to delete farm', 'Close', { duration: 3000 });
+          catchError((err) => {
+            this.snackBar.open(err.error?.message || 'Failed to delete farm', 'Close', {
+              duration: 3000,
+            });
             return of(null);
-          })
+          }),
         )
-        .subscribe(result => {
+        .subscribe((result) => {
           if (result) {
             this.snackBar.open('Farm deleted successfully', 'Close', { duration: 3000 });
             this.loadFarms();
-            this.selectedFarms.set(this.selectedFarms().filter(f => f.farm_id !== farm.farm_id));
+            this.selectedFarms.set(this.selectedFarms().filter((f) => f.farm_id !== farm.farm_id));
           }
         });
     }
@@ -790,15 +807,16 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleFarmStatus(farm: AdminFarm) {
     const newStatus = farm.status === 'active' ? 'inactive' : 'active';
-    this.adminApiService.updateFarm(farm.farm_id, { status: newStatus } as any)
+    this.adminApiService
+      .updateFarm(farm.farm_id, { status: newStatus } as any)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError(err => {
+        catchError((err) => {
           this.snackBar.open('Failed to update farm status', 'Close', { duration: 3000 });
           return of(null);
-        })
+        }),
       )
-      .subscribe(result => {
+      .subscribe((result) => {
         if (result) {
           this.snackBar.open(`Farm ${newStatus} successfully`, 'Close', { duration: 3000 });
           this.loadFarms();
@@ -832,7 +850,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     const selected = this.selectedFarms();
     if (selected.length === 0) return;
 
-    const hasDevices = selected.some(f => f.device_count > 0);
+    const hasDevices = selected.some((f) => f.device_count > 0);
     if (hasDevices) {
       this.snackBar.open('Cannot delete farms with devices', 'Close', { duration: 3000 });
       return;
@@ -856,8 +874,18 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Convert to CSV
-    const headers = ['Farm ID', 'Farm Name', 'Owner', 'Latitude', 'Longitude', 'Area (ha)', 'Devices', 'Status', 'Created'];
-    const rows = farms.map(f => [
+    const headers = [
+      'Farm ID',
+      'Farm Name',
+      'Owner',
+      'Latitude',
+      'Longitude',
+      'Area (ha)',
+      'Devices',
+      'Status',
+      'Created',
+    ];
+    const rows = farms.map((f) => [
       f.farm_id,
       f.farm_name,
       f.owner_name || 'Unknown',
@@ -866,10 +894,10 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
       f.area_hectares || 0,
       f.device_count || 0,
       f.status,
-      this.formatDate(f.created_at)
+      this.formatDate(f.created_at),
     ]);
 
-    const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+    const csv = [headers, ...rows].map((row) => row.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -889,13 +917,13 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
       maxWidth: '95vw',
       maxHeight: '90vh',
       data: {
-        mode: 'create'
+        mode: 'create',
         // No farmId needed for create mode
       },
-      panelClass: 'farm-dialog-panel'
+      panelClass: ['farm-dialog-panel', 'mobile-fullscreen-dialog'],
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.snackBar.open('Farm created successfully', 'Close', { duration: 3000 });
         this.loadFarms();
@@ -915,7 +943,7 @@ export class AdminFarmsComponent implements OnInit, AfterViewInit, OnDestroy {
     // Animate counter values
     setTimeout(() => {
       const counters = document.querySelectorAll('.counter');
-      counters.forEach(counter => {
+      counters.forEach((counter) => {
         const target = parseInt(counter.getAttribute('data-target') || '0');
         const duration = 2000;
         const increment = target / (duration / 16);
