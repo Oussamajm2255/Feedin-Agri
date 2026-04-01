@@ -1,15 +1,31 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, tap, catchError, of, map, firstValueFrom, timeout, TimeoutError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  tap,
+  catchError,
+  of,
+  map,
+  firstValueFrom,
+  timeout,
+  TimeoutError,
+} from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
-import { User, LoginRequest, RegisterRequest, AuthResponse, UserStatus } from '../models/user.model';
+import {
+  User,
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  UserStatus,
+} from '../models/user.model';
 import { environment } from '../../../environments/environment';
 import { clearHttpCache } from '../interceptors/caching.interceptor';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly API_URL = environment.apiUrl;
@@ -27,7 +43,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) {
     // Don't initialize immediately - wait for Angular to be ready
   }
@@ -56,8 +72,9 @@ export class AuthService {
       // This is non-critical, continue even if it fails
       try {
         await firstValueFrom(
-          this.http.get<{ csrfToken: string }>(`${this.API_URL}/auth/csrf`, { withCredentials: true })
-            .pipe(timeout(2000))
+          this.http
+            .get<{ csrfToken: string }>(`${this.API_URL}/auth/csrf`, { withCredentials: true })
+            .pipe(timeout(2000)),
         );
       } catch (csrfError) {
         console.warn('CSRF priming failed, continuing...', csrfError);
@@ -67,16 +84,25 @@ export class AuthService {
       // Don't rely on router.url as it's not updated during guard execution
       try {
         const user = await firstValueFrom(
-          this.http.get<User>(`${this.API_URL}/auth/me`, { withCredentials: true })
-            .pipe(timeout(2000))
+          this.http
+            .get<User>(`${this.API_URL}/auth/me`, { withCredentials: true })
+            .pipe(timeout(2000)),
         );
         this.setAuthData(user);
       } catch (authError: any) {
         // 401 is expected when no session exists, 403 is expected when refresh fails - silently handle it
-        if (authError?.status === 401 || authError?.status === 403) {
+        if (
+          authError?.status === 401 ||
+          authError?.status === 403 ||
+          authError?.name === 'AbortError'
+        ) {
           // No valid session, clear auth state without navigating
           this.clearAuthState(false);
-        } else if (authError instanceof TimeoutError || authError?.status === 0 || authError?.status === 504) {
+        } else if (
+          authError instanceof TimeoutError ||
+          authError?.status === 0 ||
+          authError?.status === 504
+        ) {
           console.warn('⚠️ Backend unreachable or timed out. Continuing without auth.');
           this.clearAuthState(false);
         } else {
@@ -97,25 +123,32 @@ export class AuthService {
     if (!this.initialized) {
       // Add a master timeout to prevent infinite hangs
       const initPromise = this.initAuth();
-      const timeoutPromise = new Promise<void>((_, reject) => 
-        setTimeout(() => reject(new Error('Auth init timeout')), 5000)
-      );
-      
+      let timeoutId: any;
+      const timeoutPromise = new Promise<void>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('Auth init timeout')), 5000);
+      });
+
       try {
         await Promise.race([initPromise, timeoutPromise]);
-      } catch (error) {
-        console.warn('Auth initialization timeout or error, continuing without auth:', error);
+      } catch (error: any) {
+        // Ignore AbortError unhandled rejections if we aborted
+        if (error?.name !== 'AbortError') {
+          console.warn('Auth initialization timeout or error, continuing without auth:', error);
+        }
         this.initialized = true;
         this.clearAuthState(false);
+      } finally {
+        if (timeoutId) clearTimeout(timeoutId);
       }
     }
     return this.isAuthenticated();
   }
 
   login(credentials: LoginRequest): Observable<User> {
-    return this.http.post<{ user: User }>(`${this.API_URL}/auth/login`, credentials, { withCredentials: true })
+    return this.http
+      .post<{ user: User }>(`${this.API_URL}/auth/login`, credentials, { withCredentials: true })
       .pipe(
-        tap(response => {
+        tap((response) => {
           if (response?.user) {
             this.setAuthData(response.user);
 
@@ -129,11 +162,11 @@ export class AuthService {
             }
           }
         }),
-        catchError(error => {
+        catchError((error) => {
           console.error('Login error:', error);
           throw error;
         }),
-        map(response => response.user)
+        map((response) => response.user),
       );
   }
 
@@ -141,20 +174,23 @@ export class AuthService {
     // Force status to PENDING for approval-based onboarding
     const registrationData = { ...userData, status: UserStatus.PENDING };
 
-    return this.http.post<{ user: User }>(`${this.API_URL}/users/register`, registrationData, { withCredentials: true })
+    return this.http
+      .post<{
+        user: User;
+      }>(`${this.API_URL}/users/register`, registrationData, { withCredentials: true })
       .pipe(
-        tap(response => {
+        tap((response) => {
           if (response?.user) {
             this.setAuthData(response.user);
             // Always redirect to onboarding pending page after registration
             this.router.navigate(['/onboarding/pending']);
           }
         }),
-        catchError(error => {
+        catchError((error) => {
           console.error('Registration error:', error);
           throw error;
         }),
-        map(response => response.user)
+        map((response) => response.user),
       );
   }
 
@@ -169,7 +205,7 @@ export class AuthService {
       complete: () => {},
       error: () => {
         // Session may already be invalid server-side — local state clear is enough
-      }
+      },
     });
 
     this.clearAuthState(navigate);
@@ -194,9 +230,13 @@ export class AuthService {
     return this.user();
   }
 
-  getToken(): string | null { return null; }
+  getToken(): string | null {
+    return null;
+  }
 
-  isTokenValid(): boolean { return !!this.token(); }
+  isTokenValid(): boolean {
+    return !!this.token();
+  }
 
   refreshToken(): Observable<any> {
     // Implement token refresh logic if needed
@@ -218,10 +258,13 @@ export class AuthService {
    * Used for async form validation
    */
   checkEmailExists(email: string): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.API_URL}/auth/check-email?email=${encodeURIComponent(email)}`, { withCredentials: true })
+    return this.http
+      .get<{
+        exists: boolean;
+      }>(`${this.API_URL}/auth/check-email?email=${encodeURIComponent(email)}`, { withCredentials: true })
       .pipe(
-        map(response => response.exists),
-        catchError(() => of(true)) // On error, assume email exists to allow form submission
+        map((response) => response.exists),
+        catchError(() => of(true)), // On error, assume email exists to allow form submission
       );
   }
 }

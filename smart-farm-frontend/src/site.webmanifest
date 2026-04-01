@@ -1,7 +1,7 @@
 {
-  "name": "Smart Farm Management System",
-  "short_name": "Smart Farm",
-  "description": "Monitor and manage your agricultural operations with IoT sensors and real-time data",
+  "name": "Feedin Green — Plateforme Agricole Intelligente",
+  "short_name": "Feedin Green",
+  "description": "Feedin Green : plateforme IoT pour l'agriculture intelligente en Tunisie. Capteurs connectés, gestion des cultures et monitoring en temps réel.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -19,7 +19,9 @@
   "theme_color": "#10b981",
   "background_color": "#ffffff",
   "display": "standalone",
-  "start_url": "/",
+  "start_url": "/landing",
   "orientation": "portrait-primary",
-  "scope": "/"
+  "scope": "/",
+  "lang": "fr",
+  "categories": ["agriculture", "business", "productivity"]
 }

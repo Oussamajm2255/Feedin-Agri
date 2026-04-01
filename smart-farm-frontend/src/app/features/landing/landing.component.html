@@ -9,6 +9,9 @@
     <!-- 1. Hero -->
     <app-hero-section id="hero-section" />
 
+    <!-- Partner Trust Carousel — eagerly loaded trust element -->
+    <app-partner-carousel id="partner-section" />
+
     <!-- The Bento Grid Ecosystem Section (Eagerly loaded for zero-gap experience) -->
     <app-landing-bento-section id="bento-section"></app-landing-bento-section>
 
@@ -39,8 +42,8 @@
     <app-skeleton-section [cards]="3" [cols]="3" />
     }
 
-    <!-- SHARED FOOTER — remains eager -->
-    <app-footer></app-footer>
+    <!-- LANDING FOOTER — enterprise-grade dedicated footer -->
+    <app-landing-footer></app-landing-footer>
 
     <!-- Global shared Back to Top Button -->
     <app-scroll-to-top></app-scroll-to-top>

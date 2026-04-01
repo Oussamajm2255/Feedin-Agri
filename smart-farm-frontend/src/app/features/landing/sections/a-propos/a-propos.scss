@@ -12,6 +12,25 @@
     overflow: hidden;
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+
+    // Blurred background image layer
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('../../../../../assets/images/bg1.jpg') center / cover no-repeat;
+        filter: blur(0.5px);
+        z-index: 0;
+    }
+
+    // Semi-transparent overlay for text readability
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.5) 100%);
+        z-index: 1;
+    }
 }
 
 .about-container {
@@ -447,6 +466,10 @@
         background: #0f172a;
         /* Slate 900 */
         border-bottom-color: rgba(255, 255, 255, 0.05);
+
+        &::after {
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.5) 100%);
+        }
     }
 
     .premium-badge {

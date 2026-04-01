@@ -1,0 +1,174 @@
+/* ============================================================
+   Partner Carousel — Premium Infinite Logo Scroll
+   ============================================================ */
+
+// ── Design Tokens ──────────────────────────────────────────
+$bg-color: #f9fafb;
+$title-color: #059669;
+$subtitle-color: #0d9488;
+
+$logo-height-desktop: 50px;
+$logo-height-mobile: 35px;
+
+$gap-desktop: 60px;
+$gap-mobile: 40px;
+
+$section-padding-desktop: 100px 0;
+$section-padding-mobile: 60px 24px;
+
+$animation-duration-desktop: 25s;
+$animation-duration-mobile: 35s;
+
+$fade-size: 80px;
+
+// ── Section Container ──────────────────────────────────────
+.partner-carousel-section {
+  background: $bg-color;
+  padding: $section-padding-desktop;
+  overflow: hidden;
+  position: relative;
+}
+
+// ── Header ─────────────────────────────────────────────────
+.partner-carousel-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 0 24px;
+}
+
+.partner-carousel-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: $title-color;
+  margin: 0 0 8px;
+}
+
+.partner-carousel-subtitle {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: $subtitle-color;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// ── Carousel Viewport (edge fade mask) ─────────────────────
+.carousel-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  // Smooth left/right edge fading via CSS mask
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black $fade-size,
+    black calc(100% - #{$fade-size}),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black $fade-size,
+    black calc(100% - #{$fade-size}),
+    transparent 100%
+  );
+}
+
+// ── Carousel Track (the sliding element) ───────────────────
+.carousel-track {
+  display: flex;
+  align-items: center;
+  gap: $gap-desktop;
+  width: max-content;
+  animation: scroll $animation-duration-desktop linear infinite;
+
+  // Pause on hover — smooth and intentional
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+// ── Individual Logo Item ───────────────────────────────────
+.carousel-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    height: $logo-height-desktop;
+    width: auto;
+    max-width: 160px;
+    object-fit: contain;
+    user-select: none;
+
+    // Default: muted green tint (brand color)
+    filter: grayscale(1) sepia(1) hue-rotate(95deg) saturate(0.6);
+    opacity: 0.5;
+    transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease,
+      box-shadow 0.4s ease;
+
+    // Hover: full color + subtle glow
+    &:hover {
+      filter: grayscale(0);
+      opacity: 1;
+      transform: scale(1.05);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+// ── Keyframes ──────────────────────────────────────────────
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    // Translate exactly half so the duplicate set takes over seamlessly
+    transform: translateX(-50%);
+  }
+}
+
+// ── Responsive: Tablet & Mobile ────────────────────────────
+@media (max-width: 768px) {
+  .partner-carousel-section {
+    padding: $section-padding-mobile;
+  }
+
+  .partner-carousel-title {
+    font-size: 1rem;
+  }
+
+  .partner-carousel-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .carousel-track {
+    gap: $gap-mobile;
+    animation-duration: $animation-duration-mobile;
+  }
+
+  .carousel-item img {
+    height: $logo-height-mobile;
+    max-width: 120px;
+  }
+
+  .carousel-viewport {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 40px,
+      black calc(100% - 40px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 40px,
+      black calc(100% - 40px),
+      transparent 100%
+    );
+  }
+}

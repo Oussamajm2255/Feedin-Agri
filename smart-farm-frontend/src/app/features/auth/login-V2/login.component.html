@@ -1,0 +1,217 @@
+<!--
+  Feedn Login Component - Concept A: Single Canvas Experience
+  ============================================================
+  A cinematic agricultural scene that naturally transforms into 
+  an interactive login surface — not two stacked sections.
+  
+  Key Design Principles:
+  - Video hero (45-50% viewport) with gradient fade into form
+  - Seamless surface continuation (no card boundaries)
+  - Single headline hierarchy
+  - Keyboard-safe scrollable layout
+  - Linen/neumorphic brand identity
+-->
+
+<div class="login-canvas" [class.video-loaded]="isVideoLoaded()" [class.keyboard-open]="isKeyboardOpen()">
+  
+  <!-- =====================================================
+       VIDEO HERO SECTION (45-50% viewport height)
+       ===================================================== -->
+  <section class="video-section" aria-label="Hero visual">
+    
+    <!-- Video Background -->
+    <div class="video-container">
+      <video #bgVideo 
+             class="video-element" 
+             preload="none" 
+             playsinline 
+             muted 
+             disablepictureinpicture
+             disableremoteplayback 
+             poster="assets/vids/login-poster.webp"
+             *ngIf="!videoError()">
+        <source src="assets/vids/login.webm" type="video/webm">
+        <source src="assets/vids/login-optimized.mp4" type="video/mp4">
+      </video>
+      
+      <!-- Gradient overlay for text readability -->
+      <div class="video-overlay"></div>
+    </div>
+    
+    <!-- Hero Content (single headline) -->
+    <div class="hero-content">
+      <!-- Back to Home (positioned within hero) -->
+      <button class="back-button" 
+              routerLink="/"
+              [attr.aria-label]="languageService.t()('auth.backToHome') || 'Back to Home'">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      
+      <!-- Single Main Headline -->
+      <div class="headline-container">
+        <h1 class="main-headline">
+          {{ languageService.t()('auth.welcomeTitle') || 'Welcome to Feedn' }}
+        </h1>
+        <p class="sub-headline">
+          {{ languageService.t()('auth.welcomeSubtitle') || 'Smart farming starts here' }}
+        </p>
+      </div>
+      
+      <!-- Logo (subtle, positioned in hero) -->
+      <div class="hero-logo">
+        <mat-icon *ngIf="showFallbackIcon(); else logoImage" class="logo-icon">eco</mat-icon>
+        <ng-template #logoImage>
+          <img [src]="config.assets.logo" 
+               alt="Feedn" 
+               (error)="onLogoError($event)" 
+               loading="eager"
+               fetchpriority="high" 
+               decoding="async" />
+        </ng-template>
+      </div>
+    </div>
+    
+    <!-- Gradient fade into form section (seamless merge) -->
+    <div class="video-fade-edge"></div>
+  </section>
+  
+  <!-- =====================================================
+       FORM SECTION (seamless surface continuation)
+       ===================================================== -->
+  <section class="form-section" aria-label="Login form">
+    
+    <!-- Screen reader live region -->
+    <div class="sr-only" 
+         role="alert" 
+         aria-live="assertive" 
+         aria-atomic="true" 
+         id="login-status">
+    </div>
+    
+    <!-- Form Surface (no card boundaries) -->
+    <div class="form-surface" [class.shake-animation]="hasLoginError()">
+      
+      <!-- Login Form (starts directly with inputs - no competing headline) -->
+      <form [formGroup]="loginForm" 
+            (ngSubmit)="onSubmit()" 
+            class="login-form"
+            novalidate>
+        
+        <!-- Email Field -->
+        <mat-form-field appearance="outline" 
+                        class="form-field"
+                        (focusin)="onFocus($event)"
+                        (focusout)="onBlur($event); trimEmail()">
+          <mat-label>{{ languageService.t()('auth.email') || 'Email' }}</mat-label>
+          <input matInput 
+                 formControlName="email" 
+                 id="email-input" 
+                 type="email" 
+                 inputmode="email" 
+                 autocomplete="email"
+                 required 
+                 [placeholder]="languageService.t()('auth.emailPlaceholder') || 'name@example.com'" />
+          <mat-icon matPrefix class="field-icon">alternate_email</mat-icon>
+          <button mat-icon-button 
+                  matSuffix 
+                  *ngIf="loginForm.get('email')?.value && !loginForm.get('email')?.disabled"
+                  (click)="clearEmail()" 
+                  type="button" 
+                  tabindex="-1" 
+                  class="clear-button"
+                  [attr.aria-label]="languageService.t()('auth.clearEmail') || 'Clear email'">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('email')" class="field-error">
+            {{ getErrorMessage('email') }}
+          </mat-error>
+        </mat-form-field>
+        
+        <!-- Password Field -->
+        <mat-form-field appearance="outline" 
+                        class="form-field"
+                        (focusin)="onFocus($event)" 
+                        (focusout)="onBlur($event)">
+          <mat-label>{{ languageService.t()('auth.password') || 'Password' }}</mat-label>
+          <input matInput 
+                 id="password-input" 
+                 formControlName="password" 
+                 [type]="hidePassword() ? 'password' : 'text'"
+                 autocomplete="current-password" 
+                 required
+                 [placeholder]="languageService.t()('auth.passwordPlaceholder') || 'Enter your password'"
+                 (keydown)="checkCapsLock($event)" 
+                 (keyup)="checkCapsLock($event)" />
+          <mat-icon matPrefix class="field-icon">lock_outline</mat-icon>
+          <button mat-icon-button 
+                  matSuffix 
+                  type="button" 
+                  (click)="togglePasswordVisibility()" 
+                  [matTooltip]="hidePassword()
+                    ? (languageService.t()('auth.showPassword') || 'Show password')
+                    : (languageService.t()('auth.hidePassword') || 'Hide password')"
+                  matTooltipPosition="above"
+                  [attr.aria-label]="hidePassword()
+                    ? (languageService.t()('auth.showPassword') || 'Show password')
+                    : (languageService.t()('auth.hidePassword') || 'Hide password')">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('password')" class="field-error">
+            {{ getErrorMessage('password') }}
+          </mat-error>
+          <mat-hint *ngIf="capsLockOn()" class="caps-warning" align="end">
+            <mat-icon inline>warning</mat-icon> Caps Lock is ON
+          </mat-hint>
+        </mat-form-field>
+        
+
+        
+        <!-- Options Row -->
+        <div class="options-row">
+          <mat-checkbox formControlName="rememberMe" color="primary" class="remember-checkbox">
+            {{ languageService.t()('auth.rememberMe') || 'Remember me' }}
+          </mat-checkbox>
+          <a routerLink="/forgot-password" class="forgot-link">
+            {{ languageService.t()('auth.forgotPassword') || 'Forgot password?' }}
+          </a>
+        </div>
+        
+        <!-- Submit Button -->
+        <button mat-raised-button 
+                color="primary" 
+                type="submit" 
+                class="login-button"
+                [class.btn-ready]="loginForm.get('email')?.value && loginForm.get('password')?.value"
+                [attr.aria-busy]="isLoading()"
+                [disabled]="isLoading()">
+          <span *ngIf="!isLoading()">
+            {{ languageService.t()('auth.loginButton') || 'Sign In' }}
+          </span>
+          <span class="loading-content" *ngIf="isLoading()">
+            <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+            {{ languageService.t()('auth.signingIn') || 'Signing in...' }}
+          </span>
+        </button>
+        
+      </form>
+      
+      <!-- Footer Links -->
+      <div class="form-footer">
+        <p class="register-prompt">
+          {{ languageService.t()('auth.noAccount') || "Don't have an account?" }}
+          <a routerLink="/request-access" class="register-link">
+            {{ languageService.t()('auth.requestAccess') || 'Request access' }}
+          </a>
+        </p>
+        
+        <!-- Optional: Contact expert CTA -->
+        <a routerLink="/contact" class="expert-link">
+          <mat-icon>support_agent</mat-icon>
+          {{ languageService.t()('auth.needHelp') || 'Need help getting started?' }}
+        </a>
+      </div>
+      
+    </div>
+  </section>
+  
+</div>

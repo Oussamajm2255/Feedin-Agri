@@ -1,89 +1,122 @@
-<section class="bento-section" [attr.aria-label]="'Plateforme FEEDIN'">
+<section class="bento-section" aria-labelledby="bento-heading">
     <div class="bento-container">
 
         @if (showSkeleton()) {
             <!-- Skeleton Header -->
-            <div class="bento-header">
+            <div class="bento-header" aria-hidden="true">
                 <div class="skeleton-label"></div>
                 <div class="skeleton-title"></div>
                 <div class="skeleton-intro"></div>
             </div>
 
             <!-- Skeleton Grid -->
-            <div class="bento-grid">
-                <div class="bento-card large skeleton-card">
-                    <div class="skeleton-icon"></div>
-                    <div class="skeleton-line title"></div>
-                    <div class="skeleton-line desc"></div>
-                    <div class="skeleton-line desc"></div>
-                    <div class="skeleton-line cta"></div>
-                </div>
-                @for (i of [1,2,3,4,5]; track i) {
-                    <div class="bento-card small skeleton-card">
+            <div class="bento-grid" aria-hidden="true">
+                @for (i of [1,2,3]; track i) {
+                    <div class="segment-card skeleton-card" [style.animation-delay]="(i * 0.12) + 's'">
                         <div class="skeleton-icon"></div>
                         <div class="skeleton-line title"></div>
                         <div class="skeleton-line desc"></div>
-                        <div class="skeleton-line desc-short"></div>
+                        <div class="skeleton-line desc short"></div>
+                        <ul class="bc-bullets skeleton-bullets">
+                            <li><div class="skeleton-line bullet-line"></div></li>
+                            <li><div class="skeleton-line bullet-line"></div></li>
+                            <li><div class="skeleton-line bullet-line"></div></li>
+                        </ul>
                         <div class="skeleton-line cta"></div>
                     </div>
                 }
             </div>
         } @else {
+            <!-- Section Header -->
             <div class="bento-header" appScrollReveal="fade-up">
                 <span class="bento-label">{{ 'landing.bento.label' | translate }}</span>
-                <h2 class="bento-title" [innerHTML]="'landing.bento.title' | translate"></h2>
+                <h2 class="bento-title" id="bento-heading" [innerHTML]="'landing.bento.title' | translate"></h2>
                 <p class="bento-intro">{{ 'landing.bento.intro' | translate }}</p>
             </div>
 
-            <div class="bento-grid" appScrollReveal="stagger" [staggerDelay]="0.1">
-                @for (card of cards; track card.title) {
-                <div #cardRef class="bento-card" [ngClass]="[card.size, card.cssClass || '']"
-                    (click)="navigateTo(card.route)" (mousemove)="onMouseMove($event, cardRef)">
+            <!-- Service Segment Grid -->
+            <div class="bento-grid" role="list" appScrollReveal="stagger" [staggerDelay]="0.12">
+                @for (card of cards; track card.id; let idx = $index) {
+                <article #cardRef
+                    class="segment-card"
+                    [ngClass]="card.cssClass || ''"
+                    [attr.id]="card.id"
+                    [style.--card-index]="idx"
+                    role="listitem"
+                    tabindex="0"
+                    [attr.aria-label]="card.header | translate"
+                    (click)="navigateTo(card.route)"
+                    (keydown)="onCardKeydown($event, card.route)"
+                    (mousemove)="onMouseMove($event, cardRef)"
+                    (mouseleave)="cardRef.style.removeProperty('--mouse-x'); cardRef.style.removeProperty('--mouse-y')">
 
                     <div class="bento-content">
+                        <!-- Icon -->
                         <div class="bc-header">
                             @if (card.icon) {
-                            <div class="bc-icon" [innerHTML]="card.icon"></div>
+                                <div class="bc-icon" aria-hidden="true" [innerHTML]="card.icon"></div>
                             }
                         </div>
 
-                        <h3 class="bc-title">{{ card.title | translate }}</h3>
+                        <!-- Segment Title -->
+                        <h3 class="bc-segment-title">{{ card.header | translate }}</h3>
+
+                        <!-- Segment Description -->
                         <p class="bc-desc">{{ card.description | translate }}</p>
 
-                        @if (card.ctaText) {
-                        <div class="bc-cta">
-                            <span>{{ card.ctaText | translate }}</span>
-                            <div class="arrow-circle">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M5 12h14" />
-                                    <path d="m12 5 7 7-7 7" />
-                                </svg>
-                            </div>
-                        </div>
-                        } @else {
-                        <div class="bc-cta icon-only">
-                            <div class="arrow-circle">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M5 12h14" />
-                                    <path d="m12 5 7 7-7 7" />
-                                </svg>
-                            </div>
-                        </div>
+                        <!-- Segment Bullets -->
+                        @if (card.bullets && card.bullets.length) {
+                            <ul class="bc-bullets" role="list">
+                                @for (bullet of card.bullets; track bullet) {
+                                    <li role="listitem">
+                                        <span class="bullet-marker" aria-hidden="true">✦</span>
+                                        <span class="bullet-text">{{ bullet | translate }}</span>
+                                    </li>
+                                }
+                            </ul>
                         }
+
+                        <!-- Segment CTA -->
+                        <div class="bc-cta" role="link" [attr.aria-label]="(card.ctaText | translate) + ' — ' + (card.header | translate)">
+                            <span class="cta-label">{{ card.ctaText | translate }}</span>
+                            <div class="arrow-circle" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M5 12h14" />
+                                    <path d="m12 5 7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="bento-bg-glow"></div>
+                    <!-- Ambient Glow Layer -->
+                    <div class="bento-bg-glow" aria-hidden="true"></div>
 
+                    <!-- Background Image -->
                     @if (card.backgroundImage) {
-                    <div class="bento-bg-image" [style.backgroundImage]="'url(\'' + card.backgroundImage + '\')'"></div>
+                        <div class="bento-bg-image" [style.backgroundImage]="'url(\'' + card.backgroundImage + '\')'" aria-hidden="true"></div>
                     }
-                </div>
+                </article>
                 }
             </div>
+
+            <!-- Premium CTA Band (Full-width Button) -->
+            <button class="bento-cta-band-btn"
+                    type="button"
+                    aria-label="Commencer votre expérience intelligente"
+                    (click)="navigateTo('/contact')">
+                <div class="cta-band-glow" aria-hidden="true"></div>
+                <div class="cta-band-content">
+                    <span class="cta-band-text">{{ 'landing.bento.ctaBand' | translate }}</span>
+                    <div class="cta-band-icon-wrap" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+            </button>
         }
 
     </div>

@@ -3174,6 +3174,7 @@
       "services": "Our Services",
       "solutions": "Our Solutions",
       "formation": "Training",
+      "projects": "Our Projects",
       "contact": "Contact",
       "login": "Sign in",
       "contactExpert": "Contact an Expert",
@@ -3194,38 +3195,42 @@
     },
     "bento": {
       "label": "Our Solutions",
-      "title": "One platform, all the tools for your farm",
+      "title": "All the keys to your farm in a single platform",
       "intro": "From connected greenhouses to full automation, Feedin tailors each solution to your agricultural reality.",
+      "ctaBand": "Start your smart experience",
       "cards": [
         {
-          "title": "Connected Greenhouses",
-          "desc": "Control temperature, humidity and irrigation from a single interface.",
-          "cta": "Learn more"
+          "header": "Smart Agriculture & Innovative Systems",
+          "desc": "Control your connected greenhouses and maximize every m² with intelligent systems tailored to your farm.",
+          "bullets": [
+            "Real-time supervised connected greenhouse",
+            "Vertical & hydroponic farming",
+            "CO₂, temperature & light monitoring"
+          ],
+          "cta": "Learn more",
+          "ctaRoute": "/solutions#smart-farming"
         },
         {
-          "title": "Vertical Farming",
-          "desc": "Maximize your production on minimal surface, intelligently.",
-          "cta": "Learn more"
+          "header": "Automation & Greenhouse Autonomy",
+          "desc": "Systems that learn, adapt and act before you do — for fully autonomous management of your crops.",
+          "bullets": [
+            "Custom automation rules",
+            "Embedded AI & machine learning",
+            "Centralized dashboard & real-time alerts"
+          ],
+          "cta": "Learn more",
+          "ctaRoute": "/solutions#automation"
         },
         {
-          "title": "Automation",
-          "desc": "Systems that adapt to your crops and act before you do.",
-          "cta": "Learn more"
-        },
-        {
-          "title": "Agricultural Development",
-          "desc": "Turnkey design and installation of your farm of the future.",
-          "cta": "Learn more"
-        },
-        {
-          "title": "Smart Monitoring",
-          "desc": "Real-time tracking of all your agricultural parameters.",
-          "cta": "Learn more"
-        },
-        {
-          "title": "Expert Support",
-          "desc": "Our team accompanies you in every step of your project.",
-          "cta": "Contact us"
+          "header": "Agricultural Development & Support",
+          "desc": "From design to operations, our team delivers a complete turnkey service and expert support at every step.",
+          "bullets": [
+            "Custom layout & installation",
+            "Training & skill development",
+            "Local & responsive technical support"
+          ],
+          "cta": "Discover our services",
+          "ctaRoute": "/services#development"
         }
       ]
     },
@@ -3289,32 +3294,69 @@
         }
       ],
       "integrations": {
-        "caption": "Compatible integrations",
         "0": "Cloud Storage",
         "1": "Mobile App",
         "2": "IoT Sensors",
-        "3": "AI Analytics"
+        "3": "AI Analytics",
+        "caption": "Compatible integrations"
       }
     },
     "ctaFinal": {
       "title": "Ready to elevate your farm management?",
       "text": "Join Feedin today and manage your crops with precision and peace of mind.",
-      "primaryBtn": "Contact an Expert",
-      "btnPrimary": "Contact an Expert",
+      "primaryBtn": "Start your smart experience",
+      "btnPrimary": "Start your smart experience",
       "btnHelperText": "Our team helps you set up your smart farm.",
       "secondaryLink": "Discover how it works →",
       "tertiaryLink": "Have questions? Contact our team",
       "stats": [
         {
-          "label": "Projects delivered"
+          "value": "50%+",
+          "label": "Cost reduction"
         },
         {
-          "label": "Client satisfaction"
+          "value": "90%+",
+          "label": "Water savings"
         },
         {
-          "label": "Support available"
+          "value": "150%+",
+          "label": "Productivity in vertical farming"
         }
       ]
+    },
+    "footer": {
+      "tagline1": "The leading IoT platform for smart agriculture in Tunisia.",
+      "tagline2": "Connected sensors, greenhouse automation and real-time monitoring — designed for every farmer.",
+      "linksTitle": "Useful Links",
+      "links": {
+        "home": "Home",
+        "about": "About",
+        "services": "Services",
+        "solutions": "Solutions",
+        "formation": "Training",
+        "contact": "Contact"
+      },
+      "newsTitle": "Latest News",
+      "news": [
+        {
+          "date": "March 2026",
+          "title": "Launch of the Feedin Green v2.0 platform"
+        },
+        {
+          "date": "Feb. 2026",
+          "title": "New partnership with Tunisian agricultural cooperatives"
+        },
+        {
+          "date": "Jan. 2026",
+          "title": "Feedin Green at the International Agriculture Fair"
+        }
+      ],
+      "locationTitle": "Find Us",
+      "addressTech": "Technical Office: Technopôle Manouba, 2010 Manouba - Tunisia",
+      "addressHQ": "Head Office: Avenue Taieb Mhiri, 5000 Monastir, Tunisia",
+      "phone": "+216 26 213 304",
+      "email": "contact@feedingreen.com",
+      "copyright": "All rights reserved."
     },
     "solutions": {
       "hero": {
@@ -3487,101 +3529,48 @@
       },
       "services": [
         {
-          "tag": "Consulting",
-          "title": "Agricultural Consulting & Audit",
-          "desc": "In-depth analysis of your farm to identify optimization and modernization opportunities.",
+          "tag": "Systems",
+          "title": "Smart Agriculture & Systems",
+          "desc": "We design and deploy advanced agricultural solutions integrating soil-less farming, vertical systems, and smart technologies to optimize production.",
           "includes": [
-            "Complete technical audit",
-            "Soil & water analysis",
-            "Personalized recommendations",
-            "Detailed action plan",
-            "Follow-up report"
+            "Connected smart greenhouses",
+            "Hydroponic & soil-less farming",
+            "Vertical farming systems",
+            "IoT sensors & climate monitoring",
+            "Yield optimization via data & AI"
           ],
           "benefits": [
-            "Optimized ROI",
-            "Clear vision",
-            "Structured plan"
+            "Goal: Maximize productivity with fewer resources"
           ]
         },
         {
-          "tag": "Installation",
-          "title": "Installation & Deployment",
-          "desc": "Professional installation of all your agricultural equipment with complete configuration and testing.",
+          "tag": "Automation",
+          "title": "Greenhouse Automation & Autonomy",
+          "desc": "We transform agricultural greenhouses into autonomous systems through automation, enabling precise control, cost reduction, and improved efficiency.",
           "includes": [
-            "On-site installation",
-            "System configuration",
-            "Testing & validation",
-            "Technical documentation"
+            "Automated irrigation and fertigation",
+            "Automated climate management",
+            "Remote control systems",
+            "Energy & autonomy (solar, energy)",
+            "Smart farming solutions"
           ],
           "benefits": [
-            "Turnkey",
-            "Quality guarantee",
-            "On-time delivery"
+            "Goal: Reduce costs, improve precision and limit human intervention"
           ]
         },
         {
-          "tag": "Maintenance",
-          "title": "Maintenance & Support",
-          "desc": "Responsive technical support and preventive maintenance to ensure continuity of your operations.",
+          "tag": "Support",
+          "title": "Agricultural Development & Support",
+          "desc": "We support farmers, entrepreneurs, and institutions in agricultural modernization through training, consulting, and rural development projects.",
           "includes": [
-            "24/7 support",
-            "Preventive maintenance",
-            "System updates",
-            "Rapid interventions"
+            "Agricultural technology training",
+            "Project support (from idea to operation)",
+            "Technical assistance & monitoring",
+            "Rural development programs",
+            "Know-how transfer"
           ],
           "benefits": [
-            "Maximum availability",
-            "Peace of mind",
-            "Local experts"
-          ]
-        },
-        {
-          "tag": "International",
-          "title": "Export Solutions",
-          "desc": "Support for adapting your crops to international standards and export markets.",
-          "includes": [
-            "Export compliance audit",
-            "Quality certification",
-            "Cold chain tracking",
-            "Target market consulting"
-          ],
-          "benefits": [
-            "New markets",
-            "Added value",
-            "Guaranteed compliance"
-          ]
-        },
-        {
-          "tag": "Ecology",
-          "title": "Soil Regeneration",
-          "desc": "Advanced programs to restore your land's fertility and optimize the use of natural inputs.",
-          "includes": [
-            "Microbiological analysis",
-            "Regeneration plan",
-            "Carbon tracking",
-            "Green manure consulting"
-          ],
-          "benefits": [
-            "Fertile soils",
-            "Fewer inputs",
-            "Sustainable"
-          ]
-        },
-        {
-          "tag": "Training",
-          "title": "Feedin Academy",
-          "desc": "Practical training to master digital tools and new agronomic techniques.",
-          "includes": [
-            "On-site workshops",
-            "Expert webinars",
-            "Educational materials",
-            "Technical certification",
-            "Post-training follow-up"
-          ],
-          "benefits": [
-            "Autonomy",
-            "Key skills",
-            "Certified"
+            "Goal: Democratize modern and sustainable agriculture"
           ]
         }
       ],
@@ -3792,6 +3781,41 @@
         "desc": "Contact us to organize a training session adapted to your schedule and needs.",
         "btn1": "Book a training",
         "btn2": "View our services"
+      },
+      "drawer": {
+        "title": "Book a Training",
+        "step": "Step",
+        "of": "of",
+        "step1Title": "Your Details",
+        "step1Sub": "Tell us about yourself",
+        "step2Title": "Your Project",
+        "step2Sub": "Help us prepare your training",
+        "fullName": "Full Name",
+        "fullNamePl": "Your full name",
+        "email": "Email",
+        "emailPl": "your@email.com",
+        "phone": "Phone",
+        "phonePl": "+216 XX XXX XXX",
+        "trainingType": "Desired Training",
+        "trainingTypePl": "Select a training program",
+        "training1": "Level 1 — Connected Agriculture",
+        "training2": "Level 2 — Smart Greenhouse Management",
+        "training3": "Level 3 — Advanced Admin & Techniques",
+        "farmSize": "Area (hectares)",
+        "farmSizePl": "e.g. 5.5",
+        "region": "Region",
+        "regionPl": "e.g. Tunis, Tunisia",
+        "message": "Message or details",
+        "messagePl": "Describe your expectations, specific needs...",
+        "next": "Next",
+        "back": "Back",
+        "submit": "Submit Request",
+        "sending": "Sending...",
+        "required": "This field is required",
+        "emailInvalid": "Invalid email",
+        "successTitle": "Request Sent!",
+        "successSub": "Our team will contact you within 24h to organize your training.",
+        "successClose": "Close"
       }
     },
     "about": {
@@ -3804,27 +3828,28 @@
       "who": {
         "label": "Who we are",
         "title": "A company born from the field",
-        "content": "<p>Feedin was founded by agricultural and technology enthusiasts with one conviction: technology must serve those who grow. We design, manufacture and install smart agricultural solutions tailored to Tunisian realities.</p><p>Our team reconciles the precision of IoT with the constraints of the field to offer simple, robust and efficient tools.</p>"
+        "content": "<p>FEED IN GREEN is a company specialized in smart Agritech solutions and connected agriculture.</p><p>We support farmers, entrepreneurs, businesses and communities in designing and deploying innovative, sustainable and high-performance agricultural projects.</p><p>Our approach combines advanced technologies, agricultural engineering and field-level support adapted to local and urban realities.</p>"
       },
       "stats": [
-        "Farms equipped",
-        "Active sensors",
-        "Years of R&D",
-        "Customer satisfaction"
+        "Agricultural projects deployed",
+        "Hectares optimized",
+        "Trusted partners",
+        "Satisfaction rate"
       ],
       "mv": {
         "mission": {
           "title": "Our Mission",
-          "content": "<p>Democratize connected agriculture by offering accessible and robust technological solutions that allow every farmer to optimize their resources and improve their yields while preserving the environment.</p>"
+          "content": "<p>Design and deploy smart agritech solutions to optimize agricultural production, reduce resource usage and promote sustainable and resilient agriculture.</p><p>FEED IN GREEN is committed to offering accessible, efficient and scalable solutions, addressing current challenges of food security, climate change and growing urbanization.</p>"
         },
         "vision": {
           "title": "Our Vision",
-          "desc": "To be the Tunisian and African leader in agricultural technology by 2030, contributing to a more resilient, productive and sustainable agriculture.",
+          "desc": "Become a leading player in smart agriculture and urban farming, actively contributing to the sustainable transformation of agricultural systems.",
+          "intro": "We believe in agriculture that is:",
           "list": [
-            "Regional expansion",
-            "Continuous innovation",
-            "Social impact",
-            "Sustainable farming"
+            "Data-driven",
+            "Environmentally responsible",
+            "Integrated into urban spaces",
+            "Creating economic and social value"
           ]
         }
       },
@@ -3878,12 +3903,30 @@
         "title": "Our domain expertise"
       },
       "expertiseItems": [
-        "Embedded Systems & IoT",
-        "Smart Irrigation Management",
-        "Precision Data Analysis",
-        "Vertical Farming Solutions",
-        "Renewable Energy in Farming",
-        "Custom Hardware Manufacturing"
+        {
+          "title": "Embedded Systems & IoT",
+          "desc": "Design of robust and durable sensors and connected devices for open fields and greenhouses."
+        },
+        {
+          "title": "Smart Irrigation Management",
+          "desc": "Optimization of water resources through automated, real-time control and analysis systems."
+        },
+        {
+          "title": "Precision Data Analysis",
+          "desc": "Transforming collected field data into actionable insights directly on our intelligent platform."
+        },
+        {
+          "title": "Vertical Farming Solutions",
+          "desc": "Layout and automation of indoor and soil-less environments to maximize urban productivity."
+        },
+        {
+          "title": "Renewable Energy in Farming",
+          "desc": "Integration of clean power sources for more autonomous, eco-friendly farming operations."
+        },
+        {
+          "title": "Custom Hardware Manufacturing",
+          "desc": "Mechanical and electronic development of advanced tools tailored to your specific agricultural needs."
+        }
       ],
       "target": {
         "label": "Target",
@@ -3947,14 +3990,14 @@
         "WhatsApp"
       ],
       "projects": {
-        "title": "Project types"
+        "title": "Types of needs"
       },
       "projectsItems": [
         "Connected & smart greenhouses",
         "Vertical farming & hydroponics",
         "Automation & monitoring",
         "Training & tech consulting",
-        "Audit & feasibility study"
+        "Diagnostic & feasibility study"
       ],
       "sw": {
         "write": "Write a message",
@@ -3971,7 +4014,7 @@
         "emailPl": "your@email.com",
         "phone": "Phone",
         "phonePl": "+216 XX XXX XXX",
-        "type": "Project type",
+        "type": "Type of need",
         "typePl": "Select a type",
         "type1": "Connected greenhouse",
         "type2": "Vertical farming",
@@ -4024,7 +4067,7 @@
       "locations": [
         {
           "title": "Head Office",
-          "desc": "Monastir"
+          "desc": "Avenue Taieb Mhiri, 5000 Monastir, Tunisia"
         },
         {
           "title": "Technical Office",
@@ -4061,6 +4104,108 @@
           "a": "We support all types of projects: from small individual greenhouses to industrial installations, including urban farming projects and collective training. Every request is studied with the same attention."
         }
       ]
+    },
+    "projects": {
+      "hero": {
+        "label": "Our Achievements",
+        "title1": "Cultivating ",
+        "title2": "the Future of Agriculture",
+        "sub": "Discover how Feedin Green is transforming the agricultural sector with connected greenhouses, hydroponic systems, and R&D innovations in Tunisia and Africa.",
+        "cta1": "Explore Projects",
+        "cta2": "Start your project",
+        "stat1": "Projects Completed",
+        "stat2": "Farmers Trained",
+        "stat3": "Plants Grown"
+      },
+      "featured": {
+        "badge": "Flagship Project",
+        "title": "R&D Project: UDENE Integration",
+        "desc": "Integration of the UDENE space tool into our agricultural modernization process for optimal parcel monitoring, in collaboration with the European Union.",
+        "r1": "Precision",
+        "r2": "Efficiency",
+        "r3": "Sustainability",
+        "cta": "View details",
+        "imgAlt": "UDENE R&D Project"
+      },
+      "grid": {
+        "label": "Our Projects",
+        "title": "AgTech Innovations",
+        "sub": "From research units to intelligent greenhouses to maximize profitability.",
+        "cardCta": "Read more"
+      },
+      "cards": [
+        {
+          "category": "R&D",
+          "title": "Research and Development Unit",
+          "desc": "Setup of indoor hydroponic systems to optimize nutrients, accelerate growth, and minimize water consumption.",
+          "tags": [
+            "Research",
+            "Hydroponics",
+            "Indoor"
+          ]
+        },
+        {
+          "category": "Deployment",
+          "title": "Smart Greenhouses 6x60 m²",
+          "desc": "Development and installation of large-scale connected greenhouses (360m²) with automated climate management and real-time tracking.",
+          "tags": [
+            "Smart Greenhouse",
+            "Automation",
+            "Yield"
+          ]
+        },
+        {
+          "category": "Software",
+          "title": "Agricultural Supervision Dashboard",
+          "desc": "Centralized IoT platform to track soil moisture, fertigation, and crop health from a single interface.",
+          "tags": [
+            "Supervision",
+            "Data",
+            "IoT"
+          ]
+        }
+      ],
+      "process": {
+        "label": "Our Method",
+        "title": "How we operate",
+        "steps": [
+          {
+            "title": "Study",
+            "desc": "Agronomic diagnosis"
+          },
+          {
+            "title": "Design",
+            "desc": "Plans & Architecture"
+          },
+          {
+            "title": "Deployment",
+            "desc": "On-site installation"
+          },
+          {
+            "title": "Automation",
+            "desc": "IoT Launch"
+          },
+          {
+            "title": "Follow-up",
+            "desc": "Continuous monitoring"
+          }
+        ]
+      },
+      "testimonial": {
+        "quote": "These modernization projects have radically changed our approach to farming, combining technology with resource respect.",
+        "name": "European Union",
+        "role": "UDENE Project Partner"
+      },
+      "cta": {
+        "title": "Ready to transform your farm?",
+        "desc": "Join the revolution of smart agriculture today.",
+        "btn1": "Contact Us",
+        "btn2": "Our Services"
+      },
+      "soon": {
+        "title": "More Innovations Coming Soon...",
+        "desc": "Stay tuned! We are working on multiple revolutionary projects in the agricultural technology field that will redefine our industry."
+      }
     }
   }
 }

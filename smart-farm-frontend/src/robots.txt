@@ -1,7 +1,34 @@
+# ============================================
+# Feedin Green — robots.txt
+# https://feedingreen.com
+# ============================================
+
+# Allow all crawlers to access public pages
 User-agent: *
 Allow: /landing
+Allow: /about
+Allow: /services
+Allow: /solutions
+Allow: /formation
+Allow: /contact
+
+# Block private / authenticated areas
 Disallow: /api/
 Disallow: /admin/
 Disallow: /dashboard/
+Disallow: /login
+Disallow: /profile
+Disallow: /settings
+Disallow: /devices
+Disallow: /sensors
+Disallow: /farms
+Disallow: /zones
+Disallow: /crops
+Disallow: /actions
+Disallow: /notifications
+Disallow: /onboarding/
+Disallow: /request-access
+Disallow: /sensor-readings
 
-Sitemap: https://feedingreen.up.railway.app/sitemap.xml
+# Sitemap location
+Sitemap: https://feedingreen.com/sitemap.xml

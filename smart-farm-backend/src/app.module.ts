@@ -1,39 +1,45 @@
-import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ScheduleModule } from '@nestjs/schedule';
-import { MqttModule } from './modules/mqtt/mqtt.module';
-import { SensorsModule } from './modules/sensors/sensors.module';
-import { FarmsModule } from './modules/farms/farms.module';
-import { UsersModule } from './modules/users/users.module';
-import { CropsModule } from './modules/crops/crops.module';
-import { DevicesModule } from './modules/devices/devices.module';
-import { SensorReadingsModule } from './modules/sensor-readings/sensor-readings.module';
-import { HealthModule } from './modules/health/health.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { ActionsModule } from './modules/actions/actions.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
-import { AdminModule } from './modules/admin/admin.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
-import { ZonesModule } from './modules/zones/zones.module';
-import { DigitalTwinsModule } from './modules/digital-twins/digital-twins.module';
-import { typeOrmConfig } from './config/typeorm.config';
-import { CsrfMiddleware } from './common/middleware/csrf.middleware';
-import configuration from './config/configuration';
+import {
+  Module,
+  MiddlewareConsumer,
+  NestModule,
+  RequestMethod,
+} from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { EventEmitterModule } from "@nestjs/event-emitter";
+import { ScheduleModule } from "@nestjs/schedule";
+import { MqttModule } from "./modules/mqtt/mqtt.module";
+import { SensorsModule } from "./modules/sensors/sensors.module";
+import { FarmsModule } from "./modules/farms/farms.module";
+import { UsersModule } from "./modules/users/users.module";
+import { CropsModule } from "./modules/crops/crops.module";
+import { DevicesModule } from "./modules/devices/devices.module";
+import { SensorReadingsModule } from "./modules/sensor-readings/sensor-readings.module";
+import { HealthModule } from "./modules/health/health.module";
+import { AuthModule } from "./modules/auth/auth.module";
+import { ActionsModule } from "./modules/actions/actions.module";
+import { NotificationsModule } from "./modules/notifications/notifications.module";
+import { AdminModule } from "./modules/admin/admin.module";
+import { DashboardModule } from "./modules/dashboard/dashboard.module";
+import { ZonesModule } from "./modules/zones/zones.module";
+import { DigitalTwinsModule } from "./modules/digital-twins/digital-twins.module";
+import { LeadsModule } from "./modules/leads/leads.module";
+import { typeOrmConfig } from "./config/typeorm.config";
+import { CsrfMiddleware } from "./common/middleware/csrf.middleware";
+import configuration from "./config/configuration";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ 
+    ConfigModule.forRoot({
       load: [configuration],
-      isGlobal: true 
+      isGlobal: true,
     }),
     ThrottlerModule.forRoot([
-      { name: 'short', ttl: 1000, limit: 3 },
-      { name: 'medium', ttl: 10000, limit: 20 },
-      { name: 'long', ttl: 60000, limit: 100 },
+      { name: "short", ttl: 1000, limit: 3 },
+      { name: "medium", ttl: 10000, limit: 20 },
+      { name: "long", ttl: 60000, limit: 100 },
     ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -42,7 +48,7 @@ import configuration from './config/configuration';
     }),
     EventEmitterModule.forRoot({
       wildcard: true,
-      delimiter: '.',
+      delimiter: ".",
     }),
     ScheduleModule.forRoot(),
     UsersModule,
@@ -60,10 +66,9 @@ import configuration from './config/configuration';
     DashboardModule,
     ZonesModule,
     DigitalTwinsModule,
+    LeadsModule,
   ],
-  providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
-  ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -71,11 +76,12 @@ export class AppModule implements NestModule {
     consumer
       .apply(CsrfMiddleware)
       .exclude(
-        { path: 'api/v1/auth/csrf', method: RequestMethod.GET },
-        { path: 'api/v1/auth/login', method: RequestMethod.POST },
-        { path: 'api/v1/auth/me', method: RequestMethod.GET },
-        { path: 'api/v1/auth/register', method: RequestMethod.POST },
+        { path: "api/v1/auth/csrf", method: RequestMethod.GET },
+        { path: "api/v1/auth/login", method: RequestMethod.POST },
+        { path: "api/v1/auth/me", method: RequestMethod.GET },
+        { path: "api/v1/auth/register", method: RequestMethod.POST },
+        { path: "api/v1/leads/(.*)", method: RequestMethod.POST },
       )
-      .forRoutes('*');
+      .forRoutes("*");
   }
 }

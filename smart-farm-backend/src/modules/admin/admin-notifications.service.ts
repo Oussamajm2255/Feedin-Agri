@@ -1,9 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, In, Between, LessThanOrEqual, MoreThanOrEqual, ILike } from 'typeorm';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { AdminNotification, AdminNotificationSeverity, AdminNotificationDomain, AdminNotificationStatus } from '../../entities/admin-notification.entity';
-import { CreateAdminNotificationDto, QueryAdminNotificationsDto, AdminNotificationCountsDto, AdminNotificationsListResponseDto } from './dto/admin-notification.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import {
+  Repository,
+  FindOptionsWhere,
+  In,
+  Between,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  ILike,
+} from "typeorm";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
+import {
+  AdminNotification,
+  AdminNotificationSeverity,
+  AdminNotificationDomain,
+  AdminNotificationStatus,
+} from "../../entities/admin-notification.entity";
+import {
+  CreateAdminNotificationDto,
+  QueryAdminNotificationsDto,
+  AdminNotificationCountsDto,
+  AdminNotificationsListResponseDto,
+} from "./dto/admin-notification.dto";
 
 @Injectable()
 export class AdminNotificationsService {
@@ -13,14 +31,14 @@ export class AdminNotificationsService {
     private readonly events: EventEmitter2,
   ) {}
 
-  @OnEvent('user.registered')
+  @OnEvent("user.registered")
   async handleUserRegisteredEvent(user: any) {
-    if (user.status === 'pending') {
+    if (user.status === "pending") {
       await this.create({
-        type: 'user_registration',
-        severity: 'info',
-        domain: 'users',
-        title: 'New Account Approval Required',
+        type: "user_registration",
+        severity: "info",
+        domain: "users",
+        title: "New Account Approval Required",
         message: `A new user ${user.first_name} ${user.last_name} (${user.email}) has requested an account and is pending activation.`,
         context: {
           userId: user.user_id,
@@ -28,33 +46,71 @@ export class AdminNotificationsService {
           email: user.email,
           role: user.role,
           suggestedActions: [
-            'Review user registration details',
-            'Activate or reject the account'
-          ]
+            "Review user registration details",
+            "Activate or reject the account",
+          ],
         },
       });
     }
   }
 
   /**
+   * Handle lead submissions (contact form + training request).
+   * Creates an admin notification so admins are alerted in real-time.
+   */
+  @OnEvent("lead.created")
+  async handleLeadCreated(data: { type: "contact" | "training"; lead: any }) {
+    const isTraining = data.type === "training";
+
+    const trainingLabels: Record<string, string> = {
+      level_1: "Niveau 1 — Agriculture Connectée",
+      level_2: "Niveau 2 — Gestion de Serre Intelligente",
+      level_3: "Niveau 3 — Administration & Techniques Avancées",
+    };
+
+    const title = isTraining ? "New Training Request" : "New Contact Message";
+
+    const message = isTraining
+      ? `${data.lead.full_name} (${data.lead.email}) requested training: ${trainingLabels[data.lead.training_type] || data.lead.training_type}`
+      : `${data.lead.first_name} ${data.lead.last_name} (${data.lead.email}) — ${data.lead.project_type}`;
+
+    await this.create({
+      type: isTraining ? "training_request" : "contact_request",
+      severity: "info",
+      domain: "leads",
+      title,
+      message,
+      context: {
+        leadId: data.lead.id,
+        leadType: data.type,
+        email: data.lead.email,
+        suggestedActions: ["Review request details", "Contact the applicant"],
+      },
+    });
+  }
+
+  /**
    * When an access request is approved, auto-resolve the original registration notification
    * and persist the approval audit trail.
    */
-  @OnEvent('access.approved')
+  @OnEvent("access.approved")
   async handleAccessApproved(data: any) {
     // Auto-resolve the original registration notification
-    await this.autoResolveRegistrationNotification(data.userId, data.approvedBy || 'system');
+    await this.autoResolveRegistrationNotification(
+      data.userId,
+      data.approvedBy || "system",
+    );
 
     // Persist the approval as an audit notification
     await this.create({
-      type: 'access_approved',
-      severity: 'success',
-      domain: 'users',
-      title: 'Access Request Approved',
-      message: `${data.firstName || ''} ${data.lastName || ''} (${data.email}) has been approved and activated.`,
+      type: "access_approved",
+      severity: "success",
+      domain: "users",
+      title: "Access Request Approved",
+      message: `${data.firstName || ""} ${data.lastName || ""} (${data.email}) has been approved and activated.`,
       context: {
         userId: data.userId,
-        userName: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        userName: `${data.firstName || ""} ${data.lastName || ""}`.trim(),
         email: data.email,
         approvedBy: data.approvedBy,
       },
@@ -65,21 +121,24 @@ export class AdminNotificationsService {
    * When an access request is rejected, auto-resolve the original registration notification
    * and persist the rejection audit trail.
    */
-  @OnEvent('access.rejected')
+  @OnEvent("access.rejected")
   async handleAccessRejected(data: any) {
     // Auto-resolve the original registration notification
-    await this.autoResolveRegistrationNotification(data.userId, data.rejectedBy || 'system');
+    await this.autoResolveRegistrationNotification(
+      data.userId,
+      data.rejectedBy || "system",
+    );
 
     // Persist the rejection as an audit notification
     await this.create({
-      type: 'access_rejected',
-      severity: 'warning',
-      domain: 'users',
-      title: 'Access Request Rejected',
-      message: `${data.firstName || ''} ${data.lastName || ''} (${data.email}) has been rejected. Reason: ${data.reason || 'No reason provided'}`,
+      type: "access_rejected",
+      severity: "warning",
+      domain: "users",
+      title: "Access Request Rejected",
+      message: `${data.firstName || ""} ${data.lastName || ""} (${data.email}) has been rejected. Reason: ${data.reason || "No reason provided"}`,
       context: {
         userId: data.userId,
-        userName: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        userName: `${data.firstName || ""} ${data.lastName || ""}`.trim(),
         email: data.email,
         rejectedBy: data.rejectedBy,
         reason: data.reason,
@@ -90,27 +149,35 @@ export class AdminNotificationsService {
   /**
    * Find and auto-resolve any pending user_registration notification for a given userId
    */
-  private async autoResolveRegistrationNotification(userId: string, adminUserId: string): Promise<void> {
+  private async autoResolveRegistrationNotification(
+    userId: string,
+    adminUserId: string,
+  ): Promise<void> {
     try {
       // Find unresolved registration notifications for this user
       const notifications = await this.repo
-        .createQueryBuilder('n')
-        .where('n.type = :type', { type: 'user_registration' })
-        .andWhere('n.status != :status', { status: 'resolved' })
+        .createQueryBuilder("n")
+        .where("n.type = :type", { type: "user_registration" })
+        .andWhere("n.status != :status", { status: "resolved" })
         .andWhere("n.context->>'userId' = :userId", { userId })
         .getMany();
 
       for (const notification of notifications) {
-        notification.status = 'resolved';
+        notification.status = "resolved";
         notification.resolved_at = new Date();
         notification.resolved_by = adminUserId;
         notification.pinned_until_resolved = false;
         await this.repo.save(notification);
-        this.events.emit('admin.notification.updated', notification);
-        console.log(`✅ [ADMIN-NOTIFICATIONS] Auto-resolved registration notification ${notification.id} for user ${userId}`);
+        this.events.emit("admin.notification.updated", notification);
+        console.log(
+          `✅ [ADMIN-NOTIFICATIONS] Auto-resolved registration notification ${notification.id} for user ${userId}`,
+        );
       }
     } catch (error) {
-      console.error(`⚠️ [ADMIN-NOTIFICATIONS] Failed to auto-resolve registration notification for user ${userId}:`, error);
+      console.error(
+        `⚠️ [ADMIN-NOTIFICATIONS] Failed to auto-resolve registration notification for user ${userId}:`,
+        error,
+      );
     }
   }
 
@@ -118,22 +185,27 @@ export class AdminNotificationsService {
    * Create a new admin notification
    */
   async create(dto: CreateAdminNotificationDto): Promise<AdminNotification> {
-    console.log('🔔 [ADMIN-NOTIFICATIONS] Creating notification:', dto.type, dto.severity);
+    console.log(
+      "🔔 [ADMIN-NOTIFICATIONS] Creating notification:",
+      dto.type,
+      dto.severity,
+    );
 
     // For critical notifications, auto-pin until resolved
-    const pinned = dto.severity === 'critical' ? true : (dto.pinned_until_resolved ?? false);
+    const pinned =
+      dto.severity === "critical" ? true : (dto.pinned_until_resolved ?? false);
 
     const notification = this.repo.create({
       ...dto,
       pinned_until_resolved: pinned,
-      status: 'new',
+      status: "new",
     });
 
     const saved = await this.repo.save(notification);
-    console.log('🔔 [ADMIN-NOTIFICATIONS] Notification created:', saved.id);
+    console.log("🔔 [ADMIN-NOTIFICATIONS] Notification created:", saved.id);
 
     // Emit event for WebSocket broadcast
-    this.events.emit('admin.notification.created', saved);
+    this.events.emit("admin.notification.created", saved);
 
     return saved;
   }
@@ -141,26 +213,40 @@ export class AdminNotificationsService {
   /**
    * List admin notifications with filtering and pagination
    */
-  async list(query: QueryAdminNotificationsDto): Promise<AdminNotificationsListResponseDto> {
-    const { severity, domain, status, from, to, farmId, userId, deviceId, search, page = 1, limit = 50 } = query;
+  async list(
+    query: QueryAdminNotificationsDto,
+  ): Promise<AdminNotificationsListResponseDto> {
+    const {
+      severity,
+      domain,
+      status,
+      from,
+      to,
+      farmId,
+      userId,
+      deviceId,
+      search,
+      page = 1,
+      limit = 50,
+    } = query;
 
-    const qb = this.repo.createQueryBuilder('n');
+    const qb = this.repo.createQueryBuilder("n");
 
     // Apply filters
     if (severity) {
-      qb.andWhere('n.severity = :severity', { severity });
+      qb.andWhere("n.severity = :severity", { severity });
     }
     if (domain) {
-      qb.andWhere('n.domain = :domain', { domain });
+      qb.andWhere("n.domain = :domain", { domain });
     }
     if (status) {
-      qb.andWhere('n.status = :status', { status });
+      qb.andWhere("n.status = :status", { status });
     }
     if (from) {
-      qb.andWhere('n.created_at >= :from', { from });
+      qb.andWhere("n.created_at >= :from", { from });
     }
     if (to) {
-      qb.andWhere('n.created_at <= :to', { to });
+      qb.andWhere("n.created_at <= :to", { to });
     }
     if (farmId) {
       qb.andWhere("n.context->>'farmId' = :farmId", { farmId });
@@ -172,13 +258,15 @@ export class AdminNotificationsService {
       qb.andWhere("n.context->>'deviceId' = :deviceId", { deviceId });
     }
     if (search) {
-      qb.andWhere('(n.title ILIKE :search OR n.message ILIKE :search)', { search: `%${search}%` });
+      qb.andWhere("(n.title ILIKE :search OR n.message ILIKE :search)", {
+        search: `%${search}%`,
+      });
     }
 
     // Order: pinned critical first, then by created_at desc
-    qb.orderBy('n.pinned_until_resolved', 'DESC')
-      .addOrderBy("CASE WHEN n.status = 'new' THEN 0 ELSE 1 END", 'ASC')
-      .addOrderBy('n.created_at', 'DESC');
+    qb.orderBy("n.pinned_until_resolved", "DESC")
+      .addOrderBy("CASE WHEN n.status = 'new' THEN 0 ELSE 1 END", "ASC")
+      .addOrderBy("n.created_at", "DESC");
 
     // Pagination
     const offset = (page - 1) * limit;
@@ -200,18 +288,18 @@ export class AdminNotificationsService {
    */
   async getCounts(): Promise<AdminNotificationCountsDto> {
     const counts = await this.repo
-      .createQueryBuilder('n')
-      .select('n.severity', 'severity')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('n.severity')
+      .createQueryBuilder("n")
+      .select("n.severity", "severity")
+      .addSelect("COUNT(*)", "count")
+      .groupBy("n.severity")
       .getRawMany();
 
     const unresolvedCount = await this.repo.count({
-      where: { status: In(['new', 'acknowledged']) },
+      where: { status: In(["new", "acknowledged"]) },
     });
 
     const newCount = await this.repo.count({
-      where: { status: 'new' },
+      where: { status: "new" },
     });
 
     const result: AdminNotificationCountsDto = {
@@ -248,21 +336,24 @@ export class AdminNotificationsService {
   /**
    * Acknowledge a notification
    */
-  async acknowledge(id: string, adminUserId: string): Promise<AdminNotification> {
+  async acknowledge(
+    id: string,
+    adminUserId: string,
+  ): Promise<AdminNotification> {
     const notification = await this.getById(id);
 
-    if (notification.status === 'resolved') {
+    if (notification.status === "resolved") {
       return notification; // Already resolved, no action needed
     }
 
-    notification.status = 'acknowledged';
+    notification.status = "acknowledged";
     notification.acknowledged_at = new Date();
     notification.acknowledged_by = adminUserId;
 
     const saved = await this.repo.save(notification);
-    this.events.emit('admin.notification.updated', saved);
+    this.events.emit("admin.notification.updated", saved);
 
-    console.log('✅ [ADMIN-NOTIFICATIONS] Notification acknowledged:', id);
+    console.log("✅ [ADMIN-NOTIFICATIONS] Notification acknowledged:", id);
     return saved;
   }
 
@@ -272,56 +363,68 @@ export class AdminNotificationsService {
   async resolve(id: string, adminUserId: string): Promise<AdminNotification> {
     const notification = await this.getById(id);
 
-    notification.status = 'resolved';
+    notification.status = "resolved";
     notification.resolved_at = new Date();
     notification.resolved_by = adminUserId;
     notification.pinned_until_resolved = false;
 
     const saved = await this.repo.save(notification);
-    this.events.emit('admin.notification.updated', saved);
+    this.events.emit("admin.notification.updated", saved);
 
-    console.log('✅ [ADMIN-NOTIFICATIONS] Notification resolved:', id);
+    console.log("✅ [ADMIN-NOTIFICATIONS] Notification resolved:", id);
     return saved;
   }
 
   /**
    * Bulk acknowledge notifications
    */
-  async bulkAcknowledge(ids: string[], adminUserId: string): Promise<{ updated: number }> {
+  async bulkAcknowledge(
+    ids: string[],
+    adminUserId: string,
+  ): Promise<{ updated: number }> {
     const result = await this.repo
       .createQueryBuilder()
       .update(AdminNotification)
       .set({
-        status: 'acknowledged',
+        status: "acknowledged",
         acknowledged_at: new Date(),
         acknowledged_by: adminUserId,
       })
-      .where('id IN (:...ids)', { ids })
-      .andWhere('status = :status', { status: 'new' })
+      .where("id IN (:...ids)", { ids })
+      .andWhere("status = :status", { status: "new" })
       .execute();
 
-    this.events.emit('admin.notification.bulk-updated', { ids, action: 'acknowledged' });
+    this.events.emit("admin.notification.bulk-updated", {
+      ids,
+      action: "acknowledged",
+    });
     return { updated: result.affected ?? 0 };
   }
 
   /**
    * Bulk resolve notifications
    */
-  async bulkResolve(ids: string[], adminUserId: string): Promise<{ updated: number }> {
+  async bulkResolve(
+    ids: string[],
+    adminUserId: string,
+  ): Promise<{ updated: number }> {
     const result = await this.repo
       .createQueryBuilder()
       .update(AdminNotification)
       .set({
-        status: 'resolved',
+        status: "resolved",
         resolved_at: new Date(),
         resolved_by: adminUserId,
         pinned_until_resolved: false,
       })
-      .where('id IN (:...ids)', { ids })
-      .andWhere('status != :status', { status: 'resolved' })
+      .where("id IN (:...ids)", { ids })
+      .andWhere("status != :status", { status: "resolved" })
       .execute();
 
-    this.events.emit('admin.notification.bulk-updated', { ids, action: 'resolved' });
+    this.events.emit("admin.notification.bulk-updated", {
+      ids,
+      action: "resolved",
+    });
     return { updated: result.affected ?? 0 };
   }
 
@@ -331,18 +434,20 @@ export class AdminNotificationsService {
   async getUnresolvedCritical(): Promise<AdminNotification[]> {
     return this.repo.find({
       where: {
-        severity: 'critical',
-        status: In(['new', 'acknowledged']),
+        severity: "critical",
+        status: In(["new", "acknowledged"]),
         pinned_until_resolved: true,
       },
-      order: { created_at: 'DESC' },
+      order: { created_at: "DESC" },
     });
   }
 
   /**
    * Export notifications for audit
    */
-  async exportForAudit(query: QueryAdminNotificationsDto): Promise<AdminNotification[]> {
+  async exportForAudit(
+    query: QueryAdminNotificationsDto,
+  ): Promise<AdminNotification[]> {
     const result = await this.list({ ...query, limit: 1000, page: 1 });
     return result.items as AdminNotification[];
   }
@@ -350,7 +455,9 @@ export class AdminNotificationsService {
   /**
    * Delete old resolved notifications (cleanup job)
    */
-  async cleanupOldResolved(olderThanDays: number = 90): Promise<{ deleted: number }> {
+  async cleanupOldResolved(
+    olderThanDays: number = 90,
+  ): Promise<{ deleted: number }> {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
 
@@ -358,11 +465,13 @@ export class AdminNotificationsService {
       .createQueryBuilder()
       .delete()
       .from(AdminNotification)
-      .where('status = :status', { status: 'resolved' })
-      .andWhere('resolved_at < :cutoff', { cutoff: cutoffDate })
+      .where("status = :status", { status: "resolved" })
+      .andWhere("resolved_at < :cutoff", { cutoff: cutoffDate })
       .execute();
 
-    console.log(`🧹 [ADMIN-NOTIFICATIONS] Cleaned up ${result.affected} old notifications`);
+    console.log(
+      `🧹 [ADMIN-NOTIFICATIONS] Cleaned up ${result.affected} old notifications`,
+    );
     return { deleted: result.affected ?? 0 };
   }
 }

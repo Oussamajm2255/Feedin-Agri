@@ -1,23 +1,39 @@
 // ================================
-// BENTO GRID NAVIGATION SECTION
+// BENTO GRID — PREMIUM SERVICE SHOWCASE
 // ================================
+// Architecture: Section > Container > Header + Grid(3 Segments) + CTA Band
 
+// ─── CSS CUSTOM PROPS ────────────────────────
+:host {
+    --bento-card-radius: 24px;
+    --bento-gap: 1.5rem;
+    --bento-transition: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    --emerald-400: #34d399;
+    --emerald-500: #10b981;
+    --emerald-glow: rgba(16, 185, 129, 0.15);
+    --card-min-h: 440px;
+}
+
+// ─── SECTION WRAPPER ─────────────────────────
 .bento-section {
     position: relative;
-    padding: 6rem var(--section-gutter);
+    padding: 7rem var(--section-gutter);
     background: var(--light-bg);
+    overflow: hidden;
 }
 
 .bento-container {
     max-width: var(--container-max-width);
     margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
-// HEADER
+// ─── HEADER ──────────────────────────────────
 .bento-header {
     text-align: center;
-    max-width: 600px;
-    margin: 0 auto 3.5rem;
+    max-width: 640px;
+    margin: 0 auto 4rem;
 }
 
 .bento-label {
@@ -27,11 +43,12 @@
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--primary-green);
-    margin-bottom: 1rem;
-    padding: 0.4rem 1rem;
+    margin-bottom: 1.25rem;
+    padding: 0.45rem 1.1rem;
     background: rgba(16, 185, 129, 0.08);
     border-radius: 100px;
     border: 1px solid rgba(16, 185, 129, 0.12);
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .bento-title {
@@ -39,7 +56,7 @@
     font-size: clamp(2rem, 4vw, 2.75rem);
     font-weight: 800;
     line-height: 1.15;
-    margin-bottom: 1rem;
+    margin-bottom: 1.125rem;
     letter-spacing: -0.02em;
     color: var(--text-primary);
 }
@@ -47,713 +64,674 @@
 .bento-intro {
     font-size: 1.125rem;
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.65;
+    max-width: 520px;
+    margin: 0 auto;
 }
 
-// ================================
-// THE BENTO GRID
-// ================================
+// ─── THE BENTO GRID (3 BALANCED SEGMENTS) ────
 .bento-grid {
     display: grid;
-    // VERY IMPORTANT: Prevent GSAP from freezing the entire grid's opacity
-    // if the stagger animation targets the wrong parent
     opacity: 1 !important;
-
+    gap: var(--bento-gap);
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: minmax(240px, auto);
-    gap: 1.5rem;
+    grid-auto-rows: minmax(var(--card-min-h), auto);
+    margin-bottom: 2rem;
 
     @media (max-width: 1024px) {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: minmax(200px, auto);
+        gap: 1rem;
     }
-
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
         grid-template-columns: 1fr;
         grid-auto-rows: auto;
-        gap: 1rem;
     }
 }
 
-// ================================
-// BENTO CARD BASE
-// ================================
-.bento-card {
+// ─── PREMIUM SEGMENT CARD ────────────────────
+.segment-card {
     position: relative;
-    background: rgba(255, 255, 255, 0.7);
-    /* Inner Glow (Rim Lighting) - White cards (Beveled edges) */
-    border-top: 1px solid rgba(255, 255, 255, 0.6);
-    border-left: 1px solid rgba(255, 255, 255, 0.6);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 24px;
-    padding: 2.25rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--bento-card-radius);
+    padding: 2.25rem 2rem;
     overflow: hidden;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    /* Glassmorphism */
-    backdrop-filter: blur(12px);
+    z-index: 1;
+    outline: none;
 
-    /* Dual-Shadow System (Static) */
+    // Premium Glassmorphism
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-top-color: rgba(255, 255, 255, 0.9);
+    border-left-color: rgba(255, 255, 255, 0.85);
     box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        /* Tight outline */
-        0 10px 15px -3px rgba(0, 0, 0, 0.02);
-    /* Soft ambient */
+        0 1px 2px rgba(0, 0, 0, 0.02),
+        0 4px 8px rgba(0, 0, 0, 0.03),
+        0 16px 32px -8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
 
-    /* Spotlight Radial Hover defaults */
+    transition:
+        transform var(--bento-transition),
+        box-shadow var(--bento-transition),
+        border-color 0.35s ease;
+    will-change: transform;
+
+    // Mouse spotlight CSS custom properties
     --mouse-x: 50%;
     --mouse-y: 50%;
-    --spotlight-color: rgba(255, 255, 255, 0.3); // Bright reactive hover light
+    --spotlight-color: rgba(16, 185, 129, 0.06);
 
-    // Subtle surface noise overlay
+    // Micro-texture noise overlay
     &::after {
         content: "";
         position: absolute;
         inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        opacity: 0.03;
-        /* Extremely subtle */
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        opacity: 0.02;
         pointer-events: none;
         z-index: 0;
         mix-blend-mode: overlay;
+        border-radius: inherit;
     }
 
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s ease;
-    will-change: transform,
-    box-shadow;
-
-    // Spotlight glow structure (follows mouse)
+    // Spotlight glow layer (follows cursor)
     .bento-bg-glow {
         position: absolute;
         inset: 0;
-        // Radial gradient anchored to mouse coords
-        background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
-                var(--spotlight-color),
-                transparent 40%);
+        border-radius: inherit;
+        background: radial-gradient(
+            500px circle at var(--mouse-x) var(--mouse-y),
+            var(--spotlight-color),
+            transparent 55%
+        );
         opacity: 0;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.6s ease;
         z-index: 0;
-        pointer-events: none;
-        will-change: opacity;
-    }
-
-    // Background Image Layer (Parallax on hover)
-    .bento-bg-image {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background-size: cover;
-        background-position: left center;
-        background-repeat: no-repeat;
-        opacity: 0.9;
-        /* Starting slight scale down so it can scale up */
-        transform: scale(1);
-        transform-origin: center;
-        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-        will-change: transform;
         pointer-events: none;
     }
 
+    // Content container
     .bento-content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         display: flex;
         flex-direction: column;
         height: 100%;
     }
 
-    &:hover {
-        /* The Lift */
+    // ── Hover State ──
+    &:hover,
+    &:focus-visible {
         transform: translateY(-8px);
-
-        /* Dual-Shadow System (Hover/Lifting) */
         box-shadow:
-            0 10px 15px -3px rgba(0, 0, 0, 0.1),
-            /* Sharp Dark shadow */
-            0 25px 50px -12px rgba(0, 0, 0, 0.1);
-        /* Wide soft lift shadow */
+            0 8px 16px rgba(0, 0, 0, 0.04),
+            0 24px 48px -8px rgba(16, 185, 129, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
 
-        border-top-color: rgba(16, 185, 129, 0.4);
+        border-color: rgba(16, 185, 129, 0.35);
 
-        .bento-bg-glow {
-            opacity: 1;
-        }
-
-        /* The Parallax Image Effect (Shift & Scale up) */
-        .bento-bg-image {
-            transform: scale(1.05) translate(calc((var(--mouse-x, 50%) - 50%) * -0.015), calc((var(--mouse-y, 50%) - 50%) * -0.015));
-            opacity: 1; // Full opacity on hover
-        }
-
-        .arrow-circle {
-            transform: translateX(4px);
-        }
+        .bento-bg-glow { opacity: 1; }
+        .bento-bg-image { transform: scale(1.06); }
+        .bc-cta .arrow-circle { transform: translateX(5px); }
+        .bc-icon { transform: scale(1.06); }
     }
 
-    /* Touch Optimizations */
+    // ── Focus Ring (accessibility) ──
+    &:focus-visible {
+        outline: 2px solid var(--emerald-500);
+        outline-offset: 3px;
+    }
+
+    // ── Active (press) State ──
+    &:active {
+        transform: translateY(-3px);
+        transition-duration: 0.15s;
+    }
+
+    // Touch device — disable hover lift
     @media (hover: none) and (pointer: coarse) {
         &:hover {
             transform: none;
-            /* Disable lift on touch */
-            box-shadow:
-                0 4px 6px -1px rgba(0, 0, 0, 0.05),
-                0 10px 15px -3px rgba(0, 0, 0, 0.02);
-            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03), 0 16px 32px -8px rgba(0, 0, 0, 0.04);
+            border-color: rgba(255, 255, 255, 0.65);
         }
-
+        &:active {
+            transform: scale(0.985);
+            transition-duration: 0.12s;
+        }
         .bento-bg-glow {
-            background: radial-gradient(circle at top left, var(--spotlight-color), transparent 70%);
+            background: radial-gradient(circle at 30% 30%, var(--spotlight-color), transparent 70%);
             opacity: 1;
-            /* Static visible glow */
-        }
-    }
-
-    &.has-bg-image {
-        .bc-cta {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-color: #15B980;
-            color: #ffffff;
-
-            .arrow-circle {
-                color: #ffffff;
-            }
-
-            &:hover {
-                background: rgba(0, 0, 0, 0.5);
-            }
         }
     }
 }
 
-// Text Elements
+// ─── BACKGROUND IMAGE ────────────────────────
+.bento-bg-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: center;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+
+    // Green gradient overlay for text readability + brand cohesion
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            155deg,
+            rgba(2, 44, 34, 0.94) 0%,
+            rgba(6, 78, 59, 0.72) 55%,
+            rgba(16, 185, 129, 0.32) 100%
+        );
+    }
+}
+
+// ─── CARD INNER ELEMENTS ─────────────────────
 .bc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .bc-icon {
-    width: 48px;
-    height: 48px;
+    width: 54px;
+    height: 54px;
     border-radius: 14px;
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--primary-green);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Colored glow behind icon */
-    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.15),
-        0 4px 12px rgba(16, 185, 129, 0.15);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
 
     svg {
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
     }
 }
 
-.bc-title {
+.bc-segment-title {
     font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    /* tracking-tighter */
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    font-size: 1.625rem;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    hyphens: auto;
+    overflow-wrap: break-word;
 }
 
 .bc-desc {
-    font-size: 0.875rem;
-    /* 14px */
-    color: #64748b;
-    /* text-slate-500 */
-    line-height: 1.5;
-    margin-bottom: auto; // pushes CTA to bottom
-    opacity: 0.9;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
 }
 
-// Call To Action
+.bc-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.625rem;
+        transition: transform 0.25s ease;
+
+        .bullet-marker {
+            font-size: 0.75rem;
+            line-height: 1.65;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+        }
+
+        .bullet-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+    }
+
+    // Bullet hover micro-interaction (desktop only)
+    @media (hover: hover) {
+        .segment-card:hover & li {
+            &:nth-child(1) { transform: translateX(2px); transition-delay: 0s; }
+            &:nth-child(2) { transform: translateX(3px); transition-delay: 0.04s; }
+            &:nth-child(3) { transform: translateX(4px); transition-delay: 0.08s; }
+        }
+    }
+}
+
+// CTA Pill Button
 .bc-cta {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
     font-size: 0.9375rem;
     font-weight: 600;
-    color: #15B980;
-    transition: all 0.3s ease;
-
-    // Unified Positioning using flexbox
-    margin-top: auto;
-    align-self: flex-end;
+    margin-top: 1.75rem;
+    align-self: flex-start;
     position: relative;
     z-index: 5;
-
-    // Glassmorphism Styling
-    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 0.4rem 0.4rem 0.4rem 1.35rem;
+    min-height: 48px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid #15B980;
+    transition: all 0.3s ease;
 
-    // Pill styling for text buttons
-    border-radius: 50px;
-    padding: 0.25rem 0.25rem 0.25rem 1.25rem;
-    min-height: 48px;
+    .cta-label {
+        transition: letter-spacing 0.3s ease;
+    }
 
     .arrow-circle {
-        width: 38px;
-        height: 38px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        background: transparent;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: transform 0.3s ease;
-        color: #15B980;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         flex-shrink: 0;
     }
 
-    &:hover {
-        background: rgba(255, 255, 255, 0.3);
-
-        .arrow-circle {
-            transform: translateX(4px);
-        }
-    }
-
-    &.icon-only {
-        padding: 0;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        justify-content: center;
-
-        .arrow-circle {
-            width: 100%;
-            height: 100%;
-        }
+    &:hover .cta-label {
+        letter-spacing: 0.02em;
     }
 }
 
-// ================================
-// CARD SIZING & POSITIONING (Desktop)
-// ================================
+// ─── SHARED IMAGE CARD THEME ─────────────────
+.segment-card.has-image {
+    border-color: rgba(52, 211, 153, 0.15);
+    background: #022c22;
 
-// Large Card (Span 2 cols, 2 rows)
-.large {
-    grid-column: span 2;
-    grid-row: span 2;
-    /* Mesh Gradient approximation for premium texture */
-    background:
-        radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.02) 0%, transparent 40%),
-        rgba(255, 255, 255, 0.8);
-
+    // ── ICON: Bright emerald container with glow ──
     .bc-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(52, 211, 153, 0.2));
+        color: #ffffff;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+        box-shadow:
+            0 0 16px rgba(16, 185, 129, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
         svg {
-            width: 32px;
-            height: 32px;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
     }
 
-    .bc-title {
-        font-size: 2.5rem;
+    // ── TITLE: White with emerald accent underline glow ──
+    .bc-segment-title {
+        color: #ffffff;
+        background: none;
+        -webkit-text-fill-color: initial;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 30px rgba(16, 185, 129, 0.12);
+        position: relative;
+        padding-bottom: 0.75rem;
         margin-bottom: 1rem;
-        color: #ffffff;
+
+        // Emerald accent line under title
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 48px;
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #34d399, rgba(16, 185, 129, 0.3));
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+        }
     }
 
+    // ── DESCRIPTION: Brighter, more readable ──
     .bc-desc {
-        font-size: 1rem;
-        max-width: 85%;
-        color: #ffffff;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); // Make text pop above images
+        color: rgba(255, 255, 255, 0.92);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        font-weight: 400;
+        letter-spacing: 0.01em;
     }
 
-    // Specific styles for background decoration
-    &.bento-hero {
-        .bento-bg-glow {
-            background: radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1), transparent 60%);
-            z-index: 1;
+    // ── BULLETS: Emerald markers with bright text ──
+    .bc-bullets {
+        .bullet-marker {
+            color: var(--emerald-400);
+            text-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
         }
-
-        .bento-bg-image {
-            left: -20px;
-            top: -20px;
-            bottom: -20px;
-            right: -20px;
-
-            &::after {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(to right, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.5) 45%, transparent 85%);
-                z-index: 1;
-            }
-        }
-    }
-}
-
-// Small Card (Span 1 col, 1 row)
-.small {
-    grid-column: span 1;
-    grid-row: span 1;
-    padding: 1.75rem;
-
-    &.has-bg-image {
-        .bento-bg-image {
-            // Apply frosted glass blur overlay directly in CSS so we don't edit original images
-            filter: blur(2px) brightness(1.1);
-
-            &::after {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(to right, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.6) 50%, transparent 90%);
-                z-index: 1;
-            }
-        }
-
-        .bc-title {
-            color: #ffffff;
-        }
-
-        .bc-desc {
-            font-weight: 500;
+        .bullet-text {
             color: #ffffff;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
         }
     }
 
-    &.bg-glass {
-        background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
-
-        &::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            /* Faint blueprint grid pattern */
-            background-image:
-                linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
-            background-size: 20px 20px;
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 0;
-        }
-    }
-
-    .bc-title {
-        font-size: 1.25rem;
-    }
-
-    .bc-desc {
-        font-size: 0.875rem;
-    }
-
-    .bc-cta.icon-only {
-        margin-top: auto;
-    }
-}
-
-// Closer Card (Card 6)
-.bento-closer {
-    background: var(--primary-green);
-    /* Inner Glow for Dark Card */
-    border: 1px solid rgba(167, 243, 208, 0.3);
-    /* Emerald 200 / 30% */
-
-    // Outer Glow - makes the card feel like it's illuminating the page
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 0 40px -10px rgba(16, 185, 129, 0.4);
-
-    --spotlight-color: rgba(255, 255, 255, 0.1); // White spotlight for dark card
-
-    // Noise overlay stronger for the green card
-    &::after {
-        opacity: 0.05;
-    }
-
-    // Retina adjust
-    @media (-webkit-min-device-pixel-ratio: 2),
-    (min-resolution: 192dpi) {
-        &::after {
-            opacity: 0.08;
-        }
-    }
-
-    .bc-icon {
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-            0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .bc-title {
-        color: white;
-    }
-
-    .bc-desc {
-        color: rgba(255, 255, 255, 0.9);
-    }
-
+    // ── CTA BUTTON: Emerald glass — bright and distinct ──
     .bc-cta {
-        border-color: white;
-        color: white;
-        background: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(52, 211, 153, 0.15));
+        border: 1px solid rgba(52, 211, 153, 0.45);
+        color: #ffffff;
+        box-shadow: 0 2px 12px rgba(16, 185, 129, 0.15);
+
+        .cta-label {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
 
         .arrow-circle {
-            background: transparent;
-            color: white;
+            color: #022c22;
+            background: var(--emerald-400);
+            box-shadow: 0 2px 8px rgba(52, 211, 153, 0.4);
         }
 
         &:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: white;
-            color: white;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(52, 211, 153, 0.25));
+            border-color: var(--emerald-400);
+            box-shadow: 0 4px 24px rgba(52, 211, 153, 0.3);
 
             .arrow-circle {
-                transform: translateX(4px);
+                background: #ffffff;
+                color: #059669;
+                box-shadow: 0 4px 16px rgba(255, 255, 255, 0.25);
             }
         }
     }
 
-    &:hover {
-        border-color: rgba(167, 243, 208, 0.6);
-        /* Stronger outer glow on lift */
+    --spotlight-color: rgba(52, 211, 153, 0.1);
+
+    &:hover,
+    &:focus-visible {
+        border-color: rgba(52, 211, 153, 0.5);
         box-shadow:
-            0 10px 15px -3px rgba(0, 0, 0, 0.2),
-            0 0 60px -15px rgba(16, 185, 129, 0.6);
-    }
-
-    @media (hover: none) and (pointer: coarse) {
-        &:hover {
-            border-color: rgba(167, 243, 208, 0.3);
-            box-shadow:
-                0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 0 40px -10px rgba(16, 185, 129, 0.4);
-        }
+            0 8px 20px rgba(0, 0, 0, 0.2),
+            0 32px 64px -12px rgba(6, 78, 59, 0.3),
+            0 0 40px rgba(16, 185, 129, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 }
 
-// ================================
-// MOBILE RESPONSIVENESS
-// ================================
+// ─── CTA BAND BUTTON (Full-Width) ────────────
+.bento-cta-band-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80px;
+    position: relative;
+    padding: 1.5rem 2rem;
+    margin-top: 1.5rem;
 
+    // Reset native
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 10;
+
+    // Visual
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.1));
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    border-radius: 20px;
+    cursor: pointer;
+    overflow: hidden;
+
+    // Glass
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02), 0 8px 24px -4px rgba(16, 185, 129, 0.06);
+
+    transition: all var(--bento-transition);
+
+    // Animated glow behind button
+    .cta-band-glow {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.1), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    }
+
+    .cta-band-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+    }
+
+    .cta-band-text {
+        font-family: 'Outfit', 'Inter', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-green);
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        transition: letter-spacing 0.35s ease;
+    }
+
+    .cta-band-icon-wrap {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--primary-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+        transition: transform var(--bento-transition), box-shadow 0.35s ease;
+    }
+
+    // Hover
+    &:hover {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06));
+        border-color: rgba(16, 185, 129, 0.4);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(16, 185, 129, 0.18);
+
+        .cta-band-glow { opacity: 1; }
+        .cta-band-text { letter-spacing: 0.06em; }
+        .cta-band-icon-wrap {
+            transform: translateX(6px) scale(1.08);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+    }
+
+    // Focus
+    &:focus-visible {
+        outline: 2px solid var(--emerald-500);
+        outline-offset: 3px;
+    }
+
+    // Active
+    &:active {
+        transform: translateY(-1px);
+        transition-duration: 0.12s;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+}
+
+// ─── TABLET / SMALL DESKTOP ──────────────────
 @media (max-width: 1024px) {
-    .large {
-        grid-column: span 2;
-        grid-row: span 1;
-        min-height: 280px;
-
-        .bc-title {
-            font-size: 2rem;
-        }
-    }
-
-    .small {
-        grid-column: span 1;
-        grid-row: span 1;
-        min-height: 200px;
-    }
+    :host { --bento-gap: 1rem; --card-min-h: 400px; }
 }
 
-@media (max-width: 768px) {
-    .bento-section {
-        padding: 4rem var(--section-gutter);
-    }
+// ─── MOBILE ──────────────────────────────────
+@media (max-width: 900px) {
+    :host { --card-min-h: auto; }
 
-    .bento-header {
-        margin-bottom: 2.5rem;
-    }
+    .bento-section { padding: 4.5rem var(--section-gutter); }
+    .bento-header { margin-bottom: 2.5rem; }
 
-    .bento-grid {
-        grid-template-columns: 1fr !important;
-        grid-auto-rows: auto;
-        gap: 1rem;
-    }
-
-    .bento-card {
+    .segment-card {
+        padding: 2rem 1.5rem;
         border-radius: 20px;
-        padding: 1.5rem;
-    }
 
-    .large {
-        grid-column: span 1;
-        grid-row: auto;
-        min-height: auto;
-
+        .bc-header { margin-bottom: 1.25rem; }
         .bc-icon {
-            width: 48px;
-            height: 48px;
-            svg { width: 24px; height: 24px; }
-        }
-
-        .bc-title {
-            font-size: 1.75rem;
-        }
-
-        .bc-desc {
-            font-size: 1rem;
-            max-width: 100%;
-        }
-    }
-
-    .small {
-        grid-column: span 1;
-        grid-row: auto;
-        min-height: auto;
-        padding: 1.5rem;
-
-        .bc-icon {
-            width: 44px;
-            height: 44px;
-            margin-bottom: 0.5rem;
+            width: 48px; height: 48px;
+            border-radius: 12px;
             svg { width: 22px; height: 22px; }
         }
-
-        .bc-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
+        .bc-segment-title { font-size: 1.35rem; margin-bottom: 0.5rem; }
+        .bc-desc { font-size: 0.875rem; margin-bottom: 1.25rem; line-height: 1.6; }
+        .bc-bullets {
+            gap: 0.625rem;
+            li .bullet-text { font-size: 0.8125rem; }
         }
+        .bc-cta { margin-top: 1.25rem; font-size: 0.875rem; min-height: 44px; padding: 0.35rem 0.35rem 0.35rem 1rem; }
+    }
 
-        .bc-desc {
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
+    .bento-cta-band-btn {
+        min-height: 64px;
+        padding: 1rem 1.25rem;
+        margin-top: 1rem;
+
+        .cta-band-content { gap: 0.75rem; }
+        .cta-band-text { font-size: 0.95rem; letter-spacing: 0.02em; }
+        .cta-band-icon-wrap { width: 38px; height: 38px; svg { width: 18px; height: 18px; } }
     }
 }
 
-@media (max-width: 480px) {
-    .bento-section {
-        padding: 3rem var(--section-gutter);
-    }
-    .bento-card {
-        padding: 1.25rem;
-    }
-    .large .bc-title {
-        font-size: 1.5rem;
-    }
-}
-
-// ================================
-// DARK THEME
-// ================================
+// ─── DARK THEME ──────────────────────────────
 :host-context(body.dark-theme) {
+    .bento-section {
+        background: var(--dark-bg, #0f172a);
+    }
+
     .bento-label {
         background: rgba(16, 185, 129, 0.12);
         border-color: rgba(16, 185, 129, 0.18);
     }
 
-    .bento-card {
-        border-color: var(--glass-border);
-        background: var(--glass-bg);
+    .segment-card:not(.has-image) {
+        background: rgba(30, 41, 59, 0.6);
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
 
-        &.large {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+    .bento-cta-band-btn {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06));
+        border-color: rgba(16, 185, 129, 0.28);
+
+        .cta-band-text { color: var(--emerald-400); }
+
+        &:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.08));
+            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.22);
         }
     }
 
     .skeleton-card {
         background: rgba(30, 41, 59, 0.5) !important;
         border-color: rgba(255, 255, 255, 0.05) !important;
-    }
 
-    .skeleton-text, .skeleton-label, .skeleton-icon {
-        background: rgba(255, 255, 255, 0.08) !important;
+        .skeleton-icon,
+        .skeleton-line {
+            background: rgba(255, 255, 255, 0.06) !important;
+            &::after { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent); }
+        }
     }
 }
 
-// ================================
-// SKELETON LOADING
-// ================================
+// ─── REDUCED MOTION ──────────────────────────
+@media (prefers-reduced-motion: reduce) {
+    .segment-card,
+    .bento-cta-band-btn,
+    .bc-cta .arrow-circle,
+    .bento-bg-image,
+    .bc-icon {
+        transition-duration: 0.01s !important;
+    }
+    .skeleton-shimmer::after { animation: none !important; }
+}
+
+// ─── SKELETON LOADING ────────────────────────
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes skeleton-fade-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .skeleton-shimmer {
     position: relative;
     overflow: hidden;
-    background: #f1f5f9;
-    
+    background: #e8ecf1;
+    border-radius: 8px;
+
     &::after {
         content: "";
         position: absolute;
         inset: 0;
         transform: translateX(-100%);
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.5),
-            transparent
-        );
-        animation: shimmer 1.5s infinite;
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+        animation: shimmer 1.8s ease-in-out infinite;
     }
 }
 
-@keyframes shimmer {
-    100% { transform: translateX(100%); }
+.skeleton-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    backdrop-filter: none;
+    cursor: default;
+    animation: skeleton-fade-in 0.5s ease both;
+
+    .skeleton-icon {
+        width: 54px; height: 54px;
+        border-radius: 14px;
+        margin-bottom: 1.5rem;
+        @extend .skeleton-shimmer;
+    }
+
+    .skeleton-line {
+        height: 18px;
+        margin-bottom: 0.75rem;
+        @extend .skeleton-shimmer;
+
+        &.title { width: 75%; height: 28px; margin-bottom: 1rem; border-radius: 10px; }
+        &.desc { width: 100%; }
+        &.short { width: 80%; margin-bottom: 1.5rem; }
+        &.bullet-line { width: 65%; height: 14px; }
+        &.cta { width: 140px; height: 44px; border-radius: 50px; margin-top: auto; }
+    }
+
+    .skeleton-bullets {
+        margin-bottom: 1.5rem;
+        li { list-style: none; &::before { content: none; } }
+    }
 }
 
 .skeleton-label {
-    width: 120px;
-    height: 24px;
+    width: 120px; height: 24px;
     border-radius: 100px;
     margin: 0 auto 1rem;
     @extend .skeleton-shimmer;
 }
 
 .skeleton-title {
-    width: 80%;
-    height: 48px;
+    width: 80%; height: 44px;
     border-radius: 12px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 1.25rem;
     @extend .skeleton-shimmer;
 }
 
 .skeleton-intro {
-    width: 60%;
-    height: 24px;
+    width: 55%; height: 20px;
     border-radius: 8px;
-    margin: 0 auto 3.5rem;
+    margin: 0 auto 4rem;
     @extend .skeleton-shimmer;
-}
-
-.skeleton-card {
-    background: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.05) !important;
-    @extend .skeleton-shimmer;
-    
-    &::after {
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(0, 0, 0, 0.03),
-            transparent
-        );
-    }
-
-    .skeleton-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        margin-bottom: 1.25rem;
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    .skeleton-line {
-        height: 24px;
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.05);
-        margin-bottom: 0.75rem;
-        
-        &.title { width: 70%; height: 32px; }
-        &.desc { width: 90%; }
-        &.desc-short { width: 40%; }
-        &.cta { width: 100px; margin-top: auto; }
-    }
 }

@@ -1,15 +1,37 @@
-import { IsString, IsOptional, IsEnum, IsBoolean, IsObject, IsDateString, IsInt, Min, Max } from 'class-validator';
-import { Type } from 'class-transformer';
-import { AdminNotificationSeverity, AdminNotificationDomain, AdminNotificationStatus } from '../../../entities/admin-notification.entity';
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsBoolean,
+  IsObject,
+  IsDateString,
+  IsInt,
+  Min,
+  Max,
+} from "class-validator";
+import { Type } from "class-transformer";
+import {
+  AdminNotificationSeverity,
+  AdminNotificationDomain,
+  AdminNotificationStatus,
+} from "../../../entities/admin-notification.entity";
 
 export class CreateAdminNotificationDto {
   @IsString()
   type: string;
 
-  @IsEnum(['critical', 'warning', 'info', 'success'])
+  @IsEnum(["critical", "warning", "info", "success"])
   severity: AdminNotificationSeverity;
 
-  @IsEnum(['system', 'farms', 'devices', 'crops', 'users', 'automation'])
+  @IsEnum([
+    "system",
+    "farms",
+    "devices",
+    "crops",
+    "users",
+    "automation",
+    "leads",
+  ])
   domain: AdminNotificationDomain;
 
   @IsString()
@@ -30,15 +52,15 @@ export class CreateAdminNotificationDto {
 
 export class QueryAdminNotificationsDto {
   @IsOptional()
-  @IsEnum(['critical', 'warning', 'info', 'success'])
+  @IsEnum(["critical", "warning", "info", "success"])
   severity?: AdminNotificationSeverity;
 
   @IsOptional()
-  @IsEnum(['system', 'farms', 'devices', 'crops', 'users', 'automation'])
+  @IsEnum(["system", "farms", "devices", "crops", "users", "automation"])
   domain?: AdminNotificationDomain;
 
   @IsOptional()
-  @IsEnum(['new', 'acknowledged', 'resolved'])
+  @IsEnum(["new", "acknowledged", "resolved"])
   status?: AdminNotificationStatus;
 
   @IsOptional()

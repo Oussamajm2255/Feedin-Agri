@@ -51,6 +51,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'projets',
+    loadComponent: () =>
+      import('./features/landing/pages/projects/projects').then((m) => m.ProjectsComponent),
+  },
+  {
     path: 'contact',
     loadComponent: () =>
       import('./features/landing/pages/contact/contact.component').then((m) => m.ContactComponent),
@@ -64,11 +69,7 @@ export const routes: Routes = [
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),
     canActivate: [guestGuard],
   },
-  {
-    path: 'register',
-    redirectTo: '/login',
-    pathMatch: 'full',
-  },
+
   // Alias: /request-access → sent to contact for manual account requests
   {
     path: 'request-access',

@@ -77,7 +77,7 @@
     "email": "E-mail",
     "password": "Mot de passe",
     "firstName": "Prénom",
-    "lastName": "Nom",
+    "lastName": "Nom de famille",
     "confirmPassword": "Confirmer le mot de passe",
     "forgotPassword": "Mot de passe oublié ?",
     "rememberMe": "Se souvenir de moi",
@@ -89,12 +89,12 @@
     "loginSuccess": "Connexion réussie",
     "loginError": "Erreur de connexion",
     "registerSuccess": "Compte créé avec succès",
-    "registerError": "Erreur de création de compte",
+    "registerError": "Erreur lors de la création du compte",
     "invalidCredentials": "Identifiants invalides",
     "emailRequired": "L'e-mail est requis",
     "passwordRequired": "Le mot de passe est requis",
     "passwordMismatch": "Les mots de passe ne correspondent pas",
-    "weakPassword": "Le mot de passe est trop faible",
+    "weakPassword": "Mot de passe trop faible",
     "sessionExpired": "Session expirée. Veuillez vous reconnecter",
     "authenticationRequired": "Authentification requise",
     "loginToViewActions": "Veuillez vous connecter pour voir les actions récentes",
@@ -102,36 +102,32 @@
     "loggingIn": "Connexion en cours...",
     "invalidEmailFormat": "Format d'e-mail invalide",
     "networkError": "Problème de connexion, veuillez réessayer plus tard",
-    "tooManyAttempts": "Trop de tentatives de connexion. Veuillez patienter",
+    "tooManyAttempts": "Trop de tentatives de connexion. Veuillez attendre",
     "welcomeBack": "Bon retour",
     "welcomeBackUser": "Bon retour !",
-    "loginSubtitle": "Connectez-vous pour continuer vers votre tableau de bord",
+    "loginSubtitle": "Connectez-vous pour accéder à votre tableau de bord",
     "emailPlaceholder": "Entrez votre e-mail",
     "passwordPlaceholder": "Entrez votre mot de passe",
     "success": "Succès !",
-    "or": "Ou",
     "registerNow": "S'inscrire maintenant",
     "rateLimitTitle": "Trop de tentatives",
-    "rateLimitMessage": "Vous avez dépassé le nombre maximum de tentatives de connexion. Veuillez patienter 15 minutes avant de réessayer.",
+    "rateLimitMessage": "Vous avez dépassé le nombre maximum de tentatives de connexion. Veuillez attendre 15 minutes avant de réessayer.",
     "rateLimited": "Trop de tentatives",
-    "pleaseWait15Minutes": "Veuillez patienter 15 minutes avant de réessayer",
-    "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe",
-    "clearEmail": "Effacer l'e-mail",
+    "pleaseWait15Minutes": "Veuillez attendre 15 minutes avant de réessayer",
     "fullName": "Nom complet",
     "phoneOptional": "Numéro de téléphone (Optionnel)",
-    "farmType": "Type d'exploitation",
-    "farmType_small": "Petite exploitation",
-    "farmType_commercial": "Exploitation commerciale",
+    "farmType": "Type de ferme",
+    "farmType_small": "Petite ferme",
+    "farmType_commercial": "Ferme commerciale",
     "farmType_cooperative": "Coopérative",
     "areaHectares": "Surface à couvrir (ha)",
     "region": "Pays / Région",
-    "registerSubtitle": "Parlez-nous de votre exploitation et nous configurerons votre espace de travail",
-    "requestAccess": "Demander l'accès",
-    "invalidEmail": "Veuillez entrer une adresse e-mail valide",
+    "registerSubtitle": "Parlez-nous de votre ferme et nous préparerons votre espace",
+    "requestAccess": "Contactez un expert",
+    "invalidEmail": "Veuillez entrer une adresse email valide",
     "stepAccount": "Compte",
-    "stepFarm": "Exploitation",
-    "nextStep": "Suivant : Détails de l'exploitation",
+    "stepFarm": "Ferme",
+    "nextStep": "Suivant : Détails de la ferme",
     "back": "Retour",
     "backToHome": "Retour à l'accueil"
   },
@@ -874,67 +870,6 @@
       "noDevices": "Aucun appareil lié à cette zone.",
       "noCrops": "Aucune culture active dans cette zone."
     }
-  },
-  "auth": {
-    "login": "Connexion",
-    "logout": "Déconnexion",
-    "register": "S'inscrire",
-    "email": "E-mail",
-    "password": "Mot de passe",
-    "firstName": "Prénom",
-    "lastName": "Nom de famille",
-    "confirmPassword": "Confirmer le mot de passe",
-    "forgotPassword": "Mot de passe oublié ?",
-    "rememberMe": "Se souvenir de moi",
-    "loginButton": "Se connecter",
-    "registerButton": "S'inscrire",
-    "alreadyHaveAccount": "Vous avez déjà un compte ?",
-    "dontHaveAccount": "Vous n'avez pas de compte ?",
-    "noAccount": "Vous n'avez pas de compte ?",
-    "loginSuccess": "Connexion réussie",
-    "loginError": "Erreur de connexion",
-    "registerSuccess": "Compte créé avec succès",
-    "registerError": "Erreur lors de la création du compte",
-    "invalidCredentials": "Identifiants invalides",
-    "emailRequired": "L'e-mail est requis",
-    "passwordRequired": "Le mot de passe est requis",
-    "passwordMismatch": "Les mots de passe ne correspondent pas",
-    "weakPassword": "Mot de passe trop faible",
-    "sessionExpired": "Session expirée. Veuillez vous reconnecter",
-    "authenticationRequired": "Authentification requise",
-    "loginToViewActions": "Veuillez vous connecter pour voir les actions récentes",
-    "signingIn": "Connexion en cours...",
-    "loggingIn": "Connexion en cours...",
-    "invalidEmailFormat": "Format d'e-mail invalide",
-    "networkError": "Problème de connexion, veuillez réessayer plus tard",
-    "tooManyAttempts": "Trop de tentatives de connexion. Veuillez attendre",
-    "welcomeBack": "Bon retour",
-    "welcomeBackUser": "Bon retour !",
-    "loginSubtitle": "Connectez-vous pour accéder à votre tableau de bord",
-    "emailPlaceholder": "Entrez votre e-mail",
-    "passwordPlaceholder": "Entrez votre mot de passe",
-    "success": "Succès !",
-    "registerNow": "S'inscrire maintenant",
-    "rateLimitTitle": "Trop de tentatives",
-    "rateLimitMessage": "Vous avez dépassé le nombre maximum de tentatives de connexion. Veuillez attendre 15 minutes avant de réessayer.",
-    "rateLimited": "Trop de tentatives",
-    "pleaseWait15Minutes": "Veuillez attendre 15 minutes avant de réessayer",
-    "fullName": "Nom complet",
-    "phoneOptional": "Numéro de téléphone (Optionnel)",
-    "farmType": "Type de ferme",
-    "farmType_small": "Petite ferme",
-    "farmType_commercial": "Ferme commerciale",
-    "farmType_cooperative": "Coopérative",
-    "areaHectares": "Surface à couvrir (ha)",
-    "region": "Pays / Région",
-    "registerSubtitle": "Parlez-nous de votre ferme et nous préparerons votre espace",
-    "requestAccess": "Contactez un expert",
-    "invalidEmail": "Veuillez entrer une adresse email valide",
-    "stepAccount": "Compte",
-    "stepFarm": "Ferme",
-    "nextStep": "Suivant : Détails de la ferme",
-    "back": "Retour",
-    "backToHome": "Retour à l'accueil"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -2795,6 +2730,7 @@
       "services": "Nos Services",
       "solutions": "Nos Solutions",
       "formation": "Formation",
+      "projects": "Nos Projets",
       "contact": "Contact",
       "login": "Se connecter",
       "contactExpert": "Contactez un expert",
@@ -2815,38 +2751,42 @@
     },
     "bento": {
       "label": "Nos solutions",
-      "title": "Une plateforme, toutes les clés de votre exploitation",
+      "title": "Toutes les clés de votre exploitation dans une seule plateforme",
       "intro": "De la serre connectée à l'automatisation complète, Feedin adapte chaque solution à votre réalité agricole.",
+      "ctaBand": "Commencer votre expérience intelligente",
       "cards": [
         {
-          "title": "Serres Connectées",
-          "desc": "Pilotez température, humidité et irrigation depuis une seule interface.",
-          "cta": "En savoir plus"
+          "header": "Agriculture intelligente & systèmes innovants",
+          "desc": "Pilotez vos serres connectées et maximisez chaque m² grâce à des systèmes intelligents adaptés à votre exploitation.",
+          "bullets": [
+            "Serre connectée supervisée en temps réel",
+            "Agriculture verticale & hydroponique",
+            "Monitoring CO₂, température & luminosité"
+          ],
+          "cta": "En savoir plus",
+          "ctaRoute": "/solutions#smart-farming"
         },
         {
-          "title": "Serres Verticales",
-          "desc": "Maximisez votre production sur une surface minimale, intelligemment.",
-          "cta": "En savoir plus"
+          "header": "Automatisation & autonomie des serres",
+          "desc": "Des systèmes qui apprennent, s'adaptent et agissent avant vous — pour une gestion entièrement autonome de vos cultures.",
+          "bullets": [
+            "Règles d'automatisation personnalisées",
+            "IA embarquée & machine learning",
+            "Tableau de bord centralisé & alertes"
+          ],
+          "cta": "En savoir plus",
+          "ctaRoute": "/solutions#automation"
         },
         {
-          "title": "Automatisation",
-          "desc": "Des systèmes qui s'adaptent à vos cultures et agissent avant vous.",
-          "cta": "En savoir plus"
-        },
-        {
-          "title": "Aménagement Agricole",
-          "desc": "Conception et installation clé en main de votre ferme du futur.",
-          "cta": "En savoir plus"
-        },
-        {
-          "title": "Surveillance Intelligente",
-          "desc": "Suivi en temps réel de tous vos paramètres agricoles.",
-          "cta": "En savoir plus"
-        },
-        {
-          "title": "Support Expert",
-          "desc": "Notre équipe vous accompagne à chaque étape de votre projet.",
-          "cta": "Contactez-nous"
+          "header": "Développement agricole & accompagnement",
+          "desc": "De la conception à l'exploitation, notre équipe vous accompagne avec un service clé en main et un support expert.",
+          "bullets": [
+            "Aménagement & installation sur mesure",
+            "Formation & montée en compétences",
+            "Support technique local & réactif"
+          ],
+          "cta": "Découvrir nos services",
+          "ctaRoute": "/services#development"
         }
       ]
     },
@@ -2910,26 +2850,69 @@
         }
       ],
       "integrations": {
-        "caption": "Intégrations compatibles",
         "0": "Stockage Cloud",
         "1": "Application Mobile",
         "2": "Capteurs IoT",
-        "3": "Analyses IA"
+        "3": "Analyses IA",
+        "caption": "Intégrations compatibles"
       }
     },
     "ctaFinal": {
       "title": "Prêt à propulser votre exploitation agricole ?",
       "text": "Rejoignez Feedin dès aujourd'hui et gérez vos cultures avec précision et sérénité.",
-      "primaryBtn": "Contacter un expert",
-      "btnPrimary": "Contacter un expert",
+      "primaryBtn": "Commencer votre expérience intelligente",
+      "btnPrimary": "Commencer votre expérience intelligente",
       "btnHelperText": "Notre équipe vous aide à configurer votre ferme intelligente.",
       "secondaryLink": "Découvrir le fonctionnement →",
       "tertiaryLink": "Une question ? Contactez notre équipe",
       "stats": [
-        { "label": "Projets réalisés" },
-        { "label": "Satisfaction client" },
-        { "label": "Support disponible" }
+        {
+          "value": "50%+",
+          "label": "Réduction des coûts"
+        },
+        {
+          "value": "90%+",
+          "label": "Economie d'eau"
+        },
+        {
+          "value": "150%+",
+          "label": "De productivité en culture verticale"
+        }
       ]
+    },
+    "footer": {
+      "tagline1": "Plateforme IoT de référence pour l'agriculture intelligente en Tunisie.",
+      "tagline2": "Capteurs connectés, automatisation des serres et monitoring en temps réel — conçus pour chaque agriculteur.",
+      "linksTitle": "Liens Utiles",
+      "links": {
+        "home": "Accueil",
+        "about": "À propos",
+        "services": "Services",
+        "solutions": "Solutions",
+        "formation": "Formation",
+        "contact": "Contact"
+      },
+      "newsTitle": "Actualités",
+      "news": [
+        {
+          "date": "Mars 2026",
+          "title": "Lancement de la plateforme Feedin Green v2.0"
+        },
+        {
+          "date": "Fév. 2026",
+          "title": "Nouveau partenariat avec des coopératives agricoles tunisiennes"
+        },
+        {
+          "date": "Jan. 2026",
+          "title": "Feedin Green au Salon International de l'Agriculture"
+        }
+      ],
+      "locationTitle": "Nous Trouver",
+      "addressTech": "Siège technique : Technopôle Manouba, 2010 Manouba - Tunisie",
+      "addressHQ": "Siège social : Avenue Taieb Mhiri, 5000 Monastir, Tunisie",
+      "phone": "+216 26 213 304",
+      "email": "contact@feedingreen.com",
+      "copyright": "Tous droits réservés."
     },
     "solutions": {
       "hero": {
@@ -3031,7 +3014,6 @@
             "Personnalisation totale"
           ]
         }
-
       ],
       "approach": {
         "label": "Notre différence",
@@ -3103,101 +3085,48 @@
       },
       "services": [
         {
-          "tag": "Conseil",
-          "title": "Conseil & Audit Agricole",
-          "desc": "Analyse approfondie de votre exploitation pour identifier les opportunités d'optimisation et de modernisation.",
+          "tag": "Systèmes",
+          "title": "Agriculture intelligente & systèmes",
+          "desc": "Nous concevons et déployons des solutions agricoles avancées intégrant la culture hors sol, les systèmes verticaux et les technologies intelligentes pour optimiser la production.",
           "includes": [
-            "Audit technique complet",
-            "Analyse sol & eau",
-            "Recommandations personnalisées",
-            "Plan d'action détaillé",
-            "Rapport de suivi"
+            "Serres intelligentes connectées",
+            "Culture hydroponique & hors sol",
+            "Systèmes de culture verticale",
+            "Capteurs IoT & monitoring climatique",
+            "Optimisation de rendement par data & IA"
           ],
           "benefits": [
-            "ROI optimisé",
-            "Vision claire",
-            "Plan structuré"
+            "Objectif : maximiser la productivité avec moins de ressources"
           ]
         },
         {
-          "tag": "Installation",
-          "title": "Installation & Déploiement",
-          "desc": "Installation professionnelle de tous vos équipements agricoles avec configuration et tests complets.",
+          "tag": "Automatisation",
+          "title": "Automatisation & autonomie des serres",
+          "desc": "Nous transformons les serres agricoles en systèmes autonomes grâce à l’automatisation, permettant un contrôle précis, une réduction des coûts et une meilleure efficacité.",
           "includes": [
-            "Installation sur site",
-            "Configuration systèmes",
-            "Tests & validation",
-            "Documentation technique"
+            "Automatisation de l’irrigation et fertigation",
+            "Gestion climatique automatisée",
+            "Systèmes de contrôle à distance",
+            "Énergie & autonomie (solaire, optimisation)",
+            "Solutions smart farming"
           ],
           "benefits": [
-            "Clé en main",
-            "Garantie qualité",
-            "Délais respectés"
+            "Objectif : réduire les coûts, améliorer la précision et limiter l’intervention humaine"
           ]
         },
         {
-          "tag": "Maintenance",
-          "title": "Maintenance & Support",
-          "desc": "Un support technique réactif et une maintenance préventive pour garantir la continuité de votre exploitation.",
+          "tag": "Accompagnement",
+          "title": "Développement agricole & accompagnement",
+          "desc": "Nous accompagnons les agriculteurs, entrepreneurs et institutions dans la modernisation agricole à travers des formations, du conseil et des projets de développement rural.",
           "includes": [
-            "Support 24/7",
-            "Maintenance préventive",
-            "Mises à jour système",
-            "Interventions rapides"
+            "Formations sur les technologies agricoles",
+            "Accompagnement de projets (de l’idée à l’exploitation)",
+            "Assistance technique & suivi",
+            "Programmes de développement rural",
+            "Transfert de savoir-faire"
           ],
           "benefits": [
-            "Disponibilité maximale",
-            "Tranquillité d'esprit",
-            "Experts locaux"
-          ]
-        },
-        {
-          "tag": "International",
-          "title": "Solutions Export",
-          "desc": "Accompagnement pour l'adaptation de vos cultures aux standards internationaux et marchés d'export.",
-          "includes": [
-            "Audit conformité export",
-            "Certification qualité",
-            "Suivi logistique froid",
-            "Conseil marchés cibles"
-          ],
-          "benefits": [
-            "Nouveaux marchés",
-            "Valeur ajoutée",
-            "Conformité garantie"
-          ]
-        },
-        {
-          "tag": "Écologie",
-          "title": "Régénération des Sols",
-          "desc": "Programmes avancés pour restaurer la fertilité de vos terres et optimiser l'usage des intrants naturels.",
-          "includes": [
-            "Analyse microbiologique",
-            "Plan de régénération",
-            "Suivi carbone",
-            "Conseil engrais verts"
-          ],
-          "benefits": [
-            "Sols fertiles",
-            "Moins d'intrants",
-            "Durable"
-          ]
-        },
-        {
-          "tag": "Formation",
-          "title": "Académie Feedin",
-          "desc": "Formations pratiques pour maîtriser les outils digitaux et les nouvelles techniques agronomiques.",
-          "includes": [
-            "Ateliers sur site",
-            "Webinaires experts",
-            "Support pédagogique",
-            "Certification technique",
-            "Suivi post-formation"
-          ],
-          "benefits": [
-            "Autonomie",
-            "Compétences clés",
-            "Certifié"
+            "Objectif : démocratiser l’agriculture moderne et durable"
           ]
         }
       ],
@@ -3269,8 +3198,110 @@
       "cta": {
         "title": "Prêt à démarrer votre projet ?",
         "desc": "Contactez notre équipe pour une consultation gratuite.",
-        "btn1": "Demander un devis gratuit",
+        "btn1": "Demander un devis",
         "btn2": "Nos réalisations"
+      }
+    },
+    "projects": {
+      "hero": {
+        "label": "Nos Réalisations",
+        "title1": "Cultiver ",
+        "title2": "l'Avenir de l'Agriculture",
+        "sub": "Découvrez comment Feedin Green transforme le secteur agricole avec des serres connectées, des systèmes hydroponiques et des innovations R&D en Tunisie et en Afrique.",
+        "cta1": "Explorer les Projets",
+        "cta2": "Lancer votre projet",
+        "stat1": "Projets Réalisés",
+        "stat2": "Agriculteurs Formés",
+        "stat3": "Plantes Cultivées"
+      },
+      "featured": {
+        "badge": "Projet Phare Européen",
+        "title": "Projet de R&D : Intégration UDENE",
+        "desc": "Intégration de l'outil UDENE dans notre processus de modernisation des exploitations agricoles, en collaboration avec l'Union Européenne.",
+        "r1": "Précision",
+        "r2": "Efficacité",
+        "r3": "Durabilité",
+        "cta": "Voir les détails",
+        "imgAlt": "Projet R&D UDENE"
+      },
+      "grid": {
+        "label": "Nos Projets",
+        "title": "Innovations AgTech",
+        "sub": "Des unités de recherche aux serres intelligentes pour maximiser la rentabilité.",
+        "cardCta": "Voir plus"
+      },
+      "cards": [
+        {
+          "category": "R&D",
+          "title": "Unité de Recherche et Développement",
+          "desc": "Mise en place de systèmes hydroponiques en intérieur pour optimiser les nutriments, accélérer la croissance et minimiser la consommation en eau.",
+          "tags": [
+            "Recherche",
+            "Hydroponie",
+            "Indoor"
+          ]
+        },
+        {
+          "category": "Déploiement",
+          "title": "Serres intelligents 6x60 m²",
+          "desc": "Développement et installation de serres connectées à grande échelle (360m²) avec une gestion climatique automatisée et suivi en temps réel.",
+          "tags": [
+            "Serre Intelligente",
+            "Automatisation",
+            "Rendement"
+          ]
+        },
+        {
+          "category": "Logiciel",
+          "title": "Dashboard de Supervision Agricole",
+          "desc": "Plateforme IoT centralisée pour suivre l'humidité du sol, la fertigation et l'état des cultures depuis une interface unique.",
+          "tags": [
+            "Supervision",
+            "Data",
+            "IoT"
+          ]
+        }
+      ],
+      "process": {
+        "label": "Notre Méthode",
+        "title": "Comment nous opérons",
+        "steps": [
+          {
+            "title": "Étude",
+            "desc": "Diagnostic agronomique"
+          },
+          {
+            "title": "Conception",
+            "desc": "Plans & Architecture"
+          },
+          {
+            "title": "Déploiement",
+            "desc": "Installation sur site"
+          },
+          {
+            "title": "Automatisation",
+            "desc": "Lancement IoT"
+          },
+          {
+            "title": "Suivi",
+            "desc": "Monitoring continu"
+          }
+        ]
+      },
+      "testimonial": {
+        "quote": "Ces projets de modernisation ont radicalement changé notre approche de l'agriculture, alliant technologie et respect des ressources.",
+        "name": "Union Européenne",
+        "role": "Partenaire Projet UDENE"
+      },
+      "cta": {
+        "title": "Prêt à transformer votre exploitation ?",
+        "desc": "Rejoignez la révolution de l'agriculture intelligente.",
+        "btn1": "Contactez-nous",
+        "btn2": "Nos Services"
+      },
+      "soon": {
+        "title": "Encore Plus d'Innovations à Venir...",
+        "desc": "Restez à l'écoute ! Nous travaillons sur plusieurs projets révolutionnaires dans le domaine de la technologie agricole qui vont redéfinir notre secteur."
       }
     },
     "formation": {
@@ -3408,6 +3439,41 @@
         "desc": "Contactez-nous pour organiser une session de formation adaptée à votre calendrier et vos besoins.",
         "btn1": "Réserver une formation",
         "btn2": "Voir nos services"
+      },
+      "drawer": {
+        "title": "Réserver une formation",
+        "step": "Étape",
+        "of": "sur",
+        "step1Title": "Vos coordonnées",
+        "step1Sub": "Dites-nous qui vous êtes",
+        "step2Title": "Votre projet",
+        "step2Sub": "Aidez-nous à préparer votre formation",
+        "fullName": "Nom complet",
+        "fullNamePl": "Votre nom complet",
+        "email": "Email",
+        "emailPl": "votre@email.com",
+        "phone": "Téléphone",
+        "phonePl": "+216 XX XXX XXX",
+        "trainingType": "Formation souhaitée",
+        "trainingTypePl": "Sélectionnez une formation",
+        "training1": "Niveau 1 — Agriculture Connectée",
+        "training2": "Niveau 2 — Gestion de Serre Intelligente",
+        "training3": "Niveau 3 — Administration & Techniques Avancées",
+        "farmSize": "Surface (hectares)",
+        "farmSizePl": "ex: 5.5",
+        "region": "Région",
+        "regionPl": "ex: Tunis, Tunisie",
+        "message": "Message ou précisions",
+        "messagePl": "Décrivez vos attentes, vos besoins spécifiques...",
+        "next": "Suivant",
+        "back": "Retour",
+        "submit": "Envoyer la demande",
+        "sending": "Envoi en cours...",
+        "required": "Ce champ est requis",
+        "emailInvalid": "Email invalide",
+        "successTitle": "Demande envoyée !",
+        "successSub": "Notre équipe vous contactera sous 24h pour organiser votre formation.",
+        "successClose": "Fermer"
       }
     },
     "about": {
@@ -3420,27 +3486,28 @@
       "who": {
         "label": "Qui sommes-nous",
         "title": "Une entreprise née du terrain",
-        "content": "<p>Feedin a été fondée par des passionnés d'agriculture et de technologie avec une conviction : la technologie doit servir ceux qui cultivent. Nous concevons, fabriquons et installons des solutions agricoles intelligentes adaptées aux réalités tunisiennes.</p><p>Notre équipe concilie la précision de l'IoT avec les contraintes du terrain pour proposer des outils simples, robustes et efficaces.</p>"
+        "content": "<p>FEED IN GREEN est une entreprise spécialisée dans les solutions Agritech intelligentes et l'agriculture connectée.</p><p>Nous accompagnons les agriculteurs, entrepreneurs, entreprises et collectivités dans la conception et le déploiement de projets agricoles innovants, durables et performants.</p><p>Notre approche repose sur la combinaison de technologies avancées, de l'ingénierie agricole et d'un accompagnement terrain adapté aux réalités locales et urbaines.</p>"
       },
       "stats": [
-        "Exploitations équipées",
-        "Capteurs actifs",
-        "Années de R&D",
-        "Satisfaction client"
+        "Projets agricoles déployés",
+        "Hectares optimisés",
+        "Partenaires de confiance",
+        "Taux de satisfaction"
       ],
       "mv": {
         "mission": {
           "title": "Notre Mission",
-          "content": "<p>Démocratiser l'agriculture connectée en proposant des solutions technologiques accessibles et robustes qui permettent à chaque agriculteur d'optimiser ses ressources et d'améliorer ses rendements tout en préservant l'environnement.</p>"
+          "content": "<p>Concevoir et déployer des solutions agritech intelligentes permettant d'optimiser la production agricole, de réduire l'utilisation des ressources et de favoriser une agriculture durable et résiliente.</p><p>FEED IN GREEN s'engage à proposer des solutions accessibles, efficaces et évolutives, répondant aux enjeux actuels de sécurité alimentaire, de changement climatique et d'urbanisation croissante.</p>"
         },
         "vision": {
           "title": "Notre Vision",
-          "desc": "Être le leader tunisien et africain de la technologie agricole d'ici 2030, en contribuant à une agriculture plus résiliente, productive et durable.",
+          "desc": "Devenir un acteur de référence de l'agriculture intelligente et de l'urban farming, en contribuant activement à la transformation durable des systèmes agricoles.",
+          "intro": "Nous croyons en une agriculture :",
           "list": [
-            "Expansion régionale",
-            "Innovation continue",
-            "Impact social",
-            "Agriculture durable"
+            "Pilotée par la donnée",
+            "Respectueuse de l'environnement",
+            "Intégrée aux espaces urbains",
+            "Créatrice de valeur économique et sociale"
           ]
         }
       },
@@ -3450,32 +3517,74 @@
         "sub": "Une méthodologie orientée vers le concret et le durable."
       },
       "steps": [
-        { "title": "Diagnostic & Audit", "desc": "Nous analysons vos besoins spécifiques sur place." },
-        { "title": "Solution sur Mesure", "desc": "Nous concevons une configuration adaptée à votre exploitation." },
-        { "title": "Installation Terrain", "desc": "Nos techniciens déploient le matériel et testent la connectivité." },
-        { "title": "Formation & Support", "desc": "Nous formons vos équipes pour une autonomie complète." }
+        {
+          "title": "Diagnostic & Audit",
+          "desc": "Nous analysons vos besoins spécifiques sur place."
+        },
+        {
+          "title": "Solution sur Mesure",
+          "desc": "Nous concevons une configuration adaptée à votre exploitation."
+        },
+        {
+          "title": "Installation Terrain",
+          "desc": "Nos techniciens déploient le matériel et testent la connectivité."
+        },
+        {
+          "title": "Formation & Support",
+          "desc": "Nous formons vos équipes pour une autonomie complète."
+        }
       ],
       "values": {
         "label": "Nos valeurs",
         "title": "Ce qui nous anime"
       },
       "valuesItem": [
-        { "title": "Innovation", "desc": "Construire les outils de demain pour les agriculteurs d'aujourd'hui." },
-        { "title": "Durabilité", "desc": "Préserver les ressources pour les générations futures." },
-        { "title": "Proximité", "desc": "Être toujours à l'écoute de nos clients sur le terrain." },
-        { "title": "Fiabilité", "desc": "Du matériel robuste qui résiste à l'épreuve du temps." }
+        {
+          "title": "Innovation",
+          "desc": "Construire les outils de demain pour les agriculteurs d'aujourd'hui."
+        },
+        {
+          "title": "Durabilité",
+          "desc": "Préserver les ressources pour les générations futures."
+        },
+        {
+          "title": "Proximité",
+          "desc": "Être toujours à l'écoute de nos clients sur le terrain."
+        },
+        {
+          "title": "Fiabilité",
+          "desc": "Du matériel robuste qui résiste à l'épreuve du temps."
+        }
       ],
       "expertise": {
         "label": "Expertise",
         "title": "Notre expertise domaine"
       },
       "expertiseItems": [
-        "Systèmes Embarqués & IoT",
-        "Gestion Intelligente de l'Irrigation",
-        "Analyse de Données de Précision",
-        "Solutions d'Agriculture Verticale",
-        "Énergie Renouvelable en Agriculture",
-        "Fabrication de Matériel sur Mesure"
+        {
+          "title": "Systèmes Embarqués & IoT",
+          "desc": "Conception de capteurs et d'objets connectés robustes et durables pour les champs et les serres."
+        },
+        {
+          "title": "Gestion Intelligente de l'Irrigation",
+          "desc": "Optimisation des ressources en eau par un contrôle automatisé et analysé en temps réel."
+        },
+        {
+          "title": "Analyse de Données de Précision",
+          "desc": "Transformation des données collectées en recommandations exploitables directement sur notre plateforme."
+        },
+        {
+          "title": "Solutions d'Agriculture Verticale",
+          "desc": "Aménagement et automatisation d'installations hors-sol pour une productivité maximisée."
+        },
+        {
+          "title": "Énergie Renouvelable en Agriculture",
+          "desc": "Intégration d'énergies propres pour des exploitations plus autonomes et éco-responsables."
+        },
+        {
+          "title": "Fabrication de Matériel sur Mesure",
+          "desc": "Développement mécanique et électronique d'outils adaptés aux besoins spécifiques de chaque agriculteur."
+        }
       ],
       "target": {
         "label": "Cible",
@@ -3507,10 +3616,22 @@
         "Accompagnement terrain"
       ],
       "channels": [
-        { "label": "Email", "note": "Réponse sous 24h" },
-        { "label": "Téléphone", "note": "Lun - Ven, 08h - 18h" },
-        { "label": "WhatsApp", "note": "Support direct & rapide" },
-        { "label": "Bureaux", "note": "Venez nous rencontrer" }
+        {
+          "label": "Email",
+          "note": "Réponse sous 24h"
+        },
+        {
+          "label": "Téléphone",
+          "note": "Lun - Ven, 08h - 18h"
+        },
+        {
+          "label": "WhatsApp",
+          "note": "Support direct & rapide"
+        },
+        {
+          "label": "Bureaux",
+          "note": "Venez nous rencontrer"
+        }
       ],
       "info": {
         "title": "Nos coordonnées",
@@ -3527,14 +3648,14 @@
         "WhatsApp"
       ],
       "projects": {
-        "title": "Types de projets"
+        "title": "Types de besoins"
       },
       "projectsItems": [
         "Serres connectées & intelligentes",
         "Agriculture verticale & hydroponie",
         "Automatisation & monitoring",
         "Formation & conseil technique",
-        "Audit & étude de faisabilité"
+        "Diagnostic & étude de faisabilité"
       ],
       "sw": {
         "write": "Écrire un message",
@@ -3551,7 +3672,7 @@
         "emailPl": "votre@email.com",
         "phone": "Téléphone",
         "phonePl": "+216 XX XXX XXX",
-        "type": "Type de projet",
+        "type": "Type de besoin",
         "typePl": "Sélectionnez un type",
         "type1": "Serre connectée",
         "type2": "Agriculture verticale",
@@ -3604,7 +3725,7 @@
       "locations": [
         {
           "title": "Siège social",
-          "desc": "Monastir"
+          "desc": "Avenue Taieb Mhiri, 5000 Monastir, Tunisie"
         },
         {
           "title": "Siège technique",

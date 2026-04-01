@@ -3,13 +3,15 @@
 
 <head>
   <meta charset="utf-8">
-  <title>FEEDIN</title>
+  <title>Feedin Green — Plateforme Agricole Intelligente</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description"
-    content="FEEDIN - Monitor and manage your agricultural operations with IoT sensors and real-time data.">
-  <meta name="keywords" content="feedin, agriculture, IoT, sensors, farming, management">
-  <meta name="author" content="FEEDIN Team">
+    content="Feedin Green : plateforme IoT pour l'agriculture intelligente en Tunisie. Capteurs connectés, gestion des cultures, monitoring en temps réel et automatisation des serres.">
+  <meta name="keywords"
+    content="feedin, feedin green, feed in, smart farm, agriculture, agriculture tunisie, agriculture intelligente, IoT agricole, capteurs agricoles, serre connectée, gestion exploitation agricole, monitoring cultures, agriculture de précision, ferme intelligente, agritech tunisie">
+  <meta name="author" content="Feedin Green">
+  <link rel="canonical" href="https://feedingreen.com/">
 
   <!-- Favicons - Updated from favicon-package -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -25,7 +27,7 @@
 
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' http://localhost:3000 ws://localhost:3000 https://feedingreen.com https://www.feedingreen.com https://feedin-agri-production.up.railway.app wss://feedin-agri-production.up.railway.app https://*.railway.app wss://*.railway.app https://api.openweathermap.org https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src 'self' blob:; worker-src 'self' blob:;">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' http://localhost:3000 ws://localhost:3000 https://feedingreen.com https://www.feedingreen.com https://feedin-agri-production.up.railway.app wss://feedin-agri-production.up.railway.app https://*.railway.app wss://*.railway.app https://api.openweathermap.org https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src 'self' blob:; worker-src 'self' blob:; frame-src 'self' https://www.google.com;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -51,11 +53,11 @@
 
   <!-- Google Fonts — optimized: load only Inter + Poppins initially, Roboto lazy -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;600;800&family=Cairo:wght@400;600;800&display=swap"
     rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;600;800&family=Cairo:wght@400;600;800&display=swap"
       rel="stylesheet">
   </noscript>
 
@@ -89,6 +91,16 @@
       rel="stylesheet">
   </noscript>
 
+  <!-- Cormorant Garamond — login V2 editorial serif headline -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,300;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,600;9..40,700&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,300;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,600;9..40,700&display=swap"
+      rel="stylesheet">
+  </noscript>
+
   <!-- Leaflet CSS — REMOVED from index.html. Loaded dynamically in map components only. -->
 
   <!-- PWA Meta Tags -->
@@ -98,19 +110,23 @@
   <meta name="apple-mobile-web-app-title" content="FEEDIN">
 
   <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="FEEDIN">
+  <meta property="og:title" content="Feedin Green — Plateforme Agricole Intelligente">
   <meta property="og:description"
-    content="Monitor and manage your agricultural operations with IoT sensors and real-time data.">
+    content="Feedin Green : plateforme IoT pour l'agriculture intelligente en Tunisie. Capteurs connectés, gestion des cultures et monitoring en temps réel.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://your-domain.com">
-  <meta property="og:image" content="https://your-domain.com/assets/og-image.png">
+  <meta property="og:url" content="https://feedingreen.com/">
+  <meta property="og:image" content="https://feedingreen.com/assets/images/logos/Feedin_pnglogo.webp">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="ar_TN">
+  <meta property="og:site_name" content="Feedin Green">
 
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="FEEDIN">
+  <meta name="twitter:title" content="Feedin Green — Plateforme Agricole Intelligente">
   <meta name="twitter:description"
-    content="Monitor and manage your agricultural operations with IoT sensors and real-time data.">
-  <meta name="twitter:image" content="https://your-domain.com/assets/twitter-image.png">
+    content="Feedin Green : plateforme IoT pour l'agriculture intelligente en Tunisie. Capteurs connectés, gestion des cultures et monitoring en temps réel.">
+  <meta name="twitter:image" content="https://feedingreen.com/assets/images/logos/Feedin_pnglogo.webp">
 
 </head>
 
