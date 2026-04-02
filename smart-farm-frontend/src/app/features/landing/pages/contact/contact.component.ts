@@ -10,6 +10,7 @@ import { RegisterRequest, UserRole, UserStatus } from '../../../../core/models/u
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 import { SeoService } from '../../../../core/services/seo.service';
 import { LeadsService } from '../../../../core/services/leads.service';
+import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
 
 interface ContactForm {
   firstName: string;
@@ -1680,6 +1681,7 @@ export class ContactComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private seoService = inject(SeoService);
+  private toastService = inject(ToastNotificationService);
 
   heroBadges = [
     { icon: 'bolt', text: 'landing.contact.badges.0' },
@@ -1846,6 +1848,7 @@ export class ContactComponent implements OnInit {
       !this.form.projectType ||
       !this.form.message
     ) {
+      this.toastService.warning('landing.contact.form.req');
       return;
     }
 
@@ -1864,11 +1867,13 @@ export class ContactComponent implements OnInit {
         next: () => {
           this.sending.set(false);
           this.sent.set(true);
+          this.toastService.success('landing.contact.form.sentTitle');
         },
         error: () => {
           this.sending.set(false);
           // Fallback: still show success to user (graceful degradation)
           this.sent.set(true);
+          this.toastService.success('landing.contact.form.sentTitle');
         },
       });
   }
@@ -1885,11 +1890,13 @@ export class ContactComponent implements OnInit {
       !this.regForm.area ||
       !this.regForm.region
     ) {
+      this.toastService.warning('landing.contact.reg.req');
       return;
     }
 
     if (this.regForm.password.length < 6) {
       this.regError.set('landing.contact.reg.pwdErr2');
+      this.toastService.warning('landing.contact.reg.pwdErr2');
       return;
     }
 
@@ -1915,6 +1922,7 @@ export class ContactComponent implements OnInit {
     this.authService.register(registrationData).subscribe({
       next: () => {
         this.regSending.set(false);
+        this.toastService.success('landing.contact.reg.success');
         // AuthService internally handles redirect to /onboarding/pending
       },
       error: (error) => {
@@ -1928,6 +1936,7 @@ export class ContactComponent implements OnInit {
           errorMessage = error.message;
         }
         this.regError.set(errorMessage);
+        this.toastService.error(errorMessage);
       },
     });
   }

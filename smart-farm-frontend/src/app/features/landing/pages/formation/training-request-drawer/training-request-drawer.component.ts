@@ -22,6 +22,7 @@ import {
 } from '@angular/forms';
 import { TranslatePipe } from '../../../../../core/pipes/translate.pipe';
 import { LeadsService } from '../../../../../core/services/leads.service';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 /**
  * Premium hybrid Training Request Drawer component.
@@ -840,6 +841,7 @@ export class TrainingRequestDrawerComponent implements OnChanges, AfterViewInit 
   private fb = inject(FormBuilder);
   private leadsService = inject(LeadsService);
   private elRef = inject(ElementRef);
+  private toastService = inject(ToastNotificationService);
 
   currentStep = signal<1 | 2>(1);
   sending = signal(false);
@@ -956,7 +958,10 @@ export class TrainingRequestDrawerComponent implements OnChanges, AfterViewInit 
   /** Submit the form to the backend */
   submit(): void {
     this.submitted.set(true);
-    if (!this.isStep2Valid()) return;
+    if (!this.isStep2Valid()) {
+      this.toastService.warning('landing.formation.drawer.required');
+      return;
+    }
 
     this.sending.set(true);
     const v = this.form.value;
@@ -975,11 +980,13 @@ export class TrainingRequestDrawerComponent implements OnChanges, AfterViewInit 
         next: () => {
           this.sending.set(false);
           this.success.set(true);
+          this.toastService.success('landing.formation.drawer.successTitle');
         },
         error: () => {
           this.sending.set(false);
           // Graceful degradation — show success anyway
           this.success.set(true);
+          this.toastService.success('landing.formation.drawer.successTitle');
         },
       });
   }

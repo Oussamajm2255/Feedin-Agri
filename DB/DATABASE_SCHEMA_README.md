@@ -55,6 +55,7 @@ This is a production-ready PostgreSQL schema designed for long-term stability an
 | 11 | **system_settings** | Global system configuration |
 | 12 | **migrations** | Migration tracking |
 | 13 | **audit_logs** | Comprehensive audit trail |
+| 14 | **contact_messages** | Landing page contact form submissions (Pro-Lead CRM pipeline) |
 
 ### 🔧 Enum Types
 
@@ -64,6 +65,8 @@ This is a production-ready PostgreSQL schema designed for long-term stability an
 | `user_status_enum` | active, inactive, suspended | users.status |
 | `action_status_enum` | queued, sent, ack, error, timeout, failed | action_logs.status |
 | `farm_status_enum` | active, inactive | farms.status |
+| `contact_status_enum` | new, read, replied, archived | contact_messages.status |
+| `contact_project_type_enum` | serre-connectee, serre-verticale, automatisation, amenagement, formation, etude, autre | contact_messages.project_type |
 
 ---
 
@@ -596,6 +599,7 @@ For issues or questions:
 
 ## Version History
 
+- **v4.1** (2026-03-14): Added contact_messages table for Pro-Lead CRM pipeline (Hybrid approach: DB + WebSocket + Email)
 - **v4.0** (2025-12-26): Complete backend entity match with system_settings, farm_moderators, extended farms metadata
 - **v3.0** (2025-01-14): Ultimate production schema with all best practices
 - **v2.0**: Enhanced schema with materialized views and utility functions
