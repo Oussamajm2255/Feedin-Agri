@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-  signal, computed, inject, DestroyRef
+  signal, computed, inject, DestroyRef, ElementRef, AfterViewInit, HostListener
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -22,13 +22,15 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData, ChartType, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartType, ChartOptions, Plugin } from 'chart.js';
 import { forkJoin, catchError, of, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AdminApiService } from '../../admin/core/services/admin-api.service';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { LanguageService } from '../../core/services/language.service';
 import { User, UserRole } from '../../core/models/user.model';
 import { Farm, Device, Sensor, SensorReading, DeviceStatus } from '../../core/models/farm.model';
 import { ExportButtonComponent } from '../../shared/components/export-button/export-button.component';
@@ -45,6 +47,7 @@ type SortDirection = 'asc' | 'desc';
 interface AnalyticsKPI {
   label: string;
   value: number | string;
+  rawValue: number;
   icon: string;
   subtitle: string;
   trend: number | null;
@@ -53,6 +56,7 @@ interface AnalyticsKPI {
   trendArrow: string;
   performanceClass: string;
   unit?: string;
+  sparklineData?: number[];
 }
 
 interface SensorGroup {
@@ -80,6 +84,7 @@ interface SensorWithReadings extends Sensor {
   farmName?: string;
   ownerName?: string;
   deviceName?: string;
+  sparklineData?: number[];
 }
 
 interface FarmComparison {
@@ -104,6 +109,97 @@ interface AnomalyRecord {
   timestamp: Date;
   deviceName: string;
 }
+
+// ─── Animated Counter Helper ─────────────────────────────────────────────────
+function animateCounter(
+  element: HTMLElement,
+  target: number,
+  duration: number = 800,
+  prefix: string = '',
+  suffix: string = ''
+): void {
+  const start = 0;
+  const startTime = performance.now();
+
+  function update(currentTime: number): void {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (target - start) * eased);
+    element.textContent = prefix + current.toLocaleString() + suffix;
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+  requestAnimationFrame(update);
+}
+
+// ─── Chart Plugins ───────────────────────────────────────────────────────────
+
+// Crosshair plugin for line charts
+const crosshairPlugin: Plugin = {
+  id: 'crosshair',
+  afterDraw(chart: any) {
+    if (chart._active && chart._active.length) {
+      const activePoint = chart._active[0];
+      const { ctx } = chart;
+      const x = activePoint.element.x;
+      const topY = chart.scales.y.top;
+      const bottomY = chart.scales.y.bottom;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, topY);
+      ctx.lineTo(x, bottomY);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(100, 116, 139, 0.25)';
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+};
+
+// Threshold line plugin for sensor detail chart
+const thresholdPlugin: (thresholds: { warning?: number; critical?: number }) => Plugin =
+  (thresholds) => ({
+    id: 'thresholdLines',
+    afterDraw(chart: any) {
+      const { ctx, scales } = chart;
+      if (!scales.y) return;
+
+      ctx.save();
+      ctx.setLineDash([6, 4]);
+      ctx.lineWidth = 1.5;
+
+      if (thresholds.critical !== undefined) {
+        const y = scales.y.getPixelForValue(thresholds.critical);
+        ctx.beginPath();
+        ctx.moveTo(scales.x.left, y);
+        ctx.lineTo(scales.x.right, y);
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+        ctx.font = '11px Inter';
+        ctx.fillText(`Critical: ${thresholds.critical}`, scales.x.right - 90, y - 6);
+      }
+
+      if (thresholds.warning !== undefined) {
+        const y = scales.y.getPixelForValue(thresholds.warning);
+        ctx.beginPath();
+        ctx.moveTo(scales.x.left, y);
+        ctx.lineTo(scales.x.right, y);
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.8)';
+        ctx.font = '11px Inter';
+        ctx.fillText(`Warning: ${thresholds.warning}`, scales.x.right - 85, y - 6);
+      }
+
+      ctx.restore();
+    }
+  });
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
@@ -139,11 +235,15 @@ interface AnomalyRecord {
   styleUrl: './sensor-analytics.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SensorAnalyticsComponent implements OnInit, OnDestroy {
+export class SensorAnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly adminApiService = inject(AdminApiService);
   private readonly apiService = inject(ApiService);
   private readonly authService = inject(AuthService);
+  private readonly languageService = inject(LanguageService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly elementRef = inject(ElementRef);
 
   // ─── Role-Based Access ─────────────────────────────────────────────────
   isAdmin = computed(() => this.authService.user()?.role === UserRole.ADMIN);
@@ -171,6 +271,10 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
   isDrawerOpen = signal(false);
   liveMode = signal(false);
 
+  // KPI animation state
+  animatedKpiValues = signal<Map<string, number>>(new Map());
+  kpiAnimationComplete = signal(false);
+
   // ─── Data Signals ───────────────────────────────────────────────────────
   farms = signal<Farm[]>([]);
   devices = signal<Device[]>([]);
@@ -181,6 +285,28 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
 
   searchControl = new FormControl('');
   private liveInterval: any = null;
+  private kpiAnimationTimeout: any = null;
+
+  // ─── Ordered sensor list for drawer navigation ──────────────────────────
+  orderedSensorIds = computed(() => {
+    return this.filteredSensors().map(s => s.sensor_id);
+  });
+
+  // ─── Previous/Next sensor for drawer ────────────────────────────────────
+  currentSensorIndex = computed(() => {
+    const id = this.selectedSensorId();
+    if (!id) return -1;
+    return this.orderedSensorIds().indexOf(id);
+  });
+
+  hasPreviousSensor = computed(() => this.currentSensorIndex() > 0);
+  hasNextSensor = computed(() => {
+    const idx = this.currentSensorIndex();
+    return idx >= 0 && idx < this.orderedSensorIds().length - 1;
+  });
+
+  // ─── Reduced motion preference ──────────────────────────────────────────
+  prefersReducedMotion = signal(false);
 
   // ─── Computed: Available Farmers ─────────────────────────────────────────
   availableFarmers = computed(() => {
@@ -247,12 +373,10 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     const search = this.searchQuery().toLowerCase().trim();
     const anomaliesOnly = this.showAnomaliesOnly();
 
-    // Filter by farm
     if (farmIds.length > 0) {
       sensorList = sensorList.filter(s => farmIds.includes(s.farm_id));
     }
 
-    // Filter by farmer
     if (farmerIds.length > 0) {
       const farmerFarmIds = this.farms()
         .filter(f => farmerIds.includes(f.owner_id))
@@ -260,12 +384,10 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
       sensorList = sensorList.filter(s => farmerFarmIds.includes(s.farm_id));
     }
 
-    // Filter by sensor type
     if (sensorTypes.length > 0) {
       sensorList = sensorList.filter(s => sensorTypes.includes(s.type));
     }
 
-    // Filter by search
     if (search) {
       sensorList = sensorList.filter(s =>
         s.sensor_id.toLowerCase().includes(search) ||
@@ -276,7 +398,6 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Filter anomalies only
     if (anomaliesOnly) {
       sensorList = sensorList.filter(s =>
         s.status === 'warning' || s.status === 'critical'
@@ -286,7 +407,7 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     return sensorList;
   });
 
-  // ─── Computed: Sensors with Reading Aggregates ──────────────────────────
+  // ─── Computed: Sensors with Reading Aggregates + Sparklines ─────────────
   sensorsWithReadings = computed<SensorWithReadings[]>(() => {
     const allSensors = this.sensors();
     const allReadings = this.readings();
@@ -295,7 +416,10 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     const users = this.users();
 
     return allSensors.map(sensor => {
-      const sensorReadings = allReadings.filter(r => r.sensor_id === sensor.sensor_id);
+      const sensorReadings = allReadings
+        .filter(r => r.sensor_id === sensor.sensor_id)
+        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
       const values = sensorReadings
         .map(r => r.value1)
         .filter((v): v is number => v !== undefined && v !== null);
@@ -318,7 +442,9 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
       const min = values.length > 0 ? Math.min(...values) : 0;
       const max = values.length > 0 ? Math.max(...values) : 0;
 
-      // Determine sensor health status
+      // Sparkline: last 12 readings for mini chart
+      const sparklineData = values.slice(-12);
+
       let status: 'normal' | 'warning' | 'critical' | 'offline' = 'normal';
       if (!latestReading) {
         status = 'offline';
@@ -348,7 +474,8 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         status,
         farmName: farm?.name || 'Unknown Farm',
         ownerName: owner ? `${owner.first_name} ${owner.last_name}` : 'Unknown',
-        deviceName: device?.name || sensor.device_id
+        deviceName: device?.name || sensor.device_id,
+        sparklineData
       };
     });
   });
@@ -397,7 +524,7 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     }).sort((a, b) => a.farmName.localeCompare(b.farmName));
   });
 
-  // ─── Computed: KPI Cards ────────────────────────────────────────────────
+  // ─── Computed: KPI Cards with Sparklines ────────────────────────────────
   kpiCards = computed<AnalyticsKPI[]>(() => {
     const sensors = this.filteredSensors();
     const readings = this.readings();
@@ -414,32 +541,54 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
       ? Math.round((activeSensors / totalSensors) * 100)
       : 0;
 
+    // Generate sparkline data from readings grouped by time buckets
+    const generateSparkline = (data: number[], points: number = 8): number[] => {
+      if (data.length === 0) return Array(points).fill(0);
+      const chunkSize = Math.max(1, Math.floor(data.length / points));
+      const result: number[] = [];
+      for (let i = 0; i < points; i++) {
+        const start = i * chunkSize;
+        const chunk = data.slice(start, start + chunkSize);
+        result.push(chunk.length > 0 ? chunk.reduce((a, b) => a + b, 0) / chunk.length : 0);
+      }
+      return result;
+    };
+
+    const allValues = readings.map(r => r.value1).filter((v): v is number => v !== null && v !== undefined);
+
     return [
       {
         label: 'Total Sensors',
         value: totalSensors,
+        rawValue: totalSensors,
         icon: 'sensors',
         subtitle: `${activeSensors} active`,
         trend: null,
         trendDirection: 'flat',
         trendColor: 'neutral',
         trendArrow: '→',
-        performanceClass: 'perf-neutral'
+        performanceClass: 'perf-neutral',
+        sparklineData: generateSparkline(
+          sensors.map(s => s.readingCount || 0)
+        )
       },
       {
         label: 'Total Readings',
         value: this.formatLargeNumber(totalReadings),
+        rawValue: totalReadings,
         icon: 'analytics',
         subtitle: `In selected period`,
         trend: null,
         trendDirection: 'flat',
         trendColor: 'neutral',
         trendArrow: '→',
-        performanceClass: 'perf-neutral'
+        performanceClass: 'perf-neutral',
+        sparklineData: generateSparkline(allValues)
       },
       {
         label: 'Sensor Uptime',
         value: `${uptimePercent}%`,
+        rawValue: uptimePercent,
         icon: 'speed',
         subtitle: `${totalSensors - activeSensors} offline`,
         trend: uptimePercent,
@@ -447,11 +596,13 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         trendColor: uptimePercent >= 80 ? 'success' : uptimePercent >= 50 ? 'neutral' : 'danger',
         trendArrow: uptimePercent >= 80 ? '↑' : uptimePercent >= 50 ? '→' : '↓',
         performanceClass: uptimePercent >= 80 ? 'perf-high' : uptimePercent >= 50 ? 'perf-medium' : 'perf-low',
-        unit: '%'
+        unit: '%',
+        sparklineData: [uptimePercent]
       },
       {
         label: 'Anomalies',
         value: anomalies.length,
+        rawValue: anomalies.length,
         icon: 'warning',
         subtitle: `${anomalies.filter(a => a.status === 'critical').length} critical`,
         trend: anomalies.length > 0 ? anomalies.length : null,
@@ -459,29 +610,40 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         trendColor: anomalies.length === 0 ? 'success' : 'danger',
         trendArrow: anomalies.length === 0 ? '→' : '↑',
         performanceClass: anomalies.length === 0 ? 'perf-high' :
-                          anomalies.length <= 3 ? 'perf-medium' : 'perf-critical'
+                          anomalies.length <= 3 ? 'perf-medium' : 'perf-critical',
+        sparklineData: generateSparkline(
+          anomalies.map(a => a.status === 'critical' ? 2 : 1)
+        )
       },
       {
         label: 'Avg Reading',
         value: Math.round(avgValue * 100) / 100,
+        rawValue: Math.round(avgValue * 100) / 100,
         icon: 'equalizer',
         subtitle: this.isAdmin() ? 'Across all sensors' : 'Across your sensors',
         trend: null,
         trendDirection: 'flat',
         trendColor: 'neutral',
         trendArrow: '→',
-        performanceClass: 'perf-neutral'
+        performanceClass: 'perf-neutral',
+        sparklineData: generateSparkline(
+          sensors.map(s => s.averageValue || 0)
+        )
       },
       {
         label: this.isAdmin() ? 'Active Farms' : 'Your Farms',
         value: new Set(sensors.map(s => s.farm_id)).size,
+        rawValue: new Set(sensors.map(s => s.farm_id)).size,
         icon: 'agriculture',
         subtitle: 'With sensor data',
         trend: null,
         trendDirection: 'flat',
         trendColor: 'neutral',
         trendArrow: '→',
-        performanceClass: 'perf-neutral'
+        performanceClass: 'perf-neutral',
+        sparklineData: generateSparkline(
+          Array.from(new Set(sensors.map(s => s.farm_id))).map(() => 1)
+        )
       }
     ];
   });
@@ -538,7 +700,6 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
 
   // ─── Chart Configurations ───────────────────────────────────────────────
 
-  // Time-series line chart
   lineChartType: ChartType = 'line';
   lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -554,37 +715,43 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         labels: {
           usePointStyle: true,
           padding: 16,
-          font: { size: 12, family: "'Inter', sans-serif" }
+          font: { size: 12, family: "'Inter', sans-serif" },
+          color: '#64748b'
         }
       },
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(15, 23, 42, 0.9)',
-        titleFont: { size: 13, family: "'Inter', sans-serif" },
+        backgroundColor: 'rgba(15, 23, 42, 0.92)',
+        titleFont: { size: 13, family: "'Inter', sans-serif", weight: '600' },
         bodyFont: { size: 12, family: "'Inter', sans-serif" },
-        padding: 12,
-        cornerRadius: 8
+        padding: 14,
+        cornerRadius: 10,
+        displayColors: true,
+        boxPadding: 4
       }
-    },
+    } as any,
     scales: {
       x: {
         display: true,
-        title: { display: true, text: 'Time', font: { size: 12 } },
-        grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 11 }, maxTicksLimit: 12 }
+        title: { display: true, text: 'Time', font: { size: 12, weight: 'normal' as any }, color: '#64748b' },
+        grid: { color: 'rgba(0,0,0,0.03)' }
       },
       y: {
         display: true,
-        title: { display: true, text: 'Value', font: { size: 12 } },
-        grid: { color: 'rgba(0,0,0,0.06)' },
+        title: { display: true, text: 'Value', font: { size: 12, weight: 'normal' as any }, color: '#64748b' },
+        grid: { color: 'rgba(0,0,0,0.04)' },
         beginAtZero: false,
-        ticks: { font: { size: 11 } }
+        ticks: { font: { size: 11 }, color: '#94a3b8' }
       }
     },
     elements: {
-      point: { radius: 2, hoverRadius: 6 },
-      line: { tension: 0.35 }
+      point: { radius: 2, hoverRadius: 7, hitRadius: 10 },
+      line: { tension: 0.4, borderWidth: 2.5 }
+    },
+    animation: {
+      duration: 800,
+      easing: 'easeOutQuart'
     }
   };
 
@@ -605,17 +772,35 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
           data: trends.sensorReadings?.map((d: any) => d.value) || [],
           label: 'Sensor Readings',
           borderColor: '#10b981',
-          backgroundColor: 'rgba(16, 185, 129, 0.08)',
+          backgroundColor: (ctx: any) => {
+            const chart = ctx.chart;
+            const { ctx: context, chartArea } = chart;
+            if (!chartArea) return 'rgba(16, 185, 129, 0.1)';
+            const gradient = context.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+            return gradient;
+          },
           fill: true,
-          tension: 0.4
+          tension: 0.4,
+          borderWidth: 2.5
         },
         {
           data: trends.deviceUsage?.map((d: any) => d.value) || [],
           label: 'Device Activity',
           borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.08)',
+          backgroundColor: (ctx: any) => {
+            const chart = ctx.chart;
+            const { ctx: context, chartArea } = chart;
+            if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
+            const gradient = context.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.02)');
+            return gradient;
+          },
           fill: true,
-          tension: 0.4
+          tension: 0.4,
+          borderWidth: 2.5
         }
       ]
     };
@@ -633,27 +818,34 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         labels: {
           usePointStyle: true,
           padding: 16,
-          font: { size: 12, family: "'Inter', sans-serif" }
+          font: { size: 12, family: "'Inter', sans-serif" },
+          color: '#64748b'
         }
       },
       tooltip: {
-        backgroundColor: 'rgba(15, 23, 42, 0.9)',
-        titleFont: { size: 13 },
-        bodyFont: { size: 12 },
-        padding: 12,
-        cornerRadius: 8
+        backgroundColor: 'rgba(15, 23, 42, 0.92)',
+        titleFont: { size: 13, family: "'Inter', sans-serif", weight: 'bold' as any },
+        bodyFont: { size: 12, family: "'Inter', sans-serif" },
+        padding: 14,
+        cornerRadius: 10,
+        displayColors: true,
+        boxPadding: 4
       }
     },
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 11 } }
+        ticks: { font: { size: 11 }, color: '#94a3b8' }
       },
       y: {
         beginAtZero: true,
-        grid: { color: 'rgba(0,0,0,0.06)' },
-        ticks: { font: { size: 11 } }
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: { font: { size: 11 }, color: '#94a3b8' }
       }
+    },
+    animation: {
+      duration: 600,
+      easing: 'easeOutQuart'
     }
   };
 
@@ -665,26 +857,29 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         {
           data: comparisons.map(c => c.sensorCount),
           label: 'Sensors',
-          backgroundColor: 'rgba(16, 185, 129, 0.7)',
+          backgroundColor: 'rgba(16, 185, 129, 0.75)',
           borderColor: '#10b981',
           borderWidth: 1,
-          borderRadius: 6
+          borderRadius: 8,
+          borderSkipped: false
         },
         {
           data: comparisons.map(c => c.readingCount),
           label: 'Readings',
-          backgroundColor: 'rgba(59, 130, 246, 0.7)',
+          backgroundColor: 'rgba(59, 130, 246, 0.75)',
           borderColor: '#3b82f6',
           borderWidth: 1,
-          borderRadius: 6
+          borderRadius: 8,
+          borderSkipped: false
         },
         {
           data: comparisons.map(c => c.alertCount),
           label: 'Alerts',
-          backgroundColor: 'rgba(239, 68, 68, 0.7)',
+          backgroundColor: 'rgba(239, 68, 68, 0.75)',
           borderColor: '#ef4444',
           borderWidth: 1,
-          borderRadius: 6
+          borderRadius: 8,
+          borderSkipped: false
         }
       ]
     };
@@ -695,7 +890,7 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
   healthChartOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: '65%',
+    cutout: '68%',
     plugins: {
       legend: {
         display: true,
@@ -703,14 +898,43 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         labels: {
           usePointStyle: true,
           padding: 20,
-          font: { size: 12, family: "'Inter', sans-serif" }
+          font: { size: 12, family: "'Inter', sans-serif" },
+          color: '#64748b',
+          generateLabels: (chart: any) => {
+            const data = chart.data;
+            return data.labels.map((label: string, i: number) => ({
+              text: ` ${label} (${data.datasets[0].data[i]})`,
+              fillStyle: data.datasets[0].backgroundColor[i],
+              strokeStyle: data.datasets[0].borderColor[i],
+              lineWidth: 2,
+              hidden: !chart.getDataVisibility(i),
+              index: i
+            }));
+          }
         }
       },
       tooltip: {
-        backgroundColor: 'rgba(15, 23, 42, 0.9)',
-        padding: 12,
-        cornerRadius: 8
+        backgroundColor: 'rgba(15, 23, 42, 0.92)',
+        padding: 14,
+        cornerRadius: 10,
+        titleFont: { size: 13, weight: 'bold' as any },
+        bodyFont: { size: 12 },
+        displayColors: true,
+        boxPadding: 4,
+        callbacks: {
+          label: (ctx: any) => {
+            const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            const pct = total > 0 ? Math.round((ctx.parsed / total) * 100) : 0;
+            return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+          }
+        }
       }
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true,
+      duration: 800,
+      easing: 'easeOutQuart'
     }
   };
 
@@ -722,18 +946,24 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     const offline = sensors.filter(s => s.status === 'offline').length;
 
     return {
-      labels: ['Normal', 'Warning', 'Critical', 'Offline'],
+      labels: [
+        this.languageService.translate('sensorAnalytics.health.normal'),
+        this.languageService.translate('sensorAnalytics.health.warning'),
+        this.languageService.translate('sensorAnalytics.health.critical'),
+        this.languageService.translate('sensorAnalytics.health.offline')
+      ],
       datasets: [{
         data: [normal, warning, critical, offline],
         backgroundColor: [
-          'rgba(16, 185, 129, 0.8)',
-          'rgba(245, 158, 11, 0.8)',
-          'rgba(239, 68, 68, 0.8)',
-          'rgba(148, 163, 184, 0.8)'
+          'rgba(16, 185, 129, 0.85)',
+          'rgba(245, 158, 11, 0.85)',
+          'rgba(239, 68, 68, 0.85)',
+          'rgba(148, 163, 184, 0.6)'
         ],
         borderColor: ['#10b981', '#f59e0b', '#ef4444', '#94a3b8'],
         borderWidth: 2,
-        hoverOffset: 6
+        hoverOffset: 8,
+        hoverBorderWidth: 3
       }]
     };
   });
@@ -762,13 +992,33 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
           data: sensorReadings.map(r => r.value1 || 0),
           label: `${sensor?.type || 'Sensor'} (${sensor?.unit || ''})`,
           borderColor: '#10b981',
-          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          backgroundColor: (ctx: any) => {
+            const chart = ctx.chart;
+            const { ctx: context, chartArea } = chart;
+            if (!chartArea) return 'rgba(16, 185, 129, 0.1)';
+            const gradient = context.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+            return gradient;
+          },
           fill: true,
-          tension: 0.35,
+          tension: 0.4,
           pointRadius: 3,
-          pointHoverRadius: 6
+          pointHoverRadius: 7,
+          pointHitRadius: 10,
+          borderWidth: 2.5
         }
       ]
+    };
+  });
+
+  // Threshold plugin config for sensor detail
+  sensorDetailThresholds = computed(() => {
+    const sensor = this.selectedSensorDetail();
+    if (!sensor) return {};
+    return {
+      warning: sensor.max_warning ?? sensor.min_warning,
+      critical: sensor.max_critical ?? sensor.min_critical
     };
   });
 
@@ -798,13 +1048,30 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     if (this.selectedFarmerIds().length) count++;
     if (this.selectedSensorTypes().length) count++;
     if (this.showAnomaliesOnly()) count++;
-    if (this.searchQuery()) count++;
+    if (this.searchControl.value) count++; // Use searchControl.value instead of searchQuery
     return count;
   });
 
   // ─── Lifecycle ──────────────────────────────────────────────────────────
 
+  private motionMediaQuery: MediaQueryList | null = null;
+
   ngOnInit(): void {
+    // Read reduced motion preference
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      this.motionMediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.prefersReducedMotion.set(this.motionMediaQuery.matches);
+      const handler = (e: MediaQueryListEvent) => this.prefersReducedMotion.set(e.matches);
+      this.motionMediaQuery.addEventListener('change', handler);
+      // Cleanup listener
+      this.destroyRef.onDestroy(() => {
+        this.motionMediaQuery?.removeEventListener('change', handler);
+      });
+    }
+
+    // Restore filters from URL params
+    this.restoreFiltersFromUrl();
+
     this.loadData();
 
     // Setup search debounce
@@ -814,17 +1081,109 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(value => {
       this.searchQuery.set(value || '');
+      this.syncFiltersToUrl();
     });
+  }
+
+  ngAfterViewInit(): void {
+    // Trigger KPI count-up animation after view init
+    if (!this.prefersReducedMotion()) {
+      this.kpiAnimationTimeout = setTimeout(() => this.animateKpiCards(), 300);
+    }
   }
 
   ngOnDestroy(): void {
     this.stopLiveMode();
+    if (this.kpiAnimationTimeout) {
+      clearTimeout(this.kpiAnimationTimeout);
+      this.kpiAnimationTimeout = null;
+    }
+  }
+
+  // ─── Keyboard Navigation ────────────────────────────────────────────────
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    // Only handle when drawer is open
+    if (!this.isDrawerOpen()) return;
+
+    // Don't handle if user is typing in an input
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
+
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault();
+        this.closeSensorDrawer();
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        this.navigateToPreviousSensor();
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this.navigateToNextSensor();
+        break;
+    }
+  }
+
+  // ─── KPI Animation ──────────────────────────────────────────────────────
+
+  private animateKpiCards(): void {
+    const kpiElements = this.elementRef.nativeElement.querySelectorAll('.kpi-value-animated');
+    const kpis = this.kpiCards();
+
+    kpiElements.forEach((el: HTMLElement, index: number) => {
+      const kpi = kpis[index];
+      if (!kpi) return;
+
+      const delay = this.prefersReducedMotion() ? 0 : index * 100;
+      setTimeout(() => {
+        animateCounter(el, kpi.rawValue, 800, '', kpi.unit === '%' ? '%' : '');
+      }, delay);
+    });
+
+    this.kpiAnimationComplete.set(true);
+  }
+
+  // ─── URL Filter Persistence ─────────────────────────────────────────────
+
+  private restoreFiltersFromUrl(): void {
+    const params = this.route.snapshot.queryParams;
+
+    if (params['tab']) this.activeTab.set(params['tab'] as ActiveTab);
+    if (params['period']) this.datePreset.set(params['period'] as DatePreset);
+    if (params['farm']) this.selectedFarmIds.set(params['farm'].split(','));
+    if (params['farmer'] && this.isAdmin()) this.selectedFarmerIds.set(params['farmer'].split(','));
+    if (params['type']) this.selectedSensorTypes.set(params['type'].split(','));
+    if (params['anomalies'] === 'true') this.showAnomaliesOnly.set(true);
+    if (params['search']) this.searchControl.setValue(params['search']);
+  }
+
+  syncFiltersToUrl(): void {
+    const params: any = {};
+
+    if (this.activeTab() !== 'overview') params['tab'] = this.activeTab();
+    if (this.datePreset() !== '7days') params['period'] = this.datePreset();
+    if (this.selectedFarmIds().length) params['farm'] = this.selectedFarmIds().join(',');
+    if (this.selectedFarmerIds().length) params['farmer'] = this.selectedFarmerIds().join(',');
+    if (this.selectedSensorTypes().length) params['type'] = this.selectedSensorTypes().join(',');
+    if (this.showAnomaliesOnly()) params['anomalies'] = 'true';
+    if (this.searchQuery()) params['search'] = this.searchQuery();
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: params,
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   // ─── Data Loading ──────────────────────────────────────────────────────
 
   loadData(): void {
     this.isLoading.set(true);
+    this.kpiAnimationComplete.set(false);
 
     if (this.isAdmin()) {
       this.loadAdminData();
@@ -833,21 +1192,17 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * ADMIN MODE: Load ALL data from the entire database.
-   * Admin sees every farm, every sensor, every reading, every user.
-   */
   private loadAdminData(): void {
     const trendsPeriod = this.datePreset() === 'today' ? '7days' :
                          this.datePreset() === '90days' ? '90days' : '30days';
 
     forkJoin({
-      farms: this.apiService.getFarms().pipe(catchError(() => of([]))),
-      devices: this.apiService.getDevices(true).pipe(catchError(() => of([]))),
-      sensors: this.apiService.getSensors().pipe(catchError(() => of([]))),
-      readings: this.apiService.getSensorReadings(500, 0).pipe(catchError(() => of([]))),
-      users: this.apiService.getUsers().pipe(catchError(() => of([]))),
-      trends: this.adminApiService.getOverviewTrends(trendsPeriod as any).pipe(catchError(() => of(null)))
+      farms: this.apiService.getFarms().pipe(catchError((err) => { console.error('Failed to load farms:', err); return of([]); })),
+      devices: this.apiService.getDevices(true).pipe(catchError((err) => { console.error('Failed to load devices:', err); return of([]); })),
+      sensors: this.apiService.getSensors().pipe(catchError((err) => { console.error('Failed to load sensors:', err); return of([]); })),
+      readings: this.apiService.getSensorReadings(500, 0).pipe(catchError((err) => { console.error('Failed to load readings:', err); return of([]); })),
+      users: this.apiService.getUsers().pipe(catchError((err) => { console.error('Failed to load users:', err); return of([]); })),
+      trends: this.adminApiService.getOverviewTrends(trendsPeriod as any).pipe(catchError((err) => { console.error('Failed to load trends:', err); return of(null); }))
     }).subscribe({
       next: (data) => {
         this.farms.set(data.farms);
@@ -858,6 +1213,15 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
         this.overviewTrends.set(data.trends);
         this.isLoading.set(false);
         this.isRefreshing.set(false);
+
+        // Trigger KPI animation after data loads
+        if (!this.prefersReducedMotion()) {
+          // Clear existing timeout before setting new one
+          if (this.kpiAnimationTimeout) {
+            clearTimeout(this.kpiAnimationTimeout);
+          }
+          this.kpiAnimationTimeout = setTimeout(() => this.animateKpiCards(), 200);
+        }
       },
       error: () => {
         this.isLoading.set(false);
@@ -866,12 +1230,6 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * FARMER MODE: Load ONLY the farmer's own farms and their related data.
-   * 1. Fetch the farmer's farms via getUserFarms(userId)
-   * 2. Fetch global sensors, devices, readings
-   * 3. Filter everything down to only the farmer's farm IDs
-   */
   private loadFarmerData(): void {
     const userId = this.currentUserId();
     if (!userId) {
@@ -880,38 +1238,39 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     }
 
     forkJoin({
-      farms: this.apiService.getUserFarms(userId).pipe(catchError(() => of([]))),
-      devices: this.apiService.getDevices(true).pipe(catchError(() => of([]))),
-      sensors: this.apiService.getSensors().pipe(catchError(() => of([]))),
-      readings: this.apiService.getSensorReadings(500, 0).pipe(catchError(() => of([])))
+      farms: this.apiService.getUserFarms(userId).pipe(catchError((err) => { console.error('Failed to load user farms:', err); return of([]); })),
+      devices: this.apiService.getDevices(true).pipe(catchError((err) => { console.error('Failed to load devices:', err); return of([]); })),
+      sensors: this.apiService.getSensors().pipe(catchError((err) => { console.error('Failed to load sensors:', err); return of([]); })),
+      readings: this.apiService.getSensorReadings(500, 0).pipe(catchError((err) => { console.error('Failed to load readings:', err); return of([]); }))
     }).subscribe({
       next: (data) => {
-        // Only the farmer's own farms
         const farmerFarmIds = new Set(data.farms.map(f => f.farm_id));
         this.farms.set(data.farms);
 
-        // Filter devices to only those belonging to farmer's farms
         const filteredDevices = data.devices.filter(d => farmerFarmIds.has(d.farm_id));
         this.devices.set(filteredDevices);
 
-        // Filter sensors to only those belonging to farmer's farms
         const filteredSensors = data.sensors.filter(s => farmerFarmIds.has(s.farm_id));
         this.sensors.set(filteredSensors);
 
-        // Filter readings to only those from farmer's sensors
         const farmerSensorIds = new Set(filteredSensors.map(s => s.sensor_id));
         const filteredReadings = data.readings.filter(r => farmerSensorIds.has(r.sensor_id));
         this.readings.set(filteredReadings);
 
-        // Set users to just the current farmer (no need to load all users)
         const currentUser = this.authService.user();
         this.users.set(currentUser ? [currentUser] : []);
-
-        // No admin trends endpoint for farmer
         this.overviewTrends.set(null);
 
         this.isLoading.set(false);
         this.isRefreshing.set(false);
+
+        if (!this.prefersReducedMotion()) {
+          // Clear existing timeout before setting new one
+          if (this.kpiAnimationTimeout) {
+            clearTimeout(this.kpiAnimationTimeout);
+          }
+          this.kpiAnimationTimeout = setTimeout(() => this.animateKpiCards(), 200);
+        }
       },
       error: () => {
         this.isLoading.set(false);
@@ -929,16 +1288,18 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
 
   onDatePresetChange(preset: DatePreset): void {
     this.datePreset.set(preset);
+    this.syncFiltersToUrl();
     this.loadData();
   }
 
   onFarmFilterChange(farmIds: string[]): void {
     this.selectedFarmIds.set(farmIds);
+    this.syncFiltersToUrl();
   }
 
   onFarmerFilterChange(farmerIds: string[]): void {
     this.selectedFarmerIds.set(farmerIds);
-    // Clear farm filter when farmer changes
+    this.syncFiltersToUrl();
     if (farmerIds.length > 0) {
       this.selectedFarmIds.set([]);
     }
@@ -946,10 +1307,12 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
 
   onSensorTypeChange(types: string[]): void {
     this.selectedSensorTypes.set(types);
+    this.syncFiltersToUrl();
   }
 
   toggleAnomaliesOnly(): void {
     this.showAnomaliesOnly.update(v => !v);
+    this.syncFiltersToUrl();
   }
 
   clearAllFilters(): void {
@@ -959,6 +1322,14 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     this.showAnomaliesOnly.set(false);
     this.searchControl.setValue('');
     this.searchQuery.set('');
+    this.syncFiltersToUrl();
+  }
+
+  // ─── Tab Navigation ─────────────────────────────────────────────────────
+
+  onTabChange(tab: ActiveTab): void {
+    this.activeTab.set(tab);
+    this.syncFiltersToUrl();
   }
 
   // ─── Sensor Group Actions ───────────────────────────────────────────────
@@ -996,10 +1367,18 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     setTimeout(() => this.selectedSensorId.set(null), 300);
   }
 
-  // ─── Tab Navigation ─────────────────────────────────────────────────────
+  navigateToPreviousSensor(): void {
+    const idx = this.currentSensorIndex();
+    if (idx > 0) {
+      this.selectedSensorId.set(this.orderedSensorIds()[idx - 1]);
+    }
+  }
 
-  onTabChange(tab: ActiveTab): void {
-    this.activeTab.set(tab);
+  navigateToNextSensor(): void {
+    const idx = this.currentSensorIndex();
+    if (idx >= 0 && idx < this.orderedSensorIds().length - 1) {
+      this.selectedSensorId.set(this.orderedSensorIds()[idx + 1]);
+    }
   }
 
   // ─── Live Mode ──────────────────────────────────────────────────────────
@@ -1016,7 +1395,7 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
     this.liveMode.set(true);
     this.liveInterval = setInterval(() => {
       this.refreshData();
-    }, 30000); // Refresh every 30 seconds
+    }, 30000);
   }
 
   private stopLiveMode(): void {
@@ -1076,10 +1455,19 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
   }
 
   getHealthLabel(score: number): string {
-    if (score >= 80) return 'Healthy';
-    if (score >= 50) return 'Degraded';
-    if (score >= 20) return 'Critical';
-    return 'Offline';
+    if (score >= 80) return this.languageService.translate('sensorAnalytics.health.healthy');
+    if (score >= 50) return this.languageService.translate('sensorAnalytics.health.degraded');
+    if (score >= 20) return this.languageService.translate('sensorAnalytics.health.critical');
+    return this.languageService.translate('sensorAnalytics.health.offline');
+  }
+
+  getSparklineColor(status: string): string {
+    switch (status) {
+      case 'normal': return '#10b981';
+      case 'warning': return '#f59e0b';
+      case 'critical': return '#ef4444';
+      default: return '#94a3b8';
+    }
   }
 
   trackByFarmId(index: number, item: SensorGroup): string {
@@ -1096,5 +1484,58 @@ export class SensorAnalyticsComponent implements OnInit, OnDestroy {
 
   trackByAnomaly(index: number, item: AnomalyRecord): string {
     return item.sensorId + item.timestamp;
+  }
+
+  /** Generate inline SVG sparkline for table rows */
+  getSparklineSvg(data: number[], color: string, width: number = 60, height: number = 20): string {
+    if (!data || data.length === 0) return '';
+
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+    const step = width / (data.length - 1);
+
+    const points = data.map((v, i) => {
+      const x = i * step;
+      const y = height - ((v - min) / range) * (height - 4) - 2;
+      return `${x},${y}`;
+    }).join(' ');
+
+    return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  }
+
+  /** Generate sparkline points for SVG polyline in template */
+  _getSparklinePoints(data: number[]): string {
+    if (!data || data.length < 2) return '0,12 80,12';
+    const width = 80;
+    const height = 24;
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+    const step = width / (data.length - 1);
+
+    return data.map((v, i) => {
+      const x = i * step;
+      const y = height - ((v - min) / range) * (height - 4) - 2;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+  }
+
+  /** Get sparkline color based on KPI type */
+  _getKpiSparklineColor(kpi: AnalyticsKPI): string {
+    if (kpi.label === 'Anomalies') {
+      return (kpi.trendDirection === 'up' && kpi.rawValue > 0) ? '#ef4444' : '#10b981';
+    }
+    if (kpi.label === 'Sensor Uptime') {
+      return kpi.rawValue >= 80 ? '#10b981' : kpi.rawValue >= 50 ? '#f59e0b' : '#ef4444';
+    }
+    return '#10b981';
+  }
+
+  /** Safe sparkline HTML binding for innerHTML */
+  _getSafeSparkline(data: number[], color: string): string {
+    return this.getSparklineSvg(data, color, 60, 20);
   }
 }

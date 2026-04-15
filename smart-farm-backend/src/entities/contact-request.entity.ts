@@ -19,7 +19,7 @@ export type ContactRequestStatus =
   | "converted"
   | "archived";
 
-@Entity("contact_requests")
+@Entity("contact_messages")
 export class ContactRequest {
   @PrimaryGeneratedColumn("uuid")
   id: string;

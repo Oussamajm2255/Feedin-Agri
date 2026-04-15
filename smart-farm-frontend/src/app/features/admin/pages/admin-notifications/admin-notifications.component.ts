@@ -149,7 +149,19 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   pendingRequests = signal<any[]>([]);
   pendingTotal = signal(0);
   isLoadingRequests = signal(false);
-  activeTab = signal<'notifications' | 'access-requests'>('notifications');
+  activeTab = signal<'notifications' | 'access-requests' | 'contact-messages' | 'training-requests'>('notifications');
+
+  // Contact messages
+  contactMessages = signal<any[]>([]);
+  contactTotal = signal(0);
+  contactNewCount = signal(0);
+  isLoadingContacts = signal(false);
+
+  // Training requests
+  trainingRequests = signal<any[]>([]);
+  trainingTotal = signal(0);
+  trainingNewCount = signal(0);
+  isLoadingTraining = signal(false);
 
   // Computed filtered notifications (client-side filtering for real-time)
   filteredNotifications = computed(() => {
@@ -220,6 +232,29 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
     this.adminWs.countsUpdated$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.loadPendingRequests();
       this.loadCounts();
+    });
+
+    // Lead-specific real-time events
+    this.adminWs.newLead$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      if (data.type === 'contact') {
+        this.contactNewCount.update((c) => c + 1);
+        if (this.activeTab() === 'contact-messages') {
+          this.loadContactMessages();
+        }
+      } else if (data.type === 'training') {
+        this.trainingNewCount.update((c) => c + 1);
+        if (this.activeTab() === 'training-requests') {
+          this.loadTrainingRequests();
+        }
+      }
+    });
+
+    this.adminWs.leadStatusChanged$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      if (data.type === 'contact' && this.activeTab() === 'contact-messages') {
+        this.loadContactMessages();
+      } else if (data.type === 'training' && this.activeTab() === 'training-requests') {
+        this.loadTrainingRequests();
+      }
     });
 
     // Auto-refresh every 60 seconds (reduced from 30s since WS handles real-time)
@@ -516,10 +551,14 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
   // ACCESS REQUEST MANAGEMENT
   // ========================
 
-  setActiveTab(tab: 'notifications' | 'access-requests'): void {
+  setActiveTab(tab: 'notifications' | 'access-requests' | 'contact-messages' | 'training-requests'): void {
     this.activeTab.set(tab);
     if (tab === 'access-requests') {
       this.loadPendingRequests();
+    } else if (tab === 'contact-messages') {
+      this.loadContactMessages();
+    } else if (tab === 'training-requests') {
+      this.loadTrainingRequests();
     }
   }
 
@@ -636,5 +675,123 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy {
    */
   isAccessRequestNotification(notification: AdminNotification): boolean {
     return notification.type === 'user_registration' && notification.status !== 'resolved';
+  }
+
+  // ========================
+  // CONTACT MESSAGES MANAGEMENT
+  // ========================
+
+  loadContactMessages(): void {
+    this.isLoadingContacts.set(true);
+    this.adminApi
+      .getContactMessages(1, 50)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => of({ items: [], total: 0, newCount: 0 })),
+      )
+      .subscribe((res: any) => {
+        this.contactMessages.set(res.items || []);
+        this.contactTotal.set(res.total || 0);
+        this.contactNewCount.set(res.newCount || 0);
+        this.isLoadingContacts.set(false);
+      });
+  }
+
+  updateContactStatus(id: string, status: string, event?: Event): void {
+    event?.stopPropagation();
+    this.adminApi
+      .updateContactMessageStatus(id, status)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.alertService.success('Success', `Message marked as ${status}`, 2000);
+          this.loadContactMessages();
+        },
+        error: () => this.alertService.error('Error', 'Failed to update status', 3000),
+      });
+  }
+
+  /** Human-readable project type label */
+  getProjectTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      'serre-connectee': 'Serre Connectée',
+      'serre-verticale': 'Serre Verticale',
+      'automatisation': 'Automatisation',
+      'amenagement': 'Aménagement',
+      'formation': 'Formation',
+      'etude': 'Étude',
+      'autre': 'Autre',
+    };
+    return labels[type] || type;
+  }
+
+  /** Icon for project type */
+  getProjectTypeIcon(type: string): string {
+    const icons: Record<string, string> = {
+      'serre-connectee': 'sensors',
+      'serre-verticale': 'vertical_align_top',
+      'automatisation': 'auto_fix_high',
+      'amenagement': 'engineering',
+      'formation': 'school',
+      'etude': 'science',
+      'autre': 'help_outline',
+    };
+    return icons[type] || 'category';
+  }
+
+  // ========================
+  // TRAINING REQUESTS MANAGEMENT
+  // ========================
+
+  loadTrainingRequests(): void {
+    this.isLoadingTraining.set(true);
+    this.adminApi
+      .getTrainingRequests(1, 50)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => of({ items: [], total: 0, newCount: 0 })),
+      )
+      .subscribe((res: any) => {
+        this.trainingRequests.set(res.items || []);
+        this.trainingTotal.set(res.total || 0);
+        this.trainingNewCount.set(res.newCount || 0);
+        this.isLoadingTraining.set(false);
+      });
+  }
+
+  updateTrainingStatus(id: string, status: string, event?: Event): void {
+    event?.stopPropagation();
+    this.adminApi
+      .updateTrainingRequestStatus(id, status)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.alertService.success('Success', `Request marked as ${status}`, 2000);
+          this.loadTrainingRequests();
+        },
+        error: () => this.alertService.error('Error', 'Failed to update status', 3000),
+      });
+  }
+
+  /** Human-readable training level label */
+  getTrainingTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      'level_1': 'Niveau 1 — Fondamentaux',
+      'level_2': 'Niveau 2 — Avancé',
+      'level_3': 'Niveau 3 — Expert',
+    };
+    return labels[type] || type;
+  }
+
+  /** Status chip color class for lead statuses */
+  getLeadStatusClass(status: string): string {
+    switch (status) {
+      case 'new': return 'lead-status-new';
+      case 'read': case 'contacted': return 'lead-status-contacted';
+      case 'replied': case 'scheduled': return 'lead-status-replied';
+      case 'completed': case 'converted': return 'lead-status-completed';
+      case 'archived': return 'lead-status-archived';
+      default: return 'lead-status-new';
+    }
   }
 }

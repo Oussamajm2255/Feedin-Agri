@@ -172,6 +172,18 @@
             <span>Access Requests</span>
             <span class="tab-badge warn" *ngIf="pendingTotal() > 0">{{ pendingTotal() }}</span>
         </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'contact-messages'"
+            (click)="setActiveTab('contact-messages')">
+            <mat-icon>mail</mat-icon>
+            <span>Contact Messages</span>
+            <span class="tab-badge contact" *ngIf="contactNewCount() > 0">{{ contactNewCount() }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'training-requests'"
+            (click)="setActiveTab('training-requests')">
+            <mat-icon>school</mat-icon>
+            <span>Training Requests</span>
+            <span class="tab-badge training" *ngIf="trainingNewCount() > 0">{{ trainingNewCount() }}</span>
+        </button>
     </div>
 
     <!-- ========================================
@@ -232,6 +244,153 @@
 
         <div class="requests-summary" *ngIf="pendingTotal() > 0">
             <span>{{ pendingTotal() }} pending request{{ pendingTotal() > 1 ? 's' : '' }}</span>
+        </div>
+    </div>
+
+    <!-- ========================================
+       CONTACT MESSAGES PANEL
+       ======================================== -->
+    <div class="leads-panel contact-messages-panel" *ngIf="activeTab() === 'contact-messages'">
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="isLoadingContacts()">
+            <mat-spinner diameter="48"></mat-spinner>
+            <p>Loading contact messages...</p>
+        </div>
+
+        <!-- Empty -->
+        <div class="empty-state" *ngIf="!isLoadingContacts() && contactMessages().length === 0">
+            <mat-icon>mail_outline</mat-icon>
+            <h3>No Contact Messages</h3>
+            <p>No new messages from the contact form.</p>
+        </div>
+
+        <!-- Cards -->
+        <div class="requests-list" *ngIf="!isLoadingContacts() && contactMessages().length > 0">
+            <div class="request-card lead-card" *ngFor="let msg of contactMessages()" [ngClass]="getLeadStatusClass(msg.status)">
+                <div class="request-avatar" [ngClass]="msg.project_type">
+                    <mat-icon>{{ getProjectTypeIcon(msg.project_type) }}</mat-icon>
+                </div>
+                <div class="request-info">
+                    <div class="lead-header">
+                        <div class="request-name">{{ msg.first_name }} {{ msg.last_name }}</div>
+                        <span class="lead-chip status-chip">{{ msg.status | titlecase }}</span>
+                    </div>
+                    <div class="request-email">{{ msg.email }} <span *ngIf="msg.phone">• {{ msg.phone }}</span></div>
+                    <div class="request-meta">
+                        <span class="meta-item">
+                            <mat-icon>category</mat-icon>
+                            {{ getProjectTypeLabel(msg.project_type) }}
+                        </span>
+                        <span class="meta-item">
+                            <mat-icon>schedule</mat-icon>
+                            {{ formatTime(msg.created_at) }}
+                        </span>
+                    </div>
+                    <div class="lead-message-box">
+                        <p>{{ msg.message }}</p>
+                    </div>
+                </div>
+                <div class="request-actions lead-actions">
+                    <button *ngIf="msg.status === 'new'" mat-flat-button color="primary" class="approve-btn"
+                        (click)="updateContactStatus(msg.id, 'read', $event)">
+                        <mat-icon>mark_email_read</mat-icon>
+                        Mark Read
+                    </button>
+                    <button *ngIf="msg.status === 'read'" mat-stroked-button color="primary" class="action-btn"
+                        (click)="updateContactStatus(msg.id, 'replied', $event)">
+                        <mat-icon>reply</mat-icon>
+                        Mark Replied
+                    </button>
+                    <button *ngIf="msg.status !== 'archived'" mat-icon-button color="warn" [matTooltip]="'Archive'"
+                        (click)="updateContactStatus(msg.id, 'archived', $event)">
+                        <mat-icon>archive</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="requests-summary" *ngIf="contactTotal() > 0">
+            <span>{{ contactTotal() }} total message{{ contactTotal() > 1 ? 's' : '' }}</span>
+        </div>
+    </div>
+
+    <!-- ========================================
+       TRAINING REQUESTS PANEL
+       ======================================== -->
+    <div class="leads-panel training-requests-panel" *ngIf="activeTab() === 'training-requests'">
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="isLoadingTraining()">
+            <mat-spinner diameter="48"></mat-spinner>
+            <p>Loading training requests...</p>
+        </div>
+
+        <!-- Empty -->
+        <div class="empty-state" *ngIf="!isLoadingTraining() && trainingRequests().length === 0">
+            <mat-icon>school</mat-icon>
+            <h3>No Training Requests</h3>
+            <p>No new formation requests at the moment.</p>
+        </div>
+
+        <!-- Cards -->
+        <div class="requests-list" *ngIf="!isLoadingTraining() && trainingRequests().length > 0">
+            <div class="request-card lead-card" *ngFor="let req of trainingRequests()" [ngClass]="getLeadStatusClass(req.status)">
+                <div class="request-avatar training">
+                    <mat-icon>model_training</mat-icon>
+                </div>
+                <div class="request-info">
+                    <div class="lead-header">
+                        <div class="request-name">{{ req.full_name }}</div>
+                        <span class="lead-chip status-chip">{{ req.status | titlecase }}</span>
+                    </div>
+                    <div class="request-email">{{ req.email }} <span *ngIf="req.phone">• {{ req.phone }}</span></div>
+                    <div class="request-meta">
+                        <span class="meta-item">
+                            <mat-icon>school</mat-icon>
+                            {{ getTrainingTypeLabel(req.training_type) }}
+                        </span>
+                        <span class="meta-item" *ngIf="req.region">
+                            <mat-icon>location_on</mat-icon>
+                            {{ req.region }}
+                        </span>
+                        <span class="meta-item" *ngIf="req.farm_size">
+                            <mat-icon>straighten</mat-icon>
+                            {{ req.farm_size }}
+                        </span>
+                        <span class="meta-item">
+                            <mat-icon>schedule</mat-icon>
+                            {{ formatTime(req.created_at) }}
+                        </span>
+                    </div>
+                    <div class="lead-message-box" *ngIf="req.message">
+                        <p>{{ req.message }}</p>
+                    </div>
+                </div>
+                <div class="request-actions lead-actions">
+                    <button *ngIf="req.status === 'new'" mat-flat-button color="primary" class="approve-btn"
+                        (click)="updateTrainingStatus(req.id, 'contacted', $event)">
+                        <mat-icon>phone</mat-icon>
+                        Mark Contacted
+                    </button>
+                    <button *ngIf="req.status === 'contacted'" mat-stroked-button color="primary" class="action-btn"
+                        (click)="updateTrainingStatus(req.id, 'scheduled', $event)">
+                        <mat-icon>event</mat-icon>
+                        Mark Scheduled
+                    </button>
+                    <button *ngIf="req.status === 'scheduled'" mat-flat-button color="accent" class="action-btn"
+                        (click)="updateTrainingStatus(req.id, 'completed', $event)">
+                        <mat-icon>task_alt</mat-icon>
+                        Mark Completed
+                    </button>
+                    <button *ngIf="req.status !== 'archived'" mat-icon-button color="warn" [matTooltip]="'Archive'"
+                        (click)="updateTrainingStatus(req.id, 'archived', $event)">
+                        <mat-icon>archive</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="requests-summary" *ngIf="trainingTotal() > 0">
+            <span>{{ trainingTotal() }} total request{{ trainingTotal() > 1 ? 's' : '' }}</span>
         </div>
     </div>
 

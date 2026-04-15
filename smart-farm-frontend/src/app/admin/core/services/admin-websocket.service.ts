@@ -31,6 +31,8 @@ export class AdminWebSocketService implements OnDestroy {
   public newAccessRequest$ = new Subject<any>();
   public countsUpdated$ = new Subject<any>();
   public systemStatus$ = new Subject<any>();
+  public newLead$ = new Subject<any>();
+  public leadStatusChanged$ = new Subject<any>();
 
   private auth = inject(AuthService);
 
@@ -147,6 +149,17 @@ export class AdminWebSocketService implements OnDestroy {
       console.log('📊 [ADMIN-WS] System status:', status);
       this.systemStatus$.next(status);
     });
+
+    // Lead events
+    this.socket.on('lead:new', (data: any) => {
+      console.log(`📨 [ADMIN-WS] New ${data.type} lead received`);
+      this.newLead$.next(data);
+    });
+
+    this.socket.on('lead:status-changed', (data: any) => {
+      console.log(`📝 [ADMIN-WS] Lead status changed: ${data.type} ${data.id}`);
+      this.leadStatusChanged$.next(data);
+    });
   }
 
   /**
@@ -211,5 +224,7 @@ export class AdminWebSocketService implements OnDestroy {
     this.newAccessRequest$.complete();
     this.countsUpdated$.complete();
     this.systemStatus$.complete();
+    this.newLead$.complete();
+    this.leadStatusChanged$.complete();
   }
 }

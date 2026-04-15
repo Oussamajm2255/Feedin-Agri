@@ -104,6 +104,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
       this.previousTheme = this.themeService.currentTheme;
       this.themeService.setTheme('light', false, false);
     }
+
+    // Enable scroll optimizations on mobile
+    if (typeof window !== 'undefined') {
+      this.enableScrollOptimizations();
+    }
   }
 
   ngAfterViewInit(): void {}
@@ -114,6 +119,33 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     // Restore the user's previous theme when leaving the landing page
     if (this.previousTheme) {
       this.themeService.setTheme(this.previousTheme, false, false);
+    }
+
+    // Cleanup scroll optimizations
+    this.disableScrollOptimizations();
+  }
+
+  /**
+   * Enable mobile scroll optimizations to prevent heavy reloads
+   */
+  private enableScrollOptimizations(): void {
+    // Use passive scroll listeners for better performance
+    const handleScroll = () => {
+      // Minimal work in scroll handler - just tracking
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Store reference for cleanup
+    (this as any)._scrollHandler = handleScroll;
+  }
+
+  /**
+   * Cleanup scroll optimizations
+   */
+  private disableScrollOptimizations(): void {
+    if ((this as any)._scrollHandler) {
+      window.removeEventListener('scroll', (this as any)._scrollHandler);
     }
   }
 

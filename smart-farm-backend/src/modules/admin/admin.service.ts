@@ -24,6 +24,8 @@ import { UpdateUserDto } from '../users/dto/update-user.dto';
 import { HealthService } from '../health/health.service';
 import { FarmsService } from '../farms/farms.service';
 import { SystemSettings } from '../../entities/system-settings.entity';
+import { ContactRequest } from '../../entities/contact-request.entity';
+import { TrainingRequest } from '../../entities/training-request.entity';
 
 @Injectable()
 export class AdminService {
@@ -48,6 +50,10 @@ export class AdminService {
     private readonly sensorReadingRepository: Repository<SensorReading>,
     @InjectRepository(SystemSettings)
     private readonly systemSettingsRepository: Repository<SystemSettings>,
+    @InjectRepository(ContactRequest)
+    private readonly contactRequestRepository: Repository<ContactRequest>,
+    @InjectRepository(TrainingRequest)
+    private readonly trainingRequestRepository: Repository<TrainingRequest>,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly healthService: HealthService,
@@ -1682,6 +1688,120 @@ export class AdminService {
         status: user.status,
       },
     };
+  }
+
+  // ========================
+  // LEADS MANAGEMENT
+  // ========================
+
+  /**
+   * Get contact messages with pagination and filtering.
+   * Returns items sorted by newest first, with counts by status.
+   */
+  async getContactMessages(
+    page: number = 1,
+    limit: number = 20,
+    status?: string,
+  ): Promise<{ items: ContactRequest[]; total: number; page: number; limit: number; newCount: number }> {
+    const skip = (page - 1) * limit;
+
+    const qb = this.contactRequestRepository
+      .createQueryBuilder('c')
+      .orderBy('c.created_at', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    if (status) {
+      qb.andWhere('c.status = :status', { status });
+    }
+
+    const [items, total] = await qb.getManyAndCount();
+
+    const newCount = await this.contactRequestRepository.count({
+      where: { status: 'new' as any },
+    });
+
+    return { items, total, page, limit, newCount };
+  }
+
+  /**
+   * Get training requests with pagination and filtering.
+   * Returns items sorted by newest first, with counts by status.
+   */
+  async getTrainingRequests(
+    page: number = 1,
+    limit: number = 20,
+    status?: string,
+  ): Promise<{ items: TrainingRequest[]; total: number; page: number; limit: number; newCount: number }> {
+    const skip = (page - 1) * limit;
+
+    const qb = this.trainingRequestRepository
+      .createQueryBuilder('t')
+      .orderBy('t.created_at', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    if (status) {
+      qb.andWhere('t.status = :status', { status });
+    }
+
+    const [items, total] = await qb.getManyAndCount();
+
+    const newCount = await this.trainingRequestRepository.count({
+      where: { status: 'new' as any },
+    });
+
+    return { items, total, page, limit, newCount };
+  }
+
+  /**
+   * Update a contact message status.
+   * Emits a lead.status-changed event for real-time updates.
+   */
+  async updateContactMessageStatus(
+    id: string,
+    status: string,
+  ): Promise<ContactRequest> {
+    const msg = await this.contactRequestRepository.findOne({ where: { id } });
+    if (!msg) {
+      throw new NotFoundException(`Contact message ${id} not found`);
+    }
+
+    msg.status = status as any;
+    const saved = await this.contactRequestRepository.save(msg);
+
+    this.eventEmitter.emit('lead.status-changed', {
+      type: 'contact',
+      id: saved.id,
+      status: saved.status,
+    });
+
+    return saved;
+  }
+
+  /**
+   * Update a training request status.
+   * Emits a lead.status-changed event for real-time updates.
+   */
+  async updateTrainingRequestStatus(
+    id: string,
+    status: string,
+  ): Promise<TrainingRequest> {
+    const req = await this.trainingRequestRepository.findOne({ where: { id } });
+    if (!req) {
+      throw new NotFoundException(`Training request ${id} not found`);
+    }
+
+    req.status = status as any;
+    const saved = await this.trainingRequestRepository.save(req);
+
+    this.eventEmitter.emit('lead.status-changed', {
+      type: 'training',
+      id: saved.id,
+      status: saved.status,
+    });
+
+    return saved;
   }
 }
 

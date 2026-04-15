@@ -18,6 +18,8 @@ import { Notification } from '../../entities/notification.entity';
 import { AdminNotification } from '../../entities/admin-notification.entity';
 import { SensorReading } from '../../entities/sensor-reading.entity';
 import { SystemSettings } from '../../entities/system-settings.entity';
+import { ContactRequest } from '../../entities/contact-request.entity';
+import { TrainingRequest } from '../../entities/training-request.entity';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { HealthModule } from '../health/health.module';
@@ -38,6 +40,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       AdminNotification,
       SensorReading,
       SystemSettings,
+      ContactRequest,
+      TrainingRequest,
     ]),
     AuthModule,
     UsersModule,

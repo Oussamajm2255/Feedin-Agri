@@ -103,7 +103,7 @@
     "invalidEmailFormat": "Format d'e-mail invalide",
     "networkError": "Problème de connexion, veuillez réessayer plus tard",
     "tooManyAttempts": "Trop de tentatives de connexion. Veuillez attendre",
-    "welcomeBack": "Bon retour",
+    "welcomeBack": "Heureux de vous revoir !",
     "welcomeBackUser": "Bon retour !",
     "loginSubtitle": "Connectez-vous pour accéder à votre tableau de bord",
     "emailPlaceholder": "Entrez votre e-mail",
@@ -129,7 +129,29 @@
     "stepFarm": "Ferme",
     "nextStep": "Suivant : Détails de la ferme",
     "back": "Retour",
-    "backToHome": "Retour à l'accueil"
+    "backToHome": "Retour à l'accueil",
+    "welcomeTitle": "Réinventez l'avenir de vos cultures",
+    "welcomeSubtitle": "L'innovation agricole, propulsée par la nature",
+    "signInToContinue": "Accédez à votre espace vitalisé et reprenez le contrôle",
+    "clearEmail": "Effacer l'e-mail",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "needHelp": "Besoin d'aide pour démarrer ?",
+    "loginSuccessMessage": "Connexion réussie",
+    "strengthWeak": "Faible",
+    "strengthFair": "Moyen",
+    "strengthGood": "Bon",
+    "strengthStrong": "Fort",
+    "passwordTooShort": "Le mot de passe doit contenir au moins {min} caractères",
+    "warning": "Avertissement",
+    "error": "Erreur",
+    "serverUnreachable": "Impossible de joindre le serveur. Veuillez réessayer.",
+    "offline": "Vous semblez être hors ligne. Vérifiez votre connexion.",
+    "pendingApproval": "Votre compte est en attente d'approbation. Vous serez notifié par e-mail.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+    "loginFailed": "Échec de connexion. Veuillez réessayer.",
+    "rateLimitReached": "Trop de tentatives. Veuillez réessayer plus tard.",
+    "capsLockWarning": "Verr Maj activée"
   },
   "pending": {
     "title": "Votre demande est en cours d'examen",
@@ -519,6 +541,79 @@
         "invoiceHistory": "Historique des Factures",
         "paymentMethods": "Méthodes de Paiement",
         "subscriptionPlans": "Plans d'Abonnement"
+      },
+      "dialog": {
+        "title": {
+          "view": "Détails de l'Agriculteur",
+          "edit": "Modifier {{name}}"
+        },
+        "quickActions": {
+          "title": "Actions Rapides",
+          "assignFarm": "Assigner une Ferme",
+          "viewFarms": "Voir Toutes les Fermes",
+          "impersonate": "Usurper l'Agriculteur",
+          "resetLink": "Envoyer le Lien de Réinitialisation"
+        },
+        "sections": {
+          "personalInfo": "Informations Personnelles",
+          "location": "Informations de Localisation",
+          "accountInfo": "Informations du Compte"
+        },
+        "fields": {
+          "firstName": "Prénom",
+          "lastName": "Nom de Famille",
+          "email": "Adresse E-mail",
+          "phone": "Numéro de Téléphone",
+          "status": "Statut",
+          "deviceId": "ID de l'Appareil",
+          "city": "Ville",
+          "country": "Pays"
+        },
+        "placeholders": {
+          "firstName": "Entrez le prénom",
+          "lastName": "Entrez le nom de famille",
+          "email": "Entrez l'adresse e-mail",
+          "phone": "Entrez le numéro de téléphone",
+          "city": "Entrez la ville",
+          "country": "Entrez le pays"
+        },
+        "hints": {
+          "emailReadonly": "L'e-mail ne peut pas être modifié",
+          "deviceIdReadonly": "L'ID de l'appareil est attribué automatiquement"
+        },
+        "status": {
+          "active": "Actif",
+          "inactive": "Inactif",
+          "suspended": "Suspendu"
+        },
+        "metadata": {
+          "userId": "ID Utilisateur",
+          "role": "Rôle",
+          "createdAt": "Créé le",
+          "updatedAt": "Dernière Mise à Jour",
+          "lastLogin": "Dernière Connexion"
+        },
+        "actions": {
+          "edit": "Modifier",
+          "save": "Enregistrer les Modifications",
+          "cancel": "Annuler"
+        },
+        "errors": {
+          "loadFailed": "Échec du chargement des détails de l'agriculteur",
+          "formErrors": "Veuillez corriger les erreurs dans le formulaire",
+          "noChanges": "Aucun changement détecté",
+          "missingId": "L'ID de l'agriculteur est manquant",
+          "updateFailed": "Échec de la mise à jour des informations de l'agriculteur",
+          "impersonateFailed": "Échec de l'usurpation de l'agriculteur",
+          "required": "Ce champ est obligatoire",
+          "invalidEmail": "Adresse e-mail invalide",
+          "maxLength": "Maximum {{max}} caractères autorisés"
+        },
+        "success": {
+          "updated": "Agriculteur mis à jour avec succès",
+          "impersonated": "Usurpation de l'agriculteur réussie",
+          "resetLinkSent": "Le lien de réinitialisation du mot de passe a été envoyé"
+        }
       }
     },
     "overview": {
@@ -2614,12 +2709,21 @@
       "anomalies": "Anomalies",
       "anomaliesOnly": "Anomalies uniquement",
       "anomaliesOnlyTooltip": "Afficher uniquement les capteurs avec des anomalies",
+      "section": "Filtres",
+      "removeFarm": "Supprimer le filtre de ferme",
+      "removeFarmer": "Supprimer le filtre d'agriculteur",
+      "removeType": "Supprimer le filtre de type de capteur",
+      "removeAnomalies": "Supprimer le filtre d'anomalies",
       "clearAll": "Tout effacer",
       "plural": "s"
     },
     "search": {
       "label": "Rechercher des capteurs, fermes, appareils…",
-      "placeholder": "Tapez pour rechercher…"
+      "placeholder": "Tapez pour rechercher…",
+      "clear": "Effacer la recherche"
+    },
+    "kpi": {
+      "section": "Indicateurs Clés de Performance"
     },
     "tabs": {
       "overview": "Vue d'ensemble",
@@ -2653,6 +2757,7 @@
       "device": "Appareil",
       "latestValue": "Dernière valeur",
       "average": "Moyenne",
+      "trend": "Tendance",
       "min": "Min",
       "max": "Max",
       "readings": "Lectures",
@@ -2679,6 +2784,8 @@
       "warning": "Avertissement",
       "critical": "Critique",
       "offline": "Hors ligne",
+      "healthy": "Sain",
+      "degraded": "Dégradé",
       "distributionTitle": "Distribution de la santé",
       "anomalyAuditLog": "Journal d'audit des anomalies",
       "systemHealthy": "Système sain",
@@ -2704,7 +2811,10 @@
       "owner": "Propriétaire",
       "location": "Emplacement",
       "statusHealth": "Statut & Santé",
+      "keyMetrics": "Métriques Clés",
       "readingStats": "Statistiques de lecture",
+      "readingsChart": "Graphique de l'historique des lectures",
+      "noReadings": "Aucune lecture disponible pour ce capteur",
       "latest": "Dernière",
       "average": "Moyenne",
       "minimum": "Minimum",
@@ -2720,6 +2830,9 @@
       "lastReading": "Dernière lecture",
       "sensorId": "ID du capteur",
       "deviceId": "ID de l'appareil",
+      "previousSensor": "Capteur précédent",
+      "nextSensor": "Capteur suivant",
+      "close": "Fermer le détail du capteur",
       "viewSensor": "Voir le capteur",
       "notFound": "Capteur introuvable"
     }
@@ -2748,6 +2861,10 @@
       "ctaHelper": "Notre équipe vous aide à configurer votre ferme intelligente.",
       "helper": "Notre équipe vous accompagne dans l'installation de votre ferme intelligente.",
       "scrollDown": "Découvrir"
+    },
+    "partner": {
+      "title": "Ils nous font confiance",
+      "subtitle": "Collaborer avec des innovateurs de l'agriculture et de la technologie"
     },
     "bento": {
       "label": "Nos solutions",
@@ -3473,7 +3590,8 @@
         "emailInvalid": "Email invalide",
         "successTitle": "Demande envoyée !",
         "successSub": "Notre équipe vous contactera sous 24h pour organiser votre formation.",
-        "successClose": "Fermer"
+        "successClose": "Fermer",
+        "errorTitle": "Une erreur est survenue. Veuillez réessayer."
       }
     },
     "about": {
@@ -3691,7 +3809,8 @@
         "sentSub": "Nous vous répondrons dans les 24 heures.",
         "req": "Ce champ est requis",
         "emailReq": "Un email valide est requis",
-        "typeReq": "Veuillez sélectionner un type"
+        "typeReq": "Veuillez sélectionner un type",
+        "errorTitle": "Échec de l'envoi. Veuillez réessayer."
       },
       "reg": {
         "title": "Demander un accès à Feedin",

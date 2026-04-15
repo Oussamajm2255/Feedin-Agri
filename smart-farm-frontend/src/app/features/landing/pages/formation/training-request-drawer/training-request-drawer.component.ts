@@ -980,13 +980,10 @@ export class TrainingRequestDrawerComponent implements OnChanges, AfterViewInit 
         next: () => {
           this.sending.set(false);
           this.success.set(true);
-          this.toastService.success('landing.formation.drawer.successTitle');
         },
         error: () => {
           this.sending.set(false);
-          // Graceful degradation — show success anyway
-          this.success.set(true);
-          this.toastService.success('landing.formation.drawer.successTitle');
+          this.toastService.error('landing.formation.drawer.errorTitle');
         },
       });
   }

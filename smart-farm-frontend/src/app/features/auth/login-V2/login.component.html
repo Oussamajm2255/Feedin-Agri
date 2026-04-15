@@ -1,38 +1,51 @@
 <!--
-  Feedn Login Component - Concept A: Single Canvas Experience
+  Feedn Login Component - Premium Two-Column Experience
   ============================================================
-  A cinematic agricultural scene that naturally transforms into 
-  an interactive login surface — not two stacked sections.
+  Left (60%): Video background with feathered gradient fade.
+  Right (40%): Login form, perfectly centered.
+  Mobile (<768px): Vertical stack (Video top 35-40vh, Form below).
   
-  Key Design Principles:
-  - Video hero (45-50% viewport) with gradient fade into form
-  - Seamless surface continuation (no card boundaries)
-  - Single headline hierarchy
-  - Keyboard-safe scrollable layout
-  - Linen/neumorphic brand identity
+  Performance Optimizations:
+  - CSS containment for isolated rendering
+  - Hardware-accelerated transitions
+  - Reduced animations on mobile
+  - Fast keyboard detection
 -->
 
-<div class="login-canvas" [class.video-loaded]="isVideoLoaded()" [class.keyboard-open]="isKeyboardOpen()">
+<div class="login-canvas" 
+     [class.video-loaded]="isVideoLoaded()" 
+     [class.keyboard-open]="isKeyboardOpen()"
+     [class.mobile-optimized]="isMobileDevice()"
+     data-testid="login-page"
+     style="contain: layout style;">
   
   <!-- =====================================================
-       VIDEO HERO SECTION (45-50% viewport height)
+       LEFT COLUMN (60% Desktop) / HERO SECTION (Mobile)
        ===================================================== -->
-  <section class="video-section" aria-label="Hero visual">
+  <section class="video-section" aria-label="Hero visual"
+           style="contain: layout style paint;">
     
-    <!-- Video Background -->
-    <div class="video-container">
+    <!-- Video Background with Feathered Transition Mask -->
+    <div class="video-wrapper"
+         [class.video-ready]="isVideoLoaded()"
+         [class.video-failed]="videoError()"
+         style="transform: translateZ(0);">
       <video #bgVideo 
              class="video-element" 
-             preload="none" 
-             playsinline 
+             preload="auto" 
              muted 
+             autoplay
              disablepictureinpicture
-             disableremoteplayback 
              poster="assets/vids/login-poster.webp"
-             *ngIf="!videoError()">
+             width="1920"
+             height="1080"
+             data-testid="hero-video">
         <source src="assets/vids/login.webm" type="video/webm">
         <source src="assets/vids/login-optimized.mp4" type="video/mp4">
       </video>
+      
+      <!-- Static fallback image if video fails -->
+      <div class="hero-background-image" *ngIf="videoError()"></div>
       
       <!-- Gradient overlay for text readability -->
       <div class="video-overlay"></div>
@@ -40,45 +53,33 @@
     
     <!-- Hero Content (single headline) -->
     <div class="hero-content">
-      <!-- Back to Home (positioned within hero) -->
+      <!-- Back to Home — Brand Logo Button -->
       <button class="back-button" 
               routerLink="/"
               [attr.aria-label]="languageService.t()('auth.backToHome') || 'Back to Home'">
-        <mat-icon>arrow_back</mat-icon>
+        <img src="assets/images/logos/only_F.png" 
+             alt="Feed In Green" 
+             class="back-logo-img" />
+        <span class="back-label">{{ languageService.t()('auth.backToHome') || 'Home' }}</span>
       </button>
       
       <!-- Single Main Headline -->
       <div class="headline-container">
         <h1 class="main-headline">
-          {{ languageService.t()('auth.welcomeTitle') || 'Welcome to Feedn' }}
+          {{ languageService.t()('auth.welcomeTitle') }}
         </h1>
         <p class="sub-headline">
-          {{ languageService.t()('auth.welcomeSubtitle') || 'Smart farming starts here' }}
+          {{ languageService.t()('auth.welcomeSubtitle') }}
         </p>
       </div>
-      
-      <!-- Logo (subtle, positioned in hero) -->
-      <div class="hero-logo">
-        <mat-icon *ngIf="showFallbackIcon(); else logoImage" class="logo-icon">eco</mat-icon>
-        <ng-template #logoImage>
-          <img [src]="config.assets.logo" 
-               alt="Feedn" 
-               (error)="onLogoError($event)" 
-               loading="eager"
-               fetchpriority="high" 
-               decoding="async" />
-        </ng-template>
-      </div>
     </div>
-    
-    <!-- Gradient fade into form section (seamless merge) -->
-    <div class="video-fade-edge"></div>
   </section>
   
   <!-- =====================================================
-       FORM SECTION (seamless surface continuation)
+       RIGHT COLUMN (40% Desktop) / FORM SECTION (Mobile)
        ===================================================== -->
-  <section class="form-section" aria-label="Login form">
+  <section class="form-section" aria-label="Login form"
+           style="contain: layout style;">
     
     <!-- Screen reader live region -->
     <div class="sr-only" 
@@ -88,90 +89,136 @@
          id="login-status">
     </div>
     
-    <!-- Form Surface (no card boundaries) -->
-    <div class="form-surface" [class.shake-animation]="hasLoginError()">
+    <!-- Form Surface (Centered in 40% container) -->
+    <div class="form-surface" 
+         [class.shake-animation]="hasLoginError()"
+         data-testid="login-form-container"
+         style="will-change: transform, box-shadow;">
       
-      <!-- Login Form (starts directly with inputs - no competing headline) -->
+      <!-- Welcome Header & Branding -->
+      <div class="welcome-header">
+        <div class="brand-logo-inline">
+          <mat-icon *ngIf="showFallbackIcon(); else formLogo" class="brand-icon">eco</mat-icon>
+          <ng-template #formLogo>
+            <img [src]="config.assets.logo" 
+                 alt="Feed In Green" 
+                 (error)="onLogoError($event)" 
+                 loading="eager" />
+          </ng-template>
+        </div>
+        <h2 class="welcome-title">
+          {{ languageService.t()('auth.welcomeBack') || 'Heureux de vous revoir !' }}
+        </h2>
+        <p class="welcome-subtitle">
+          {{ languageService.t()('auth.signInToContinue') || 'Accédez à votre espace vitalisé et reprenez le contrôle' }}
+        </p>
+      </div>
+
+      <!-- Login Form -->
       <form [formGroup]="loginForm" 
             (ngSubmit)="onSubmit()" 
             class="login-form"
-            novalidate>
+            novalidate
+            data-testid="login-form">
         
-        <!-- Email Field -->
-        <mat-form-field appearance="outline" 
-                        class="form-field"
-                        (focusin)="onFocus($event)"
-                        (focusout)="onBlur($event); trimEmail()">
-          <mat-label>{{ languageService.t()('auth.email') || 'Email' }}</mat-label>
-          <input matInput 
-                 formControlName="email" 
-                 id="email-input" 
-                 type="email" 
-                 inputmode="email" 
-                 autocomplete="email"
-                 required 
-                 [placeholder]="languageService.t()('auth.emailPlaceholder') || 'name@example.com'" />
-          <mat-icon matPrefix class="field-icon">alternate_email</mat-icon>
-          <button mat-icon-button 
-                  matSuffix 
-                  *ngIf="loginForm.get('email')?.value && !loginForm.get('email')?.disabled"
-                  (click)="clearEmail()" 
-                  type="button" 
-                  tabindex="-1" 
-                  class="clear-button"
-                  [attr.aria-label]="languageService.t()('auth.clearEmail') || 'Clear email'">
-            <mat-icon>close</mat-icon>
-          </button>
-          <mat-error *ngIf="hasError('email')" class="field-error">
+        <!-- Custom Email Field -->
+        <div class="custom-field-container" data-testid="email-field">
+          <div class="custom-field" [class.has-error]="hasError('email')">
+            <mat-icon class="field-icon prefix">alternate_email</mat-icon>
+            <div class="input-wrapper">
+              <input formControlName="email" 
+                     id="email-input" 
+                     type="email" 
+                     class="custom-input"
+                     placeholder=" "
+                     autocomplete="email"
+                     inputmode="email"
+                     [attr.aria-describedby]="hasError('email') ? 'email-error' : null"
+                     [attr.aria-invalid]="hasError('email')"
+                     (focusin)="onFocus($event)"
+                     (focusout)="onBlur($event); trimEmail()"
+                     data-testid="email-input">
+              <label for="email-input" class="custom-label">{{ languageService.t()('auth.email') || 'Email' }}</label>
+            </div>
+            <button *ngIf="loginForm.get('email')?.value && !loginForm.get('email')?.disabled"
+                    type="button" 
+                    class="action-btn" 
+                    (click)="clearEmail()"
+                    tabindex="-1"
+                    [attr.aria-label]="languageService.t()('auth.clearEmail') || 'Clear email'"
+                    data-testid="clear-email-btn">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div class="error-text" 
+               id="email-error" 
+               *ngIf="hasError('email')"
+               role="alert"
+               data-testid="email-error">
             {{ getErrorMessage('email') }}
-          </mat-error>
-        </mat-form-field>
+          </div>
+        </div>
         
-        <!-- Password Field -->
-        <mat-form-field appearance="outline" 
-                        class="form-field"
-                        (focusin)="onFocus($event)" 
-                        (focusout)="onBlur($event)">
-          <mat-label>{{ languageService.t()('auth.password') || 'Password' }}</mat-label>
-          <input matInput 
-                 id="password-input" 
-                 formControlName="password" 
-                 [type]="hidePassword() ? 'password' : 'text'"
-                 autocomplete="current-password" 
-                 required
-                 [placeholder]="languageService.t()('auth.passwordPlaceholder') || 'Enter your password'"
-                 (keydown)="checkCapsLock($event)" 
-                 (keyup)="checkCapsLock($event)" />
-          <mat-icon matPrefix class="field-icon">lock_outline</mat-icon>
-          <button mat-icon-button 
-                  matSuffix 
-                  type="button" 
-                  (click)="togglePasswordVisibility()" 
-                  [matTooltip]="hidePassword()
-                    ? (languageService.t()('auth.showPassword') || 'Show password')
-                    : (languageService.t()('auth.hidePassword') || 'Hide password')"
-                  matTooltipPosition="above"
-                  [attr.aria-label]="hidePassword()
-                    ? (languageService.t()('auth.showPassword') || 'Show password')
-                    : (languageService.t()('auth.hidePassword') || 'Hide password')">
-            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          <mat-error *ngIf="hasError('password')" class="field-error">
-            {{ getErrorMessage('password') }}
-          </mat-error>
-          <mat-hint *ngIf="capsLockOn()" class="caps-warning" align="end">
-            <mat-icon inline>warning</mat-icon> Caps Lock is ON
-          </mat-hint>
-        </mat-form-field>
-        
-
+        <!-- Custom Password Field -->
+        <div class="custom-field-container" data-testid="password-field">
+          <div class="custom-field" [class.has-error]="hasError('password')">
+            <mat-icon class="field-icon prefix">lock_outline</mat-icon>
+            <div class="input-wrapper">
+              <input id="password-input" 
+                     formControlName="password" 
+                     [type]="hidePassword() ? 'password' : 'text'"
+                     class="custom-input"
+                     placeholder=" "
+                     autocomplete="current-password"
+                     [attr.aria-describedby]="getPasswordAriaDescribedBy()"
+                     [attr.aria-invalid]="hasError('password')"
+                     (focusin)="onFocus($event)"
+                     (focusout)="onBlur($event)"
+                     (keydown)="checkCapsLock($event)" 
+                     (keyup)="checkCapsLock($event)"
+                     data-testid="password-input">
+              <label for="password-input" class="custom-label">{{ languageService.t()('auth.password') || 'Password' }}</label>
+            </div>
+            <button type="button" 
+                    class="action-btn" 
+                    (click)="togglePasswordVisibility()"
+                    tabindex="-1"
+                    [matTooltip]="hidePassword() ? (languageService.t()('auth.showPassword') || 'Show password') : (languageService.t()('auth.hidePassword') || 'Hide password')"
+                    matTooltipPosition="above"
+                    data-testid="toggle-password-btn">
+              <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          
+          <div class="field-hints">
+            <div class="error-text" 
+                 id="password-error" 
+                 *ngIf="hasError('password')"
+                 role="alert"
+                 data-testid="password-error">
+              {{ getErrorMessage('password') }}
+            </div>
+            <div class="caps-warning-text" 
+                 id="caps-warning"
+                 *ngIf="capsLockOn()"
+                 role="status"
+                 data-testid="caps-warning">
+              <mat-icon inline>warning</mat-icon> {{ languageService.t()('auth.capsLockWarning') || 'Caps Lock is ON' }}
+            </div>
+          </div>
+        </div>
         
         <!-- Options Row -->
-        <div class="options-row">
-          <mat-checkbox formControlName="rememberMe" color="primary" class="remember-checkbox">
+        <div class="options-row" data-testid="options-row">
+          <mat-checkbox formControlName="rememberMe" 
+                        color="primary" 
+                        class="remember-checkbox"
+                        data-testid="remember-me-checkbox">
             {{ languageService.t()('auth.rememberMe') || 'Remember me' }}
           </mat-checkbox>
-          <a routerLink="/forgot-password" class="forgot-link">
+          <a routerLink="/forgot-password" 
+             class="forgot-link"
+             data-testid="forgot-password-link">
             {{ languageService.t()('auth.forgotPassword') || 'Forgot password?' }}
           </a>
         </div>
@@ -183,7 +230,8 @@
                 class="login-button"
                 [class.btn-ready]="loginForm.get('email')?.value && loginForm.get('password')?.value"
                 [attr.aria-busy]="isLoading()"
-                [disabled]="isLoading()">
+                [disabled]="isLoading()"
+                data-testid="login-submit-btn">
           <span *ngIf="!isLoading()">
             {{ languageService.t()('auth.loginButton') || 'Sign In' }}
           </span>
@@ -196,16 +244,20 @@
       </form>
       
       <!-- Footer Links -->
-      <div class="form-footer">
+      <div class="form-footer" data-testid="form-footer">
         <p class="register-prompt">
           {{ languageService.t()('auth.noAccount') || "Don't have an account?" }}
-          <a routerLink="/request-access" class="register-link">
+          <a routerLink="/request-access" 
+             class="register-link"
+             data-testid="register-link">
             {{ languageService.t()('auth.requestAccess') || 'Request access' }}
           </a>
         </p>
         
         <!-- Optional: Contact expert CTA -->
-        <a routerLink="/contact" class="expert-link">
+        <a routerLink="/contact" 
+           class="expert-link"
+           data-testid="help-link">
           <mat-icon>support_agent</mat-icon>
           {{ languageService.t()('auth.needHelp') || 'Need help getting started?' }}
         </a>

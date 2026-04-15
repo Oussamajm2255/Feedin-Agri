@@ -8,6 +8,7 @@
  * @section Landing Page — below Hero, above Bento Grid
  */
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
 /** Partner logo entry */
 interface Partner {
@@ -20,6 +21,7 @@ interface Partner {
 @Component({
   selector: 'app-partner-carousel',
   standalone: true,
+  imports: [TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './partner-carousel.component.html',
   styleUrls: ['./partner-carousel.component.scss'],

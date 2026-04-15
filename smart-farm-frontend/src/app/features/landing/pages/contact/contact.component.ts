@@ -1871,9 +1871,7 @@ export class ContactComponent implements OnInit {
         },
         error: () => {
           this.sending.set(false);
-          // Fallback: still show success to user (graceful degradation)
-          this.sent.set(true);
-          this.toastService.success('landing.contact.form.sentTitle');
+          this.toastService.error('landing.contact.form.errorTitle');
         },
       });
   }

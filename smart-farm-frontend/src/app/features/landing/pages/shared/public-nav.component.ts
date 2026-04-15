@@ -35,6 +35,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
               loading="eager"
               fetchpriority="high"
               decoding="async"
+              style="contain: layout;"
             />
           </div>
           <span class="brand-text jersey-10-regular">FEEDIN</span>
@@ -66,7 +67,11 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         <div class="nav-actions">
           <app-language-switcher></app-language-switcher>
           <button class="nav-btn secondary nav-login-btn" (click)="go('/login')" aria-label="Login">
-            <span class="material-icons cta-icon">login</span>
+            <svg class="nav-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
             <span class="desktop-content">{{ 'landing.nav.login' | translate }}</span>
           </button>
           <button
@@ -508,6 +513,24 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
       .nav-btn.primary:hover .cta-sparkle {
         transform: rotate(15deg) scale(1.1);
       }
+      
+      /* SVG icon styles - instant rendering */
+      .nav-icon-svg {
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+        /* GPU acceleration for icons */
+        will-change: transform;
+      }
+      .nav-btn.primary:hover .nav-icon-svg {
+        transform: rotate(15deg) scale(1.1);
+      }
+      .nav-arrow-icon {
+        opacity: 0.7;
+      }
+      .nav-btn.primary:hover .nav-arrow-icon {
+        opacity: 1;
+        transform: translateX(2px);
+      }
       /* Arrow icon — hidden by default, slides in on hover */
       .cta-arrow {
         font-size: 0.875rem;
@@ -554,10 +577,11 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
           align-items: center;
           gap: 0;
         }
-        .nav-btn.primary.cta-expert .cta-sparkle,
-        .nav-btn.secondary.nav-login-btn .cta-icon {
+        .nav-btn.primary.cta-expert .nav-icon-svg,
+        .nav-btn.secondary.nav-login-btn .nav-icon-svg {
           margin: 0;
-          font-size: 1.25rem;
+          width: 20px;
+          height: 20px;
         }
       }
 

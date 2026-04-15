@@ -953,6 +953,85 @@ export class AdminApiService {
   }
 
   // ========================
+  // LEADS MANAGEMENT
+  // ========================
+
+  /**
+   * GET /admin/leads/contact
+   * Get contact messages with pagination
+   */
+  getContactMessages(page: number = 1, limit: number = 20, status?: string): Observable<{
+    items: Array<{
+      id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      phone?: string;
+      project_type: string;
+      message: string;
+      status: string;
+      created_at: string;
+      updated_at: string;
+    }>;
+    total: number;
+    page: number;
+    limit: number;
+    newCount: number;
+  }> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    if (status) params = params.set('status', status);
+    return this.http.get<any>(`${this.API_URL}/admin/leads/contact`, { params });
+  }
+
+  /**
+   * PATCH /admin/leads/contact/:id/status
+   * Update contact message status
+   */
+  updateContactMessageStatus(id: string, status: string): Observable<any> {
+    return this.http.patch<any>(`${this.API_URL}/admin/leads/contact/${id}/status`, { status });
+  }
+
+  /**
+   * GET /admin/leads/training
+   * Get training requests with pagination
+   */
+  getTrainingRequests(page: number = 1, limit: number = 20, status?: string): Observable<{
+    items: Array<{
+      id: string;
+      full_name: string;
+      email: string;
+      phone?: string;
+      training_type: string;
+      farm_size?: string;
+      region?: string;
+      message?: string;
+      status: string;
+      created_at: string;
+      updated_at: string;
+    }>;
+    total: number;
+    page: number;
+    limit: number;
+    newCount: number;
+  }> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    if (status) params = params.set('status', status);
+    return this.http.get<any>(`${this.API_URL}/admin/leads/training`, { params });
+  }
+
+  /**
+   * PATCH /admin/leads/training/:id/status
+   * Update training request status
+   */
+  updateTrainingRequestStatus(id: string, status: string): Observable<any> {
+    return this.http.patch<any>(`${this.API_URL}/admin/leads/training/${id}/status`, { status });
+  }
+
+  // ========================
   // GENERIC HTTP METHODS
   // ========================
 

@@ -130,7 +130,29 @@
     "stepFarm": "المزرعة",
     "nextStep": "التالي: تفاصيل المزرعة",
     "back": "رجوع",
-    "backToHome": "العودة للرئيسية"
+    "backToHome": "العودة للرئيسية",
+    "welcomeTitle": "مرحباً بك في Feed In Green",
+    "welcomeSubtitle": "الزراعة الذكية تبدأ من هنا",
+    "signInToContinue": "سجّل الدخول إلى حسابك للمتابعة",
+    "clearEmail": "مسح البريد الإلكتروني",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "needHelp": "هل تحتاج مساعدة للبدء؟",
+    "loginSuccessMessage": "تم تسجيل الدخول بنجاح",
+    "strengthWeak": "ضعيف",
+    "strengthFair": "مقبول",
+    "strengthGood": "جيد",
+    "strengthStrong": "قوي",
+    "passwordTooShort": "يجب أن تكون كلمة المرور {min} أحرف على الأقل",
+    "warning": "تحذير",
+    "error": "خطأ",
+    "serverUnreachable": "تعذر الوصول إلى الخادم. يرجى المحاولة مرة أخرى.",
+    "offline": "يبدو أنك غير متصل. تحقق من اتصالك.",
+    "pendingApproval": "حسابك قيد الموافقة. سيتم إشعارك عبر البريد الإلكتروني.",
+    "serverError": "خطأ في الخادم. يرجى المحاولة لاحقاً.",
+    "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+    "rateLimitReached": "محاولات كثيرة جداً. يرجى المحاولة لاحقاً.",
+    "capsLockWarning": "Caps Lock مفعّل"
   },
   "pending": {
     "title": "طلبك قيد المراجعة",
@@ -520,6 +542,79 @@
         "invoiceHistory": "سجل الفواتير",
         "paymentMethods": "طرق الدفع",
         "subscriptionPlans": "خطط الاشتراك"
+      },
+      "dialog": {
+        "title": {
+          "view": "تفاصيل المزارع",
+          "edit": "تعديل {{name}}"
+        },
+        "quickActions": {
+          "title": "إجراءات سريعة",
+          "assignFarm": "تخصيص مزرعة",
+          "viewFarms": "عرض جميع المزارع",
+          "impersonate": "انتحال شخصية المزارع",
+          "resetLink": "إرسال رابط إعادة تعيين كلمة المرور"
+        },
+        "sections": {
+          "personalInfo": "المعلومات الشخصية",
+          "location": "معلومات الموقع",
+          "accountInfo": "معلومات الحساب"
+        },
+        "fields": {
+          "firstName": "الاسم الأول",
+          "lastName": "اسم العائلة",
+          "email": "البريد الإلكتروني",
+          "phone": "رقم الهاتف",
+          "status": "الحالة",
+          "deviceId": "معرف الجهاز",
+          "city": "المدينة",
+          "country": "البلد"
+        },
+        "placeholders": {
+          "firstName": "أدخل الاسم الأول",
+          "lastName": "أدخل اسم العائلة",
+          "email": "أدخل البريد الإلكتروني",
+          "phone": "أدخل رقم الهاتف",
+          "city": "أدخل المدينة",
+          "country": "أدخل البلد"
+        },
+        "hints": {
+          "emailReadonly": "لا يمكن تغيير البريد الإلكتروني",
+          "deviceIdReadonly": "يتم تعيين معرف الجهاز تلقائياً"
+        },
+        "status": {
+          "active": "نشط",
+          "inactive": "غير نشط",
+          "suspended": "معلق"
+        },
+        "metadata": {
+          "userId": "معرف المستخدم",
+          "role": "الدور",
+          "createdAt": "تاريخ الإنشاء",
+          "updatedAt": "آخر تحديث",
+          "lastLogin": "آخر تسجيل دخول"
+        },
+        "actions": {
+          "edit": "تعديل",
+          "save": "حفظ التغييرات",
+          "cancel": "إلغاء"
+        },
+        "errors": {
+          "loadFailed": "فشل تحميل تفاصيل المزارع",
+          "formErrors": "يرجى تصحيح الأخطاء في النموذج",
+          "noChanges": "لم يتم اكتشاف أي تغييرات",
+          "missingId": "معرف المزارع مفقود",
+          "updateFailed": "فشل تحديث معلومات المزارع",
+          "impersonateFailed": "فشل انتحال شخصية المزارع",
+          "required": "هذا الحقل مطلوب",
+          "invalidEmail": "بريد إلكتروني غير صالح",
+          "maxLength": "الحد الأقصى {{max}} حرف مسموح"
+        },
+        "success": {
+          "updated": "تم تحديث المزارع بنجاح",
+          "impersonated": "تم انتحال شخصية المزارع بنجاح",
+          "resetLinkSent": "تم إرسال رابط إعادة تعيين كلمة المرور"
+        }
       }
     },
     "overview": {
@@ -2623,12 +2718,21 @@
       "anomalies": "الشذوذات",
       "anomaliesOnly": "الشذوذات فقط",
       "anomaliesOnlyTooltip": "عرض المستشعرات ذات الشذوذات فقط",
+      "section": "الفلاتر",
+      "removeFarm": "إزالة فلتر المزرعة",
+      "removeFarmer": "إزالة فلتر المزارع",
+      "removeType": "إزالة فلتر نوع المستشعر",
+      "removeAnomalies": "إزالة فلتر الشذوذات",
       "clearAll": "مسح الكل",
       "plural": ""
     },
     "search": {
       "label": "ابحث عن مستشعرات، مزارع، أجهزة…",
-      "placeholder": "اكتب للبحث…"
+      "placeholder": "اكتب للبحث…",
+      "clear": "مسح البحث"
+    },
+    "kpi": {
+      "section": "مؤشرات الأداء الرئيسية"
     },
     "tabs": {
       "overview": "نظرة عامة",
@@ -2662,6 +2766,7 @@
       "device": "الجهاز",
       "latestValue": "أحدث قيمة",
       "average": "المتوسط",
+      "trend": "الاتجاه",
       "min": "الحد الأدنى",
       "max": "الحد الأقصى",
       "readings": "القراءات",
@@ -2688,6 +2793,8 @@
       "warning": "تحذير",
       "critical": "حرج",
       "offline": "غير متصل",
+      "healthy": "سليم",
+      "degraded": "متدهور",
       "distributionTitle": "توزيع الصحة",
       "anomalyAuditLog": "سجل تدقيق الشذوذات",
       "systemHealthy": "النظام سليم",
@@ -2713,7 +2820,10 @@
       "owner": "المالك",
       "location": "الموقع",
       "statusHealth": "الحالة والصحة",
+      "keyMetrics": "المقاييس الرئيسية",
       "readingStats": "إحصائيات القراءة",
+      "readingsChart": "رسم بياني لسجل القراءات",
+      "noReadings": "لا توجد قراءات متاحة لهذا المستشعر",
       "latest": "الأحدث",
       "average": "المتوسط",
       "minimum": "الحد الأدنى",
@@ -2729,6 +2839,9 @@
       "lastReading": "آخر قراءة",
       "sensorId": "معرف المستشعر",
       "deviceId": "معرف الجهاز",
+      "previousSensor": "المستشعر السابق",
+      "nextSensor": "المستشعر التالي",
+      "close": "إغلاق تفاصيل المستشعر",
       "viewSensor": "عرض المستشعر",
       "notFound": "المستشعر غير موجود"
     }
@@ -2757,6 +2870,10 @@
       "ctaHelper": "فريقنا يساعدك في إعداد مزرعتك الذكية.",
       "helper": "فريقنا يساعدك في إعداد مزرعتك الذكية.",
       "scrollDown": "اكتشف"
+    },
+    "partner": {
+      "title": "يثقون بنا",
+      "subtitle": "نتعاون مع المبتكرين في الزراعة والتكنولوجيا"
     },
     "bento": {
       "label": "حلولنا",
@@ -3508,7 +3625,8 @@
         "emailInvalid": "بريد إلكتروني غير صالح",
         "successTitle": "تم إرسال الطلب!",
         "successSub": "سيتواصل فريقنا معك خلال 24 ساعة لتنظيم تدريبك.",
-        "successClose": "إغلاق"
+        "successClose": "إغلاق",
+        "errorTitle": "حدث خطأ. يرجى المحاولة مرة أخرى."
       }
     },
     "contact": {
@@ -3598,7 +3716,8 @@
         "sentSub": "سنردّ عليك في غضون 24 ساعة.",
         "req": "هذا الحقل مطلوب",
         "emailReq": "بريد إلكتروني صالح مطلوب",
-        "typeReq": "يرجى اختيار نوع"
+        "typeReq": "يرجى اختيار نوع",
+        "errorTitle": "فشل الإرسال. يرجى المحاولة مرة أخرى."
       },
       "reg": {
         "title": "طلب الوصول إلى Feedin",

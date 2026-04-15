@@ -155,6 +155,27 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
   }
 
   /**
+   * Handle new lead created — notify all admins of new contact message or training request
+   */
+  @OnEvent('lead.created')
+  handleLeadCreated(data: { type: 'contact' | 'training'; lead: any }) {
+    console.log(`📨 [ADMIN-WS] New ${data.type} lead from: ${data.lead.email}`);
+    this.server.emit('lead:new', {
+      type: data.type,
+      lead: data.lead,
+    });
+  }
+
+  /**
+   * Handle lead status change — notify all admins
+   */
+  @OnEvent('lead.status-changed')
+  handleLeadStatusChanged(data: { type: string; id: string; status: string }) {
+    console.log(`📝 [ADMIN-WS] Lead status changed: ${data.type} ${data.id} → ${data.status}`);
+    this.server.emit('lead:status-changed', data);
+  }
+
+  /**
    * Get number of connected admins
    */
   getConnectedAdminsCount(): number {

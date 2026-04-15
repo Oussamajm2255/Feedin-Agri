@@ -384,5 +384,63 @@ export class AdminController {
   async updateSettings(@Body() settingsData: any) {
     return this.adminService.updateSettings(settingsData);
   }
+
+  // ========================
+  // LEADS MANAGEMENT
+  // ========================
+
+  /**
+   * GET /admin/leads/contact
+   * List contact messages with pagination
+   */
+  @Get('leads/contact')
+  async getContactMessages(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('status') status?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 20;
+    return this.adminService.getContactMessages(pageNum, limitNum, status);
+  }
+
+  /**
+   * PATCH /admin/leads/contact/:id/status
+   * Update a contact message status
+   */
+  @Patch('leads/contact/:id/status')
+  async updateContactMessageStatus(
+    @Param('id') id: string,
+    @Body() body: { status: string },
+  ) {
+    return this.adminService.updateContactMessageStatus(id, body.status);
+  }
+
+  /**
+   * GET /admin/leads/training
+   * List training requests with pagination
+   */
+  @Get('leads/training')
+  async getTrainingRequests(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('status') status?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 20;
+    return this.adminService.getTrainingRequests(pageNum, limitNum, status);
+  }
+
+  /**
+   * PATCH /admin/leads/training/:id/status
+   * Update a training request status
+   */
+  @Patch('leads/training/:id/status')
+  async updateTrainingRequestStatus(
+    @Param('id') id: string,
+    @Body() body: { status: string },
+  ) {
+    return this.adminService.updateTrainingRequestStatus(id, body.status);
+  }
 }
 

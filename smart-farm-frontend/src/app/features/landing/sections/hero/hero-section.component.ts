@@ -1030,6 +1030,43 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
           transition: none;
         }
       }
+
+      /* =========================================
+       MOBILE PERFORMANCE OPTIMIZATIONS (<1024px)
+       Disable heavy effects on mobile devices
+       ========================================= */
+      @media (max-width: 1023px) {
+        /* Disable Three.js canvas rendering on mobile */
+        .hero-canvas {
+          display: none !important;
+        }
+
+        /* Reduce backdrop-filter blur for better performance */
+        .hero-backdrop::before {
+          display: none;
+        }
+
+        /* Disable ambient glow animations */
+        .ambient-glow {
+          animation: none !important;
+          opacity: 0.08 !important;
+        }
+
+        /* Simplify CTA shine effect */
+        .cta-shine {
+          display: none;
+        }
+
+        /* Reduce scroll wheel animation */
+        .scroll-wheel {
+          animation-duration: 3s !important;
+        }
+
+        /* GPU acceleration for hero content */
+        .hero-content {
+          transform: translateZ(0);
+        }
+      }
     `,
   ],
 })
@@ -1089,11 +1126,22 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
   /**
    * Determine if the device can handle Three.js particle rendering.
    * Skips on very low-end: < 2 cores, < 2GB memory, or reduced motion.
+   * Also skips on mobile to improve scroll performance.
    */
   private shouldInitThreeJS(): boolean {
     // Respect reduced motion preference
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return false;
+    }
+
+    // Skip on mobile/touch devices for better performance
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isMobile || isTouchDevice) {
+      return false; // Disable Three.js on mobile/touch devices
     }
 
     const cores = navigator.hardwareConcurrency || 4;

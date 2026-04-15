@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  ViewEncapsulation,
   signal,
   computed,
   HostListener
@@ -29,6 +30,7 @@ import { LoginRequest, UserRole, UserStatus } from '../../../core/models/user.mo
 import { LanguageService } from '../../../core/services/language.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { environment } from '../../../../environments/environment';
+import { LOGIN_CONFIG } from './login.config';
 
 /**
  * LoginComponent - Concept A: Single Canvas Experience
@@ -61,6 +63,7 @@ import { environment } from '../../../../environments/environment';
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fadeIn', [
@@ -83,6 +86,9 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   public readonly languageService = inject(LanguageService);
 
+  // Login-specific configuration (keyboard thresholds, autofill, etc)
+  protected readonly loginConfig = LOGIN_CONFIG;
+
   // =============================================================================
   // REFERENCES & CLEANUP
   // =============================================================================
@@ -94,6 +100,8 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   private autofillInterval: ReturnType<typeof setInterval> | null = null;
   private videoAbortController: AbortController | null = null;
   private initialViewportHeight: number = 0;
+  private keyboardThreshold: number = LOGIN_CONFIG.keyboard.heightThreshold;
+  private keyboardCheckDelay: number = LOGIN_CONFIG.keyboard.checkDelay;
 
   // =============================================================================
   // FORM STATE
@@ -117,9 +125,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   readonly hasLoginError = signal(false);
   readonly capsLockOn = signal(false);
   readonly isKeyboardOpen = signal(false);
+  readonly isMobileDevice = signal(false);
 
   // =============================================================================
-  // CONFIGURATION
+  // Environment configuration (auth settings, analytics)
   // =============================================================================
 
   public readonly config = environment;
@@ -163,7 +172,37 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   constructor() {
     this.loginForm = this.createLoginForm();
     this.initializeFormState();
+    // Store initial viewport height immediately
     this.initialViewportHeight = window.visualViewport?.height || window.innerHeight;
+    this.keyboardThreshold = this.loginConfig.keyboard.heightThreshold;
+    this.keyboardCheckDelay = this.loginConfig.keyboard.checkDelay;
+    
+    // Optimize for mobile immediately
+    if (this.isMobileDeviceCheck()) {
+      this.optimizeForMobile();
+    }
+  }
+  
+  /**
+   * Detect mobile device early for optimization
+   */
+  private isMobileDeviceCheck(): boolean {
+    return window.innerWidth < 768 || 
+           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+  
+  /**
+   * Apply mobile optimizations before first render
+   */
+  private optimizeForMobile(): void {
+    // Set mobile device signal
+    this.isMobileDevice.set(true);
+    
+    // Disable heavy animations on mobile
+    document.documentElement.classList.add('mobile-device');
+    
+    // Use passive event listeners for better scroll performance
+    document.addEventListener('touchstart', () => {}, { passive: true });
   }
 
   // =============================================================================
@@ -207,14 +246,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.videoAbortController?.abort();
     this.cleanupVideoListeners();
-
-    if (this.keyboardHandler) {
-      document.removeEventListener('keydown', this.keyboardHandler);
-    }
+    this.cleanupKeyboardListeners();
 
     if (this.resizeHandler) {
       window.visualViewport?.removeEventListener('resize', this.resizeHandler);
-      window.removeEventListener('resize', this.resizeHandler);
     }
 
     if (this.autofillInterval) {
@@ -223,30 +258,55 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  private cleanupKeyboardListeners(): void {
+    if (this.keyboardHandler) {
+      document.removeEventListener('keydown', this.keyboardHandler);
+    }
+    if (this.resizeHandler) {
+      window.removeEventListener('resize', this.resizeHandler);
+    }
+  }
+
   // =============================================================================
   // KEYBOARD DETECTION (for mobile keyboard-safe layout)
   // =============================================================================
 
   private setupKeyboardDetection(): void {
-    // Store initial viewport height
-    this.initialViewportHeight = window.visualViewport?.height || window.innerHeight;
-
-    // Use visualViewport API for more accurate keyboard detection
-    this.resizeHandler = () => {
-      const currentHeight = window.visualViewport?.height || window.innerHeight;
-      const heightDiff = this.initialViewportHeight - currentHeight;
+    // Use ResizeObserver for faster, more accurate detection
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        this.checkKeyboardState();
+      });
       
-      // If viewport shrinks by more than 150px, keyboard is likely open
-      const keyboardOpen = heightDiff > 150;
-      
-      if (this.isKeyboardOpen() !== keyboardOpen) {
-        this.isKeyboardOpen.set(keyboardOpen);
-        this.cdr.markForCheck();
+      // Observe the login form for size changes
+      const formElement = document.querySelector('.form-section');
+      if (formElement) {
+        resizeObserver.observe(formElement);
       }
+    }
+    
+    // Fallback to visualViewport for keyboard detection
+    this.resizeHandler = () => {
+      this.checkKeyboardState();
     };
 
     window.visualViewport?.addEventListener('resize', this.resizeHandler);
-    window.addEventListener('resize', this.resizeHandler);
+  }
+  
+  private checkKeyboardState(): void {
+    const currentHeight = window.visualViewport?.height || window.innerHeight;
+    const heightDiff = this.initialViewportHeight - currentHeight;
+    
+    // If viewport shrinks by more than threshold, keyboard is likely open
+    const keyboardOpen = heightDiff > this.keyboardThreshold;
+    
+    if (this.isKeyboardOpen() !== keyboardOpen) {
+      this.isKeyboardOpen.set(keyboardOpen);
+      // Use requestAnimationFrame for smoother state updates
+      requestAnimationFrame(() => {
+        this.cdr.markForCheck();
+      });
+    }
   }
 
   // Alternative: Detect focus on input fields
@@ -254,15 +314,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   onFocusIn(event: FocusEvent): void {
     const target = event.target as HTMLElement;
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-      // Small delay to let keyboard animate in
-      setTimeout(() => {
-        const currentHeight = window.visualViewport?.height || window.innerHeight;
-        const heightDiff = this.initialViewportHeight - currentHeight;
-        if (heightDiff > 150) {
-          this.isKeyboardOpen.set(true);
-          this.cdr.markForCheck();
-        }
-      }, 100);
+      // Use requestAnimationFrame for immediate response
+      requestAnimationFrame(() => {
+        this.checkKeyboardState();
+      });
     }
   }
 
@@ -270,15 +325,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   onFocusOut(event: FocusEvent): void {
     const target = event.target as HTMLElement;
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-      // Small delay to let keyboard animate out
-      setTimeout(() => {
-        const currentHeight = window.visualViewport?.height || window.innerHeight;
-        const heightDiff = this.initialViewportHeight - currentHeight;
-        if (heightDiff <= 150) {
-          this.isKeyboardOpen.set(false);
-          this.cdr.markForCheck();
-        }
-      }, 100);
+      // Use requestAnimationFrame for smoother transition
+      requestAnimationFrame(() => {
+        this.checkKeyboardState();
+      });
     }
   }
 
@@ -294,32 +344,55 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
     if (isSlow) {
       this.videoError.set(true);
+      this.log('info', 'Video skipped due to slow connection');
       return;
     }
 
     const video = this.bgVideo?.nativeElement;
     if (!video) {
       this.videoError.set(true);
+      this.log('error', 'Video element not found');
       return;
     }
 
     this.videoAbortController = new AbortController();
 
-    // Defer video load for better initial render performance
-    setTimeout(() => {
+    // Preload video immediately for instant display on page load
+    video.preload = 'auto';
+    this.attachVideoListeners(video);
+    video.muted = true;
+    
+    // Set explicit dimensions to prevent layout shift
+    video.width = 1920;
+    video.height = 1080;
+    
+    // Force immediate load and play on component init
+    requestAnimationFrame(() => {
       if (this.videoAbortController?.signal.aborted) return;
-
-      video.preload = 'metadata';
-      this.attachVideoListeners(video);
-      video.muted = true;
+      
+      // Load and play immediately
       video.load();
-      this.playVideo();
-    }, 300);
+      
+      // Use canplay event to ensure video is buffered enough to show
+      const onCanPlay = () => {
+        video.removeEventListener('canplay', onCanPlay);
+        this.playVideo();
+      };
+      video.addEventListener('canplay', onCanPlay);
+      
+      // Fallback: try play after timeout even if not fully buffered
+      const loadTimeout = setTimeout(() => {
+        clearTimeout(loadTimeout);
+        if (!this.isVideoLoaded()) {
+          this.playVideo();
+        }
+      }, this.loginConfig.video.loadTimeout);
+    });
   }
 
   private attachVideoListeners(video: HTMLVideoElement): void {
     video.addEventListener('loadeddata', this.onVideoLoaded.bind(this));
-    video.addEventListener('ended', this.onVideoEnded.bind(this));
+    video.addEventListener('timeupdate', this.onVideoTimeUpdate.bind(this));
     video.addEventListener('error', this.onVideoError.bind(this));
   }
 
@@ -328,7 +401,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     if (!video) return;
 
     video.removeEventListener('loadeddata', this.onVideoLoaded);
-    video.removeEventListener('ended', this.onVideoEnded);
+    video.removeEventListener('timeupdate', this.onVideoTimeUpdate);
     video.removeEventListener('error', this.onVideoError);
   }
 
@@ -337,13 +410,20 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  private onVideoEnded(): void {
-    this.bgVideo?.nativeElement?.pause();
+  private onVideoTimeUpdate(): void {
+    const video = this.bgVideo?.nativeElement;
+    if (!video || video.duration === 0) return;
+
+    // Pause 1 second before the end
+    const pauseTime = video.duration - 1;
+    if (video.currentTime >= pauseTime) {
+      video.pause();
+    }
   }
 
   private onVideoError(): void {
     this.videoError.set(true);
-    console.warn('Video failed to load, using fallback background');
+    this.log('warn', 'Video failed to load, using fallback background');
     this.cdr.markForCheck();
   }
 
@@ -351,8 +431,8 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     const video = this.bgVideo?.nativeElement;
     if (!video) return;
 
-    video.play()?.catch(() => {
-      console.warn('Video autoplay prevented by browser');
+    video.play()?.catch((error) => {
+      this.log('warn', 'Video autoplay prevented by browser', error);
       video.currentTime = 0;
     });
   }
@@ -413,7 +493,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.hasLoginError.set(true);
 
     // Reset error state after animation
-    setTimeout(() => this.hasLoginError.set(false), 600);
+    setTimeout(() => this.hasLoginError.set(false), this.loginConfig.animations.shakeDuration);
 
     this.trackLoginAttempt(this.loginForm.get('email')?.value, false);
     this.incrementLoginAttempts();
@@ -425,7 +505,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.showErrorMessage(error);
     this.announceToScreenReader(error);
 
-    console.error('Login error:', error);
+    this.log('error', 'Login failed', error);
   }
 
   private announceToScreenReader(error: any): void {
@@ -561,12 +641,15 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   }
 
   private focusInitialField(): void {
-    const emailControl = this.loginForm.get('email');
-    if (!emailControl?.value) {
-      document.getElementById('email-input')?.focus();
-    } else {
-      document.getElementById('password-input')?.focus();
-    }
+    // Use requestAnimationFrame for immediate focus without layout shift
+    requestAnimationFrame(() => {
+      const emailControl = this.loginForm.get('email');
+      if (!emailControl?.value) {
+        document.getElementById('email-input')?.focus();
+      } else {
+        document.getElementById('password-input')?.focus();
+      }
+    });
   }
 
   checkCapsLock(event: KeyboardEvent): void {
@@ -574,6 +657,21 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
       const capsLockActive = event.getModifierState('CapsLock');
       this.capsLockOn.set(capsLockActive);
     }
+  }
+
+  /**
+   * Get ARIA describedby IDs for password field
+   * Combines error and caps lock warning IDs as needed
+   */
+  getPasswordAriaDescribedBy(): string | null {
+    const ids: string[] = [];
+    if (this.hasError('password')) {
+      ids.push('password-error');
+    }
+    if (this.capsLockOn()) {
+      ids.push('caps-warning');
+    }
+    return ids.length > 0 ? ids.join(' ') : null;
   }
 
   clearEmail(): void {
@@ -753,9 +851,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   // =============================================================================
 
   private setupAutofillDetection(): void {
-    // Initial checks
-    setTimeout(() => this.checkAndUpdateAutofill(), 100);
-    setTimeout(() => this.checkAndUpdateAutofill(), 500);
+    // Initial checks using config delays
+    this.loginConfig.autofill.initialChecks.forEach(delay => {
+      setTimeout(() => this.checkAndUpdateAutofill(), delay);
+    });
 
     // Setup input listeners
     const emailInput = document.getElementById('email-input') as HTMLInputElement;
@@ -795,9 +894,9 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
       });
     }
 
-    // Periodic check
+    // Periodic check - optimized with longer interval and fewer checks
     let checkCount = 0;
-    const maxChecks = 30;
+    const maxChecks = this.loginConfig.autofill.maxChecks;
     this.autofillInterval = setInterval(() => {
       checkCount++;
       if (this.hasAutofilledValues()) {
@@ -805,14 +904,16 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
         if (this.autofillInterval) {
           clearInterval(this.autofillInterval);
           this.autofillInterval = null;
+          this.log('debug', 'Autofill detected, cleared interval');
         }
       } else if (checkCount >= maxChecks) {
         if (this.autofillInterval) {
           clearInterval(this.autofillInterval);
           this.autofillInterval = null;
+          this.log('debug', 'Autofill check timeout after', maxChecks, 'attempts');
         }
       }
-    }, 100);
+    }, this.loginConfig.autofill.checkInterval);
   }
 
   private syncInputToForm(controlName: 'email' | 'password', value: string): void {
@@ -905,7 +1006,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
       const storage = type === 'local' ? localStorage : sessionStorage;
       storage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.warn(`Failed to save ${type} storage item:`, error);
+      this.log('warn', `Failed to save ${type} storage item`, error);
     }
   }
 
@@ -915,7 +1016,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
       const item = storage.getItem(key);
       return item ? JSON.parse(item) : null;
     } catch (error) {
-      console.warn(`Failed to load ${type} storage item:`, error);
+      this.log('warn', `Failed to load ${type} storage item`, error);
       return null;
     }
   }
@@ -926,6 +1027,48 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
   private trackLoginAttempt(email: string, success: boolean): void {
     if (!this.config.enableAnalytics) return;
-    console.log(`Login attempt: ${email}, Success: ${success}`);
+    // Sanitize email for privacy - only log domain or hash
+    const sanitized = email ? email.split('@')[1] || 'unknown' : 'anonymous';
+    this.log('info', 'Login attempt tracked', { domain: sanitized, success });
+  }
+
+  /**
+   * Production-safe logging helper
+   * Only logs in non-production or when explicitly enabled
+   */
+  private log(level: 'debug' | 'info' | 'warn' | 'error', message: string, ...args: any[]): void {
+    if (!environment.production || this.loginConfig.errorTracking.enabled) {
+      const timestamp = new Date().toISOString();
+      const prefix = `[Login ${timestamp}]`;
+      
+      // Sanitize sensitive data
+      const sanitizedArgs = args.map(arg => {
+        if (typeof arg === 'string') {
+          return arg.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]');
+        }
+        return arg;
+      });
+
+      switch (level) {
+        case 'debug':
+          if ((this.loginConfig.errorTracking.logLevel as string) === 'debug') {
+            console.debug(prefix, message, ...sanitizedArgs);
+          }
+          break;
+        case 'info':
+          if (['debug', 'info'].includes(this.loginConfig.errorTracking.logLevel as string)) {
+            console.info(prefix, message, ...sanitizedArgs);
+          }
+          break;
+        case 'warn':
+          if (['debug', 'info', 'warn'].includes(this.loginConfig.errorTracking.logLevel as string)) {
+            console.warn(prefix, message, ...sanitizedArgs);
+          }
+          break;
+        case 'error':
+          console.error(prefix, message, ...sanitizedArgs);
+          break;
+      }
+    }
   }
 }
