@@ -44,7 +44,7 @@ export class SensorActuatorRule {
   sensor_location: string | null;  // e.g., "north_zone", "greenhouse_a", or NULL
 
   @Index()
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'varchar', length: 36, nullable: true })
   farm_id: string | null;  // Specific farm or NULL for all farms
 
   @Column({ type: 'varchar', length: 100, nullable: true })

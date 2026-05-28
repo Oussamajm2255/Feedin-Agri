@@ -16,7 +16,7 @@
     <app-landing-bento-section id="bento-section"></app-landing-bento-section>
 
     <!-- 2. À propos Teaser (Deferred — loads on viewport, preserved in DOM) -->
-    @defer (on viewport; prefetch on viewport; when true) {
+    @defer (on viewport) {
     <app-a-propos id="about-section" />
     } @loading (minimum 200ms) {
     <app-skeleton-section [cards]="3" [cols]="3" />
@@ -25,7 +25,7 @@
     }
 
     <!-- 3. Valeur & Services Teaser (Deferred — loads on viewport, preserved in DOM) -->
-    @defer (on viewport; prefetch on viewport; when true) {
+    @defer (on viewport) {
     <app-valeur-agricole id="valeur-section" />
     } @loading (minimum 200ms) {
     <app-skeleton-section [cards]="3" [cols]="3" />
@@ -33,8 +33,17 @@
     <app-skeleton-section [cards]="3" [cols]="3" />
     }
 
+    <!-- 4. News Section (Deferred — loads on viewport, preserved in DOM) -->
+    @defer (on viewport) {
+    <app-landing-news id="news-section" />
+    } @loading (minimum 200ms) {
+    <app-skeleton-section [cards]="2" [cols]="2" />
+    } @placeholder {
+    <app-skeleton-section [cards]="2" [cols]="2" />
+    }
+
     <!-- 4. Appel à l'action final (Deferred — loads on viewport, preserved in DOM) -->
-    @defer (on viewport; prefetch on viewport; when true) {
+    @defer (on viewport) {
     <app-cta-final id="cta-final-section" />
     } @loading (minimum 200ms) {
     <app-skeleton-section [cards]="3" [cols]="3" />

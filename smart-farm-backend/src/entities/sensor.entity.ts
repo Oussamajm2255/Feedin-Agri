@@ -22,7 +22,7 @@ export class Sensor {
   sensor_id: string;
 
   @Index()
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 36 })
   farm_id: string;
 
   @Column({ type: 'varchar', length: 50 })

@@ -2844,6 +2844,7 @@
       "solutions": "Nos Solutions",
       "formation": "Formation",
       "projects": "Nos Projets",
+      "store": "Boutique",
       "contact": "Contact",
       "login": "Se connecter",
       "contactExpert": "Contactez un expert",
@@ -2857,7 +2858,8 @@
       "title2": "enfin prévisible.",
       "cta": "Contactez un expert",
       "cta1": "Contactez un expert",
-      "cta2": "Découvrir nos solutions",
+      "cta2": "Découvrir nos produits",
+      "cta2Badge": "100% Tunisien 🇹🇳",
       "ctaHelper": "Notre équipe vous aide à configurer votre ferme intelligente.",
       "helper": "Notre équipe vous accompagne dans l'installation de votre ferme intelligente.",
       "scrollDown": "Découvrir"
@@ -2874,22 +2876,22 @@
       "cards": [
         {
           "header": "Agriculture intelligente & systèmes innovants",
-          "desc": "Pilotez vos serres connectées et maximisez chaque m² grâce à des systèmes intelligents adaptés à votre exploitation.",
+          "desc": "Pilotez vos parcelles connectées à distance et maximisez chaque m² grâce à des systèmes intelligents adaptés à votre exploitation.",
           "bullets": [
-            "Serre connectée supervisée en temps réel",
+            "parcelles connectée supervisée en temps réel",
             "Agriculture verticale & hydroponique",
-            "Monitoring CO₂, température & luminosité"
+            "Monitoring via l’inteligence artificiel embarquée"
           ],
           "cta": "En savoir plus",
           "ctaRoute": "/solutions#smart-farming"
         },
         {
           "header": "Automatisation & autonomie des serres",
-          "desc": "Des systèmes qui apprennent, s'adaptent et agissent avant vous — pour une gestion entièrement autonome de vos cultures.",
+          "desc": "Des systèmes qui apprennent, s'adaptent et agissent avant vous — pour une gestion entièrement autonome de vos serre",
           "bullets": [
             "Règles d'automatisation personnalisées",
             "IA embarquée & machine learning",
-            "Tableau de bord centralisé & alertes"
+            "Tableau de bord centralisé & alertes Précoce"
           ],
           "cta": "En savoir plus",
           "ctaRoute": "/solutions#automation"
@@ -2898,9 +2900,9 @@
           "header": "Développement agricole & accompagnement",
           "desc": "De la conception à l'exploitation, notre équipe vous accompagne avec un service clé en main et un support expert.",
           "bullets": [
-            "Aménagement & installation sur mesure",
+            "Support technique local & réactif",
             "Formation & montée en compétences",
-            "Support technique local & réactif"
+            "Aménagement & installation sur mesure"
           ],
           "cta": "Découvrir nos services",
           "ctaRoute": "/services#development"
@@ -2913,14 +2915,14 @@
       "desc1": "Feedin est née d'une conviction simple : l'agriculture mérite les meilleurs outils. Nous concevons des serres connectées, des systèmes d'automatisation et des formations pour que chaque agriculteur puisse travailler avec précision, sérénité et efficacité.",
       "desc2": "Nous ne vendons pas des gadgets. Nous construisons des partenariats durables avec des professionnels qui veulent aller plus loin.",
       "features": [
-        "Solutions 100% adaptées au climat tunisien",
+        "Solutions 100% Sur mesure",
         "Support technique local et réactif",
         "Installation et accompagnement inclus",
         "Technologie éprouvée sur le terrain"
       ],
       "cta": "Découvrir notre histoire",
       "card1": {
-        "title": "12+",
+        "title": "8+",
         "sub": "Années d'expertise agricole"
       },
       "card2": {
@@ -2997,6 +2999,20 @@
         }
       ]
     },
+    "news": {
+      "subtitle": "NOTRE ACTUALITÉ",
+      "title": "Dernières actualités de FEEDIN GREEN",
+      "description": "Suivez nos dernières innovations, nos participations aux forums économiques et nos actualités technologiques.",
+      "readMore": "Lire l'actualité",
+      "items": {
+        "0": {
+          "date": "10 Mai 2026"
+        },
+        "1": {
+          "date": "15 Mai 2026"
+        }
+      }
+    },
     "footer": {
       "tagline1": "Plateforme IoT de référence pour l'agriculture intelligente en Tunisie.",
       "tagline2": "Capteurs connectés, automatisation des serres et monitoring en temps réel — conçus pour chaque agriculteur.",
@@ -3025,6 +3041,7 @@
         }
       ],
       "locationTitle": "Nous Trouver",
+      "exploreMap": "Cliquez pour naviguer sur la page de contact",
       "addressTech": "Siège technique : Technopôle Manouba, 2010 Manouba - Tunisie",
       "addressHQ": "Siège social : Avenue Taieb Mhiri, 5000 Monastir, Tunisie",
       "phone": "+216 26 213 304",
@@ -3202,49 +3219,44 @@
       },
       "services": [
         {
-          "tag": "Systèmes",
+          "tag": "SYSTEMES",
           "title": "Agriculture intelligente & systèmes",
-          "desc": "Nous concevons et déployons des solutions agricoles avancées intégrant la culture hors sol, les systèmes verticaux et les technologies intelligentes pour optimiser la production.",
+          "desc": "Notre approche d’agriculture intelligente repose sur l’utilisation de technologies avancées pour collecter et analyser des données en temps réel. Grâce à ces systèmes, nous permettons aux agriculteurs d’optimiser leurs pratiques, d’anticiper les besoins des cultures et d’améliorer significativement leur productivité.",
+          "includesTitle": "Notre service d’agriculture intelligente & systèmes propose une solution complète incluant :",
           "includes": [
-            "Serres intelligentes connectées",
-            "Culture hydroponique & hors sol",
-            "Systèmes de culture verticale",
-            "Capteurs IoT & monitoring climatique",
-            "Optimisation de rendement par data & IA"
+            "l’installation de capteurs connectés dans les parcelles ou serres",
+            "la collecte et l’analyse des données en temps réel",
+            "le pilotage automatisé de l’irrigation et de la fertigation",
+            "une plateforme de suivi accessible à distance"
           ],
-          "benefits": [
-            "Objectif : maximiser la productivité avec moins de ressources"
-          ]
+          "footerText": "Cette approche permet d’optimiser les rendements, de réduire les coûts d’exploitation et de garantir une gestion plus durable des ressources agricoles."
         },
         {
-          "tag": "Automatisation",
-          "title": "Automatisation & autonomie des serres",
-          "desc": "Nous transformons les serres agricoles en systèmes autonomes grâce à l’automatisation, permettant un contrôle précis, une réduction des coûts et une meilleure efficacité.",
+          "tag": "AUTOMATISATION",
+          "title": "Installation & fourniture serre agricole",
+          "desc": "Nous installons des serres performantes, fournissons tous les équipements nécessaires et assurons leur mise à niveau pour répondre aux exigences de l’agriculture moderne. Avec nous, vos serres deviennent plus productives, plus efficaces et prêtes pour l’avenir.",
+          "includesTitle": "Notre service couvre l’installation et l’équipement de serres, incluant :",
           "includes": [
-            "Automatisation de l’irrigation et fertigation",
-            "Gestion climatique automatisée",
-            "Systèmes de contrôle à distance",
-            "Énergie & autonomie (solaire, optimisation)",
-            "Solutions smart farming"
+            "la conception et le montage de différents types de serres (tunnel, multi-chapelles, serre jardin, etc.)",
+            "l’installation des systèmes d’irrigation et de fertigation",
+            "la mise en place de systèmes de ventilation, chauffage et ombrage",
+            "la fourniture de pièces de rechange",
+            "la modernisation et l’automatisation des serres existantes"
           ],
-          "benefits": [
-            "Objectif : réduire les coûts, améliorer la précision et limiter l’intervention humaine"
-          ]
+          "footerText": "Nous garantissons des solutions techniques fiables et adaptées aux conditions climatiques locales."
         },
         {
-          "tag": "Accompagnement",
+          "tag": "ACCOMPAGNEMENT",
           "title": "Développement agricole & accompagnement",
-          "desc": "Nous accompagnons les agriculteurs, entrepreneurs et institutions dans la modernisation agricole à travers des formations, du conseil et des projets de développement rural.",
+          "desc": "Nous accompagnons les agriculteurs à chaque étape de leur développement. Grâce à nos formations et notre expertise, nous les aidons à adopter les meilleures pratiques et à intégrer les nouvelles technologies agricoles. Ensemble, construisons une agriculture plus efficace, plus rentable et tournée vers l’avenir.",
+          "includesTitle": "Notre service d’accompagnement et de formation inclut :",
           "includes": [
-            "Formations sur les technologies agricoles",
-            "Accompagnement de projets (de l’idée à l’exploitation)",
-            "Assistance technique & suivi",
-            "Programmes de développement rural",
-            "Transfert de savoir-faire"
+            "des sessions de formation adaptées aux besoins des agriculteurs",
+            "un encadrement technique sur le terrain",
+            "un accompagnement dans l’utilisation des technologies agricoles modernes",
+            "un suivi continu pour assurer l’amélioration des pratiques"
           ],
-          "benefits": [
-            "Objectif : démocratiser l’agriculture moderne et durable"
-          ]
+          "footerText": "Nous mettons l’accent sur le transfert de connaissances et le développement des compétences pour garantir des résultats concrets et durables."
         }
       ],
       "farmers": {
@@ -3316,7 +3328,76 @@
         "title": "Prêt à démarrer votre projet ?",
         "desc": "Contactez notre équipe pour une consultation gratuite.",
         "btn1": "Demander un devis",
-        "btn2": "Nos réalisations"
+        "btn2": "Nos derniers projets"
+      },
+      "details": {
+        "showDetails": "Afficher les détails",
+        "hideDetails": "Masquer les détails",
+        "tabs": {
+          "specs": "Spécifications",
+          "cases": "Applications",
+          "impact": "Impact & ROI"
+        },
+        "service0": {
+          "specs": [
+            "Contrôleur IoT industriel multi-capteurs (température, humidité, luminosité, CO₂).",
+            "Capteurs d'humidité du sol capacitifs et sondes NPK de précision.",
+            "Intégration d'imagerie multispectrale pour l'analyse de santé foliaire.",
+            "Module de connectivité LoRaWAN / GSM longue portée (jusqu'à 15 km).",
+            "Interface web & mobile de supervision en temps réel avec graphiques interactifs."
+          ],
+          "cases": [
+            "Serres de production commerciale (maraîchage, horticulture, floriculture).",
+            "Unités de recherche agronomique et laboratoires universitaires.",
+            "Installations de fermes urbaines et systèmes de culture verticale indoor.",
+            "Coopératives agricoles souhaitant mutualiser la supervision climatique."
+          ],
+          "impact": [
+            "Jusqu'à 40% d'économie d'eau grâce aux sondes tensiométriques.",
+            "Augmentation moyenne de 25% du rendement des cultures sensibles.",
+            "Réduction de 50% des pertes liées aux maladies cryptogamiques grâce aux alertes d'humidité."
+          ]
+        },
+        "service1": {
+          "specs": [
+            "Système de fertigation proportionnelle automatisé (contrôle EC/pH).",
+            "Contrôleurs de servomoteurs pour ouvrants de serres et écrans d'ombrage.",
+            "Variateurs de vitesse pour ventilateurs de brassage et extracteurs.",
+            "Algorithmes prédictifs basés sur les prévisions météo locales.",
+            "Système d'alimentation hybride (panneaux solaires et batterie de secours)."
+          ],
+          "cases": [
+            "Serres industrielles de moyenne et grande superficie.",
+            "Exploitations agricoles situées en zones isolées hors réseau électrique.",
+            "Systèmes d'irrigation goutte-à-goutte complexes sur terrains vallonnés.",
+            "Projets d'agriculture de précision nécessitant une intervention humaine minimale."
+          ],
+          "impact": [
+            "Réduction du temps de main-d'œuvre quotidien de 70% pour la gestion du climat.",
+            "Économie d'eau et de nutriments de 30% grâce au dosage intelligent.",
+            "Amortissement rapide de l'investissement (en moyenne 18 à 24 mois)."
+          ]
+        },
+        "service2": {
+          "specs": [
+            "Programmes de formation certifiants (théorie en salle et pratique sur site).",
+            "Études de faisabilité technico-économique personnalisées.",
+            "Diagnostic agronomique complet (analyse de sol, eau, climatologie).",
+            "Assistance technique à distance 24/7 et visites de suivi mensuelles.",
+            "Accompagnement à l'obtention de subventions de modernisation agricole."
+          ],
+          "cases": [
+            "Jeunes entrepreneurs et investisseurs se lançant dans l'AgTech.",
+            "Agriculteurs traditionnels souhaitant entamer une transition numérique.",
+            "ONG et organismes de développement pour des projets de résilience rurale.",
+            "Centres de formation professionnelle agricole et lycées techniques."
+          ],
+          "impact": [
+            "Autonomie totale des équipes opérationnelles en moins de 2 semaines.",
+            "Validation de la rentabilité du projet avant investissement matériel.",
+            "Sécurisation des investissements grâce à un suivi d'experts agronomiques."
+          ]
+        }
       }
     },
     "projects": {

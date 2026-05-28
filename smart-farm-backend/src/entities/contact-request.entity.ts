@@ -54,6 +54,21 @@ export class ContactRequest {
   @Column({ type: "varchar", length: 20, default: "new" })
   status: ContactRequestStatus;
 
+  @Column({ type: "text", nullable: true })
+  admin_notes?: string;
+
+  @Column({ type: "timestamp", precision: 6, nullable: true })
+  replied_at?: Date;
+
+  @Column({ type: "varchar", length: 36, nullable: true })
+  replied_by?: string;
+
+  @Column({ type: "varchar", length: 45, nullable: true })
+  ip_address?: string;
+
+  @Column({ type: "text", nullable: true })
+  user_agent?: string;
+
   @Index("idx_contact_requests_created")
   @CreateDateColumn({ type: "timestamp", precision: 6 })
   created_at: Date;

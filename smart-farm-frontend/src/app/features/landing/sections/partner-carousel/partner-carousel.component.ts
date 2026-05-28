@@ -38,6 +38,7 @@ export class PartnerCarouselComponent {
     { name: 'Smart Farm', logo: 'assets/partner/smart-farm.jpg' },
     { name: 'S2T', logo: 'assets/partner/smart-tunisian-tchnopark.png' },
     { name: 'TEC', logo: 'assets/partner/TEC.jpeg' },
+    { name: 'TUNSA', logo: 'assets/partner/Tunsa.jpeg' },
   ];
 
   /**

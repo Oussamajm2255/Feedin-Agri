@@ -7,10 +7,6 @@
     overflow-x: hidden;
     background: var(--light-bg);
 
-    // Performance: GPU acceleration for smoother scrolling
-    transform: translateZ(0);
-    will-change: scroll-position;
-
     // Performance: skip rendering work for offscreen sections
     // Note: content-visibility removed as it causes layout sizing bugs
     // on viewport resize (mobile to desktop). Performance is handled by @defer.
@@ -18,9 +14,6 @@
     app-valeur-agricole,
     app-cta-final {
         display: block;
-        // Keep components in DOM to avoid reload penalty
-        content-visibility: auto;
-        contain-intrinsic-size: 0 500px;
     }
 }
 

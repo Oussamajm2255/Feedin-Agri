@@ -40,7 +40,12 @@ export class Zone {
   @Column({ type: 'varchar', length: 120 })
   name: string;
 
-  @Column({ type: 'varchar', length: 30, default: 'outdoor' })
+  @Column({
+    type: 'enum',
+    enum: ['indoor', 'outdoor', 'greenhouse', 'hydroponic'],
+    enumName: 'zone_type_enum',
+    default: 'outdoor'
+  })
   type: ZoneType;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
@@ -52,7 +57,12 @@ export class Zone {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @Column({ type: 'varchar', length: 20, default: 'active' })
+  @Column({
+    type: 'enum',
+    enum: ['active', 'inactive'],
+    enumName: 'farm_status_enum',
+    default: 'active'
+  })
   @Index()
   status: 'active' | 'inactive';
 

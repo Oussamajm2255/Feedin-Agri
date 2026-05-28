@@ -76,9 +76,17 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
               <span class="cta-text">{{ 'landing.hero.cta1' | translate }}</span>
               <span class="cta-shine"></span>
             </button>
-            <button class="hero-cta secondary" (click)="navigateTo('/solutions')">
-              <span class="cta-text">{{ 'landing.hero.cta2' | translate }}</span>
-            </button>
+            <div class="store-cta-wrapper">
+              <button class="hero-cta secondary store-cta" (click)="navigateTo('/store')">
+                <span class="cta-text">{{ 'landing.hero.cta2' | translate }}</span>
+                <i class="material-icons store-icon">storefront</i>
+                <span class="cta-shine"></span>
+              </button>
+              <span class="store-badge">
+                <span class="badge-dot"></span>
+                {{ 'landing.hero.cta2Badge' | translate }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -113,6 +121,41 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         padding-top: var(--nav-height);
         overflow: hidden;
         contain: layout style paint;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 240px;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(249, 250, 251, 0) 0%,
+          rgba(249, 250, 251, 0.4) 40%,
+          rgba(249, 250, 251, 0.85) 75%,
+          rgba(249, 250, 251, 1) 100%
+        );
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+        will-change: backdrop-filter, mask-image, -webkit-backdrop-filter;
       }
 
       /* =========================================
@@ -535,6 +578,103 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         color: #ffffff;
         font-weight: 700;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .store-cta-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .hero-cta.store-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+        border: 2px solid #ffffff;
+        padding-right: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation-delay: 0.8s;
+      }
+
+      .store-icon {
+        font-size: 1.1rem;
+        color: #ffffff;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .hero-cta.store-cta:hover {
+        background: rgba(16, 185, 129, 0.15);
+        border-color: #34d399;
+        box-shadow:
+          0 0 15px rgba(52, 211, 153, 0.3),
+          0 8px 25px rgba(16, 185, 129, 0.25);
+        transform: translateY(-3px) scale(1.02);
+      }
+
+      .hero-cta.store-cta:hover .store-icon {
+        transform: scale(1.2) rotate(-10deg);
+        color: #34d399;
+      }
+
+      .store-badge {
+        position: absolute;
+        top: -14px;
+        right: -6px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 2px 8px;
+        border-radius: 20px;
+        box-shadow:
+          0 4px 10px rgba(16, 185, 129, 0.4),
+          0 0 0 2px rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        pointer-events: none;
+        z-index: 12;
+        transform: rotate(4deg);
+        animation: badgeFloat 3s ease-in-out infinite;
+      }
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 8px #ffffff;
+        animation: dotPulse 1.5s infinite;
+      }
+
+      @keyframes badgeFloat {
+        0%, 100% {
+          transform: translateY(0) rotate(4deg);
+        }
+        50% {
+          transform: translateY(-4px) rotate(6deg);
+        }
+      }
+
+      @keyframes dotPulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
       }
 
       .hero-cta:active {

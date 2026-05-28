@@ -26,7 +26,7 @@ export const environment = {
     loginVideoWebm: 'assets/vids/login.webm',
     loginVideoPoster: 'assets/vids/login-poster.webp',
     loginVideoFallback: 'assets/images/login-bg.jpg',
-    logo: 'assets/images/logos/Feedin_pnglogo.png'
+    logo: 'assets/new-logo/only-f.png'
   },
 
   // UI Configuration

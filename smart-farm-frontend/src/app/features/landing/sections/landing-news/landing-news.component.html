@@ -1,0 +1,75 @@
+<!-- ========================================================
+     SECTION: LANDING NEWS & ACTUALITÉS
+     Premium Clean split layout design for AgTech
+     ======================================================== -->
+<section class="premium-news-section" id="news-section" [attr.aria-label]="'landing.news.subtitle' | translate">
+  <!-- Subtle ambient decorative glow orbs -->
+  <div class="ambient-glow orb-1" aria-hidden="true"></div>
+  <div class="ambient-glow orb-2" aria-hidden="true"></div>
+
+  <div class="news-container">
+    <!-- Header Block -->
+    <div class="news-header-block" appScrollReveal="fade-up">
+      <span class="section-subtitle">{{ 'landing.news.subtitle' | translate }}</span>
+      <h2 id="news-section-title" class="section-title">
+        {{ 'landing.news.title' | translate }}
+      </h2>
+      <p class="section-desc">
+        {{ 'landing.news.description' | translate }}
+      </p>
+    </div>
+
+    <!-- News Grid (CSS Grid Configured for Exactly 2 items, scalable to N) -->
+    <div class="news-grid">
+      @for (item of newsItems; track item.title; let i = $index) {
+        <div 
+          class="news-card" 
+          [attr.id]="'news-card-' + i"
+          (click)="navigateToArticle(item.link)"
+          (keydown)="onCardKeydown($event, item.link)"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="item.title"
+          appScrollReveal="fade-up" 
+          [delay]="i * 0.15"
+        >
+          <!-- 1. The Image Section (fills its space seamlessly, no overlays) -->
+          <div class="news-image-section">
+            <img 
+              [src]="item.imagePath" 
+              (error)="onImgError($event, item.fallbackPath)" 
+              [alt]="item.title"
+              class="news-card-image"
+              loading="lazy"
+            >
+          </div>
+
+          <!-- 2. The Text/Content Section (sits right beside/below without overlapping) -->
+          <div class="news-content-section">
+            <div class="card-meta">
+              <span class="card-tag">{{ item.tag }}</span>
+              <span class="card-date-read">
+                <span class="dot-separator" aria-hidden="true"></span>
+                {{ item.dateKey | translate }}
+              </span>
+            </div>
+            
+            <h3 class="card-title">{{ item.title }}</h3>
+            
+            <!-- Read Time Info for breathing room -->
+            <span class="card-read-time">{{ item.readTime }}</span>
+            
+            <!-- Trigger button block -->
+            <div class="card-action-trigger">
+              <span class="read-more-text">{{ 'landing.news.readMore' | translate }}</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -582,21 +582,18 @@ body.rtl .stats-grid {
 }
 
 // Header is fixed, so we need to add padding to account for header height
+// Dual-Tier desktop: Tier1 (56px) + Tier2 (48px) = 104px
 .main-content.with-header {
-  padding-top: 92px; // Header height (80px) + underline space (12px)
-
-  @media (max-width: 1200px) {
-    padding-top: 88px; // Header height (76px) + underline space (12px)
-  }
+  padding-top: 112px; // Dual-tier header (104px) + breathing room (8px)
 
   @media (max-width: 1024px) {
-    padding-top: 84px; // Header height (72px) + underline space (12px)
-    padding-bottom: 80px; // Space for bottom navigation
+    padding-top: 68px; // Mobile top bar (56px) + spacing (12px)
+    padding-bottom: 80px; // Space for bottom navigation + FAB
   }
 
   @media (max-width: 767px) {
-    padding-top: 80px; // Header height (68px) + underline space (12px)
-    padding-bottom: 80px; // Space for bottom navigation
+    padding-top: 64px; // Mobile top bar (56px) + spacing (8px)
+    padding-bottom: 80px; // Space for bottom navigation + FAB
   }
 }
 

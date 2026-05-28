@@ -13,7 +13,7 @@ export class Device {
   @Column({ type: 'varchar', length: 255 })
   location: string;
 
-  @Column({ type: 'varchar', length: 255, default: 'offline' })
+  @Column({ type: 'varchar', length: 50, default: 'offline' })
   status: string; // 'online', 'offline', 'maintenance'
 
   @Index()

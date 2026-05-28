@@ -320,40 +320,90 @@ body.dark-theme .cdk-overlay-backdrop.date-range-picker-backdrop {
   }
 }
 
-// CSS Variables for TerraFlow Theme
+// CSS Variables for TerraFlow Theme - Updated with Brand Configuration
 :root {
+  // Brand Colors - Primary Green (Agriculture)
   --primary-green: #10b981;
+  --primary-green-light: #34d399;
+  --primary-green-dark: #059669;
+  --primary-green-darker: #047857;
   --secondary-green: #34d399;
   --dark-green: #047857;
+  
+  // Brand Colors - Secondary Earth Tones
+  --brand-linen-50: #faf8f5;
+  --brand-linen-100: #f5f0eb;
+  --brand-linen-200: #ebe4dc;
+  --brand-linen-300: #ddd1c4;
+  
+  // Brand Colors - Accent Blue (Tech)
   --primary-blue: #3b82f6;
+  --primary-blue-light: #60a5fa;
+  --primary-blue-dark: #2563eb;
   --secondary-blue: #60a5fa;
+  
+  // Backgrounds
   --light-bg: #f8fafb;
   --card-bg: #ffffff;
+  
+  // Text Colors
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --text-muted: #cbd5e1;
+  
+  // Borders
   --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+  
+  // Semantic Colors
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+  --info: #3b82f6;
+  
+  // Shadows
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+  
+  // Brand Shadows
+  --brand-shadow-sm: 0 2px 8px rgba(16, 185, 129, 0.08);
+  --brand-shadow-md: 0 4px 12px rgba(16, 185, 129, 0.15);
+  --brand-shadow-lg: 0 10px 20px rgba(16, 185, 129, 0.25);
+  --brand-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  
+  // Glassmorphism
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-backdrop: blur(20px);
+  
+  // Header Styles
   --header-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(240, 253, 244, 0.7));
   --header-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   --header-border: rgba(255, 255, 255, 0.4);
   --header-text: #1f2937;
   --header-text-secondary: #6b7280;
+  
+  // Navigation
   --nav-item-hover: rgba(16, 185, 129, 0.1);
   --nav-item-active: rgba(16, 185, 129, 0.15);
+  
+  // User Menu
   --user-menu-bg: #ffffff;
   --user-menu-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   --user-menu-border: rgba(0, 0, 0, 0.08);
   --user-menu-item-hover: rgba(16, 185, 129, 0.08);
   --user-menu-item-active: rgba(16, 185, 129, 0.12);
-  --user-menu-item-active: rgba(16, 185, 129, 0.12);
+  
+  // Divider
   --divider-color: rgba(0, 0, 0, 0.08);
+  
+  // Brand Typography
+  --font-primary: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'DM Sans', 'Roboto', sans-serif;
+  --font-brand: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 
   // Pro Layout System
   --section-gutter: 2rem;

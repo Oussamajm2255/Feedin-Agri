@@ -50,7 +50,13 @@ export class Farm {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   area_hectares: number;
 
-  @Column({ type: 'varchar', length: 20, nullable: true, default: 'active' })
+  @Column({
+    type: 'enum',
+    enum: ['active', 'inactive'],
+    enumName: 'farm_status_enum',
+    default: 'active',
+    nullable: true
+  })
   @Index()
   status: 'active' | 'inactive';
 

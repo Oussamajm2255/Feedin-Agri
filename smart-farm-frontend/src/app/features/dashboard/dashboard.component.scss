@@ -6,6 +6,82 @@ $breakpoint-tablet-sm: 768px;
 $breakpoint-tablet: 1024px;
 $breakpoint-desktop: 1440px;
 
+// ===== DESIGN TOKENS =====
+:host {
+  --color-online: #2ECC71;
+  --color-warning: #F39C12;
+  --color-critical: #E74C3C;
+  
+  // Brand-specific tokens
+  --brand-primary: #10b981;
+  --brand-primary-light: #34d399;
+  --brand-primary-dark: #059669;
+  --brand-success: #10b981;
+  --brand-shadow-sm: 0 2px 8px rgba(16, 185, 129, 0.08);
+  --brand-shadow-md: 0 4px 12px rgba(16, 185, 129, 0.15);
+  --brand-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+// ===== SUNLIGHT-READY STATUS CLASSES =====
+// Minimum 4.5:1 contrast ratio against card backgrounds
+.status-online {
+  color: var(--color-online) !important;
+}
+
+.status-warning {
+  color: var(--color-warning) !important;
+}
+
+.status-critical {
+  color: var(--color-critical) !important;
+}
+
+// Status badge variants with high-contrast backgrounds
+.status-badge-online {
+  background: rgba(46, 204, 113, 0.15);
+  color: #1B8A4A; // Darkened for 4.5:1 contrast on white
+  border: 1px solid rgba(46, 204, 113, 0.4);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge-warning {
+  background: rgba(243, 156, 18, 0.15);
+  color: #B8740E; // Darkened for contrast
+  border: 1px solid rgba(243, 156, 18, 0.4);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge-critical {
+  background: rgba(231, 76, 60, 0.15);
+  color: #C0392B; // Darkened for contrast
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+// Dark theme contrast overrides
+:host-context(body.dark-theme) {
+  .status-badge-online {
+    color: #2ECC71; // Lighter for dark backgrounds
+  }
+
+  .status-badge-warning {
+    color: #F39C12;
+  }
+
+  .status-badge-critical {
+    color: #E74C3C;
+  }
+}
+
 // ===== MAIN CONTAINER =====
 .dashboard-container {
   padding: 1rem;
@@ -94,10 +170,16 @@ $breakpoint-desktop: 1440px;
   align-items: center;
   text-align: center;
   gap: 0.75rem;
-  transition: all 150ms ease-in-out;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
   position: relative;
   overflow: hidden;
+
+  // Hover effect with brand shadow
+  &:hover {
+    box-shadow: var(--brand-shadow-md, 0 4px 12px rgba(16, 185, 129, 0.15));
+    transform: translateY(-2px);
+  }
 
   // Tablets and up: horizontal layout
   @media (min-width: $breakpoint-tablet-sm) {

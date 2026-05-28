@@ -28,6 +28,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest, UserRole, UserStatus } from '../../../core/models/user.model';
 import { LanguageService } from '../../../core/services/language.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { environment } from '../../../../environments/environment';
 import { LOGIN_CONFIG } from './login.config';
@@ -85,6 +86,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   private readonly alertService = inject(AlertService);
   private readonly cdr = inject(ChangeDetectorRef);
   public readonly languageService = inject(LanguageService);
+  public readonly themeService = inject(ThemeService);
 
   // Login-specific configuration (keyboard thresholds, autofill, etc)
   protected readonly loginConfig = LOGIN_CONFIG;
@@ -617,6 +619,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
 
   togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   onLogoError(event: Event): void {

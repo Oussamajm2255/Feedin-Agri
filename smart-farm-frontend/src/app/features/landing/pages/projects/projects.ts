@@ -44,6 +44,17 @@ import { SeoService } from '../../../../core/services/seo.service';
            ═══════════════════════════════════════════ -->
       <header class="page-hero">
         <div class="hero-overlay"></div>
+
+        <!-- Floating Hexagon IoT Icons Tech Overlay -->
+        <div class="tech-overlay-grid">
+          <div class="hex-icon floating-hex hex-1"><span class="material-icons">thermostat</span></div>
+          <div class="hex-icon floating-hex hex-2"><span class="material-icons">water_drop</span></div>
+          <div class="hex-icon floating-hex hex-3"><span class="material-icons">recycling</span></div>
+          <div class="hex-icon floating-hex hex-4"><span class="material-icons">eco</span></div>
+          <div class="hex-icon floating-hex hex-5"><span class="material-icons">memory</span></div>
+          <div class="hex-icon floating-hex hex-6"><span class="material-icons">agriculture</span></div>
+        </div>
+
         <div class="hero-content">
           <span class="page-label">{{ 'landing.projects.hero.label' | translate }}</span>
           <h1>
@@ -310,6 +321,40 @@ import { SeoService } from '../../../../core/services/seo.service';
         opacity: 1;
       }
 
+      .page-hero::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 180px;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(248, 247, 244, 0) 0%,
+          rgba(248, 247, 244, 0.4) 40%,
+          rgba(248, 247, 244, 0.85) 75%,
+          rgba(248, 247, 244, 1) 100%
+        );
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+      }
+
       .hero-overlay {
         position: absolute;
         inset: 0;
@@ -319,6 +364,46 @@ import { SeoService } from '../../../../core/services/seo.service';
           rgba(10, 74, 46, 0.85) 50%,
           rgba(5, 41, 82, 0.9) 100%
         );
+      }
+
+      /* Tech Overlay with floating IoT icons */
+      .tech-overlay-grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .floating-hex {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.05);
+        animation: float-slow-hex 6s ease-in-out infinite;
+      }
+
+      .floating-hex span {
+        font-size: 1.5rem;
+      }
+
+      .hex-1 { top: 15%; left: 10%; animation-delay: 0s; }
+      .hex-2 { top: 25%; right: 12%; animation-delay: 1.5s; }
+      .hex-3 { bottom: 20%; left: 15%; animation-delay: 3s; }
+      .hex-4 { bottom: 15%; right: 18%; animation-delay: 4.5s; }
+      .hex-5 { top: 50%; left: 8%; animation-delay: 2s; }
+      .hex-6 { top: 55%; right: 8%; animation-delay: 3.5s; }
+
+      @keyframes float-slow-hex {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
       }
 
       .hero-content {
@@ -361,11 +446,13 @@ import { SeoService } from '../../../../core/services/seo.service';
       }
 
       .hero-sub {
-        font-size: 1.0625rem;
-        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.15rem;
+        color: #f8fafc; /* Solid off-white for high contrast */
         max-width: 580px;
         margin: 0 auto 2rem;
         line-height: 1.7;
+        font-weight: 500; /* Medium weight for readability */
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); /* Deep text shadow */
       }
 
       .hero-actions {
@@ -398,16 +485,18 @@ import { SeoService } from '../../../../core/services/seo.service';
 
       .hero-stat-value {
         font-family: 'Outfit', sans-serif;
-        font-size: 2rem;
+        font-size: 2.5rem; /* Slightly larger */
         font-weight: 800;
-        color: white;
+        color: #4ade80; /* Vibrant bright green for maximum visibility */
         line-height: 1;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
       }
 
       .hero-stat-label {
-        font-size: 0.8125rem;
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 500;
+        font-size: 0.875rem; /* Slightly larger */
+        color: #ffffff;
+        font-weight: 600; /* Bolder text */
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
       }
 
       /* ════════════════════════════════════════════════

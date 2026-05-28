@@ -60,6 +60,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/landing/pages/contact/contact.component').then((m) => m.ContactComponent),
   },
+  {
+    path: 'store',
+    loadComponent: () =>
+      import('./features/landing/pages/store/store').then((m) => m.Store),
+  },
   // ================================
   // AUTHENTICATION ROUTES
   // ================================

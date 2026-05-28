@@ -53,20 +53,29 @@
     
     <!-- Hero Content (single headline) -->
     <div class="hero-content">
-      <!-- Back to Home — Brand Logo Button -->
-      <button class="back-button" 
-              routerLink="/"
-              [attr.aria-label]="languageService.t()('auth.backToHome') || 'Back to Home'">
-        <img src="assets/images/logos/only_F.png" 
-             alt="Feed In Green" 
-             class="back-logo-img" />
-        <span class="back-label">{{ languageService.t()('auth.backToHome') || 'Home' }}</span>
-      </button>
+      <!-- Header Actions Row -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+        <!-- Back to Home — Brand Logo Button -->
+        <button class="back-button" 
+                routerLink="/"
+                [attr.aria-label]="languageService.t()('auth.backToHome') || 'Back to Home'">
+          <img src="assets/new-logo/only-f.png" 
+               alt="Feed In Green" 
+               class="back-logo-img" />
+          <span class="back-label">{{ languageService.t()('auth.backToHome') || 'Home' }}</span>
+        </button>
+        
+        <!-- Theme Toggle Button -->
+        <button class="back-button theme-toggle" 
+                (click)="toggleTheme()"
+                aria-label="Toggle theme">
+          <mat-icon>{{ themeService.currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+      </div>
       
       <!-- Single Main Headline -->
       <div class="headline-container">
-        <h1 class="main-headline">
-          {{ languageService.t()('auth.welcomeTitle') }}
+        <h1 class="main-headline" [innerHTML]="languageService.t()('auth.welcomeTitle')">
         </h1>
         <p class="sub-headline">
           {{ languageService.t()('auth.welcomeSubtitle') }}

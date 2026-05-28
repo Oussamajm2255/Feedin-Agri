@@ -27,7 +27,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         <a class="nav-brand" routerLink="/landing">
           <div class="brand-icon">
             <img
-              src="/assets/images/logos/only_F_small.png"
+              src="/assets/new-logo/only-f.png"
               alt="Feedin Logo"
               class="brand-logo"
               width="34"
@@ -38,7 +38,7 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
               style="contain: layout;"
             />
           </div>
-          <span class="brand-text jersey-10-regular">FEEDIN</span>
+          <span class="brand-text jersey-10-regular">FEEDIN GREEN</span>
         </a>
 
         <!-- ✅ DESKTOP LINKS — always in DOM, always visible on ≥1024px, hidden on mobile -->
@@ -49,14 +49,14 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
           <a class="nav-link" routerLink="/services" routerLinkActive="active">{{
             'landing.nav.services' | translate
           }}</a>
-          <a class="nav-link" routerLink="/solutions" routerLinkActive="active">{{
-            'landing.nav.solutions' | translate
-          }}</a>
           <a class="nav-link" routerLink="/formation" routerLinkActive="active">{{
             'landing.nav.formation' | translate
           }}</a>
           <a class="nav-link" routerLink="/projets" routerLinkActive="active">{{
             'landing.nav.projects' | translate
+          }}</a>
+          <a class="nav-link" routerLink="/store" routerLinkActive="active">{{
+            'landing.nav.store' | translate
           }}</a>
           <a class="nav-link" routerLink="/contact" routerLinkActive="active">{{
             'landing.nav.contact' | translate
@@ -173,28 +173,6 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
           </a>
           <a
             class="mob-link"
-            routerLink="/solutions"
-            routerLinkActive="active"
-            (click)="closeMenu()"
-            style="animation-delay:0.25s"
-          >
-            <svg
-              class="mob-icon"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-            <span>{{ 'landing.nav.solutions' | translate }}</span>
-          </a>
-          <a
-            class="mob-link"
             routerLink="/formation"
             routerLinkActive="active"
             (click)="closeMenu()"
@@ -240,6 +218,30 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
               <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
             <span>{{ 'landing.nav.projects' | translate }}</span>
+          </a>
+          <a
+            class="mob-link"
+            routerLink="/store"
+            routerLinkActive="active"
+            (click)="closeMenu()"
+            style="animation-delay:0.43s"
+          >
+            <svg
+              class="mob-icon"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>{{ 'landing.nav.store' | translate }}</span>
           </a>
           <a
             class="mob-link"

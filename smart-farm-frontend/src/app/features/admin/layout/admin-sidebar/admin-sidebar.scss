@@ -17,7 +17,7 @@
     backdrop-filter: blur($blur) saturate(180%);
     -webkit-backdrop-filter: blur($blur) saturate(180%);
     border-right: 1px solid rgba(0, 0, 0, 0.07);
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06), var(--brand-shadow-sm);
 
     :host-context(.dark-theme) & {
         background: rgba(15, 23, 42, 0.92);

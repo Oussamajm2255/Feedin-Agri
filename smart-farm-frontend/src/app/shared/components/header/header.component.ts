@@ -13,7 +13,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ApiService } from '../../../core/services/api.service';
@@ -22,20 +21,48 @@ import { LanguageService } from '../../../core/services/language.service';
 import { ThemeService, Theme } from '../../../core/services/theme.service';
 import { FarmManagementService } from '../../../core/services/farm-management.service';
 import { BreakpointService } from '../../../core/services/breakpoint.service';
+import { ZonesService } from '../../../core/services/zones.service';
 import { CustomDropdownComponent, DropdownItem } from '../custom-dropdown/custom-dropdown.component';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { Farm } from '../../../core/models/farm.model';
 
-// Navigation Item Interface
+export interface ZoneBrief {
+  id: string;
+  name: string;
+  type?: string;
+  area_m2?: number | null;
+  cropName?: string;
+  status: 'healthy' | 'warning' | 'critical';
+  healthScore: number;
+  liveMetricSnippet?: { label: string; value: string };
+  deviceCount: number;
+  alertCount: number;
+}
+
+/**
+ * Zone health summary used for the Farm Selector Zone Status Teaser.
+ */
+export interface ZoneStatusSummary {
+  healthy: number;
+  warning: number;
+  critical: number;
+  zones: ZoneBrief[];
+}
+
+/**
+ * Navigation Item Interface — extended with Bento grid properties.
+ */
 export interface NavItem {
   id: string;
   label: string;
   route: string;
   icon: string;
   svgPath: string;
-  fontAwesomeIcon: string; // Font Awesome icon class
-  priority: 'primary' | 'secondary';  // primary = show on mobile bottom nav
+  fontAwesomeIcon: string;
+  priority: 'primary' | 'secondary';
   translationKey: string;
+  bentoIcon?: string;
+  bentoColor?: string;
 }
 
 @Component({
@@ -74,6 +101,15 @@ export interface NavItem {
         style({ transform: 'translateY(100%)', opacity: 0 }),
         animate('300ms cubic-bezier(0.4, 0, 0.2, 1)', style({ transform: 'translateY(0)', opacity: 1 }))
       ])
+    ]),
+    trigger('bentoSlide', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('350ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('250ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 0, transform: 'translateY(20px)' }))
+      ])
     ])
   ]
 })
@@ -88,12 +124,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   public breakpointService = inject(BreakpointService);
+  private zonesService = inject(ZonesService);
 
   user = this.authService.user;
   isAuthenticated = this.authService.isAuthenticated;
   showMobileMenu = false;
   showFarmSelector = false;
   showMoreMenu = false;
+  showBentoMenu = false;
+
   // Use BreakpointService signals instead of local signals
   isMobile = this.breakpointService.isMobile;
   isTablet = this.breakpointService.isTablet;
@@ -117,6 +156,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private refreshInterval?: number;
 
+  // Zone status cache for Farm Selector teaser
+  farmZoneCache = signal<Map<string, ZoneStatusSummary>>(new Map());
+
   // Navigation Items (reusable for both desktop and mobile)
   navItems: NavItem[] = [
     {
@@ -127,7 +169,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       svgPath: 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25',
       fontAwesomeIcon: 'fa-solid fa-house',
       priority: 'primary',
-      translationKey: 'navigation.dashboard'
+      translationKey: 'navigation.dashboard',
+      bentoIcon: 'fa-solid fa-house',
+      bentoColor: '#2ECC71'
     },
     {
       id: 'devices',
@@ -137,7 +181,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       svgPath: 'M3 7.5A2.25 2.25 0 015.25 5.25h13.5A2.25 2.25 0 0121 7.5v1.5A2.25 2.25 0 0118.75 11.25H5.25A2.25 2.25 0 013 9V7.5zM3 15.75A2.25 2.25 0 015.25 13.5h13.5A2.25 2.25 0 0121 15.75v1.5A2.25 2.25 0 0118.75 19.5H5.25A2.25 2.25 0 013 17.25v-1.5zM7.5 7.5h1.5v1.5H7.5V7.5zm0 8.25h1.5v1.5H7.5v-1.5zm7.5-8.25h1.5v1.5H15V7.5zm0 8.25h1.5v1.5H15v-1.5z',
       fontAwesomeIcon: 'fa-solid fa-diagram-project',
       priority: 'primary',
-      translationKey: 'navigation.devices'
+      translationKey: 'navigation.devices',
+      bentoIcon: 'fa-solid fa-diagram-project',
+      bentoColor: '#3498DB'
     },
     {
       id: 'zones',
@@ -146,8 +192,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       icon: 'map',
       svgPath: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6.75',
       fontAwesomeIcon: 'fa-solid fa-map',
-      priority: 'primary',
-      translationKey: 'navigation.zones'
+      priority: 'secondary',
+      translationKey: 'navigation.zones',
+      bentoIcon: 'fa-solid fa-map',
+      bentoColor: '#9B59B6'
     },
     {
       id: 'sensors',
@@ -157,7 +205,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       svgPath: 'M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z',
       fontAwesomeIcon: 'fa-solid fa-microchip',
       priority: 'secondary',
-      translationKey: 'navigation.sensors'
+      translationKey: 'navigation.sensors',
+      bentoIcon: 'fa-solid fa-microchip',
+      bentoColor: '#E67E22'
     },
     {
       id: 'readings',
@@ -167,7 +217,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       svgPath: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6.75',
       fontAwesomeIcon: 'fa-solid fa-chart-line',
       priority: 'secondary',
-      translationKey: 'navigation.liveReadings'
+      translationKey: 'navigation.liveReadings',
+      bentoIcon: 'fa-solid fa-chart-line',
+      bentoColor: '#1ABC9C'
     },
     {
       id: 'actions',
@@ -177,7 +229,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       svgPath: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
       fontAwesomeIcon: 'fa-solid fa-bolt',
       priority: 'primary',
-      translationKey: 'navigation.actions'
+      translationKey: 'navigation.actions',
+      bentoIcon: 'fa-solid fa-bolt',
+      bentoColor: '#F39C12'
     },
     {
       id: 'crops',
@@ -187,9 +241,51 @@ export class HeaderComponent implements OnInit, OnDestroy {
       svgPath: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z',
       fontAwesomeIcon: 'fa-solid fa-seedling',
       priority: 'primary',
-      translationKey: 'navigation.crops'
+      translationKey: 'navigation.crops',
+      bentoIcon: 'fa-solid fa-seedling',
+      bentoColor: '#27AE60'
     }
   ];
+
+  /**
+   * Bento grid items — secondary nav items plus extra utility items
+   * shown in the full-screen Bento Grid Overlay on mobile.
+   */
+  get bentoNavItems(): NavItem[] {
+    const bento: NavItem[] = [
+      ...this.navItems.filter(item => item.priority === 'secondary'),
+      // Add crops here as well since it's not in the 4-pillar bottom nav
+      ...this.navItems.filter(item => item.id === 'crops'),
+    ];
+    // Add extra items for Bento: Zones (if not already), Settings, Profile
+    const extras: NavItem[] = [
+      {
+        id: 'settings',
+        label: 'Settings',
+        route: '/settings',
+        icon: 'settings',
+        svgPath: '',
+        fontAwesomeIcon: 'fa-solid fa-gear',
+        priority: 'secondary',
+        translationKey: 'navigation.settings',
+        bentoIcon: 'fa-solid fa-gear',
+        bentoColor: '#95A5A6'
+      },
+      {
+        id: 'profile',
+        label: 'Profile',
+        route: '/profile',
+        icon: 'person',
+        svgPath: '',
+        fontAwesomeIcon: 'fa-solid fa-user',
+        priority: 'secondary',
+        translationKey: 'navigation.profile',
+        bentoIcon: 'fa-solid fa-user',
+        bentoColor: '#3498DB'
+      }
+    ];
+    return [...bento, ...extras];
+  }
 
   // Get all nav items for mobile bottom nav
   get primaryNavItems(): NavItem[] {
@@ -529,6 +625,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       document.body.style.overflow = 'hidden';
       this.filteredFarms = this.farms;
       this.farmSearchQuery = '';
+      // Load zone status and device counts for all farms
+      this.loadAllFarmZoneStatus();
+      this.loadAllFarmDeviceCounts();
     } else {
       document.body.style.overflow = '';
     }
@@ -576,38 +675,147 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private deviceCountCache = signal<Map<string, number>>(new Map());
 
   getFarmDeviceCount(farm: Farm): number {
-    const cache = this.deviceCountCache();
-    // Return cached count if available
+    return this.deviceCountCache().get(farm.farm_id) || 0;
+  }
+
+  /**
+   * Pre-fetches device counts for all farms to avoid making API calls during template rendering.
+   */
+  private loadAllFarmDeviceCounts(): void {
+    for (const farm of this.farms) {
+      if (this.deviceCountCache().has(farm.farm_id)) {
+        continue;
+      }
+
+      this.api.getDevicesByFarm(farm.farm_id).subscribe({
+        next: (devices) => {
+          const count = devices?.length || 0;
+          const newCache = new Map(this.deviceCountCache());
+          newCache.set(farm.farm_id, count);
+          this.deviceCountCache.set(newCache);
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Error fetching device count for farm:', error);
+          const newCache = new Map(this.deviceCountCache());
+          newCache.set(farm.farm_id, 0);
+          this.deviceCountCache.set(newCache);
+          this.cdr.markForCheck();
+        }
+      });
+    }
+  }
+
+  /**
+   * Load zone status summary for all farms (called when Farm Selector modal opens).
+   * Populates farmZoneCache with healthy/warning/critical counts per farm.
+   */
+  private loadAllFarmZoneStatus(): void {
+    for (const farm of this.farms) {
+      this.loadZoneStatusForFarm(farm);
+    }
+  }
+
+  /**
+   * Load zone health summary for a single farm.
+   * Computes healthy / warning / critical counts from zone alert data.
+   */
+  loadZoneStatusForFarm(farm: Farm): void {
+    const cache = this.farmZoneCache();
     if (cache.has(farm.farm_id)) {
-      return cache.get(farm.farm_id) || 0;
+      return; // Already loaded
     }
 
-    // Fetch device count from API
-    this.api.getDevicesByFarm(farm.farm_id).subscribe({
-      next: (devices) => {
-        const count = devices?.length || 0;
-        const newCache = new Map(cache);
-        newCache.set(farm.farm_id, count);
-        this.deviceCountCache.set(newCache);
+    this.zonesService.getFarmDashboard(farm.farm_id).subscribe({
+      next: (data) => {
+        let healthy = 0;
+        let warning = 0;
+        let critical = 0;
+        const zonesList: ZoneBrief[] = [];
+
+        if (data && data.zones) {
+          for (const zoneData of data.zones) {
+            const alerts = zoneData.alerts || [];
+            const hasCritical = alerts.some((a: any) => a.severity === 'critical' || a.severity === 'danger');
+            const hasWarning = alerts.some((a: any) => a.severity === 'warning');
+
+            let status: 'healthy' | 'warning' | 'critical' = 'healthy';
+            if (hasCritical) {
+              critical++;
+              status = 'critical';
+            } else if (hasWarning) {
+              warning++;
+              status = 'warning';
+            } else {
+              healthy++;
+            }
+
+            let snippet = undefined;
+            if (zoneData.sensors && zoneData.sensors.length > 0) {
+              const sensor = zoneData.sensors[0]; // grab the most critical or recent sensor
+              snippet = {
+                label: sensor.type || 'Sensor',
+                value: `${sensor.latest_value !== null ? sensor.latest_value : '--'} ${sensor.unit || ''}`.trim()
+              };
+            }
+
+            zonesList.push({
+              id: zoneData.zone?.id || Math.random().toString(),
+              name: zoneData.zone?.name || 'Unnamed Zone',
+              type: zoneData.zone?.type,
+              area_m2: zoneData.zone?.area_m2,
+              cropName: zoneData.crops && zoneData.crops.length > 0 ? zoneData.crops[0].name : undefined,
+              status: status,
+              healthScore: zoneData.healthScore ?? 100,
+              liveMetricSnippet: snippet,
+              deviceCount: zoneData.deviceCount || 0,
+              alertCount: alerts.length
+            });
+          }
+        }
+
+        const newCache = new Map(this.farmZoneCache());
+        newCache.set(farm.farm_id, { healthy, warning, critical, zones: zonesList });
+        this.farmZoneCache.set(newCache);
         this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error('Error fetching device count for farm:', error);
-        const newCache = new Map(cache);
-        newCache.set(farm.farm_id, 0);
-        this.deviceCountCache.set(newCache);
+      error: (err) => {
+        console.error('Error loading zone status for farm:', farm.farm_id, err);
+        const newCache = new Map(this.farmZoneCache());
+        newCache.set(farm.farm_id, { healthy: 0, warning: 0, critical: 0, zones: [] });
+        this.farmZoneCache.set(newCache);
         this.cdr.markForCheck();
       }
     });
+  }
 
-    // Return 0 initially, will update when API call completes
-    return 0;
+  /**
+   * Action triggered when clicking a specific nested zone teaser.
+   */
+  selectZoneFromModal(farm: Farm, zoneId: string, event: Event): void {
+    event.stopPropagation();
+    this.farmManagement.selectFarm(farm);
+
+    // Store the selected zone via ZonesService or route params
+    // If your app typically relies on active route, navigating to dashboard
+    // with a hypothetical trigger or queryParam to select the zone on load:
+    this.router.navigate(['/dashboard'], { queryParams: { selected_zone: zoneId } });
+    this.closeFarmSelector();
+  }
+
+  /**
+   * Get zone status summary for a farm (from cache).
+   */
+  getFarmZoneStatus(farm: Farm): ZoneStatusSummary | null {
+    return this.farmZoneCache().get(farm.farm_id) || null;
   }
 
   // Close farm selector on escape key
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
-    if (this.showFarmSelector) {
+    if (this.showBentoMenu) {
+      this.closeBentoMenu();
+    } else if (this.showFarmSelector) {
       this.closeFarmSelector();
     } else if (this.showMobileMenu) {
       this.closeMobileMenu();
@@ -619,6 +827,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // Check if route is active
   isRouteActive(route: string): boolean {
     return this.currentRoute().startsWith(route);
+  }
+
+  /**
+   * Check if the Equipment Hub tab should be active.
+   * Active when on /devices, /sensors, or /sensor-readings.
+   */
+  isEquipmentHubActive(): boolean {
+    const route = this.currentRoute();
+    return route.startsWith('/devices') || route.startsWith('/sensors') || route.startsWith('/sensor-readings');
   }
 
   // Get translation for nav item
@@ -640,12 +857,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showMoreMenu = false;
   }
 
+  // Bento Menu methods
+  toggleBentoMenu(): void {
+    this.showBentoMenu = !this.showBentoMenu;
+    if (this.showBentoMenu) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
+  closeBentoMenu(): void {
+    this.showBentoMenu = false;
+    document.body.style.overflow = '';
+  }
+
 
   // Navigate to route and close menus
   navigateTo(route: string): void {
     this.router.navigate([route]);
     this.closeMobileMenu();
     this.closeMoreMenu();
+    this.closeBentoMenu();
   }
 
   // Get current language display name for mobile

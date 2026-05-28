@@ -29,9 +29,9 @@ export class LandingFooterComponent {
   /** Dynamic copyright year */
   readonly currentYear = new Date().getFullYear();
 
-  /** Sanitized Google Maps embed URL for Monastir, Tunisia */
+  /** Sanitized Google Maps embed URL for the technical headquarters at Technopôle Manouba, Manouba, Tunisia */
   readonly mapEmbedUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3234.5!2d10.8167!3d35.7667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd8b5e3a3e7e5d%3A0x0!2sAvenue+Taieb+Mhiri%2C+Monastir+5000!5e0!3m2!1sfr!2stn!4v1700000000000!5m2!1sfr!2stn',
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3234.5!2d10.094704!3d36.811329!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTechnopole+Manouba%2C+2010+Manouba+-+Tunisie!5e0!3m2!1sfr!2stn!4v1700000000000!5m2!1sfr!2stn',
   );
 
   /** Navigation links shown in "Liens Utiles" column */
@@ -46,9 +46,8 @@ export class LandingFooterComponent {
 
   /** Social media links */
   readonly socialLinks: ReadonlyArray<{ icon: string; url: string; label: string }> = [
-    { icon: 'linkedin', url: 'https://www.linkedin.com/company/feedin', label: 'LinkedIn' },
-    { icon: 'facebook', url: 'https://www.facebook.com/feedingreen', label: 'Facebook' },
-    { icon: 'instagram', url: 'https://www.instagram.com/feedingreen', label: 'Instagram' },
+    { icon: 'facebook', url: 'https://www.facebook.com/profile.php?id=100089482084748', label: 'Facebook' },
+    { icon: 'linkedin', url: 'https://www.linkedin.com/company/feedin-green', label: 'LinkedIn' },
   ];
 
   /**

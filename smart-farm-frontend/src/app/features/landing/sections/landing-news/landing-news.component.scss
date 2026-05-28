@@ -1,0 +1,366 @@
+/* ========================================================
+   SECTION: NEWS & ACTUALITÉS
+   Premium Split-Card SCSS Design System (No overlays)
+   ======================================================== */
+
+.premium-news-section {
+  position: relative;
+  padding: 8rem var(--section-gutter, 2rem);
+  background: #f8fafc; // Clean off-white background matching the nav bar
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+
+  // Subtle ambient decorative background glow orbs
+  .ambient-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    will-change: transform;
+
+    &.orb-1 {
+      top: -10%;
+      left: -5%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, #10b981 0%, transparent 70%);
+      animation: float-orb-1 12s ease-in-out infinite;
+    }
+
+    &.orb-2 {
+      bottom: -10%;
+      right: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+      animation: float-orb-2 15s ease-in-out infinite;
+    }
+  }
+}
+
+// Background Orb Floating Animations
+@keyframes float-orb-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -20px) scale(1.05); }
+}
+
+@keyframes float-orb-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 30px) scale(0.95); }
+}
+
+.news-container {
+  max-width: var(--container-max-width, 1280px);
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ========================================================
+   HEADER BLOCK
+   ======================================================== */
+.news-header-block {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 5rem auto;
+
+  .section-subtitle {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #10b981; // Brand's signature green
+    margin-bottom: 0.75rem;
+    position: relative;
+    padding-left: 12px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 5px;
+      background: #10b981;
+      border-radius: 50%;
+    }
+  }
+
+  .section-title {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(2.25rem, 4.5vw, 3rem);
+    font-weight: 850;
+    color: #0f172a; // Slate 900 for premium contrast
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-desc {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #475569; // Slate 600
+  }
+}
+
+/* ========================================================
+   GRID ARCHITECTURE (2 columns for balanced layout)
+   ======================================================== */
+.news-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========================================================
+   PREMIUM CARD STRUCTURE & FLEX SPLIT
+   ======================================================== */
+.news-card {
+  position: relative;
+  border-radius: 24px; // Large, uniform border radius as requested
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column; // Stacked on mobile viewports
+  height: 100%;
+  
+  // Custom cubic-bezier transition for buttery-smooth depth lift
+  transition: 
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+
+  // Split horizontally on larger viewports
+  @media (min-width: 768px) {
+    flex-direction: row;
+    min-height: 280px;
+  }
+
+  // Keyboard navigation focus state
+  &:focus-visible {
+    box-shadow: 
+      0 0 0 3px rgba(16, 185, 129, 0.3),
+      0 20px 40px rgba(16, 185, 129, 0.1);
+    border-color: #10b981;
+    transform: translateY(-4px);
+  }
+}
+
+/* ========================================================
+   IMAGE SECTION
+   ======================================================== */
+.news-image-section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: #f1f5f9;
+  flex-shrink: 0;
+
+  // On mobile viewports: Image on top, fills full width
+  aspect-ratio: 16 / 10;
+
+  // On desktop viewports: Image on the left, stretches top/left/bottom seamlessly
+  @media (min-width: 768px) {
+    width: 40%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
+.news-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  // Transition settings for high-end micro-interaction
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* ========================================================
+   TEXT / CONTENT SECTION (Clean & Minimal Legibility)
+   ======================================================== */
+.news-content-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding: 2.25rem 2rem;
+  background: #ffffff; // Clean high-contrast white area
+  gap: 1.25rem;
+
+  @media (max-width: 480px) {
+    padding: 1.75rem 1.5rem;
+  }
+}
+
+// Meta Data (Tag & Date/Read Time)
+.card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.card-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #047857; // Dark emerald green matching active navigation accents
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.25rem 0.625rem;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+
+.card-date-read {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #64748b; // Slate 500
+  font-weight: 600;
+
+  .dot-separator {
+    width: 4px;
+    height: 4px;
+    background: #cbd5e1;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+  }
+}
+
+// Typography (No ellipses, wrapping naturally for maximum clarity)
+.card-title {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.125rem, 2.2vw, 1.35rem);
+  font-weight: 800;
+  color: #0f172a; // Slate 900
+  line-height: 1.45;
+  margin: 0;
+  letter-spacing: -0.015em;
+  word-wrap: break-word;
+  overflow: visible; // Allows natural wrap without truncate
+}
+
+.card-read-time {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8; // Slate 400
+}
+
+// Primary Trigger (Arrow Action)
+.card-action-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: auto; // Pushes trigger action always to the bottom
+
+  .arrow-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* ========================================================
+   IMMERSIVE INTERACTION & HOVER STATES
+   ======================================================== */
+.news-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(16, 185, 129, 0.25);
+  // Soft, deep, premium box-shadow lift
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+
+  // Image Inside Frame Scales Smoothly (immersive hover)
+  .news-card-image {
+    transform: scale(1.05);
+  }
+
+  // Smooth translation of active trigger arrow
+  .arrow-icon {
+    transform: translateX(4px);
+  }
+}
+
+/* ========================================================
+   DARK THEME OVERRIDES (Full Visual Coherence)
+   ======================================================== */
+:host-context(body.dark-theme) {
+  .premium-news-section {
+    background: #0b0f19; // Deep tech slate dark background
+    border-bottom-color: rgba(255, 255, 255, 0.03);
+
+    .ambient-glow {
+      opacity: 0.04;
+    }
+
+    .news-header-block {
+      .section-title {
+        color: #f8fafc;
+      }
+      .section-desc {
+        color: #94a3b8;
+      }
+    }
+  }
+
+  .news-card {
+    background: #111827; // Premium charcoal-dark card base
+    border-color: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      border-color: rgba(16, 185, 129, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+    
+    &:focus-visible {
+      border-color: #10b981;
+    }
+  }
+
+  .news-image-section {
+    background: #111827;
+  }
+
+  .news-content-section {
+    background: #111827; // Dark high-contrast section matching active nav system
+
+    .card-title {
+      color: #f8fafc;
+    }
+
+    .card-date-read {
+      color: #94a3b8;
+    }
+
+    .card-tag {
+      color: #34d399; // Crisp emerald for dark mode visibility
+      background: rgba(52, 211, 153, 0.08);
+    }
+  }
+}

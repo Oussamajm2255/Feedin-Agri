@@ -27,6 +27,17 @@ import { SeoService } from '../../../../core/services/seo.service';
       <!-- Hero -->
       <header class="page-hero">
         <div class="hero-overlay"></div>
+
+        <!-- Floating Hexagon IoT Icons Tech Overlay -->
+        <div class="tech-overlay-grid">
+          <div class="hex-icon floating-hex hex-1"><span class="material-icons">thermostat</span></div>
+          <div class="hex-icon floating-hex hex-2"><span class="material-icons">water_drop</span></div>
+          <div class="hex-icon floating-hex hex-3"><span class="material-icons">recycling</span></div>
+          <div class="hex-icon floating-hex hex-4"><span class="material-icons">eco</span></div>
+          <div class="hex-icon floating-hex hex-5"><span class="material-icons">memory</span></div>
+          <div class="hex-icon floating-hex hex-6"><span class="material-icons">agriculture</span></div>
+        </div>
+
         <div class="hero-content">
           <span class="page-label">{{ 'landing.services.hero.label' | translate }}</span>
           <h1>
@@ -51,27 +62,43 @@ import { SeoService } from '../../../../core/services/seo.service';
               </p>
             </div>
 
-            <div class="services-grid fade-in">
-              <div class="service-card" *ngFor="let s of services">
-                <div class="service-image" *ngIf="s.image">
-                  <img [src]="s.image" [alt]="s.title | translate" loading="lazy" />
-                </div>
-                <div class="service-card-content">
-                  <div class="service-header">
-                    <div class="service-icon material-icons">{{ s.icon }}</div>
-                    <div class="service-tag">{{ s.tag | translate }}</div>
+            <div class="services-list fade-in">
+              <div class="service-card" *ngFor="let s of services; let i = index">
+                <div class="service-card-main">
+                  <div class="service-image" *ngIf="s.image">
+                    <img [src]="s.image" [alt]="s.title | translate" loading="lazy" />
+                    <div class="service-image-overlay"></div>
                   </div>
-                  <h3>{{ s.title | translate }}</h3>
-                  <p [innerHTML]="s.desc | translate"></p>
-                  <div class="service-includes" *ngIf="s.includes">
-                    <h5>{{ 'landing.services.grid.includes' | translate }}</h5>
-                    <ul>
-                      <li *ngFor="let item of s.includes">{{ item | translate }}</li>
-                    </ul>
-                  </div>
-                  <div class="service-benefits" *ngIf="s.benefits">
-                    <div class="benefit-chip" *ngFor="let b of s.benefits">
-                      ✓ {{ b | translate }}
+                  <div class="service-card-content">
+                    <div class="service-meta">
+                      <div class="service-tag-wrapper">
+                        <span class="service-icon material-icons">{{ s.icon }}</span>
+                        <span class="service-tag">{{ s.tag | translate }}</span>
+                      </div>
+                    </div>
+                    
+                    <h3>{{ s.title | translate }}</h3>
+                    <p class="service-desc" [innerHTML]="s.desc | translate"></p>
+                    
+                    <div class="service-includes" *ngIf="s.includes">
+                      <h5 class="includes-title">{{ s.includesTitle | translate }}</h5>
+                      <div class="includes-grid">
+                        <span class="include-item" *ngFor="let item of s.includes">
+                          <span class="material-icons check-icon">check_circle</span>
+                          {{ item | translate }}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p class="service-footer-text" *ngIf="s.footerText">
+                      {{ s.footerText | translate }}
+                    </p>
+                    
+                    <div class="service-actions">
+                      <button (click)="goToContactRegister()" class="btn-action-primary">
+                        {{ 'landing.services.cta.btn1' | translate }}
+                        <span class="material-icons">arrow_forward</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -135,7 +162,7 @@ import { SeoService } from '../../../../core/services/seo.service';
                 <a (click)="goToContactRegister()" class="btn-primary" style="cursor:pointer">{{
                   'landing.services.cta.btn1' | translate
                 }}</a>
-                <a routerLink="/projects" class="btn-secondary">{{
+                <a routerLink="/projets" class="btn-secondary">{{
                   'landing.services.cta.btn2' | translate
                 }}</a>
               </div>
@@ -179,10 +206,84 @@ import { SeoService } from '../../../../core/services/seo.service';
         opacity: 0.8;
       }
 
+      .page-hero::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 180px;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(248, 250, 248, 0) 0%,
+          rgba(248, 250, 248, 0.4) 40%,
+          rgba(248, 250, 248, 0.85) 75%,
+          rgba(248, 250, 248, 1) 100%
+        );
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+      }
+
       .hero-overlay {
         position: absolute;
         inset: 0;
         background: linear-gradient(135deg, rgba(10, 74, 46, 0.65) 0%, rgba(5, 41, 82, 0.55) 100%);
+      }
+
+      /* Tech Overlay with floating IoT icons */
+      .tech-overlay-grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .floating-hex {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.05);
+        animation: float-slow-hex 6s ease-in-out infinite;
+      }
+
+      .floating-hex span {
+        font-size: 1.5rem;
+      }
+
+      .hex-1 { top: 15%; left: 10%; animation-delay: 0s; }
+      .hex-2 { top: 25%; right: 12%; animation-delay: 1.5s; }
+      .hex-3 { bottom: 20%; left: 15%; animation-delay: 3s; }
+      .hex-4 { bottom: 15%; right: 18%; animation-delay: 4.5s; }
+      .hex-5 { top: 50%; left: 8%; animation-delay: 2s; }
+      .hex-6 { top: 55%; right: 8%; animation-delay: 3.5s; }
+
+      @keyframes float-slow-hex {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
       }
 
       .hero-content {
@@ -223,11 +324,13 @@ import { SeoService } from '../../../../core/services/seo.service';
       }
 
       .hero-sub {
-        font-size: 1.0625rem;
-        color: rgba(255, 255, 255, 0.75);
+        font-size: 1.15rem;
+        color: #f8fafc; /* Solid off-white for high contrast */
         max-width: 600px;
         margin: 0 auto;
-        line-height: 1.6;
+        line-height: 1.65;
+        font-weight: 500; /* Medium weight for readability */
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); /* Deep text shadow */
       }
 
       .page-main {
@@ -279,27 +382,40 @@ import { SeoService } from '../../../../core/services/seo.service';
         font-family: 'Outfit', 'Inter', system-ui, sans-serif;
       }
 
-      .services-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        justify-content: center;
+      .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
       }
 
       .service-card {
-        background: #fff;
-        border: 1px solid rgba(16, 185, 129, 0.12);
-        border-radius: 24px;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        border-radius: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         display: flex;
         flex-direction: column;
         overflow: hidden;
       }
 
+      .service-card:hover {
+        border-color: rgba(16, 185, 129, 0.4);
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.08);
+        transform: translateY(-4px);
+      }
+
+      .service-card-main {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+      }
+
       .service-image {
-        width: 100%;
-        height: 220px;
+        position: relative;
+        width: 380px;
+        min-width: 380px;
         overflow: hidden;
       }
 
@@ -307,107 +423,144 @@ import { SeoService } from '../../../../core/services/seo.service';
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .service-card:hover .service-image img {
-        transform: scale(1.05);
+        transform: scale(1.08);
+      }
+
+      .service-image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(16, 185, 129, 0) 60%, rgba(255, 255, 255, 0.85) 100%);
+        pointer-events: none;
+        transition: background 0.4s ease;
+      }
+
+      .service-card:hover .service-image-overlay {
+        background: linear-gradient(to right, rgba(16, 185, 129, 0.05) 50%, rgba(255, 255, 255, 0.9) 100%);
       }
 
       .service-card-content {
-        padding: 2rem;
+        padding: 2.5rem;
         display: flex;
         flex-direction: column;
-        flex: 1;
+        justify-content: space-between;
+        flex-grow: 1;
       }
 
-      .service-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 48px rgba(16, 185, 129, 0.12);
-        border-color: rgba(16, 185, 129, 0.3);
-      }
-
-      .service-header {
+      .service-meta {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
         margin-bottom: 1.25rem;
+      }
+
+      .service-tag-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
       }
 
       .service-icon {
-        font-size: 2.25rem;
-        width: 56px;
-        height: 56px;
-        background: rgba(16, 185, 129, 0.1);
+        font-size: 1.75rem;
+        width: 44px;
+        height: 44px;
+        background: rgba(16, 185, 129, 0.15);
         color: #10b981;
-        border-radius: 16px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);
         transition: all 0.3s ease;
       }
+
       .service-card:hover .service-icon {
         transform: scale(1.1) rotate(-5deg);
-        background: rgba(16, 185, 129, 0.2);
-        color: #34d399;
-        text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        background: #10b981;
+        color: white;
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
       }
 
       .service-tag {
-        font-size: 0.6875rem;
+        font-size: 0.75rem;
         font-weight: 700;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
-        color: #10b981;
-        background: #f0fdf4;
-        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #065f46;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.25);
         border-radius: 100px;
-        padding: 0.25rem 0.75rem;
+        padding: 0.35rem 0.85rem;
       }
 
       .service-card h3 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.75rem;
-      }
-
-      .service-card p {
-        color: #6b7280;
-        font-size: 0.9375rem;
-        line-height: 1.6;
-        margin-bottom: 1.25rem;
-      }
-
-      .service-includes h5 {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.625rem;
-      }
-
-      .service-includes ul {
-        list-style: none;
-        padding: 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #111827;
         margin: 0 0 1rem;
+        font-family: 'Outfit', 'Inter', system-ui, sans-serif;
       }
 
-      .service-includes li {
-        font-size: 0.875rem;
-        color: #6b7280;
-        padding: 0.25rem 0;
-        padding-left: 1.25rem;
-        position: relative;
+      .service-desc {
+        font-size: 1.05rem;
+        color: #4b5563;
+        line-height: 1.6;
+        margin: 0 0 1.5rem;
       }
 
-      .service-includes li::before {
-        content: '•';
-        position: absolute;
-        left: 0;
-        color: #10b981;
+      .service-includes {
+        margin-bottom: 1.5rem;
+      }
+
+      .service-includes .includes-title {
+        font-size: 0.95rem;
         font-weight: 700;
+        color: #374151;
+        margin: 0 0 1.25rem;
+        line-height: 1.5;
+      }
+
+      .service-footer-text {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #065f46;
+        background: rgba(16, 185, 129, 0.04);
+        padding: 1rem 1.25rem;
+        border-left: 4px solid #10b981;
+        border-radius: 0 16px 16px 0;
+        margin: 0 0 2rem;
+        font-weight: 500;
+      }
+
+      body.rtl .service-footer-text {
+        border-left: none;
+        border-right: 4px solid #10b981;
+        border-radius: 16px 0 0 16px;
+      }
+
+      .includes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.875rem;
+      }
+
+      .include-item {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        font-size: 0.9375rem;
+        color: #374151;
+        font-weight: 500;
+      }
+
+      .check-icon {
+        font-size: 1.25rem;
+        color: #10b981;
       }
 
       .service-benefits {
@@ -423,6 +576,89 @@ import { SeoService } from '../../../../core/services/seo.service';
         border-radius: 100px;
         padding: 0.25rem 0.625rem;
         font-weight: 500;
+      }
+
+      .service-actions {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin-top: auto;
+      }
+
+      .btn-action-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.85rem 1.75rem;
+        background: #10b981;
+        color: white;
+        border: none;
+        border-radius: 100px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+      }
+
+      .btn-action-primary:hover {
+        background: #059669;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      }
+
+      .btn-action-primary span {
+        font-size: 1.125rem;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-action-primary:hover span {
+        transform: translateX(3px);
+      }
+
+      .btn-action-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.85rem 1.75rem;
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 100px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      @media (max-width: 992px) {
+        .service-card-main {
+          flex-direction: column;
+        }
+        .service-image {
+          width: 100%;
+          min-width: 100%;
+          height: 250px;
+        }
+        .service-image-overlay {
+          background: linear-gradient(to bottom, rgba(16, 185, 129, 0) 60%, rgba(255, 255, 255, 0.95) 100%);
+        }
+        .service-card:hover .service-image-overlay {
+          background: linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 50%, rgba(255, 255, 255, 0.95) 100%);
+        }
+        .service-card-content {
+          padding: 1.75rem;
+        }
+        .service-card h3 {
+          font-size: 1.4rem;
+        }
+        .service-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-action-primary {
+          justify-content: center;
+        }
       }
 
       /* Farmers Section */
@@ -699,14 +935,14 @@ export class ServicesComponent implements OnInit {
       tag: 'landing.services.services.0.tag',
       title: 'landing.services.services.0.title',
       desc: 'landing.services.services.0.desc',
+      includesTitle: 'landing.services.services.0.includesTitle',
       includes: [
         'landing.services.services.0.includes.0',
         'landing.services.services.0.includes.1',
         'landing.services.services.0.includes.2',
         'landing.services.services.0.includes.3',
-        'landing.services.services.0.includes.4',
       ],
-      benefits: ['landing.services.services.0.benefits.0'],
+      footerText: 'landing.services.services.0.footerText',
     },
     {
       icon: 'memory',
@@ -714,6 +950,7 @@ export class ServicesComponent implements OnInit {
       tag: 'landing.services.services.1.tag',
       title: 'landing.services.services.1.title',
       desc: 'landing.services.services.1.desc',
+      includesTitle: 'landing.services.services.1.includesTitle',
       includes: [
         'landing.services.services.1.includes.0',
         'landing.services.services.1.includes.1',
@@ -721,7 +958,7 @@ export class ServicesComponent implements OnInit {
         'landing.services.services.1.includes.3',
         'landing.services.services.1.includes.4',
       ],
-      benefits: ['landing.services.services.1.benefits.0'],
+      footerText: 'landing.services.services.1.footerText',
     },
     {
       icon: 'school',
@@ -729,14 +966,14 @@ export class ServicesComponent implements OnInit {
       tag: 'landing.services.services.2.tag',
       title: 'landing.services.services.2.title',
       desc: 'landing.services.services.2.desc',
+      includesTitle: 'landing.services.services.2.includesTitle',
       includes: [
         'landing.services.services.2.includes.0',
         'landing.services.services.2.includes.1',
         'landing.services.services.2.includes.2',
         'landing.services.services.2.includes.3',
-        'landing.services.services.2.includes.4',
       ],
-      benefits: ['landing.services.services.2.benefits.0'],
+      footerText: 'landing.services.services.2.footerText',
     },
   ];
 

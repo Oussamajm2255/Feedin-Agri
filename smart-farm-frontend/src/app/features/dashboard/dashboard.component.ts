@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -63,6 +63,7 @@ import { catchError } from 'rxjs/operators';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
   private apiService = inject(ApiService);
   private notifications = inject(NotificationService);
   private authService = inject(AuthService);
@@ -171,6 +172,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         next: (devices) => {
           this.devices = devices;
           this.notifyOfflineDevices(devices);
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error refreshing device status:', error);
@@ -181,6 +183,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         next: (devices) => {
           this.devices = devices;
           this.notifyOfflineDevices(devices);
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error refreshing device status:', error);
@@ -202,9 +205,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         next: (devices) => {
           this.devices = devices;
           this.notifyOfflineDevices(devices);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading devices:', error);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
     }
@@ -213,6 +220,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.apiService.getSensorReadings(10, 0).subscribe({
       next: (readings) => {
         this.recentReadings = readings;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading sensor readings:', error);
@@ -223,11 +231,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.apiService.getDeviceStatistics().subscribe({
       next: (stats) => {
         this.statistics = stats;
-        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading statistics:', error);
-        this.isLoading = false;
       }
     });
   }
@@ -341,6 +348,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadFarmData(farm: Farm): void {
+    this.isLoading = true;
     this.farmDetails = farm;
     
     // Load devices for selected farm
@@ -348,9 +356,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       next: (devices) => {
         this.devices = devices;
         this.notifyOfflineDevices(devices);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading farm devices:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
 
@@ -380,10 +392,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
           if (this.map && this.mapInitialized) {
             this.updateMapPopup(farm.name, this.farmerName, farm.location || '');
           }
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading farmer:', error);
           this.farmerName = 'Unknown';
+          this.cdr.detectChanges();
         }
       });
     }
@@ -477,6 +491,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.error('Error loading weather data:', error);
         this.weatherError = error.message || 'Failed to load weather data';
         this.weatherLoading = false;
+        this.cdr.detectChanges();
         return of(null);
       })
     ).subscribe({
@@ -487,6 +502,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.generateAIInsights();
         }
         this.weatherLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -540,9 +556,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
             // Regenerate insights with sensor data
             this.generateAIInsights();
+            this.cdr.detectChanges();
           },
           error: (error) => {
             console.error('Error loading sensor data:', error);
+            this.cdr.detectChanges();
           }
         });
       },
@@ -690,10 +708,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.zonesService.getFarmDashboard(farmId).subscribe({
       next: (data) => {
         this.zoneDashboardData = data;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading zone dashboard:', err);
         this.zoneDashboardData = null;
+        this.cdr.detectChanges();
       },
     });
   }

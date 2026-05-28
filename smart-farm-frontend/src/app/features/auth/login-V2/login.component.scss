@@ -41,9 +41,11 @@
 $brand-primary: #10b981;        // Emerald green
 $brand-primary-light: #34d399;  // Light emerald
 $brand-primary-dark: #059669;   // Dark emerald
+$brand-primary-darker: #047857; // Darker emerald
 $brand-primary-glow: rgba(16, 185, 129, 0.18);
+$brand-primary-glow-strong: rgba(16, 185, 129, 0.3);
 
-// Linen/Morning Mist Palette
+// Linen/Morning Mist Palette (Earth Tones)
 $linen-50: #faf8f5;
 $linen-100: #f5f0eb;
 $linen-200: #ebe4dc;
@@ -399,6 +401,34 @@ $shadow-focus: 0 0 0 3px rgba(16, 185, 129, 0.25);
   }
 }
 
+.theme-toggle {
+  padding: $space-2 !important;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    padding: $space-1 !important;
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  &:hover {
+    transform: translateY(-2px) !important;
+  }
+}
+
 // Headline Container
 .headline-container {
   text-align: left;
@@ -421,6 +451,10 @@ $shadow-focus: 0 0 0 3px rgba(16, 185, 129, 0.25);
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   letter-spacing: -0.02em;
   line-height: 1.1;
+  
+  .brand-highlight {
+    color: $brand-primary-light; // A vibrant green that stands out on dark/video backgrounds
+  }
 }
 
 .sub-headline {
@@ -1570,8 +1604,47 @@ $shadow-focus: 0 0 0 3px rgba(16, 185, 129, 0.25);
 
 :host-context([dir="rtl"]),
 [dir="rtl"] {
-  .back-button:hover {
-    transform: translateX(2px);
+  .back-button {
+    flex-direction: row-reverse;
+    
+    &:hover {
+      transform: translateX(3px);
+    }
+  }
+  
+  .headline-container {
+    text-align: right;
+  }
+  
+  // Custom Field RTL Layout
+  .field-icon.prefix {
+    margin-right: $space-3;
+    margin-left: $space-2;
+  }
+
+  .action-btn {
+    margin-right: auto;
+    margin-left: $space-1;
+  }
+  
+  .custom-input {
+    text-align: right;
+  }
+  
+  .custom-label {
+    left: auto;
+    right: 0;
+    transform-origin: right top;
+  }
+
+  .welcome-header {
+    text-align: right;
+  }
+
+  .remember-checkbox {
+    .mdc-label, label {
+      margin: 0 6px 0 0 !important;
+    }
   }
   
   .hero-logo {
@@ -1581,12 +1654,6 @@ $shadow-focus: 0 0 0 3px rgba(16, 185, 129, 0.25);
     @media (min-width: 768px) {
       right: auto;
       left: $space-8;
-    }
-  }
-  
-  .form-field {
-    .mat-mdc-input-element {
-      text-align: right;
     }
   }
   
@@ -1601,12 +1668,178 @@ $shadow-focus: 0 0 0 3px rgba(16, 185, 129, 0.25);
     margin-right: $space-1;
     
     &::after {
-      transform-origin: left;
+      transform-origin: right;
     }
     
     &:hover::after {
-      transform-origin: right;
+      transform-origin: left;
     }
+  }
+
+  // Desktop Video Fade (RTL requires fading the opposite edge)
+  @media (min-width: 1024px) {
+    .video-wrapper {
+      mask-image: linear-gradient(to left, rgba(0,0,0,1) 55%, rgba(0,0,0,0.6) 75%, rgba(0,0,0,0.2) 92%, rgba(0,0,0,0) 100%) !important;
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 55%, rgba(0,0,0,0.6) 75%, rgba(0,0,0,0.2) 92%, rgba(0,0,0,0) 100%) !important;
+    }
+  }
+}
+
+// =============================================================================
+// DARK MODE
+// =============================================================================
+
+@mixin dark-mode-styles() {
+  .login-canvas {
+    background-color: #0a0a0a; 
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+  
+  .form-section {
+    background: #0a0a0a;
+  }
+
+  .form-surface {
+    background: #121212;
+    border: 1px solid rgba(46, 204, 113, 0.15) !important;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(46, 204, 113, 0.05);
+
+    @media (max-width: 768px) {
+       background: #121212;
+       border-radius: 24px;
+    }
+  }
+
+  .welcome-title {
+    color: #ffffff;
+  }
+  
+  .welcome-subtitle {
+    color: #a0a0a0;
+  }
+  
+  .custom-field {
+    background: #1e1e1e;
+    border-color: rgba(255, 255, 255, 0.1);
+    
+    &:hover {
+      background: #232323;
+      border-color: rgba(46, 204, 113, 0.5);
+    }
+    
+    &:focus-within {
+      background: #1e1e1e;
+      border-color: #2ecc71;
+      box-shadow: 0 0 0 1px #2ecc71, 0 4px 12px rgba(46, 204, 113, 0.15);
+    }
+    
+    &.has-error {
+      background: #1e1e1e;
+      border-color: var(--color-danger);
+    }
+  }
+
+  .custom-input {
+    color: #ffffff;
+    
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+  }
+
+  .custom-label {
+    color: #a0a0a0;
+  }
+
+  .custom-input:focus ~ .custom-label {
+    color: #2ecc71;
+  }
+
+  .has-error .custom-input ~ .custom-label {
+    color: var(--color-danger); 
+  }
+
+  .field-icon {
+    color: #a0a0a0;
+  }
+
+  .action-btn {
+    color: #a0a0a0;
+    
+    &:hover {
+      color: #2ecc71;
+    }
+  }
+
+  .remember-checkbox {
+    .mdc-label, label {
+      color: #a0a0a0 !important;
+    }
+    .mdc-checkbox__native-control:enabled:not(:checked) ~ .mdc-checkbox__background {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      background-color: #1e1e1e !important;
+    }
+  }
+
+  .forgot-link {
+    color: #a0a0a0;
+    &:hover {
+      color: #2ecc71;
+    }
+  }
+
+  .form-footer {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .register-prompt {
+    color: #a0a0a0;
+  }
+
+  .register-link {
+    color: #2ecc71;
+    &:hover {
+      color: color.adjust(#2ecc71, $lightness: 10%);
+    }
+  }
+
+  .expert-link {
+    background: rgba(46, 204, 113, 0.08);
+    border-color: rgba(46, 204, 113, 0.15);
+    color: #ffffff;
+    
+    &:hover {
+      background: rgba(46, 204, 113, 0.15);
+      border-color: rgba(46, 204, 113, 0.3);
+      color: #2ecc71;
+    }
+  }
+
+  .video-overlay {
+    background: linear-gradient(
+      to bottom,
+      #0a0a0a 0%,
+      rgba(10, 10, 10, 0.4) 40%,
+      #0a0a0a 100%
+    );
+  }
+}
+
+// Apply dark mode based on class/attribute
+:host-context(.dark-theme),
+:host-context([data-theme="dark"]),
+:host-context([data-mode="dark"]) {
+  @include dark-mode-styles();
+}
+
+// Fallback to prefers-color-scheme if no class is set
+@media (prefers-color-scheme: dark) {
+  :host-context(:not(.light-theme)):not([data-theme="light"]) {
+    @include dark-mode-styles();
   }
 }
 

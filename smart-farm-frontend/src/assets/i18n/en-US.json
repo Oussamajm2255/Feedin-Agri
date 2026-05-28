@@ -3279,6 +3279,7 @@
       "solutions": "Our Solutions",
       "formation": "Training",
       "projects": "Our Projects",
+      "store": "Store",
       "contact": "Contact",
       "login": "Sign in",
       "contactExpert": "Contact an Expert",
@@ -3292,7 +3293,8 @@
       "title2": "finally predictable.",
       "cta": "Contact an Expert",
       "cta1": "Contact an Expert",
-      "cta2": "Discover our solutions",
+      "cta2": "Explore our products",
+      "cta2Badge": "100% Local 🇹🇳",
       "ctaHelper": "Our team helps you set up your smart farm.",
       "helper": "Our team helps you set up your smart farm.",
       "scrollDown": "Discover"
@@ -3309,22 +3311,22 @@
       "cards": [
         {
           "header": "Smart Agriculture & Innovative Systems",
-          "desc": "Control your connected greenhouses and maximize every m² with intelligent systems tailored to your farm.",
+          "desc": "Control your connected parcels remotely and maximize every m² with intelligent systems tailored to your farm.",
           "bullets": [
-            "Real-time supervised connected greenhouse",
+            "Connected parcels supervised in real time",
             "Vertical & hydroponic farming",
-            "CO₂, temperature & light monitoring"
+            "Monitoring via embedded artificial intelligence"
           ],
           "cta": "Learn more",
           "ctaRoute": "/solutions#smart-farming"
         },
         {
           "header": "Automation & Greenhouse Autonomy",
-          "desc": "Systems that learn, adapt and act before you do — for fully autonomous management of your crops.",
+          "desc": "Systems that learn, adapt and act before you do — for fully autonomous management of your greenhouse",
           "bullets": [
             "Custom automation rules",
             "Embedded AI & machine learning",
-            "Centralized dashboard & real-time alerts"
+            "Centralized dashboard & early alerts"
           ],
           "cta": "Learn more",
           "ctaRoute": "/solutions#automation"
@@ -3333,9 +3335,9 @@
           "header": "Agricultural Development & Support",
           "desc": "From design to operations, our team delivers a complete turnkey service and expert support at every step.",
           "bullets": [
-            "Custom layout & installation",
+            "Local & responsive technical support",
             "Training & skill development",
-            "Local & responsive technical support"
+            "Custom layout & installation"
           ],
           "cta": "Discover our services",
           "ctaRoute": "/services#development"
@@ -3348,14 +3350,14 @@
       "desc1": "Feedin was born from a simple conviction: agriculture deserves the best tools. We design connected greenhouses, automation systems and training programs so every farmer can work with precision, serenity and efficiency.",
       "desc2": "We don't sell gadgets. We build lasting partnerships with professionals who want to go further.",
       "features": [
-        "100% adapted to the Tunisian climate",
+        "100% Tailored solutions",
         "Local and responsive technical support",
         "Installation and coaching included",
         "Field-proven technology"
       ],
       "cta": "Discover our story",
       "card1": {
-        "title": "12+",
+        "title": "8+",
         "sub": "Years of agricultural expertise"
       },
       "card2": {
@@ -3432,6 +3434,20 @@
         }
       ]
     },
+    "news": {
+      "subtitle": "OUR LATEST NEWS",
+      "title": "FEEDIN GREEN Events & Insights",
+      "description": "Follow our latest innovations, our participation in economic forums, and technological breakthroughs.",
+      "readMore": "Read more",
+      "items": {
+        "0": {
+          "date": "May 10, 2026"
+        },
+        "1": {
+          "date": "May 15, 2026"
+        }
+      }
+    },
     "footer": {
       "tagline1": "The leading IoT platform for smart agriculture in Tunisia.",
       "tagline2": "Connected sensors, greenhouse automation and real-time monitoring — designed for every farmer.",
@@ -3460,6 +3476,7 @@
         }
       ],
       "locationTitle": "Find Us",
+      "exploreMap": "Click to navigate to the contact page",
       "addressTech": "Technical Office: Technopôle Manouba, 2010 Manouba - Tunisia",
       "addressHQ": "Head Office: Avenue Taieb Mhiri, 5000 Monastir, Tunisia",
       "phone": "+216 26 213 304",
@@ -3637,49 +3654,44 @@
       },
       "services": [
         {
-          "tag": "Systems",
+          "tag": "SYSTEMS",
           "title": "Smart Agriculture & Systems",
-          "desc": "We design and deploy advanced agricultural solutions integrating soil-less farming, vertical systems, and smart technologies to optimize production.",
+          "desc": "Our smart agriculture approach relies on the use of advanced technologies to collect and analyze real-time data. Thanks to these systems, we enable farmers to optimize their practices, anticipate crop needs, and significantly improve their productivity.",
+          "includesTitle": "Our smart agriculture & systems service offers a complete solution including:",
           "includes": [
-            "Connected smart greenhouses",
-            "Hydroponic & soil-less farming",
-            "Vertical farming systems",
-            "IoT sensors & climate monitoring",
-            "Yield optimization via data & AI"
+            "installation of connected sensors in plots or greenhouses",
+            "real-time data collection and analysis",
+            "automated control of irrigation and fertigation",
+            "a remote monitoring platform accessible from anywhere"
           ],
-          "benefits": [
-            "Goal: Maximize productivity with fewer resources"
-          ]
+          "footerText": "This approach helps optimize yields, reduce operating costs, and guarantee a more sustainable management of agricultural resources."
         },
         {
-          "tag": "Automation",
-          "title": "Greenhouse Automation & Autonomy",
-          "desc": "We transform agricultural greenhouses into autonomous systems through automation, enabling precise control, cost reduction, and improved efficiency.",
+          "tag": "AUTOMATION",
+          "title": "Greenhouse Installation & Supply",
+          "desc": "We install high-performance greenhouses, supply all necessary equipment, and ensure their upgrade to meet the requirements of modern agriculture. With us, your greenhouses become more productive, more efficient, and ready for the future.",
+          "includesTitle": "Our service covers greenhouse installation and equipment, including:",
           "includes": [
-            "Automated irrigation and fertigation",
-            "Automated climate management",
-            "Remote control systems",
-            "Energy & autonomy (solar, energy)",
-            "Smart farming solutions"
+            "design and assembly of various greenhouse types (tunnel, multi-span, garden greenhouse, etc.)",
+            "installation of irrigation and fertigation systems",
+            "setup of ventilation, heating, and shading systems",
+            "supply of spare parts",
+            "modernization and automation of existing greenhouses"
           ],
-          "benefits": [
-            "Goal: Reduce costs, improve precision and limit human intervention"
-          ]
+          "footerText": "We guarantee reliable technical solutions tailored to local climatic conditions."
         },
         {
-          "tag": "Support",
+          "tag": "SUPPORT",
           "title": "Agricultural Development & Support",
-          "desc": "We support farmers, entrepreneurs, and institutions in agricultural modernization through training, consulting, and rural development projects.",
+          "desc": "We support farmers at every stage of their development. Through our training and expertise, we help them adopt best practices and integrate new agricultural technologies. Together, let's build a more efficient, profitable, and future-oriented agriculture.",
+          "includesTitle": "Our support and training service includes:",
           "includes": [
-            "Agricultural technology training",
-            "Project support (from idea to operation)",
-            "Technical assistance & monitoring",
-            "Rural development programs",
-            "Know-how transfer"
+            "training sessions tailored to the needs of farmers",
+            "technical coaching on the field",
+            "support in using modern agricultural technologies",
+            "continuous monitoring to ensure the improvement of practices"
           ],
-          "benefits": [
-            "Goal: Democratize modern and sustainable agriculture"
-          ]
+          "footerText": "We focus on knowledge transfer and skill development to guarantee concrete and sustainable results."
         }
       ],
       "farmers": {
@@ -3751,7 +3763,76 @@
         "title": "Ready to start your project?",
         "desc": "Contact our team for a free consultation.",
         "btn1": "Request a free quote",
-        "btn2": "Our projects"
+        "btn2": "Our latest projects"
+      },
+      "details": {
+        "showDetails": "Show details",
+        "hideDetails": "Hide details",
+        "tabs": {
+          "specs": "Specifications",
+          "cases": "Applications",
+          "impact": "Impact & ROI"
+        },
+        "service0": {
+          "specs": [
+            "Industrial multi-sensor IoT controller (temp, humidity, light, CO₂).",
+            "Precision capacitive soil moisture and NPK sensors.",
+            "Multispectral imaging integration for leaf health monitoring.",
+            "Long-range LoRaWAN / GSM connectivity module (up to 15 km).",
+            "Real-time web & mobile dashboard with interactive analytics."
+          ],
+          "cases": [
+            "Commercial production greenhouses (vegetables, horticulture, floriculture).",
+            "Agronomic research units and academic laboratories.",
+            "Urban farming installations and indoor vertical farming systems.",
+            "Agricultural cooperatives looking to share climate monitoring."
+          ],
+          "impact": [
+            "Up to 40% water savings thanks to tensiometric probes.",
+            "Average 25% yield increase for sensitive crops.",
+            "50% reduction in losses due to fungal diseases from humidity alerts."
+          ]
+        },
+        "service1": {
+          "specs": [
+            "Automated proportional fertigation system (EC/pH control).",
+            "Servomotor controllers for greenhouse vents and shade screens.",
+            "Variable frequency drives for circulation fans and extractors.",
+            "Predictive algorithms based on local weather forecasts.",
+            "Hybrid power system (solar panels and backup battery)."
+          ],
+          "cases": [
+            "Medium and large-scale industrial greenhouses.",
+            "Farms in remote areas off the electrical grid.",
+            "Complex drip irrigation systems on hilly terrain.",
+            "Smart farming projects requiring minimal human intervention."
+          ],
+          "impact": [
+            "70% reduction in daily labor for climate management.",
+            "30% water and nutrient savings through intelligent dosing.",
+            "Fast return on investment (average 18 to 24 months)."
+          ]
+        },
+        "service2": {
+          "specs": [
+            "Certified training programs (classroom theory and on-site practice).",
+            "Custom technical and economic feasibility studies.",
+            "Complete agronomic diagnostics (soil, water, climatology analysis).",
+            "24/7 remote technical assistance and monthly follow-up visits.",
+            "Support in obtaining agricultural modernization grants."
+          ],
+          "cases": [
+            "Young entrepreneurs and investors launching into AgTech.",
+            "Traditional farmers wishing to start a digital transition.",
+            "NGOs and development agencies for rural resilience projects.",
+            "Agricultural vocational training centers and technical high schools."
+          ],
+          "impact": [
+            "Total autonomy of operational teams in less than 2 weeks.",
+            "Validation of project profitability before equipment purchase.",
+            "Securing investments through expert agronomic monitoring."
+          ]
+        }
       }
     },
     "formation": {

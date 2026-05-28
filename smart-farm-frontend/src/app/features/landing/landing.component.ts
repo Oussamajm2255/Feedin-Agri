@@ -38,6 +38,7 @@ import { ValeurAgricoleComponent } from './sections/valeur-agricole/valeur-agric
 import { CtaFinalComponent } from './sections/cta-final/cta-final.component';
 import { LandingBentoSectionComponent } from './sections/landing-bento-section/landing-bento-section.component';
 import { PartnerCarouselComponent } from './sections/partner-carousel/partner-carousel.component';
+import { LandingNewsComponent } from './sections/landing-news/landing-news.component';
 
 // Shared components
 import { PublicNavComponent } from './pages/shared/public-nav.component';
@@ -56,6 +57,7 @@ import { ScrollToTopComponent } from '../../shared/components/scroll-to-top/scro
     LandingBentoSectionComponent,
     AProposComponent,
     ValeurAgricoleComponent,
+    LandingNewsComponent,
     CtaFinalComponent,
     PartnerCarouselComponent,
     LandingFooterComponent,

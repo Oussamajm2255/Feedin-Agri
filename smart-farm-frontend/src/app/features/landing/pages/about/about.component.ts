@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { PublicNavComponent } from '../shared/public-nav.component';
 import { LandingFooterComponent } from '../../sections/landing-footer/landing-footer.component';
 import { ScrollToTopComponent } from '../../../../shared/components/scroll-to-top/scroll-to-top.component';
@@ -12,7 +12,6 @@ import { SeoService } from '../../../../core/services/seo.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     PublicNavComponent,
     LandingFooterComponent,
     ScrollToTopComponent,
@@ -23,9 +22,20 @@ import { SeoService } from '../../../../core/services/seo.service';
     <div class="page-wrapper">
       <app-public-nav></app-public-nav>
 
-      <!-- Hero Band -->
+      <!-- SECTION 1: HERO -->
       <header class="page-hero">
         <div class="hero-overlay"></div>
+        
+        <!-- Floating Hexagon IoT Icons Tech Overlay -->
+        <div class="tech-overlay-grid">
+          <div class="hex-icon floating-hex hex-1"><span class="material-icons">thermostat</span></div>
+          <div class="hex-icon floating-hex hex-2"><span class="material-icons">water_drop</span></div>
+          <div class="hex-icon floating-hex hex-3"><span class="material-icons">recycling</span></div>
+          <div class="hex-icon floating-hex hex-4"><span class="material-icons">eco</span></div>
+          <div class="hex-icon floating-hex hex-5"><span class="material-icons">memory</span></div>
+          <div class="hex-icon floating-hex hex-6"><span class="material-icons">agriculture</span></div>
+        </div>
+
         <div class="hero-content">
           <span class="page-label">{{ 'landing.about.hero.label' | translate }}</span>
           <h1 [innerHTML]="'landing.about.hero.title' | translate"></h1>
@@ -34,184 +44,209 @@ import { SeoService } from '../../../../core/services/seo.service';
       </header>
 
       <main class="page-main">
-        <!-- WHO WE ARE -->
+        
+        <!-- SECTION 2: QUI SOMMES-NOUS / WHO WE ARE -->
         <section class="section who-section">
           <div class="container">
-            <div class="two-col fade-in">
-              <div class="col-text">
-                <span class="section-label">{{ 'landing.about.who.label' | translate }}</span>
-                <h2>{{ 'landing.about.who.title' | translate }}</h2>
-                <div [innerHTML]="'landing.about.who.content' | translate"></div>
+            <div class="two-col-grid">
+              
+              <!-- Left Column: Left-Aligned Text Block -->
+              <div class="col-text fade-in">
+                <span class="small-label">QUI SOMMES-NOUS</span>
+                <h2 class="section-title-left">Une entreprise née du terrain</h2>
+                
+                <!-- Explicitly styled left-aligned paragraph matching stat label font family & size -->
+                <div class="about-paragraph-content">
+                  <p>FEED IN GREEN est une entreprise spécialisée dans les solutions Agritech intelligentes et l'agriculture connectée.</p>
+                  <p>Nous accompagnons les agriculteurs, entrepreneurs, entreprises et collectivités dans la conception et le déploiement de projets agricoles innovants, durables et performants.</p>
+                  <p>Notre approche repose sur la combinaison de technologies avancées, de l'ingénierie agricole et d'un accompagnement terrain adapté aux réalités locales et urbaines.</p>
+                </div>
               </div>
+
+              <!-- Right Column: Stats Grid (2x2) with Dashes -->
               <div class="col-visual fade-in">
-                <div class="stat-grid">
-                  <div class="stat-card premium group" *ngFor="let s of stats">
-                    <div class="stat-glow"></div>
-                    <div class="stat-content">
-                      <div class="stat-icon material-icons">{{ s.icon }}</div>
-                      <div class="stat-number">{{ s.value }}</div>
-                      <div class="stat-label">{{ s.label | translate }}</div>
+                <div class="stats-grid-2x2">
+                  <div class="stat-card" *ngFor="let s of stats; let i = index">
+                    <div class="stat-icon-wrapper">
+                      <span class="material-icons stat-icon">{{ s.icon }}</span>
                     </div>
+                    <div class="stat-number-wrapper">
+                      <!-- Subtle pulse animation on dashes placeholder -->
+                      <span class="stat-number-dashes">{{ s.value }}</span>
+                    </div>
+                    <div class="stat-label-text">{{ s.label | translate }}</div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </section>
 
-        <!-- MISSION VISION -->
-        <section class="section mv-section">
+        <!-- SECTION 3: POURQUOI NOUS CHOISIR / WHY CHOOSE US -->
+        <section class="section choose-section">
           <div class="container">
-            <div class="mv-bento-grid fade-in">
-              <!-- Mission Text -->
-              <div class="mv-card text-card mission">
-                <div class="card-glass"></div>
-                <div class="content-wrapper">
-                  <div class="mv-icon material-icons">my_location</div>
-                  <h3>{{ 'landing.about.mv.mission.title' | translate }}</h3>
-                  <div
-                    class="mv-desc"
-                    [innerHTML]="'landing.about.mv.mission.content' | translate"
-                  ></div>
+            <div class="choose-grid">
+              
+              <!-- Left Column: Core Text + Tag Pills -->
+              <div class="choose-text-block fade-in">
+                <span class="small-label">POURQUOI NOUS CHOISIR</span>
+                <h2 class="section-title-left">L'agriculture mérite les meilleurs outils</h2>
+                
+                <p class="choose-desc">
+                  Feedin est né d'une conviction simple : l'agriculture mérite les meilleurs outils. 
+                  Nous concevons des serres connectées, des systèmes d'automatisation et des 
+                  formations pour que chaque agriculteur puisse travailler avec précision, 
+                  sérénité et efficacité.
+                </p>
+                <p class="choose-desc">
+                  Nous ne vendons pas des gadgets. Nous construisons des partenariats durables 
+                  avec des professionnels qui veulent aller plus loin.
+                </p>
+
+                <div class="tag-pills-container">
+                  <span class="tag-pill">Sur mesure</span>
+                  <span class="tag-pill">Solution à la tunisienne</span>
+                  <span class="tag-pill">Support réactif</span>
                 </div>
               </div>
 
-              <!-- Image 1 -->
-              <div class="mv-card img-card">
-                <img src="assets/landing/images/agri-ai.jpg" alt="Agritech AI" />
-                <div class="img-overlay"></div>
-              </div>
+              <!-- Right Column: Visual Cutout Mask + Floating Stats (8+ Years / 98% Satisfaction) -->
+              <div class="choose-visual-block fade-in">
+                
+                <!-- [IMAGE PLACEHOLDER: IMG-ABOUT-5]
+                     Description: FEED IN GREEN text cutout over field photo
+                     Section: Pourquoi Nous Choisir side visual
+                     Recommended: 1200×800px, PNG with mask
+                     Source: Client to provide
+                -->
+                <div class="cutout-image-container">
+                  <div class="cutout-bg-image"></div>
+                  <div class="cutout-overlay"></div>
+                  <div class="cutout-text-mask">FEED IN GREEN</div>
 
-              <!-- Image 2 -->
-              <div class="mv-card img-card">
-                <img src="assets/landing/images/serre.jpg" alt="Smart Greenhouse" />
-                <div class="img-overlay"></div>
-              </div>
+                  <!-- Floating Stat 1: 8+ Years -->
+                  <div class="floating-stat-card stat-card-left">
+                    <div class="floating-stat-value">8+</div>
+                    <div class="floating-stat-label">Années d'expertise agricole</div>
+                  </div>
 
-              <!-- Vision Text -->
-              <div class="mv-card text-card vision">
-                <div class="card-glass"></div>
-                <div class="content-wrapper">
-                  <div class="mv-icon material-icons">travel_explore</div>
-                  <h3>{{ 'landing.about.mv.vision.title' | translate }}</h3>
-                  <p class="mv-desc">{{ 'landing.about.mv.vision.desc' | translate }}</p>
-                  <p class="vision-intro">{{ 'landing.about.mv.vision.intro' | translate }}</p>
-                  <ul class="vision-list">
-                    <li>
-                      <span class="material-icons inline-icon">data_exploration</span>
-                      {{ 'landing.about.mv.vision.list.0' | translate }}
-                    </li>
-                    <li>
-                      <span class="material-icons inline-icon">eco</span>
-                      {{ 'landing.about.mv.vision.list.1' | translate }}
-                    </li>
-                    <li>
-                      <span class="material-icons inline-icon">location_city</span>
-                      {{ 'landing.about.mv.vision.list.2' | translate }}
-                    </li>
-                    <li>
-                      <span class="material-icons inline-icon">groups</span>
-                      {{ 'landing.about.mv.vision.list.3' | translate }}
-                    </li>
-                  </ul>
+                  <!-- Floating Stat 2: 98% Satisfaction -->
+                  <div class="floating-stat-card stat-card-right">
+                    <div class="floating-stat-value">98%</div>
+                    <div class="floating-stat-label">Clients satisfaits</div>
+                  </div>
                 </div>
+
               </div>
+
             </div>
           </div>
         </section>
 
-        <!-- OUR APPROACH -->
-        <section class="section approach-section">
-          <div class="container">
-            <div class="section-header center">
-              <span class="section-label">{{ 'landing.about.approach.label' | translate }}</span>
-              <h2>{{ 'landing.about.approach.title' | translate }}</h2>
-              <p class="section-sub">{{ 'landing.about.approach.sub' | translate }}</p>
-            </div>
-            <div class="steps-track">
-              <div class="step-item" *ngFor="let step of approachSteps; let i = index">
-                <div class="step-number">{{ i + 1 }}</div>
-                <div class="step-body">
-                  <h4>{{ step.title | translate }}</h4>
-                  <p>{{ step.desc | translate }}</p>
-                </div>
-                <div class="step-connector" *ngIf="i < approachSteps.length - 1"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- VALUES -->
+        <!-- SECTION 4: NOS VALEURS / OUR VALUES -->
         <section class="section values-section">
-          <div class="container fade-in">
-            <div class="values-premium-card">
-              <div class="values-card-left">
-                <span class="section-label-light">{{
-                  'landing.about.values.label' | translate
-                }}</span>
-                <h2>{{ 'landing.about.values.title' | translate }}</h2>
+          <div class="container">
+            
+            <!-- [IMAGE PLACEHOLDER: IMG-ABOUT-1]
+                 Description: Smart greenhouse interior with pink LED grow lights
+                 Section: Nos Valeurs background
+                 Recommended: 1920×1080px, JPG, vibrant colors
+                 Source: Client to provide
+            -->
+            <div class="values-tinted-container fade-in">
+              <div class="values-background-image"></div>
+              <div class="values-tint-overlay"></div>
+              
+              <div class="values-header">
+                <span class="values-pill-label">NOS VALEURS</span>
+                <h2 class="values-title">Ce qui nous anime</h2>
               </div>
-              <div class="values-card-right">
-                <div class="value-cell" *ngFor="let v of values">
-                  <div class="value-icon material-icons">{{ v.icon }}</div>
-                  <div class="value-text">
-                    <h4>{{ v.title | translate }}</h4>
-                    <p>{{ v.desc | translate }}</p>
+
+              <div class="values-cards-grid">
+                
+                <!-- Card 1: Innovation -->
+                <!-- [IMAGE PLACEHOLDER: IMG-ABOUT-2]
+                     Description: Field technician with farmer examining crops using tablet
+                     Section: Nos Valeurs Card 1 (Innovation) Background
+                     Recommended: 800×600px, JPG
+                     Source: Client to provide
+                -->
+                <div class="value-card">
+                  <div class="value-card-bg card-bg-1"></div>
+                  <div class="value-card-overlay"></div>
+                  <div class="value-card-content">
+                    <div class="value-icon-box">
+                      <span class="material-icons">memory</span>
+                    </div>
+                    <h3 class="value-card-title">Innovation</h3>
+                    <p class="value-card-desc">Construire les outils de demain pour les agriculteurs d'aujourd'hui.</p>
                   </div>
                 </div>
+
+                <!-- Card 2: Proximité -->
+                <!-- [IMAGE PLACEHOLDER: IMG-ABOUT-2]
+                     Description: Field technician with farmer examining crops using tablet
+                     Section: Nos Valeurs Card 2 (Proximité) Background
+                     Recommended: 800×600px, JPG
+                     Source: Client to provide
+                -->
+                <div class="value-card">
+                  <div class="value-card-bg card-bg-2"></div>
+                  <div class="value-card-overlay"></div>
+                  <div class="value-card-content">
+                    <div class="value-icon-box">
+                      <span class="material-icons">handshake</span>
+                    </div>
+                    <h3 class="value-card-title">Proximité</h3>
+                    <p class="value-card-desc">Être toujours à l'écoute de nos clients sur le terrain.</p>
+                  </div>
+                </div>
+
+                <!-- Card 3: Durabilité -->
+                <!-- [IMAGE PLACEHOLDER: IMG-ABOUT-3]
+                     Description: Solar panels over green agricultural field
+                     Section: Nos Valeurs Card 3 (Durabilité) Background
+                     Recommended: 800×600px, JPG
+                     Source: Client to provide
+                -->
+                <div class="value-card">
+                  <div class="value-card-bg card-bg-3"></div>
+                  <div class="value-card-overlay"></div>
+                  <div class="value-card-content">
+                    <div class="value-icon-box">
+                      <span class="material-icons">recycling</span>
+                    </div>
+                    <h3 class="value-card-title">Durabilité</h3>
+                    <p class="value-card-desc">Préserver les ressources pour les générations futures.</p>
+                  </div>
+                </div>
+
+                <!-- Card 4: Fiabilité -->
+                <!-- [IMAGE PLACEHOLDER: IMG-ABOUT-4]
+                     Description: Galvanized steel greenhouse structure
+                     Section: Nos Valeurs Card 4 (Fiabilité) Background
+                     Recommended: 800×600px, JPG
+                     Source: Client to provide
+                -->
+                <div class="value-card">
+                  <div class="value-card-bg card-bg-4"></div>
+                  <div class="value-card-overlay"></div>
+                  <div class="value-card-content">
+                    <div class="value-icon-box">
+                      <span class="material-icons">verified</span>
+                    </div>
+                    <h3 class="value-card-title">Fiabilité</h3>
+                    <p class="value-card-desc">Du matériel robuste qui résiste à l'épreuve du temps.</p>
+                  </div>
+                </div>
+
               </div>
             </div>
+            
           </div>
         </section>
 
-        <!-- EXPERTISE -->
-        <section class="section expertise-section">
-          <div class="container fade-in">
-            <div class="section-header center" style="margin-bottom: 3.5rem;">
-              <span class="section-label">{{ 'landing.about.expertise.label' | translate }}</span>
-              <h2>{{ 'landing.about.expertise.title' | translate }}</h2>
-            </div>
-            <div class="expertise-bento-grid">
-              <div
-                class="expertise-card fade-in"
-                *ngFor="let e of expertise"
-                [style.transition-delay]="'0.1s'"
-              >
-                <div class="exp-icon material-icons">{{ e.icon }}</div>
-                <div class="exp-content">
-                  <h4>{{ e.title | translate }}</h4>
-                  <p>{{ e.desc | translate }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- TRUST / CONFIANCE -->
-        <section class="section trust-section">
-          <div class="container">
-            <div class="trust-banner fade-in">
-              <div class="trust-content-wrapper">
-                <div class="trust-text">
-                  <h2>{{ 'landing.about.trust.title' | translate }}</h2>
-                  <div [innerHTML]="'landing.about.trust.content' | translate"></div>
-                </div>
-                <div class="trust-cta">
-                  <a (click)="goToContactRegister()" class="btn-primary" style="cursor:pointer">{{
-                    'landing.about.trust.cta1' | translate
-                  }}</a>
-                  <a routerLink="/services" class="btn-secondary">{{
-                    'landing.about.trust.cta2' | translate
-                  }}</a>
-                </div>
-              </div>
-              <div class="trust-image">
-                <img src="assets/landing/images/mission.jpg" alt="Feedin Green Community" />
-                <div class="trust-image-overlay"></div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       <app-landing-footer></app-landing-footer>
@@ -222,10 +257,25 @@ import { SeoService } from '../../../../core/services/seo.service';
     `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800&display=swap');
 
+      :root {
+        --about-primary: #15803d;
+        --about-primary-light: #22c55e;
+        --about-primary-glow: #4ade80;
+        --about-bg-light: #f0fdf4;
+        --about-text-dark: #0f172a;
+        --about-text-body: #475569;
+        --about-text-muted: #64748b;
+        --about-white-glass: rgba(255, 255, 255, 0.1);
+        --about-border-glass: rgba(255, 255, 255, 0.15);
+        --about-green-tint: rgba(21, 128, 61, 0.85);
+      }
+
       .page-wrapper {
         min-height: 100vh;
         background: #f8faf8;
         font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+        color: #334155;
+        overflow-x: hidden;
       }
 
       /* ---- HERO ---- */
@@ -238,7 +288,7 @@ import { SeoService } from '../../../../core/services/seo.service';
         justify-content: center;
         background: #052952;
         overflow: hidden;
-        padding-top: var(--nav-height);
+        padding-top: var(--nav-height, 80px);
       }
 
       .page-hero::before {
@@ -251,16 +301,86 @@ import { SeoService } from '../../../../core/services/seo.service';
         opacity: 0.8;
       }
 
+      .page-hero::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 180px;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(248, 250, 248, 0) 0%,
+          rgba(248, 250, 248, 0.4) 40%,
+          rgba(248, 250, 248, 0.85) 75%,
+          rgba(248, 250, 248, 1) 100%
+        );
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.8) 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+      }
+
       .hero-overlay {
         position: absolute;
         inset: 0;
         background: linear-gradient(135deg, rgba(5, 41, 82, 0.65) 0%, rgba(10, 74, 46, 0.55) 100%);
       }
 
+      /* Tech Overlay with floating IoT icons */
+      .tech-overlay-grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .floating-hex {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.05);
+        animation: float-slow 6s ease-in-out infinite;
+      }
+
+      .floating-hex span {
+        font-size: 1.5rem;
+      }
+
+      .hex-1 { top: 15%; left: 10%; animation-delay: 0s; }
+      .hex-2 { top: 25%; right: 12%; animation-delay: 1.5s; }
+      .hex-3 { bottom: 20%; left: 15%; animation-delay: 3s; }
+      .hex-4 { bottom: 15%; right: 18%; animation-delay: 4.5s; }
+      .hex-5 { top: 50%; left: 8%; animation-delay: 2s; }
+      .hex-6 { top: 55%; right: 8%; animation-delay: 3.5s; }
+
       .hero-content {
         position: relative;
         z-index: 2;
         text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
         padding: 2rem 1.5rem;
       }
 
@@ -295,18 +415,16 @@ import { SeoService } from '../../../../core/services/seo.service';
       }
 
       .hero-sub {
-        font-size: 1.0625rem;
-        color: rgba(255, 255, 255, 0.75);
+        font-size: 1.15rem;
+        color: #f8fafc; /* Solid off-white for high contrast */
         max-width: 560px;
         margin: 0 auto;
-        line-height: 1.6;
+        line-height: 1.65;
+        font-weight: 500; /* Medium weight for readability */
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); /* Deep text shadow */
       }
 
-      /* ---- LAYOUT ---- */
-      .page-main {
-        padding-bottom: 4rem;
-      }
-
+      /* ---- COMMON LAYOUT ---- */
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -314,796 +432,530 @@ import { SeoService } from '../../../../core/services/seo.service';
       }
 
       .section {
-        padding: 5rem 0;
+        padding: 6rem 0;
       }
 
-      .section:nth-child(even) {
-        background: white;
-      }
-
-      .section-header.center {
-        text-align: center;
-        margin-bottom: 3rem;
-      }
-
-      .section-label {
+      .small-label {
         display: inline-block;
         font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: var(--primary-green);
+        color: #15803d;
         margin-bottom: 0.75rem;
       }
 
-      .section-sub {
-        color: #6b7280;
-        font-size: 1.0625rem;
-        max-width: 560px;
-        margin: 0.75rem auto 0;
-        line-height: 1.6;
-      }
-
-      h2 {
-        font-size: clamp(1.75rem, 4vw, 2.5rem);
+      .section-title-left {
+        font-size: clamp(2rem, 4vw, 2.75rem);
         font-weight: 800;
-        color: #1f2937;
+        color: #0f172a;
         line-height: 1.2;
-        margin-bottom: 1rem;
-        font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+        margin-bottom: 1.5rem;
+        font-family: 'Outfit', sans-serif;
+        text-align: left;
       }
 
-      /* ---- WHO WE ARE ---- */
+      /* ---- SECTION 2: QUI SOMMES-NOUS ---- */
       .who-section {
         background: white;
       }
 
-      .two-col {
+      .two-col-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 3rem;
-        align-items: center;
-      }
-
-      .two-col.gap-lg {
         gap: 4rem;
+        align-items: center;
       }
 
       @media (min-width: 1024px) {
-        .two-col {
-          grid-template-columns: 1fr 1fr;
-        }
-        .col-text {
-          text-align: left;
-        }
-        .col-text p {
-          margin-left: 0;
-          margin-right: 0;
+        .two-col-grid {
+          grid-template-columns: 55fr 45fr;
         }
       }
 
-      .col-text {
-        text-align: center;
-      }
-
-      .col-text p {
-        color: #4b5563;
-        line-height: 1.7;
-        margin-bottom: 1rem;
-        font-size: 1.0625rem;
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 600px;
-      }
-
-      .stat-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        justify-content: center;
-      }
-
-      .stat-card.premium {
-        position: relative;
-        background: rgba(255, 255, 255, 0.8);
-        -webkit-backdrop-filter: blur(16px);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 1);
-        border-radius: 20px;
-        padding: 2rem 1.5rem;
+      .about-paragraph-content {
         text-align: left;
-        box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.15);
-        overflow: hidden;
-        transition:
-          transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.4s ease;
       }
 
-      .stat-card.premium .stat-glow {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(
-          circle at 100% 0%,
-          rgba(16, 185, 129, 0.15) 0%,
-          transparent 60%
-        );
-        opacity: 0;
-        transition: opacity 0.4s ease;
+      .about-paragraph-content p {
+        font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+        font-size: 1.05rem; /* Matches stat label hierarchy font size */
+        line-height: 1.7;
+        color: #475569;
+        margin-bottom: 1.25rem;
+        text-align: left;
       }
 
-      .stat-card.premium:hover {
+      .about-paragraph-content p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Stats Grid */
+      .stats-grid-2x2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+
+      .stat-card {
+        background: #f0fdf4;
+        border: 1px solid rgba(21, 128, 61, 0.1);
+        border-radius: 1rem;
+        padding: 1.75rem 1.5rem;
+        text-align: left;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.25);
+        box-shadow: 0 12px 30px rgba(21, 128, 61, 0.08);
       }
 
-      .stat-card.premium:hover .stat-glow {
-        opacity: 1;
-      }
-
-      .stat-content {
-        position: relative;
-        z-index: 2;
+      .stat-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: white;
+        border-radius: 0.75rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
       }
 
       .stat-icon {
-        font-size: 2.25rem;
-        margin-bottom: 1.25rem;
-        color: #10b981;
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.05));
-        padding: 0.875rem;
-        border-radius: 14px;
-        display: inline-flex;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 2rem;
+        color: #22c55e;
       }
 
-      .stat-card.premium:hover .stat-icon {
-        transform: scale(1.1) rotate(5deg);
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      .stat-number-wrapper {
+        margin-bottom: 0.5rem;
       }
 
-      .stat-number {
-        font-family: 'Outfit', sans-serif;
-        font-size: 2.5rem;
+      .stat-number-dashes {
+        font-size: clamp(2.2rem, 3.5vw, 2.8rem);
         font-weight: 800;
-        color: #052952;
-        line-height: 1.1;
-        margin-bottom: 0.25rem;
+        color: #0f172a;
+        font-family: 'Outfit', sans-serif;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        animation: pulse-dashes 2s infinite ease-in-out;
+        display: inline-block;
       }
 
-      .stat-label {
-        font-size: 0.9375rem;
-        font-weight: 500;
-        color: #6b7280;
+      .stat-label-text {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #64748b;
         line-height: 1.4;
       }
 
-      /* ---- MISSION VISION BENTO ---- */
-      .mv-section {
+      /* ---- SECTION 4: NOS VALEURS ---- */
+      .values-section {
         background: #f8faf8;
-        padding-top: 2rem;
       }
 
-      .mv-bento-grid {
+      .values-tinted-container {
+        position: relative;
+        border-radius: 1.5rem;
+        padding: 4rem 3rem;
+        margin: 0 auto;
+        max-width: 1200px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+      }
+
+      /* Parallax Background */
+      .values-background-image {
+        position: absolute;
+        inset: 0;
+        background-image: url('/assets/landing/images/serre.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+        z-index: 1;
+      }
+
+      @media (min-width: 1024px) {
+        .values-background-image {
+          background-attachment: fixed; /* Parallax effect */
+        }
+      }
+
+      .values-tint-overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(21, 128, 61, 0.45); /* Reduced overlay opacity to make picture clearer */
+        backdrop-filter: blur(2px); /* Limit to 2px max so background is recognizable */
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 2;
+      }
+
+      .values-header {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        margin-bottom: 3.5rem;
+      }
+
+      .values-pill-label {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        padding: 0.4rem 1.25rem;
+        border-radius: 100px;
+        margin-bottom: 0.75rem;
+      }
+
+      .values-title {
+        font-size: clamp(2rem, 3.5vw, 2.75rem);
+        font-weight: 800;
+        color: white;
+        font-family: 'Outfit', sans-serif;
+        margin: 0;
+      }
+
+      .values-cards-grid {
+        position: relative;
+        z-index: 3;
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 2rem;
       }
 
       @media (min-width: 768px) {
-        .mv-bento-grid {
+        .values-cards-grid {
           grid-template-columns: 1fr 1fr;
         }
       }
 
-      .mv-card {
+      /* Glassmorphism Value Cards */
+      .value-card {
         position: relative;
-        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 1rem;
+        padding: 2.25rem 2rem;
         overflow: hidden;
+        backdrop-filter: blur(8px); /* Card-only blur */
+        -webkit-backdrop-filter: blur(8px);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
       }
 
-      .mv-card.text-card {
-        background: white;
-        padding: 3rem 2.5rem;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(16, 185, 129, 0.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .mv-card.img-card {
-        min-height: 350px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-      }
-
-      .mv-card.img-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+      /* Specific Card Background Images (low opacity inside card) */
+      .value-card-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.08;
+        z-index: 1;
         transition: transform 0.6s ease;
       }
 
-      .mv-card.img-card:hover img {
-        transform: scale(1.05);
-      }
+      .card-bg-1 { background-image: url('/assets/landing/images/agri-ai.jpg'); }
+      .card-bg-2 { background-image: url('/assets/landing/images/mission.jpg'); }
+      .card-bg-3 { background-image: url('/assets/landing/images/urban-farming.jpg'); }
+      .card-bg-4 { background-image: url('/assets/landing/images/serre.jpg'); }
 
-      .img-overlay {
+      .value-card-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(5, 41, 82, 0.4), transparent);
-        pointer-events: none;
-      }
-
-      .card-glass {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 150px;
-        height: 150px;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-        pointer-events: none;
-      }
-
-      .content-wrapper {
-        position: relative;
+        background: linear-gradient(180deg, rgba(21, 128, 61, 0.1) 0%, rgba(21, 128, 61, 0.4) 100%);
         z-index: 2;
       }
 
-      .mv-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        color: #10b981;
-        background: rgba(16, 185, 129, 0.1);
-        padding: 1rem;
-        border-radius: 16px;
-        display: inline-flex;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+      .value-card-content {
+        position: relative;
+        z-index: 3;
       }
 
-      .mv-card h3 {
-        font-size: 1.75rem;
-        font-weight: 800;
-        color: #052952;
-        margin-bottom: 1.25rem;
+      .value-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.35);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .value-card:hover .value-card-bg {
+        transform: scale(1.08);
+      }
+
+      .value-icon-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+        color: white;
+        transition: transform 0.3s ease;
+      }
+
+      .value-card:hover .value-icon-box {
+        transform: scale(1.1);
+        background: #22c55e;
+        border-color: #4ade80;
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+      }
+
+      .value-icon-box span {
+        font-size: 1.8rem;
+      }
+
+      .value-card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.75rem;
         font-family: 'Outfit', sans-serif;
       }
 
-      .mv-desc {
-        color: #4b5563;
-        line-height: 1.7;
-        font-size: 1.0625rem;
-        margin-bottom: 1.5rem;
-      }
-
-      .vision-intro {
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 1rem;
-        font-size: 1.0625rem;
-      }
-
-      .vision-list {
-        list-style: none;
-        padding: 0;
+      .value-card-desc {
+        font-size: 0.95rem;
+        color: #e2e8f0;
+        line-height: 1.6;
         margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
       }
 
-      .vision-list li {
-        display: flex;
-        align-items: center;
-        color: #374151;
-        font-size: 1rem;
-        font-weight: 500;
-      }
-
-      .vision-list li .inline-icon {
-        color: #10b981;
-        background: rgba(16, 185, 129, 0.1);
-        border-radius: 50%;
-        padding: 0.4rem;
-        font-size: 1.2rem;
-        margin-right: 0.75rem;
-      }
-
-      /* ---- APPROACH ---- */
-      .approach-section {
+      /* ---- SECTION 3: POURQUOI NOUS CHOISIR ---- */
+      .choose-section {
         background: white;
       }
 
-      .steps-track {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        position: relative;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      .step-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 1.5rem;
-        position: relative;
-        padding-bottom: 2rem;
-      }
-
-      .step-number {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        font-size: 1.125rem;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        position: relative;
-        z-index: 1;
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-        transition: all 0.3s ease;
-      }
-      .step-item:hover .step-number {
-        transform: scale(1.1);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
-      }
-
-      .step-body h4 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
-        padding-top: 0.625rem;
-      }
-
-      .step-body p {
-        color: #6b7280;
-        line-height: 1.6;
-      }
-
-      .step-connector {
-        position: absolute;
-        left: 23px;
-        top: 48px;
-        width: 2px;
-        height: calc(100% - 48px);
-        background: linear-gradient(180deg, rgba(16, 185, 129, 0.4), rgba(16, 185, 129, 0.1));
-      }
-
-      /* ---- VALUES ---- */
-      .values-section {
-        background: #f8faf8;
-        padding: 5rem 0 7rem;
-      }
-
-      .values-premium-card {
-        background: #ffffff;
-        border-radius: 32px;
-        box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(16, 185, 129, 0.15);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      @media (min-width: 992px) {
-        .values-premium-card {
-          flex-direction: row;
-        }
-      }
-
-      .values-card-left {
-        background:
-          linear-gradient(135deg, rgba(16, 185, 129, 0.85), rgba(5, 150, 105, 0.95)),
-          url('/assets/landing/images/urban-farming.jpg') center/cover no-repeat;
-        color: white;
-        padding: 4rem 3rem;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .values-card-left::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
-        pointer-events: none;
-      }
-
-      .section-label-light {
-        font-size: 0.8125rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: rgba(255, 255, 255, 0.9);
-        background: rgba(255, 255, 255, 0.2);
-        padding: 0.5rem 1rem;
-        border-radius: 100px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        display: inline-block;
-        margin-bottom: 1rem;
-      }
-
-      .values-card-left h2 {
-        color: white;
-        font-size: 2.75rem;
-        font-weight: 800;
-        font-family: 'Outfit', sans-serif;
-        line-height: 1.2;
-        margin: 0;
-        position: relative;
-        z-index: 2;
-      }
-
-      .values-card-right {
-        flex: 1.8;
-        padding: 4rem 3rem;
+      .choose-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 2.5rem;
-        background: white;
+        gap: 4rem;
+        align-items: center;
       }
 
-      @media (min-width: 640px) {
-        .values-card-right {
+      @media (min-width: 1024px) {
+        .choose-grid {
           grid-template-columns: 1fr 1fr;
         }
       }
 
-      .value-cell {
+      .choose-desc {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #475569;
+        margin-bottom: 1.5rem;
+      }
+
+      .tag-pills-container {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 2rem;
+      }
+
+      .tag-pill {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+        padding: 0.5rem 1.25rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.25s ease;
+      }
+
+      .tag-pill:hover {
+        background: #dcfce7;
+        transform: translateY(-1px);
+      }
+
+      /* Side Visual: Cutout Mask & Floating stats */
+      .choose-visual-block {
+        position: relative;
+        width: 100%;
+        padding: 2rem 0;
+      }
+
+      .cutout-image-container {
+        position: relative;
+        width: 100%;
+        height: 420px;
+        border-radius: 1.5rem;
+        overflow: visible; /* Required to allow floating cards to overflow */
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      }
+
+      .cutout-bg-image {
+        position: absolute;
+        inset: 0;
+        background-image: url('/assets/landing/images/propos.png');
+        background-size: cover;
+        background-position: center;
+        border-radius: 1.5rem;
+        z-index: 1;
+        transition: transform 0.5s ease, filter 0.5s ease;
+        filter: blur(10px); /* Initially blurred for loading effect */
+      }
+
+      .cutout-bg-image.loaded {
+        filter: blur(0px); /* Blur reveal transition */
+      }
+
+      .cutout-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(21, 128, 61, 0.3) 0%, rgba(15, 23, 42, 0.4) 100%);
+        border-radius: 1.5rem;
+        z-index: 2;
+      }
+
+      .cutout-text-mask {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.15);
+        border: 2px dashed rgba(255, 255, 255, 0.25);
+        margin: 2rem;
+        border-radius: 1rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      /* Floating cards */
+      .floating-stat-card {
+        position: absolute;
+        background: white;
+        border-radius: 1rem;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        z-index: 5;
+        min-width: 160px;
+        border: 1px solid rgba(21, 128, 61, 0.1);
         transition: transform 0.3s ease;
       }
 
-      .value-cell:hover {
-        transform: translateY(-5px);
+      .floating-stat-card:hover {
+        transform: translateY(-5px) scale(1.05);
       }
 
-      .value-cell .value-icon {
-        font-size: 2rem;
-        color: var(--primary-green);
-        background: #f0fdf4;
-        width: 64px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 16px;
-        margin-bottom: 1.25rem;
-        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.05);
-        transition: all 0.3s ease;
+      .stat-card-left {
+        top: 15%;
+        left: -8%;
+        animation: float-slow 5s ease-in-out infinite alternate;
       }
 
-      .value-cell:hover .value-icon {
-        background: var(--primary-green);
-        color: white;
-        transform: scale(1.05) rotate(5deg);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+      .stat-card-right {
+        bottom: 12%;
+        right: -8%;
+        animation: float-slow 5s ease-in-out infinite alternate-reverse;
+        animation-delay: 1s;
       }
 
-      .value-cell h4 {
-        font-size: 1.25rem;
+      @media (max-width: 768px) {
+        .stat-card-left { left: 2%; }
+        .stat-card-right { right: 2%; }
+      }
+
+      .floating-stat-value {
+        font-size: 2.2rem;
         font-weight: 800;
-        color: #111827;
-        margin-bottom: 0.5rem;
-        font-family: inherit;
+        color: #15803d;
+        font-family: 'Outfit', sans-serif;
+        line-height: 1;
+        margin-bottom: 0.25rem;
       }
 
-      .value-cell p {
-        font-size: 0.9375rem;
-        color: #6b7280;
-        line-height: 1.6;
-        margin: 0;
-      }
-
-      /* ---- EXPERTISE ---- */
-      .expertise-section {
-        background: white;
-        padding: 5rem 0;
-      }
-
-      .expertise-bento-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 1.5rem;
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-
-      .expertise-card {
-        background: #ffffff;
-        border: 1px solid #f3f4f6;
-        border-radius: 20px;
-        padding: 2rem;
-        display: flex;
-        align-items: flex-start;
-        gap: 1.25rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow:
-          0 4px 6px -1px rgba(0, 0, 0, 0.05),
-          0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      }
-
-      .expertise-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08);
-        border-color: #e5e7eb;
-      }
-
-      .exp-icon {
-        font-size: 2rem;
-        color: var(--primary-green);
-        background: #f0fdf4;
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-      }
-
-      .expertise-card:hover .exp-icon {
-        background: var(--primary-green);
-        color: white;
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 8px 15px rgba(16, 185, 129, 0.25);
-      }
-
-      .exp-content h4 {
-        font-size: 1.125rem;
-        font-weight: 800;
-        color: #111827;
-        margin-bottom: 0.5rem;
-        font-family: inherit;
+      .floating-stat-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
         line-height: 1.3;
       }
 
-      .exp-content p {
-        font-size: 0.9375rem;
-        color: #6b7280;
-        line-height: 1.6;
-        margin: 0;
+      /* ---- ANIMATIONS ---- */
+      @keyframes float-slow {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
       }
 
-      /* ---- TRUST / CTA ---- */
-      .trust-section {
-        background: #f8faf8;
-        padding-bottom: 6rem;
+      @keyframes slow-zoom {
+        0% { transform: scale(1.03); }
+        100% { transform: scale(1.1); }
       }
 
-      .trust-banner {
-        position: relative;
-        background: white;
-        border-radius: 28px;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(16, 185, 129, 0.1);
+      @keyframes pulse-dashes {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(0.97); }
       }
 
-      @media (min-width: 992px) {
-        .trust-banner {
-          flex-direction: row;
-        }
-      }
-
-      .trust-content-wrapper {
-        flex: 1;
-        padding: 4rem 3rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 2rem;
-        z-index: 2;
-        background: linear-gradient(135deg, white 60%, rgba(255, 255, 255, 0.8));
-      }
-
-      .trust-image {
-        position: relative;
-        flex: 1;
-        min-height: 350px;
-      }
-
-      .trust-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .trust-image-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to right, white, transparent 30%);
-      }
-
-      @media (max-width: 991px) {
-        .trust-image-overlay {
-          background: linear-gradient(to bottom, white, transparent 30%);
-        }
-      }
-
-      .trust-text h2 {
-        color: #1f2937;
-        margin-bottom: 1rem;
-        font-size: 2rem;
-        font-weight: 800;
-        font-family: 'Outfit', sans-serif;
-      }
-
-      .trust-text p {
-        color: #4b5563;
-        font-size: 1.0625rem;
-        line-height: 1.7;
-        max-width: 520px;
-      }
-
-      .trust-cta {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1rem;
-        align-items: center;
-      }
-
-      .btn-primary {
-        display: inline-block;
-        padding: 0.875rem 2rem;
-        background: var(--primary-green);
-        color: white;
-        font-weight: 600;
-        font-size: 0.9375rem;
-        border-radius: 100px;
-        text-decoration: none;
-        transition: all 0.25s ease;
-        text-align: center;
-      }
-
-      .btn-primary:hover {
-        background: #059669;
-        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-        transform: translateY(-2px);
-      }
-
-      .btn-secondary {
-        display: inline-block;
-        padding: 0.875rem 2rem;
-        background: transparent;
-        color: #1f2937;
-        font-weight: 600;
-        font-size: 0.9375rem;
-        border-radius: 100px;
-        border: 2px solid rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        transition: all 0.25s ease;
-        text-align: center;
-      }
-
-      .btn-secondary:hover {
-        border-color: var(--primary-green);
-        color: var(--primary-green);
-      }
-
-      /* Animation CSS */
+      /* Scroll Fade-In Classes */
       .fade-in {
         opacity: 0;
         transform: translateY(20px);
-        transition:
-          opacity 0.6s ease-out,
-          transform 0.6s ease-out;
+        transition: 
+          opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+          transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
       }
+
       .fade-in.visible {
         opacity: 1;
         transform: translateY(0);
       }
-      .inline-icon {
-        font-size: 1.1em;
-        vertical-align: bottom;
-        margin-right: 0.25rem;
+
+      /* Breakpoint Responsive Stacking and paddings */
+      @media (max-width: 767px) {
+        .section {
+          padding: 4.5rem 0;
+        }
+
+        .stats-grid-2x2 {
+          grid-template-columns: 1fr; /* Stack 2x2 to 1x4 */
+          gap: 1rem;
+        }
+
+        .values-tinted-container {
+          padding: 2.5rem 1.5rem;
+          border-radius: 1rem;
+        }
+
+        .cutout-image-container {
+          height: 320px;
+        }
       }
     `,
   ],
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private seoService = inject(SeoService);
 
+  // Dash placeholders for the Section 2 stats grid
   stats = [
-    { icon: 'domain', value: '150+', label: 'landing.about.stats.0' },
-    { icon: 'landscape', value: '500+', label: 'landing.about.stats.1' },
-    { icon: 'handshake', value: '50+', label: 'landing.about.stats.2' },
-    { icon: 'verified', value: '99%', label: 'landing.about.stats.3' },
-  ];
-
-  approachSteps = [
-    { title: 'landing.about.steps.0.title', desc: 'landing.about.steps.0.desc' },
-    { title: 'landing.about.steps.1.title', desc: 'landing.about.steps.1.desc' },
-    { title: 'landing.about.steps.2.title', desc: 'landing.about.steps.2.desc' },
-    { title: 'landing.about.steps.3.title', desc: 'landing.about.steps.3.desc' },
-  ];
-
-  values = [
-    {
-      icon: 'tips_and_updates',
-      title: 'landing.about.valuesItem.0.title',
-      desc: 'landing.about.valuesItem.0.desc',
-    },
-    {
-      icon: 'recycling',
-      title: 'landing.about.valuesItem.1.title',
-      desc: 'landing.about.valuesItem.1.desc',
-    },
-    {
-      icon: 'handshake',
-      title: 'landing.about.valuesItem.2.title',
-      desc: 'landing.about.valuesItem.2.desc',
-    },
-    {
-      icon: 'done_all',
-      title: 'landing.about.valuesItem.3.title',
-      desc: 'landing.about.valuesItem.3.desc',
-    },
-  ];
-
-  expertise = [
-    {
-      icon: 'memory',
-      title: 'landing.about.expertiseItems.0.title',
-      desc: 'landing.about.expertiseItems.0.desc',
-    },
-    {
-      icon: 'water_drop',
-      title: 'landing.about.expertiseItems.1.title',
-      desc: 'landing.about.expertiseItems.1.desc',
-    },
-    {
-      icon: 'analytics',
-      title: 'landing.about.expertiseItems.2.title',
-      desc: 'landing.about.expertiseItems.2.desc',
-    },
-    {
-      icon: 'layers',
-      title: 'landing.about.expertiseItems.3.title',
-      desc: 'landing.about.expertiseItems.3.desc',
-    },
-    {
-      icon: 'solar_power',
-      title: 'landing.about.expertiseItems.4.title',
-      desc: 'landing.about.expertiseItems.4.desc',
-    },
-    {
-      icon: 'engineering',
-      title: 'landing.about.expertiseItems.5.title',
-      desc: 'landing.about.expertiseItems.5.desc',
-    },
+    { icon: 'grid_view', value: '--', label: 'landing.about.stats.0' }, // Projets agricoles déployés
+    { icon: 'terrain', value: '--', label: 'landing.about.stats.1' },   // Hectares optimisés
+    { icon: 'handshake', value: '--', label: 'landing.about.stats.2' }, // Partenaires de confiance
+    { icon: 'verified', value: '--', label: 'landing.about.stats.3' }  // Taux de satisfaction
   ];
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
 
-    // SEO — About page meta tags
+    // SEO Settings
     this.seoService.setMeta({
       title: 'À Propos de Feedin Green | Agriculture Intelligente en Tunisie',
       description:
@@ -1115,8 +967,9 @@ export class AboutComponent implements OnInit {
       url: 'https://feedingreen.com/about',
     });
 
-    // Setup intersection observer for fade-in
+    // Staggered trigger and Image Reveal Setup
     setTimeout(() => {
+      // Intersection Observer for scroll triggers
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -1126,19 +979,29 @@ export class AboutComponent implements OnInit {
             }
           });
         },
-        { threshold: 0.1 },
+        { threshold: 0.1 }
       );
 
-      document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+      document.querySelectorAll('.fade-in').forEach((el) => {
+        observer.observe(el);
+      });
+
+      // Simulates image load event trigger for image blur reveals
+      document.querySelectorAll('.cutout-bg-image').forEach((img) => {
+        setTimeout(() => {
+          img.classList.add('loaded');
+        }, 150);
+      });
     }, 100);
   }
 
   ngOnDestroy(): void {}
 
   /**
-   * Navigate to the contact page with the 'register' (Demander un accès) tab active.
+   * Navigate to the contact page with the 'register' tab active.
    */
   goToContactRegister(): void {
     this.router.navigate(['/contact'], { queryParams: { tab: 'register' } });
   }
 }
+
