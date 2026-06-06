@@ -593,7 +593,6 @@
   justify-content: center;
   overflow: hidden;
   color: #ffffff;
-  transform-style: preserve-3d;
   transition: all 0.3s ease;
 }
 
@@ -634,7 +633,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transform-style: preserve-3d;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   
   .product-icon-wrapper {
@@ -978,8 +976,7 @@
     background-image: url('/assets/landing/images/bg2.webp');
     background-size: cover;
     background-position: center;
-    opacity: 0.75;
-    mix-blend-mode: overlay;
+    opacity: 0.15;
     pointer-events: none;
   }
 }
@@ -991,7 +988,6 @@
   width: 400px;
   height: 400px;
   background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, transparent 70%);
-  filter: blur(30px);
   pointer-events: none;
   contain: strict;
 }
