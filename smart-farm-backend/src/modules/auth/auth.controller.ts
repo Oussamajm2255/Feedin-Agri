@@ -76,8 +76,18 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('sf_auth', { path: '/' });
-    res.clearCookie('sf_refresh', { path: '/api/v1/auth/refresh' });
+    const isProd = process.env.NODE_ENV === 'production' || !!process.env.RAILWAY_ENVIRONMENT_ID || !!process.env.PORT;
+
+    res.clearCookie('sf_auth', { 
+      path: '/',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    });
+    res.clearCookie('sf_refresh', { 
+      path: '/api/v1/auth/refresh',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    });
     return { ok: true };
   }
 
