@@ -1619,10 +1619,11 @@ export class ManualControlComponent implements OnInit, OnDestroy {
         { duration: 3000 }
       );
 
-    } catch (error) {
+    } catch (err) {
+      const error = err as any;
       console.error('Error executing action:', error);
       this.snackBar.open(
-        this.languageService.t()('manualControl.actionFailedMessage', { actionName: this.getActionNameTranslation(action.name), error: error.error?.message || error.message || 'Unknown error' }),
+        this.languageService.t()('manualControl.actionFailedMessage', { actionName: this.getActionNameTranslation(action.name), error: error?.error?.message || error?.message || 'Unknown error' }),
         this.languageService.t()('common.close'),
         { duration: 3000 }
       );
