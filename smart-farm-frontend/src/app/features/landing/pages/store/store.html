@@ -21,36 +21,36 @@
       <div class="hero-left fade-in">
         <span class="hero-badge">
           <span class="badge-dot"></span>
-          Boutique Agricole Feedin Green
+          {{ 'store.HERO.BADGE' | translate }}
         </span>
         <h1 class="hero-title">
-          Agriculture intelligente & <span class="accent-text">systèmes innovants</span>
+          {{ 'store.HERO.TITLE' | translate }}
         </h1>
         <p class="hero-subtitle">
-          Nous concevons et déployons des solutions agricoles avancées intégrant la culture hors sol, les systèmes verticaux et les technologies intelligentes pour optimiser la production.
+          {{ 'store.HERO.SUBTITLE' | translate }}
         </p>
         <div class="hero-actions">
           <button (click)="openQuoteDrawer()" class="btn btn-primary">
             <span class="material-icons btn-icon">rate_review</span>
-            Demander un Devis
+            {{ 'store.HERO.BTN_QUOTE' | translate }}
           </button>
           <button (click)="goToSolutions()" class="btn btn-secondary">
-            Découvrir nos Solutions
+            {{ 'store.HERO.BTN_SOLUTIONS' | translate }}
             <span class="material-icons btn-icon">arrow_forward</span>
           </button>
         </div>
         <div class="hero-trust">
           <div class="trust-item">
             <span class="material-icons trust-icon">verified</span>
-            <span>Matériel Garanti 2 Ans</span>
+            <span>{{ 'store.HERO.TRUST_1' | translate }}</span>
           </div>
           <div class="trust-item">
             <span class="material-icons trust-icon">support_agent</span>
-            <span>Support Réactif 24/7</span>
+            <span>{{ 'store.HERO.TRUST_2' | translate }}</span>
           </div>
           <div class="trust-item">
             <span class="material-icons trust-icon">local_shipping</span>
-            <span>Installation Incluse</span>
+            <span>{{ 'store.HERO.TRUST_3' | translate }}</span>
           </div>
         </div>
       </div>
@@ -76,10 +76,10 @@
     <!-- Intro Band -->
     <section class="section intro-section">
       <div class="container text-center">
-        <span class="section-label fade-in">Conception Durable</span>
-        <h2 class="section-title fade-in">Des Solutions Adaptées au Terrain Tunisien</h2>
+        <span class="section-label fade-in">{{ 'store.INTRO.LABEL' | translate }}</span>
+        <h2 class="section-title fade-in">{{ 'store.INTRO.TITLE' | translate }}</h2>
         <p class="section-subtitle fade-in">
-          De la serre tunnel à l'ombrière, en passant par le plastique agricole et les équipements de fixation, nous fournissons tout le matériel nécessaire pour protéger et optimiser vos cultures dans les conditions climatiques locales.
+          {{ 'store.INTRO.SUBTITLE' | translate }}
         </p>
       </div>
     </section>
@@ -90,7 +90,7 @@
         <!-- Sticky Tabs for Categories -->
         <div class="category-tabs fade-in">
           <button
-            *ngFor="let cat of categories"
+            *ngFor="let cat of categories()"
             (click)="selectCategory(cat.id)"
             [class.active]="activeCategory() === cat.id"
             class="tab-btn"
@@ -142,9 +142,9 @@
                 <div class="product-info">
                   <div class="info-header">
                     <span class="prod-category" [ngSwitch]="prod.category">
-                      <span *ngSwitchCase="'serres'">SERRES & STRUCTURES</span>
-                      <span *ngSwitchCase="'materiaux'">MATÉRIAUX DE COUVERTURE</span>
-                      <span *ngSwitchCase="'accessoires'">ÉQUIPEMENTS & ACCESSOIRES</span>
+                      <span *ngSwitchCase="'serres'">{{ 'store.CATEGORIES.serres' | translate }}</span>
+                      <span *ngSwitchCase="'materiaux'">{{ 'store.CATEGORIES.materiaux' | translate }}</span>
+                      <span *ngSwitchCase="'accessoires'">{{ 'store.CATEGORIES.accessoires' | translate }}</span>
                     </span>
                     <h3 class="prod-name">{{ prod.name }}</h3>
                   </div>
@@ -162,7 +162,7 @@
                   <div class="front-actions">
                     <button class="btn-card btn-details" (click)="toggleFlip(prod.id, $event)">
                       <span class="material-icons">info</span>
-                      Détails & Specs
+                      {{ 'store.CARD.BTN_DETAILS' | translate }}
                     </button>
                     <button (click)="openQuoteDrawer(prod)" class="btn-card btn-quote-quick" title="Ajouter au devis">
                       <span class="material-icons">add_shopping_cart</span>
@@ -176,9 +176,9 @@
                 <div class="card-back-header">
                   <div class="back-header-meta">
                     <span class="prod-category-back" [ngSwitch]="prod.category">
-                      <span *ngSwitchCase="'serres'">Serres & Structures</span>
-                      <span *ngSwitchCase="'materiaux'">Matériaux</span>
-                      <span *ngSwitchCase="'accessoires'">Équipements</span>
+                      <span *ngSwitchCase="'serres'">{{ 'store.CATEGORIES.serres' | translate }}</span>
+                      <span *ngSwitchCase="'materiaux'">{{ 'store.CATEGORIES.materiaux' | translate }}</span>
+                      <span *ngSwitchCase="'accessoires'">{{ 'store.CATEGORIES.accessoires' | translate }}</span>
                     </span>
                   </div>
                   <button class="btn-back-flip" (click)="toggleFlip(prod.id, $event)" title="Retour">
@@ -192,7 +192,7 @@
 
                   <!-- Technical Specifications -->
                   <div class="specs-box">
-                    <h4 class="specs-title">Spécifications Techniques</h4>
+                    <h4 class="specs-title">{{ 'store.CARD.SPECS_TITLE' | translate }}</h4>
                     <ul class="specs-list">
                       <li *ngFor="let spec of prod.specs">
                         <span class="material-icons spec-check" [style.color]="prod.primaryColor">check_circle</span>
@@ -211,9 +211,7 @@
 
                 <!-- Back Actions -->
                 <div class="back-actions">
-                  <button (click)="openQuoteDrawer(prod)" class="btn-card btn-quote-back">
-                    Demander Devis
-                    <span class="material-icons card-btn-icon">arrow_forward</span>
+                  <button (click)="openQuoteDrawer(prod)" class="btn-card btn-quote-back">{{ 'store.CARD.BTN_QUOTE' | translate }}<span class="material-icons card-btn-icon">arrow_forward</span>
                   </button>
                 </div>
               </div>
@@ -231,14 +229,14 @@
           <div class="custom-glow"></div>
           <div class="custom-content">
             <div class="left-content">
-              <span class="custom-label">Installation & Support</span>
-              <h3 class="custom-title">Besoin d'une Installation Professionnelle ?</h3>
+              <span class="custom-label">{{ 'store.INSTALLATION.LABEL' | translate }}</span>
+              <h3 class="custom-title">{{ 'store.INSTALLATION.TITLE' | translate }}</h3>
               <p class="custom-text">
-                Notre équipe technique tunisienne vous accompagne du choix des matériaux à l'installation sur votre exploitation. Nous assurons le montage des serres, la mise en place des systèmes de ventilation et le raccordement des équipements d'irrigation.
+                {{ 'store.INSTALLATION.DESC' | translate }}
               </p>
               <div class="custom-actions">
                 <button (click)="goToContactExpert()" class="btn btn-primary bg-white text-green">
-                  Demander une Installation
+                  {{ 'store.INSTALLATION.BTN' | translate }}
                   <span class="material-icons btn-icon text-green">build</span>
                 </button>
               </div>
@@ -260,38 +258,38 @@
     <section class="section consultation-section">
       <div class="container text-center">
         <div class="consultation-card fade-in">
-          <span class="section-label">Mise en Service</span>
-          <h2 class="section-title">Comment se Déroule Votre Projet ?</h2>
+          <span class="section-label">{{ 'store.PROCESS.LABEL' | translate }}</span>
+          <h2 class="section-title">{{ 'store.PROCESS.TITLE' | translate }}</h2>
           <p class="section-subtitle max-w-2xl mx-auto">
-            Nous ne nous contentons pas de livrer du matériel. Feedin Green s'engage à assurer la réussite opérationnelle complète de vos investissements agritech.
+            {{ 'store.PROCESS.SUBTITLE' | translate }}
           </p>
 
           <div class="consultation-steps">
             <div class="step-item">
               <div class="step-num">01</div>
-              <h4>Choix du Produit</h4>
-              <p>Sélectionnez la serre ou le matériel adapté à votre culture et surface.</p>
+              <h4>{{ 'store.PROCESS.STEP1_TITLE' | translate }}</h4>
+              <p>{{ 'store.PROCESS.STEP1_DESC' | translate }}</p>
             </div>
             <div class="step-item">
               <div class="step-num">02</div>
-              <h4>Devis Sur Mesure</h4>
-              <p>Étude personnalisée avec dimensions, options et coût d'installation.</p>
+              <h4>{{ 'store.PROCESS.STEP2_TITLE' | translate }}</h4>
+              <p>{{ 'store.PROCESS.STEP2_DESC' | translate }}</p>
             </div>
             <div class="step-item">
               <div class="step-num">03</div>
-              <h4>Livraison & Montage</h4>
-              <p>Livraison sur site et installation par nos équipes techniques qualifiées.</p>
+              <h4>{{ 'store.PROCESS.STEP3_TITLE' | translate }}</h4>
+              <p>{{ 'store.PROCESS.STEP3_DESC' | translate }}</p>
             </div>
             <div class="step-item">
               <div class="step-num">04</div>
-              <h4>Support Après-Vente</h4>
-              <p>Assistance technique, pièces de rechange et maintenance disponibles.</p>
+              <h4>{{ 'store.PROCESS.STEP4_TITLE' | translate }}</h4>
+              <p>{{ 'store.PROCESS.STEP4_DESC' | translate }}</p>
             </div>
           </div>
 
           <div class="consultation-actions mt-12">
             <button (click)="openQuoteDrawer()" class="btn btn-primary">
-              Planifier un Diagnostic Gratuit
+              {{ 'store.PROCESS.BTN' | translate }}
             </button>
           </div>
         </div>
@@ -314,23 +312,23 @@
         <!-- Normal Form Mode -->
         <div *ngIf="!showSuccess()">
           <header class="drawer-header">
-            <span class="drawer-badge">Étude Personnalisée</span>
-            <h3 class="drawer-title">Demande de Devis</h3>
+            <span class="drawer-badge">{{ 'store.DRAWER.BADGE' | translate }}</span>
+            <h3 class="drawer-title">{{ 'store.DRAWER.TITLE' | translate }}</h3>
             <p class="drawer-desc">
-              Remplissez ce formulaire pour recevoir un devis détaillé sur nos serres, structures et équipements agricoles. Réponse sous 24h.
+              {{ 'store.DRAWER.DESC' | translate }}
             </p>
           </header>
 
           <!-- Selected Products Quote List -->
           <div class="quote-products-section">
-            <h4 class="section-sub-title">Votre Sélection de Produits</h4>
+            <h4 class="section-sub-title">{{ 'store.DRAWER.SELECTION_TITLE' | translate }}</h4>
             
             <div *ngIf="requestedProducts().length === 0" class="empty-selection">
               <span class="material-icons empty-icon">shopping_bag</span>
-              <p>Aucun produit sélectionné. Ajoutez-en un pour commencer.</p>
+              <p>{{ 'store.DRAWER.EMPTY_SELECTION' | translate }}</p>
               <div class="all-prods-picker">
                 <button 
-                  *ngFor="let p of products" 
+                  *ngFor="let p of products()" 
                   (click)="addProductToQuoteList(p)" 
                   class="picker-btn"
                 >
@@ -348,8 +346,8 @@
                   <h5>{{ prod.name }}</h5>
                   <span class="category-name" [ngSwitch]="prod.category">
                     <span *ngSwitchCase="'serres'">Serres & Structures</span>
-                    <span *ngSwitchCase="'materiaux'">Matériaux de couverture</span>
-                    <span *ngSwitchCase="'accessoires'">Équipements & Accessoires</span>
+                    <span *ngSwitchCase="'materiaux'">{{ 'store.CATEGORIES.materiaux' | translate }}</span>
+                    <span *ngSwitchCase="'accessoires'">{{ 'store.CATEGORIES.accessoires' | translate }}</span>
                   </span>
                 </div>
                 <button (click)="removeProductFromQuote(prod.id)" class="btn-remove-prod" title="Retirer">
@@ -358,10 +356,10 @@
               </div>
 
               <!-- Quick Add More Products Dropdown/Buttons -->
-              <div class="quick-add-more" *ngIf="requestedProducts().length < products.length">
-                <span class="quick-add-label">Ajouter d'autres produits à votre devis :</span>
+              <div class="quick-add-more" *ngIf="requestedProducts().length < products().length">
+                <span class="quick-add-label">{{ 'store.DRAWER.QUICK_ADD' | translate }}</span>
                 <div class="quick-add-buttons">
-                  <ng-container *ngFor="let p of products">
+                  <ng-container *ngFor="let p of products()">
                     <button 
                       *ngIf="!isProductInQuote(p.id)"
                       (click)="addProductToQuoteList(p)"
@@ -377,11 +375,11 @@
 
           <!-- Quote Details Form -->
           <form [formGroup]="quoteForm" (ngSubmit)="onSubmitQuote()" class="quote-form">
-            <h4 class="section-sub-title">Vos Informations</h4>
+            <h4 class="section-sub-title">{{ 'store.DRAWER.FORM_TITLE' | translate }}</h4>
 
             <!-- Nom Complet -->
             <div class="form-group">
-              <label for="fullName">Nom & Prénom <span class="required">*</span></label>
+              <label for="fullName">{{ 'store.DRAWER.NAME' | translate }} <span class="required">*</span></label>
               <div class="input-wrapper" [class.invalid]="isFieldInvalid('fullName')">
                 <span class="material-icons input-icon">person</span>
                 <input 
@@ -393,13 +391,13 @@
                 />
               </div>
               <span *ngIf="isFieldInvalid('fullName')" class="error-msg">
-                Le nom complet est obligatoire (min 3 caractères).
+                {{ 'store.DRAWER.ERR_NAME' | translate }}
               </span>
             </div>
 
             <!-- Email Address -->
             <div class="form-group">
-              <label for="email">Adresse E-mail <span class="required">*</span></label>
+              <label for="email">{{ 'store.DRAWER.EMAIL' | translate }} <span class="required">*</span></label>
               <div class="input-wrapper" [class.invalid]="isFieldInvalid('email')">
                 <span class="material-icons input-icon">email</span>
                 <input 
@@ -411,13 +409,13 @@
                 />
               </div>
               <span *ngIf="isFieldInvalid('email')" class="error-msg">
-                Veuillez entrer une adresse e-mail valide.
+                {{ 'store.DRAWER.ERR_EMAIL' | translate }}
               </span>
             </div>
 
             <!-- Phone Number -->
             <div class="form-group">
-              <label for="phone">Numéro de Téléphone <span class="required">*</span></label>
+              <label for="phone">{{ 'store.DRAWER.PHONE' | translate }} <span class="required">*</span></label>
               <div class="input-wrapper" [class.invalid]="isFieldInvalid('phone')">
                 <span class="material-icons input-icon">phone</span>
                 <input 
@@ -429,14 +427,14 @@
                 />
               </div>
               <span *ngIf="isFieldInvalid('phone')" class="error-msg">
-                Le numéro de téléphone est obligatoire.
+                {{ 'store.DRAWER.ERR_PHONE' | translate }}
               </span>
             </div>
 
             <div class="form-row-2">
               <!-- Farm Size -->
               <div class="form-group">
-                <label for="farmSize">Surface Agricole (ha) <span class="required">*</span></label>
+                <label for="farmSize">{{ 'store.DRAWER.FARM_SIZE' | translate }} <span class="required">*</span></label>
                 <div class="input-wrapper" [class.invalid]="isFieldInvalid('farmSize')">
                   <span class="material-icons input-icon">landscape</span>
                   <input 
@@ -450,13 +448,13 @@
                   />
                 </div>
                 <span *ngIf="isFieldInvalid('farmSize')" class="error-msg">
-                  Supérieur à 0.1 hectare.
+                  {{ 'store.DRAWER.ERR_SIZE' | translate }}
                 </span>
               </div>
 
               <!-- City / Gouvernorat -->
               <div class="form-group">
-                <label for="city">Ville & Gouvernorat <span class="required">*</span></label>
+                <label for="city">{{ 'store.DRAWER.CITY' | translate }} <span class="required">*</span></label>
                 <div class="input-wrapper" [class.invalid]="isFieldInvalid('city')">
                   <span class="material-icons input-icon">place</span>
                   <input 
@@ -468,22 +466,22 @@
                   />
                 </div>
                 <span *ngIf="isFieldInvalid('city')" class="error-msg">
-                  Ce champ est obligatoire.
+                  {{ 'store.DRAWER.ERR_CITY' | translate }}
                 </span>
               </div>
             </div>
 
             <!-- Specific Crop Details & Message -->
             <div class="form-group">
-              <label for="message">Description de votre projet (Cultures, besoins spécifiques...)</label>
+              <label for="message">{{ 'store.DRAWER.MESSAGE_LABEL' | translate }}</label>
               <textarea 
                 id="message" 
                 formControlName="message" 
                 rows="4" 
-                placeholder="Ex: Serre de tomates sous abri de 2 hectares, besoin de régulation automatisée et mesure d'humidité du sol."
+                placeholder="{{ 'store.DRAWER.MESSAGE_PLACEHOLDER' | translate }}"
               ></textarea>
               <span *ngIf="isFieldInvalid('message')" class="error-msg">
-                La description doit contenir au moins 10 caractères.
+                {{ 'store.DRAWER.ERR_MESSAGE' | translate }}
               </span>
             </div>
 
@@ -493,7 +491,7 @@
               class="btn btn-primary btn-block mt-6"
               [disabled]="isSubmitting() || quoteForm.invalid"
             >
-              <span *ngIf="!isSubmitting()">Soumettre ma Demande</span>
+              <span *ngIf="!isSubmitting()">{{ 'store.DRAWER.BTN_SUBMIT' | translate }}</span>
               <span *ngIf="isSubmitting()" class="spinner-container">
                 <svg class="spinner" viewBox="0 0 50 50">
                   <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>

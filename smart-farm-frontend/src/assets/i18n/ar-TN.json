@@ -3972,5 +3972,252 @@
         "desc": "ابقوا متابعين! نحن نعمل على عدة مشاريع ثورية في مجال التكنولوجيا الزراعية التي ستعيد تعريف هذا القطاع."
       }
     }
+  },
+  "store": {
+    "HERO": {
+      "BADGE": "Boutique Agricole Feedin Green",
+      "TITLE": "Agriculture intelligente & <span class=\"accent-text\">systèmes innovants</span>",
+      "SUBTITLE": "Nous concevons et déployons des solutions agricoles avancées intégrant la culture hors sol, les systèmes verticaux et les technologies intelligentes pour optimiser la production.",
+      "BTN_QUOTE": "Demander un Devis",
+      "BTN_SOLUTIONS": "Découvrir nos Solutions",
+      "TRUST_1": "Matériel Garanti 2 Ans",
+      "TRUST_2": "Support Réactif 24/7",
+      "TRUST_3": "Installation Incluse"
+    },
+    "INTRO": {
+      "LABEL": "Conception Durable",
+      "TITLE": "Des Solutions Adaptées au Terrain Tunisien",
+      "SUBTITLE": "De la serre tunnel à l'ombrière, en passant par le plastique agricole et les équipements de fixation, nous fournissons tout le matériel nécessaire pour protéger et optimiser vos cultures dans les conditions climatiques locales."
+    },
+    "CATEGORIES": {
+      "all": "Tous les produits",
+      "serres": "Serres & Structures",
+      "materiaux": "Matériaux de couverture",
+      "accessoires": "Équipements & Accessoires"
+    },
+    "PRODUCTS": {
+      "SERRE_MULTI_CHAPELLE": {
+        "NAME": "Serre Multi Chapelle",
+        "BADGE": "Structure Pro",
+        "DESC": "C'est une serre composée de plusieurs chapelles accolées. Grâce à sa structure robuste en acier galvanisé et à sa couverture en film plastique ou polycarbonate, elle garantit une excellente résistance aux conditions climatiques (vent, pluie, chaleur). Elle permet également de créer un environnement contrôlé, idéal pour maximiser le rendement agricole tout au long de l'année.",
+        "SPECS": [
+          "Structure modulaire adaptable selon vos besoins",
+          "Ossature en acier galvanisé haute résistance",
+          "Largeurs disponibles : 4m à 12,8m (ou plus sur mesure)",
+          "Ventilation latérale et zénithale pour un climat optimal",
+          "Compatible avec systèmes d'irrigation et de fertigation",
+          "Couverture : plastique agricole, polycarbonate ou filet"
+        ],
+        "FEATURES": [
+          "Modulaire",
+          "Acier Galvanisé",
+          "Sur Mesure",
+          "Ventilation Optimale"
+        ]
+      },
+      "SERRE_TUNNEL": {
+        "NAME": "Serre Tunnel",
+        "BADGE": "Économique",
+        "DESC": "La serre tunnel est une solution simple, économique et efficace pour protéger vos cultures tout au long de l'année. Sa structure en arceaux recouverts de film plastique permet de créer un microclimat favorable à la croissance des plantes. Facile à installer et à entretenir, elle est particulièrement adaptée aux exploitations agricoles de petite et moyenne taille.",
+        "SPECS": [
+          "Structure en arceaux en acier galvanisé",
+          "Largeurs disponibles : 4m à 9m (ou sur mesure)",
+          "Hauteur variable selon les besoins",
+          "Couverture en film plastique agricole",
+          "Système de ventilation latérale (manuelle ou motorisée)",
+          "Montage simple et rapide"
+        ],
+        "FEATURES": [
+          "Économique",
+          "Rapide à Monter",
+          "Microclimat Optimal",
+          "PME Adaptée"
+        ]
+      },
+      "SERRE_JARDIN": {
+        "NAME": "Serre Jardin",
+        "BADGE": "Amateur & Pro",
+        "DESC": "La serre de jardin est idéale pour les amateurs de jardinage souhaitant cultiver leurs plantes dans des conditions optimales. Elle permet de protéger les cultures contre les intempéries, le froid et les variations climatiques tout en favorisant leur croissance. Compacte et esthétique, elle s'intègre facilement dans tout type de jardin.",
+        "SPECS": [
+          "Structure légère en aluminium ou acier galvanisé",
+          "Longueurs : de 2.3m à 10m",
+          "Hauteur de la serre : 2.20 à 2.50m",
+          "En polycarbonate ou film plastique",
+          "Dimensions adaptées aux petits espaces",
+          "Porte d'accès avec système de fermeture",
+          "Bonne transmission de la lumière",
+          "Montage simple et rapide"
+        ],
+        "FEATURES": [
+          "Compacte",
+          "Esthétique",
+          "Légère",
+          "Facile à Monter"
+        ]
+      },
+      "STRUCTURE_OMBRIERE": {
+        "NAME": "Structure Ombrière",
+        "BADGE": "Protection UV",
+        "DESC": "La structure ombrière est conçue pour protéger les cultures contre l'excès d'ensoleillement et les fortes chaleurs. Équipée de filets d'ombrage, elle permet de réduire l'intensité lumineuse tout en assurant une bonne circulation de l'air. Idéale pour les pépinières, les cultures sensibles et les zones à climat chaud.",
+        "SPECS": [
+          "Structure en acier galvanisé résistante à la corrosion",
+          "Filets d'ombrage disponibles en différents taux (50%, 70%)",
+          "Hauteur et dimensions personnalisables (3-4m)",
+          "Longueur : multiple de 2m ou 3m",
+          "Largeur : multiple de 6m ou 9m",
+          "Installation fixe ou démontable",
+          "Bonne résistance au vent et aux conditions extérieures",
+          "Adaptée à différents types de cultures"
+        ],
+        "FEATURES": [
+          "Anti-UV",
+          "Personnalisable",
+          "Fixe ou Mobile",
+          "Résistante"
+        ]
+      },
+      "EQUIPEMENTS_SERRES": {
+        "NAME": "Équipements des Serres",
+        "BADGE": "Accessoires Pro",
+        "DESC": "Nous proposons une gamme complète d'équipements pour serres agricoles. Conçus avec des matériaux résistants à la corrosion et aux conditions climatiques, nos produits assurent une installation fiable, durable et adaptée à tous types de structures, garantissant la stabilité et la performance optimale de votre serre.",
+        "SPECS": [
+          "Clips de fixation : maintien sécurisé du film plastique, résistance aux UV",
+          "Arceaux galvanisés : structure robuste, haute résistance à la corrosion",
+          "Colliers de serrage : assemblage solide et durable des éléments",
+          "Fil de tension (Nylstrong) : maintien optimal de la bâche, résistance à la traction",
+          "Visserie et boulonnerie : fixation fiable, longue durée de vie",
+          "Accessoires de montage : installation simple et rapide"
+        ],
+        "FEATURES": [
+          "Clips UV",
+          "Acier Galvanisé",
+          "Nylstrong",
+          "Visserie Pro"
+        ]
+      },
+      "PLASTIQUE_SERRE": {
+        "NAME": "Plastique de Serre",
+        "BADGE": "Indispensable",
+        "DESC": "Le plastique de serre est un élément indispensable pour protéger vos cultures et créer un environnement optimal pour leur développement. Il permet de maintenir la température, de protéger contre le vent et la pluie, tout en laissant passer la lumière nécessaire à la photosynthèse.",
+        "SPECS": [
+          "Matériaux : polyéthylène (PE), polycarbonate ou film UV stabilisé",
+          "Épaisseur : 180 à 200 microns",
+          "Protection UV pour prolonger la durée de vie",
+          "Transparent ou diffusant selon le type de culture",
+          "Compatible avec toutes les structures de serre",
+          "Résistant aux intempéries et aux variations de température"
+        ],
+        "FEATURES": [
+          "PE / Polycarbonate",
+          "UV Stabilisé",
+          "180-200 microns",
+          "Transparent/Diffusant"
+        ]
+      },
+      "SCOTCH_REPARATION": {
+        "NAME": "Scotch Réparation Plastique",
+        "BADGE": "Pratique",
+        "DESC": "Le scotch pour réparation de plastique de serre est un accessoire pratique et indispensable pour prolonger la durée de vie de vos films plastiques. Il permet de réparer rapidement les déchirures, fissures ou trous dans vos serres sans avoir à remplacer tout le film.",
+        "SPECS": [
+          "Largeur : 7.5cm",
+          "Longueur : rouleau de 25m",
+          "Résistant aux UV et aux intempéries",
+          "Adhésif puissant compatible avec polyéthylène et polycarbonate",
+          "Transparent ou semi-transparent pour ne pas réduire la lumière",
+          "Facile à découper et à appliquer"
+        ],
+        "FEATURES": [
+          "7.5cm x 25m",
+          "Anti-UV",
+          "Adhésif Puissant",
+          "Transparent"
+        ]
+      },
+      "TOILE_HORS_SOL": {
+        "NAME": "La Toile Hors Sol",
+        "BADGE": "Protection Sol",
+        "DESC": "La toile hors sol est un revêtement protecteur destiné à couvrir vos cultures, planches ou structures agricoles sans contact direct avec le sol. Elle offre une protection efficace contre le vent, le soleil et certains nuisibles, tout en favorisant le développement des plantes dans un environnement contrôlé.",
+        "SPECS": [
+          "Réalisée avec du polypropylène stabilisé au UV",
+          "Différentes densités disponibles : 90g/m², 100g/m², 110g/m²",
+          "Résistant aux UV et aux intempéries",
+          "Disponible en rouleaux",
+          "Léger et facile à installer",
+          "Adapté aux cultures sur tables, bacs ou structures hors sol"
+        ],
+        "FEATURES": [
+          "Polypropylène UV",
+          "90-110g/m²",
+          "Rouleaux",
+          "Léger"
+        ]
+      },
+      "FILET_PROTECTION": {
+        "NAME": "Filet de Protection",
+        "BADGE": "Gamme Complète",
+        "DESC": "Optimisez vos performances agricoles avec notre gamme complète de filets techniques et toiles professionnelles. Nos filets ombrières, insect-proof et anti-grêle, ainsi que nos toiles hors sol, offrent une protection globale de vos cultures contre les agressions climatiques et biologiques.",
+        "SPECS": [
+          "Filets ombrières : régulation précise de l'ensoleillement et réduction de la chaleur",
+          "Filets insect-proof : barrière efficace contre les insectes nuisibles avec excellente ventilation",
+          "Filets anti-grêle : protection renforcée contre les impacts et intempéries",
+          "Toiles hors sol : contrôle optimal des adventices et gestion efficace de l'humidité"
+        ],
+        "FEATURES": [
+          "Ombrière",
+          "Insect-Proof",
+          "Anti-Grêle",
+          "Hors Sol"
+        ]
+      }
+    },
+    "CARD": {
+      "BTN_DETAILS": "Détails & Specs",
+      "BTN_BACK": "Retour",
+      "SPECS_TITLE": "Spécifications Techniques",
+      "BTN_QUOTE": "Demander Devis"
+    },
+    "INSTALLATION": {
+      "LABEL": "Installation & Support",
+      "TITLE": "Besoin d'une Installation Professionnelle ?",
+      "DESC": "Notre équipe technique tunisienne vous accompagne du choix des matériaux à l'installation sur votre exploitation. Nous assurons le montage des serres, la mise en place des systèmes de ventilation et le raccordement des équipements d'irrigation.",
+      "BTN": "Demander une Installation"
+    },
+    "PROCESS": {
+      "LABEL": "Mise en Service",
+      "TITLE": "Comment se Déroule Votre Projet ?",
+      "SUBTITLE": "Nous ne nous contentons pas de livrer du matériel. Feedin Green s'engage à assurer la réussite opérationnelle complète de vos investissements agritech.",
+      "STEP1_TITLE": "Choix du Produit",
+      "STEP1_DESC": "Sélectionnez la serre ou le matériel adapté à votre culture et surface.",
+      "STEP2_TITLE": "Devis Sur Mesure",
+      "STEP2_DESC": "Étude personnalisée avec dimensions, options et coût d'installation.",
+      "STEP3_TITLE": "Livraison & Montage",
+      "STEP3_DESC": "Livraison sur site et installation par nos équipes techniques qualifiées.",
+      "STEP4_TITLE": "Support Après-Vente",
+      "STEP4_DESC": "Assistance technique, pièces de rechange et maintenance disponibles.",
+      "BTN": "Planifier un Diagnostic Gratuit"
+    },
+    "DRAWER": {
+      "BADGE": "Étude Personnalisée",
+      "TITLE": "Demande de Devis",
+      "DESC": "Remplissez ce formulaire pour recevoir un devis détaillé sur nos serres, structures et équipements agricoles. Réponse sous 24h.",
+      "SELECTION_TITLE": "Votre Sélection de Produits",
+      "EMPTY_SELECTION": "Aucun produit sélectionné. Ajoutez-en un pour commencer.",
+      "QUICK_ADD": "Ajouter d'autres produits à votre devis :",
+      "FORM_TITLE": "Vos Informations",
+      "NAME": "Nom & Prénom",
+      "EMAIL": "Adresse E-mail",
+      "PHONE": "Numéro de Téléphone",
+      "FARM_SIZE": "Surface Agricole (ha)",
+      "CITY": "Ville & Gouvernorat",
+      "MESSAGE_LABEL": "Description de votre projet (Cultures, besoins spécifiques...)",
+      "MESSAGE_PLACEHOLDER": "Ex: Serre de tomates sous abri de 2 hectares, besoin de régulation automatisée et mesure d'humidité du sol.",
+      "ERR_NAME": "Le nom complet est obligatoire (min 3 caractères).",
+      "ERR_EMAIL": "Veuillez entrer une adresse e-mail valide.",
+      "ERR_PHONE": "Le numéro de téléphone est obligatoire.",
+      "ERR_SIZE": "Supérieur à 0.1 hectare.",
+      "ERR_CITY": "Ce champ est obligatoire.",
+      "ERR_MESSAGE": "La description doit contenir au moins 10 caractères.",
+      "BTN_SUBMIT": "Soumettre ma Demande"
+    }
   }
 }

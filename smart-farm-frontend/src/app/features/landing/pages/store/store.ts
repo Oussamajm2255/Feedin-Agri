@@ -56,6 +56,7 @@ import { LandingFooterComponent } from '../../sections/landing-footer/landing-fo
 import { ScrollToTopComponent } from '../../../../shared/components/scroll-to-top/scroll-to-top.component';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 import { SeoService } from '../../../../core/services/seo.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 interface Product {
   id: string;
@@ -81,6 +82,7 @@ interface Product {
     PublicNavComponent,
     LandingFooterComponent,
     ScrollToTopComponent,
+    TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './store.html',
@@ -91,236 +93,146 @@ export class Store implements OnInit {
   private router = inject(Router);
   private seoService = inject(SeoService);
   private cdr = inject(ChangeDetectorRef);
+  private langService = inject(LanguageService);
 
   // Categories
-  categories = [
-    { id: 'all', label: 'Tous les produits' },
-    { id: 'serres', label: 'Serres & Structures' },
-    { id: 'materiaux', label: 'Matériaux de couverture' },
-    { id: 'accessoires', label: 'Équipements & Accessoires' },
-  ];
+  categories = computed(() => [
+    { id: 'all', label: this.langService.t()('store.CATEGORIES.all') },
+    { id: 'serres', label: this.langService.t()('store.CATEGORIES.serres') },
+    { id: 'materiaux', label: this.langService.t()('store.CATEGORIES.materiaux') },
+    { id: 'accessoires', label: this.langService.t()('store.CATEGORIES.accessoires') },
+  ]);
 
   // Selected Category filter
   activeCategory = signal<string>('all');
 
   // Selected product list
-  products: Product[] = [
-    // ============================================
-    // PRODUCT 1: SERRE MULTI CHAPELLE
-    // ============================================
-    {
-      id: 'serre-multi-chapelle',
-      name: 'Serre Multi Chapelle',
-      badge: 'Structure Pro',
-      category: 'serres',
-      description: 'C\'est une serre composée de plusieurs chapelles accolées. Grâce à sa structure robuste en acier galvanisé et à sa couverture en film plastique ou polycarbonate, elle garantit une excellente résistance aux conditions climatiques (vent, pluie, chaleur). Elle permet également de créer un environnement contrôlé, idéal pour maximiser le rendement agricole tout au long de l\'année.',
-      specs: [
-        'Structure modulaire adaptable selon vos besoins',
-        'Ossature en acier galvanisé haute résistance',
-        'Largeurs disponibles : 4m à 12,8m (ou plus sur mesure)',
-        'Ventilation latérale et zénithale pour un climat optimal',
-        'Compatible avec systèmes d\'irrigation et de fertigation',
-        'Couverture : plastique agricole, polycarbonate ou filet'
-      ],
-      features: ['Modulaire', 'Acier Galvanisé', 'Sur Mesure', 'Ventilation Optimale'],
-      icon: 'warehouse',
-      bgGradient: 'linear-gradient(135deg, #15803d 0%, #166534 100%)',
-      primaryColor: '#22c55e',
-      imageUrl: 'assets/landing/images/serre.jpg',
-    },
+  products = computed<Product[]>(() => {
+    const t = this.langService.t();
+    const trans = this.langService.translations()?.['store']?.PRODUCTS;
+    
+    // Fallback safe arrays if translations not yet loaded fully
+    const getSpecs = (key: string) => trans?.[key]?.SPECS || [];
+    const getFeats = (key: string) => trans?.[key]?.FEATURES || [];
 
-    // ============================================
-    // PRODUCT 2: SERRE TUNNEL
-    // ============================================
-    {
-      id: 'serre-tunnel',
-      name: 'Serre Tunnel',
-      badge: 'Économique',
-      category: 'serres',
-      description: 'La serre tunnel est une solution simple, économique et efficace pour protéger vos cultures tout au long de l\'année. Sa structure en arceaux recouverts de film plastique permet de créer un microclimat favorable à la croissance des plantes. Facile à installer et à entretenir, elle est particulièrement adaptée aux exploitations agricoles de petite et moyenne taille.',
-      specs: [
-        'Structure en arceaux en acier galvanisé',
-        'Largeurs disponibles : 4m à 9m (ou sur mesure)',
-        'Hauteur variable selon les besoins',
-        'Couverture en film plastique agricole',
-        'Système de ventilation latérale (manuelle ou motorisée)',
-        'Montage simple et rapide'
-      ],
-      features: ['Économique', 'Rapide à Monter', 'Microclimat Optimal', 'PME Adaptée'],
-      icon: 'agriculture',
-      bgGradient: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
-      primaryColor: '#0d9488',
-      imageUrl: 'assets/landing/images/serre-connectee-intelligente.jpg',
-    },
-
-    // ============================================
-    // PRODUCT 3: SERRE JARDIN
-    // ============================================
-    {
-      id: 'serre-jardin',
-      name: 'Serre Jardin',
-      badge: 'Amateur & Pro',
-      category: 'serres',
-      description: 'La serre de jardin est idéale pour les amateurs de jardinage souhaitant cultiver leurs plantes dans des conditions optimales. Elle permet de protéger les cultures contre les intempéries, le froid et les variations climatiques tout en favorisant leur croissance. Compacte et esthétique, elle s\'intègre facilement dans tout type de jardin.',
-      specs: [
-        'Structure légère en aluminium ou acier galvanisé',
-        'Longueurs : de 2.3m à 10m',
-        'Hauteur de la serre : 2.20 à 2.50m',
-        'En polycarbonate ou film plastique',
-        'Dimensions adaptées aux petits espaces',
-        'Porte d\'accès avec système de fermeture',
-        'Bonne transmission de la lumière',
-        'Montage simple et rapide'
-      ],
-      features: ['Compacte', 'Esthétique', 'Légère', 'Facile à Monter'],
-      icon: 'yard',
-      bgGradient: 'linear-gradient(135deg, #0369a1 0%, #075985 100%)',
-      primaryColor: '#0284c7',
-      imageUrl: 'assets/landing/images/urban-farming.jpg',
-    },
-
-    // ============================================
-    // PRODUCT 4: STRUCTURE OMBRIÈRE
-    // ============================================
-    {
-      id: 'structure-ombriere',
-      name: 'Structure Ombrière',
-      badge: 'Protection UV',
-      category: 'serres',
-      description: 'La structure ombrière est conçue pour protéger les cultures contre l\'excès d\'ensoleillement et les fortes chaleurs. Équipée de filets d\'ombrage, elle permet de réduire l\'intensité lumineuse tout en assurant une bonne circulation de l\'air. Idéale pour les pépinières, les cultures sensibles et les zones à climat chaud.',
-      specs: [
-        'Structure en acier galvanisé résistante à la corrosion',
-        'Filets d\'ombrage disponibles en différents taux (50%, 70%)',
-        'Hauteur et dimensions personnalisables (3-4m)',
-        'Longueur : multiple de 2m ou 3m',
-        'Largeur : multiple de 6m ou 9m',
-        'Installation fixe ou démontable',
-        'Bonne résistance au vent et aux conditions extérieures',
-        'Adaptée à différents types de cultures'
-      ],
-      features: ['Anti-UV', 'Personnalisable', 'Fixe ou Mobile', 'Résistante'],
-      icon: 'wb_shade',
-      bgGradient: 'linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%)',
-      primaryColor: '#7c3aed',
-      imageUrl: 'assets/landing/images/serres-agricoles-connectees.jpg',
-    },
-
-    // ============================================
-    // PRODUCT 5: ÉQUIPEMENTS DES SERRES
-    // ============================================
-    {
-      id: 'equipements-serres',
-      name: 'Équipements des Serres',
-      badge: 'Accessoires Pro',
-      category: 'accessoires',
-      description: 'Nous proposons une gamme complète d\'équipements pour serres agricoles. Conçus avec des matériaux résistants à la corrosion et aux conditions climatiques, nos produits assurent une installation fiable, durable et adaptée à tous types de structures, garantissant la stabilité et la performance optimale de votre serre.',
-      specs: [
-        'Clips de fixation : maintien sécurisé du film plastique, résistance aux UV',
-        'Arceaux galvanisés : structure robuste, haute résistance à la corrosion',
-        'Colliers de serrage : assemblage solide et durable des éléments',
-        'Fil de tension (Nylstrong) : maintien optimal de la bâche, résistance à la traction',
-        'Visserie et boulonnerie : fixation fiable, longue durée de vie',
-        'Accessoires de montage : installation simple et rapide'
-      ],
-      features: ['Clips UV', 'Acier Galvanisé', 'Nylstrong', 'Visserie Pro'],
-      icon: 'build',
-      bgGradient: 'linear-gradient(135deg, #b45309 0%, #92400e 100%)',
-      primaryColor: '#d97706',
-      imageUrl: 'assets/landing/images/systemes-automatisation-serres.jpg',
-    },
-
-    // ============================================
-    // PRODUCT 6: PLASTIQUE DE SERRE
-    // ============================================
-    {
-      id: 'plastique-serre',
-      name: 'Plastique de Serre',
-      badge: 'Indispensable',
-      category: 'materiaux',
-      description: 'Le plastique de serre est un élément indispensable pour protéger vos cultures et créer un environnement optimal pour leur développement. Il permet de maintenir la température, de protéger contre le vent et la pluie, tout en laissant passer la lumière nécessaire à la photosynthèse.',
-      specs: [
-        'Matériaux : polyéthylène (PE), polycarbonate ou film UV stabilisé',
-        'Épaisseur : 180 à 200 microns',
-        'Protection UV pour prolonger la durée de vie',
-        'Transparent ou diffusant selon le type de culture',
-        'Compatible avec toutes les structures de serre',
-        'Résistant aux intempéries et aux variations de température'
-      ],
-      features: ['PE / Polycarbonate', 'UV Stabilisé', '180-200 microns', 'Transparent/Diffusant'],
-      icon: 'layers',
-      bgGradient: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
-      primaryColor: '#4b5563',
-      imageUrl: 'assets/landing/images/bg2.webp',
-    },
-
-    // ============================================
-    // PRODUCT 7: SCOTCH RÉPARATION PLASTIQUE
-    // ============================================
-    {
-      id: 'scotch-reparation',
-      name: 'Scotch Réparation Plastique',
-      badge: 'Pratique',
-      category: 'accessoires',
-      description: 'Le scotch pour réparation de plastique de serre est un accessoire pratique et indispensable pour prolonger la durée de vie de vos films plastiques. Il permet de réparer rapidement les déchirures, fissures ou trous dans vos serres sans avoir à remplacer tout le film.',
-      specs: [
-        'Largeur : 7.5cm',
-        'Longueur : rouleau de 25m',
-        'Résistant aux UV et aux intempéries',
-        'Adhésif puissant compatible avec polyéthylène et polycarbonate',
-        'Transparent ou semi-transparent pour ne pas réduire la lumière',
-        'Facile à découper et à appliquer'
-      ],
-      features: ['7.5cm x 25m', 'Anti-UV', 'Adhésif Puissant', 'Transparent'],
-      icon: 'tape_measure',
-      bgGradient: 'linear-gradient(135deg, #be123c 0%, #9f1239 100%)',
-      primaryColor: '#e11d48',
-    },
-
-    // ============================================
-    // PRODUCT 8: TOILE HORS SOL
-    // ============================================
-    {
-      id: 'toile-hors-sol',
-      name: 'La Toile Hors Sol',
-      badge: 'Protection Sol',
-      category: 'materiaux',
-      description: 'La toile hors sol est un revêtement protecteur destiné à couvrir vos cultures, planches ou structures agricoles sans contact direct avec le sol. Elle offre une protection efficace contre le vent, le soleil et certains nuisibles, tout en favorisant le développement des plantes dans un environnement contrôlé.',
-      specs: [
-        'Réalisée avec du polypropylène stabilisé au UV',
-        'Différentes densités disponibles : 90g/m², 100g/m², 110g/m²',
-        'Résistant aux UV et aux intempéries',
-        'Disponible en rouleaux',
-        'Léger et facile à installer',
-        'Adapté aux cultures sur tables, bacs ou structures hors sol'
-      ],
-      features: ['Polypropylène UV', '90-110g/m²', 'Rouleaux', 'Léger'],
-      icon: 'texture',
-      bgGradient: 'linear-gradient(135deg, #047857 0%, #065f46 100%)',
-      primaryColor: '#10b981',
-    },
-
-    // ============================================
-    // PRODUCT 9: FILET DE PROTECTION
-    // ============================================
-    {
-      id: 'filet-protection',
-      name: 'Filet de Protection',
-      badge: 'Gamme Complète',
-      category: 'materiaux',
-      description: 'Optimisez vos performances agricoles avec notre gamme complète de filets techniques et toiles professionnelles. Nos filets ombrières, insect-proof et anti-grêle, ainsi que nos toiles hors sol, offrent une protection globale de vos cultures contre les agressions climatiques et biologiques.',
-      specs: [
-        'Filets ombrières : régulation précise de l\'ensoleillement et réduction de la chaleur',
-        'Filets insect-proof : barrière efficace contre les insectes nuisibles avec excellente ventilation',
-        'Filets anti-grêle : protection renforcée contre les impacts et intempéries',
-        'Toiles hors sol : contrôle optimal des adventices et gestion efficace de l\'humidité'
-      ],
-      features: ['Ombrière', 'Insect-Proof', 'Anti-Grêle', 'Hors Sol'],
-      icon: 'grid_on',
-      bgGradient: 'linear-gradient(135deg, #4338ca 0%, #3730a3 100%)',
-      primaryColor: '#6366f1',
-      imageUrl: 'assets/landing/images/serres-verticales-connectees.webp',
-    }
-  ];
+    return [
+      {
+        id: 'serre-multi-chapelle',
+        name: t('store.PRODUCTS.SERRE_MULTI_CHAPELLE.NAME'),
+        badge: t('store.PRODUCTS.SERRE_MULTI_CHAPELLE.BADGE'),
+        category: 'serres',
+        description: t('store.PRODUCTS.SERRE_MULTI_CHAPELLE.DESC'),
+        specs: getSpecs('SERRE_MULTI_CHAPELLE'),
+        features: getFeats('SERRE_MULTI_CHAPELLE'),
+        icon: 'warehouse',
+        bgGradient: 'linear-gradient(135deg, #15803d 0%, #166534 100%)',
+        primaryColor: '#22c55e',
+        imageUrl: 'assets/landing/images/serre.jpg',
+      },
+      {
+        id: 'serre-tunnel',
+        name: t('store.PRODUCTS.SERRE_TUNNEL.NAME'),
+        badge: t('store.PRODUCTS.SERRE_TUNNEL.BADGE'),
+        category: 'serres',
+        description: t('store.PRODUCTS.SERRE_TUNNEL.DESC'),
+        specs: getSpecs('SERRE_TUNNEL'),
+        features: getFeats('SERRE_TUNNEL'),
+        icon: 'agriculture',
+        bgGradient: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
+        primaryColor: '#0d9488',
+        imageUrl: 'assets/landing/images/serre-connectee-intelligente.jpg',
+      },
+      {
+        id: 'serre-jardin',
+        name: t('store.PRODUCTS.SERRE_JARDIN.NAME'),
+        badge: t('store.PRODUCTS.SERRE_JARDIN.BADGE'),
+        category: 'serres',
+        description: t('store.PRODUCTS.SERRE_JARDIN.DESC'),
+        specs: getSpecs('SERRE_JARDIN'),
+        features: getFeats('SERRE_JARDIN'),
+        icon: 'yard',
+        bgGradient: 'linear-gradient(135deg, #0369a1 0%, #075985 100%)',
+        primaryColor: '#0284c7',
+        imageUrl: 'assets/landing/images/urban-farming.jpg',
+      },
+      {
+        id: 'structure-ombriere',
+        name: t('store.PRODUCTS.STRUCTURE_OMBRIERE.NAME'),
+        badge: t('store.PRODUCTS.STRUCTURE_OMBRIERE.BADGE'),
+        category: 'serres',
+        description: t('store.PRODUCTS.STRUCTURE_OMBRIERE.DESC'),
+        specs: getSpecs('STRUCTURE_OMBRIERE'),
+        features: getFeats('STRUCTURE_OMBRIERE'),
+        icon: 'wb_shade',
+        bgGradient: 'linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%)',
+        primaryColor: '#7c3aed',
+        imageUrl: 'assets/landing/images/serres-agricoles-connectees.jpg',
+      },
+      {
+        id: 'equipements-serres',
+        name: t('store.PRODUCTS.EQUIPEMENTS_SERRES.NAME'),
+        badge: t('store.PRODUCTS.EQUIPEMENTS_SERRES.BADGE'),
+        category: 'accessoires',
+        description: t('store.PRODUCTS.EQUIPEMENTS_SERRES.DESC'),
+        specs: getSpecs('EQUIPEMENTS_SERRES'),
+        features: getFeats('EQUIPEMENTS_SERRES'),
+        icon: 'build',
+        bgGradient: 'linear-gradient(135deg, #b45309 0%, #92400e 100%)',
+        primaryColor: '#d97706',
+        imageUrl: 'assets/landing/images/systemes-automatisation-serres.jpg',
+      },
+      {
+        id: 'plastique-serre',
+        name: t('store.PRODUCTS.PLASTIQUE_SERRE.NAME'),
+        badge: t('store.PRODUCTS.PLASTIQUE_SERRE.BADGE'),
+        category: 'materiaux',
+        description: t('store.PRODUCTS.PLASTIQUE_SERRE.DESC'),
+        specs: getSpecs('PLASTIQUE_SERRE'),
+        features: getFeats('PLASTIQUE_SERRE'),
+        icon: 'layers',
+        bgGradient: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
+        primaryColor: '#4b5563',
+        imageUrl: 'assets/landing/images/bg2.webp',
+      },
+      {
+        id: 'scotch-reparation',
+        name: t('store.PRODUCTS.SCOTCH_REPARATION.NAME'),
+        badge: t('store.PRODUCTS.SCOTCH_REPARATION.BADGE'),
+        category: 'accessoires',
+        description: t('store.PRODUCTS.SCOTCH_REPARATION.DESC'),
+        specs: getSpecs('SCOTCH_REPARATION'),
+        features: getFeats('SCOTCH_REPARATION'),
+        icon: 'tape_measure',
+        bgGradient: 'linear-gradient(135deg, #be123c 0%, #9f1239 100%)',
+        primaryColor: '#e11d48',
+      },
+      {
+        id: 'toile-hors-sol',
+        name: t('store.PRODUCTS.TOILE_HORS_SOL.NAME'),
+        badge: t('store.PRODUCTS.TOILE_HORS_SOL.BADGE'),
+        category: 'materiaux',
+        description: t('store.PRODUCTS.TOILE_HORS_SOL.DESC'),
+        specs: getSpecs('TOILE_HORS_SOL'),
+        features: getFeats('TOILE_HORS_SOL'),
+        icon: 'texture',
+        bgGradient: 'linear-gradient(135deg, #047857 0%, #065f46 100%)',
+        primaryColor: '#10b981',
+      },
+      {
+        id: 'filet-protection',
+        name: t('store.PRODUCTS.FILET_PROTECTION.NAME'),
+        badge: t('store.PRODUCTS.FILET_PROTECTION.BADGE'),
+        category: 'materiaux',
+        description: t('store.PRODUCTS.FILET_PROTECTION.DESC'),
+        specs: getSpecs('FILET_PROTECTION'),
+        features: getFeats('FILET_PROTECTION'),
+        icon: 'grid_on',
+        bgGradient: 'linear-gradient(135deg, #4338ca 0%, #3730a3 100%)',
+        primaryColor: '#6366f1',
+        imageUrl: 'assets/landing/images/serres-verticales-connectees.webp',
+      }
+    ];
+  });
 
   // Drawer States
   isDrawerOpen = signal<boolean>(false);
@@ -387,9 +299,9 @@ export class Store implements OnInit {
   filteredProducts = computed<Product[]>(() => {
     const category = this.activeCategory();
     if (category === 'all') {
-      return this.products;
+      return this.products();
     }
-    return this.products.filter(p => p.category === category);
+    return this.products().filter(p => p.category === category);
   });
 
   // Side Drawer Operations

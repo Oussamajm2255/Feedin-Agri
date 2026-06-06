@@ -4398,5 +4398,252 @@
         "desc": "Stay tuned! We are working on multiple revolutionary projects in the agricultural technology field that will redefine our industry."
       }
     }
+  },
+  "store": {
+    "HERO": {
+      "BADGE": "Feedin Green Agricultural Store",
+      "TITLE": "Smart Agriculture & <span class=\"accent-text\">innovative systems</span>",
+      "SUBTITLE": "We design and deploy advanced agricultural solutions integrating soilless culture, vertical systems, and smart technologies to optimize production.",
+      "BTN_QUOTE": "Request a Quote",
+      "BTN_SOLUTIONS": "Discover our Solutions",
+      "TRUST_1": "2-Year Equipment Warranty",
+      "TRUST_2": "24/7 Responsive Support",
+      "TRUST_3": "Installation Included"
+    },
+    "INTRO": {
+      "LABEL": "Sustainable Design",
+      "TITLE": "Solutions Adapted to Tunisian Terrain",
+      "SUBTITLE": "From tunnel greenhouses to shade structures, agricultural plastics, and fixing equipment, we provide everything needed to protect and optimize your crops under local climate conditions."
+    },
+    "CATEGORIES": {
+      "all": "All Products",
+      "serres": "Greenhouses & Structures",
+      "materiaux": "Covering Materials",
+      "accessoires": "Equipment & Accessories"
+    },
+    "PRODUCTS": {
+      "SERRE_MULTI_CHAPELLE": {
+        "NAME": "Multi-Span Greenhouse",
+        "BADGE": "Pro Structure",
+        "DESC": "A greenhouse composed of several attached spans. Thanks to its robust galvanized steel structure and plastic film or polycarbonate cover, it guarantees excellent resistance to climatic conditions. It creates a controlled environment, ideal for maximizing agricultural yield year-round.",
+        "SPECS": [
+          "Modular structure adaptable to your needs",
+          "High-resistance galvanized steel frame",
+          "Available widths: 4m to 12.8m (or custom)",
+          "Side and roof ventilation for optimal climate",
+          "Compatible with irrigation and fertigation systems",
+          "Cover: agricultural plastic, polycarbonate, or net"
+        ],
+        "FEATURES": [
+          "Modular",
+          "Galvanized Steel",
+          "Custom",
+          "Optimal Ventilation"
+        ]
+      },
+      "SERRE_TUNNEL": {
+        "NAME": "Tunnel Greenhouse",
+        "BADGE": "Economic",
+        "DESC": "The tunnel greenhouse is a simple, economic, and effective solution to protect your crops year-round. Its hoop structure covered with plastic film creates a microclimate favorable for plant growth. Easy to install and maintain, it is particularly suited for small and medium-sized farms.",
+        "SPECS": [
+          "Galvanized steel hoop structure",
+          "Available widths: 4m to 9m (or custom)",
+          "Variable height according to needs",
+          "Agricultural plastic film cover",
+          "Side ventilation system (manual or motorized)",
+          "Simple and quick assembly"
+        ],
+        "FEATURES": [
+          "Economic",
+          "Quick to Build",
+          "Optimal Microclimate",
+          "SME Adapted"
+        ]
+      },
+      "SERRE_JARDIN": {
+        "NAME": "Garden Greenhouse",
+        "BADGE": "Amateur & Pro",
+        "DESC": "The garden greenhouse is ideal for gardening enthusiasts wanting to grow plants under optimal conditions. It protects crops against bad weather, cold, and climate variations while promoting growth. Compact and aesthetic, it easily fits into any garden.",
+        "SPECS": [
+          "Lightweight aluminum or galvanized steel structure",
+          "Lengths: 2.3m to 10m",
+          "Height: 2.20 to 2.50m",
+          "Polycarbonate or plastic film",
+          "Dimensions adapted for small spaces",
+          "Access door with locking system",
+          "Good light transmission",
+          "Simple and quick assembly"
+        ],
+        "FEATURES": [
+          "Compact",
+          "Aesthetic",
+          "Lightweight",
+          "Easy to Build"
+        ]
+      },
+      "STRUCTURE_OMBRIERE": {
+        "NAME": "Shade Structure",
+        "BADGE": "UV Protection",
+        "DESC": "The shade structure is designed to protect crops against excessive sunlight and heat. Equipped with shade nets, it reduces light intensity while ensuring good air circulation. Ideal for nurseries, sensitive crops, and hot climate areas.",
+        "SPECS": [
+          "Corrosion-resistant galvanized steel structure",
+          "Shade nets available in different rates (50%, 70%)",
+          "Customizable height and dimensions (3-4m)",
+          "Length: multiple of 2m or 3m",
+          "Width: multiple of 6m or 9m",
+          "Fixed or removable installation",
+          "Good wind resistance",
+          "Adapted to different types of crops"
+        ],
+        "FEATURES": [
+          "Anti-UV",
+          "Customizable",
+          "Fixed or Mobile",
+          "Resistant"
+        ]
+      },
+      "EQUIPEMENTS_SERRES": {
+        "NAME": "Greenhouse Equipment",
+        "BADGE": "Pro Accessories",
+        "DESC": "We offer a complete range of equipment for agricultural greenhouses. Designed with materials resistant to corrosion and climatic conditions, our products ensure a reliable, durable installation adapted to all types of structures.",
+        "SPECS": [
+          "Fixing clips: secure hold of plastic film, UV resistance",
+          "Galvanized hoops: robust structure, high corrosion resistance",
+          "Clamps: solid and durable assembly of elements",
+          "Tension wire (Nylstrong): optimal hold, tensile strength",
+          "Screws and bolts: reliable fixing, long lifespan",
+          "Mounting accessories: simple and fast installation"
+        ],
+        "FEATURES": [
+          "UV Clips",
+          "Galvanized Steel",
+          "Nylstrong",
+          "Pro Screws"
+        ]
+      },
+      "PLASTIQUE_SERRE": {
+        "NAME": "Greenhouse Plastic",
+        "BADGE": "Essential",
+        "DESC": "Greenhouse plastic is an essential element to protect your crops and create an optimal environment for their development. It maintains temperature, protects against wind and rain, while letting through the light necessary for photosynthesis.",
+        "SPECS": [
+          "Materials: polyethylene (PE), polycarbonate, or UV stabilized film",
+          "Thickness: 180 to 200 microns",
+          "UV protection to extend lifespan",
+          "Transparent or diffusing depending on the crop type",
+          "Compatible with all greenhouse structures",
+          "Resistant to bad weather and temperature variations"
+        ],
+        "FEATURES": [
+          "PE / Polycarbonate",
+          "UV Stabilized",
+          "180-200 microns",
+          "Transparent/Diffusing"
+        ]
+      },
+      "SCOTCH_REPARATION": {
+        "NAME": "Plastic Repair Tape",
+        "BADGE": "Practical",
+        "DESC": "Greenhouse plastic repair tape is a practical and essential accessory to extend the life of your plastic films. It allows you to quickly repair tears, cracks, or holes in your greenhouses without having to replace the entire film.",
+        "SPECS": [
+          "Width: 7.5cm",
+          "Length: 25m roll",
+          "UV and weather resistant",
+          "Powerful adhesive compatible with polyethylene and polycarbonate",
+          "Transparent or semi-transparent",
+          "Easy to cut and apply"
+        ],
+        "FEATURES": [
+          "7.5cm x 25m",
+          "Anti-UV",
+          "Powerful Adhesive",
+          "Transparent"
+        ]
+      },
+      "TOILE_HORS_SOL": {
+        "NAME": "Ground Cover Fabric",
+        "BADGE": "Soil Protection",
+        "DESC": "Ground cover fabric is a protective covering intended to cover your crops or structures without direct contact with the soil. It offers effective protection against wind, sun, and certain pests, while promoting plant development.",
+        "SPECS": [
+          "Made with UV stabilized polypropylene",
+          "Different densities available: 90g/m², 100g/m², 110g/m²",
+          "UV and weather resistant",
+          "Available in rolls",
+          "Lightweight and easy to install",
+          "Adapted to crops on tables or soilless structures"
+        ],
+        "FEATURES": [
+          "UV Polypropylene",
+          "90-110g/m²",
+          "Rolls",
+          "Lightweight"
+        ]
+      },
+      "FILET_PROTECTION": {
+        "NAME": "Protection Net",
+        "BADGE": "Full Range",
+        "DESC": "Optimize your agricultural performance with our complete range of technical nets and professional fabrics. Our shade nets, insect-proof, and anti-hail nets offer overall protection of your crops against climatic and biological attacks.",
+        "SPECS": [
+          "Shade nets: precise regulation of sunshine and heat reduction",
+          "Insect-proof nets: effective barrier against pests with excellent ventilation",
+          "Anti-hail nets: reinforced protection against impacts and bad weather",
+          "Ground covers: optimal weed control and effective moisture management"
+        ],
+        "FEATURES": [
+          "Shade Net",
+          "Insect-Proof",
+          "Anti-Hail",
+          "Ground Cover"
+        ]
+      }
+    },
+    "CARD": {
+      "BTN_DETAILS": "Details & Specs",
+      "BTN_BACK": "Return",
+      "SPECS_TITLE": "Technical Specifications",
+      "BTN_QUOTE": "Request Quote"
+    },
+    "INSTALLATION": {
+      "LABEL": "Installation & Support",
+      "TITLE": "Need a Professional Installation?",
+      "DESC": "Our technical team supports you from the choice of materials to the installation on your farm. We handle greenhouse assembly, ventilation systems, and irrigation equipment connections.",
+      "BTN": "Request an Installation"
+    },
+    "PROCESS": {
+      "LABEL": "Commissioning",
+      "TITLE": "How Does Your Project Work?",
+      "SUBTITLE": "We do more than just deliver equipment. Feedin Green is committed to ensuring the complete operational success of your agritech investments.",
+      "STEP1_TITLE": "Product Choice",
+      "STEP1_DESC": "Select the greenhouse or equipment suitable for your crop and area.",
+      "STEP2_TITLE": "Custom Quote",
+      "STEP2_DESC": "Personalized study with dimensions, options, and installation costs.",
+      "STEP3_TITLE": "Delivery & Assembly",
+      "STEP3_DESC": "On-site delivery and installation by our qualified technical teams.",
+      "STEP4_TITLE": "After-Sales Support",
+      "STEP4_DESC": "Technical assistance, spare parts, and maintenance available.",
+      "BTN": "Schedule a Free Diagnostic"
+    },
+    "DRAWER": {
+      "BADGE": "Custom Study",
+      "TITLE": "Quote Request",
+      "DESC": "Fill out this form to receive a detailed quote on our greenhouses, structures, and agricultural equipment. Reply within 24 hours.",
+      "SELECTION_TITLE": "Your Product Selection",
+      "EMPTY_SELECTION": "No products selected. Add one to start.",
+      "QUICK_ADD": "Add other products to your quote:",
+      "FORM_TITLE": "Your Information",
+      "NAME": "Full Name",
+      "EMAIL": "Email Address",
+      "PHONE": "Phone Number",
+      "FARM_SIZE": "Agricultural Area (ha)",
+      "CITY": "City & Governorate",
+      "MESSAGE_LABEL": "Project Description (Crops, specific needs...)",
+      "MESSAGE_PLACEHOLDER": "Ex: 2 hectare tomato greenhouse, need automated regulation and soil moisture measurement.",
+      "ERR_NAME": "Full name is required (min 3 characters).",
+      "ERR_EMAIL": "Please enter a valid email address.",
+      "ERR_PHONE": "Phone number is required.",
+      "ERR_SIZE": "Must be greater than 0.1 hectare.",
+      "ERR_CITY": "This field is required.",
+      "ERR_MESSAGE": "The description must contain at least 10 characters.",
+      "BTN_SUBMIT": "Submit my Request"
+    }
   }
 }
