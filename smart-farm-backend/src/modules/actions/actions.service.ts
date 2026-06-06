@@ -3,13 +3,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { ActionLog } from '../../entities/action-log.entity';
 import { ActionDispatcherService } from '../mqtt/services/action-dispatcher.service';
+import { IsString, IsOptional, IsEnum, IsNumber, IsObject } from 'class-validator';
 
-export interface ExecuteActionDto {
+export class ExecuteActionDto {
+  @IsString()
   deviceId: string;
+
+  @IsString()
   action: string; // either 'mqtt:...' or logical action name
+
+  @IsOptional()
+  @IsString()
   actionId?: string; // Frontend-generated action ID for tracking
+
+  @IsOptional()
+  @IsEnum(['critical', 'important', 'normal'])
   actionType?: 'critical' | 'important' | 'normal'; // Action criticality level
+
+  @IsOptional()
   payload?: any;
+
+  @IsOptional()
+  @IsObject()
   context?: {
     sensorId?: string;
     sensorType?: string;
@@ -19,14 +34,35 @@ export interface ExecuteActionDto {
   };
 }
 
-export interface GetActionsQuery {
+export class GetActionsQuery {
+  @IsOptional()
   limit?: number;
+
+  @IsOptional()
   offset?: number;
+
+  @IsOptional()
+  @IsString()
   device_id?: string;
+
+  @IsOptional()
+  @IsString()
   sensor_id?: string;
+
+  @IsOptional()
+  @IsEnum(['auto', 'manual'])
   source?: 'auto' | 'manual';
+
+  @IsOptional()
+  @IsEnum(['queued', 'sent', 'ack', 'error'])
   status?: 'queued' | 'sent' | 'ack' | 'error';
+
+  @IsOptional()
+  @IsString()
   from?: string; // ISO
+
+  @IsOptional()
+  @IsString()
   to?: string;   // ISO
 }
 

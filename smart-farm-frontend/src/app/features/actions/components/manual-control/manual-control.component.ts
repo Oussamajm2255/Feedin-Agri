@@ -1622,7 +1622,7 @@ export class ManualControlComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error executing action:', error);
       this.snackBar.open(
-        this.languageService.t()('manualControl.actionFailedMessage', { actionName: this.getActionNameTranslation(action.name) }),
+        this.languageService.t()('manualControl.actionFailedMessage', { actionName: this.getActionNameTranslation(action.name), error: error.error?.message || error.message || 'Unknown error' }),
         this.languageService.t()('common.close'),
         { duration: 3000 }
       );
