@@ -31,8 +31,12 @@ WORKDIR /app
 # Copy built application
 COPY --from=builder /app/dist ./dist
 
+# Copy startup script (Railway expects /start.sh as the entrypoint)
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 # Expose the port Railway assigns via $PORT
 EXPOSE ${PORT:-8080}
 
-# Start the Angular SSR Express server
-CMD ["node", "dist/smart-farm-frontend/server/server.mjs"]
+# Railway uses /start.sh as configured in the project dashboard
+CMD ["/start.sh"]
