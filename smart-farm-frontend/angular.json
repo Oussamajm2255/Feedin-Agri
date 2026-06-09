@@ -85,8 +85,18 @@
               "canvg",
               "rgbcolor",
               "raf",
-              "core-js"
-            ]
+              "core-js",
+              "debug",
+              "xmlhttprequest-ssl"
+            ],
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {

@@ -12,8 +12,8 @@ export const routes: Routes = [
   // ================================
   {
     path: '',
-    redirectTo: '/landing',
-    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/landing/landing.component').then((m) => m.LandingComponent),
   },
   {
     path: 'landing',

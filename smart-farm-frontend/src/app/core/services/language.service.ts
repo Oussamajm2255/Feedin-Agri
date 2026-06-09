@@ -1,4 +1,5 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed, effect, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -63,7 +64,10 @@ export class LanguageService {
   ];
 
   constructor(private http: HttpClient) {
-    this.initializeLanguage();
+    // SSR-safe: only access localStorage in browser
+    if (isPlatformBrowser(inject(PLATFORM_ID))) {
+      this.initializeLanguage();
+    }
     this.loadEnglishFallback();
 
     // Enhanced reactivity effect for automatic UI updates

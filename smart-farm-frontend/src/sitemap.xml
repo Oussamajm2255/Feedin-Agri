@@ -2,71 +2,112 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Landing Page (Home) — Highest Priority -->
+  <!-- Landing / Home — Highest Priority -->
   <url>
-    <loc>https://feedingreen.com/landing</loc>
-    <lastmod>2026-03-28</lastmod>
+    <loc>https://feedingreen.com/</loc>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/landing" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/landing" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/landing" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/landing" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/" />
   </url>
 
   <!-- About Page -->
   <url>
     <loc>https://feedingreen.com/about</loc>
-    <lastmod>2026-03-28</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/about" />
     <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/about" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/about" />
   </url>
 
   <!-- Services Page -->
   <url>
     <loc>https://feedingreen.com/services</loc>
-    <lastmod>2026-03-28</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/services" />
     <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/services" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/services" />
   </url>
 
   <!-- Solutions Page -->
   <url>
     <loc>https://feedingreen.com/solutions</loc>
-    <lastmod>2026-03-28</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/solutions" />
     <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/solutions" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/solutions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/solutions" />
   </url>
 
   <!-- Formation Page -->
   <url>
     <loc>https://feedingreen.com/formation</loc>
-    <lastmod>2026-03-28</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/formation" />
     <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/formation" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/formation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/formation" />
+  </url>
+
+  <!-- Projects Page -->
+  <url>
+    <loc>https://feedingreen.com/projets</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/projets" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/projets" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/projets" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/projets" />
   </url>
 
   <!-- Contact Page -->
   <url>
     <loc>https://feedingreen.com/contact</loc>
-    <lastmod>2026-03-28</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/contact" />
     <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/contact" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/contact" />
+  </url>
+
+  <!-- Store Page -->
+  <url>
+    <loc>https://feedingreen.com/store</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/store" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/store" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/store" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/store" />
+  </url>
+
+  <!-- Login Page -->
+  <url>
+    <loc>https://feedingreen.com/login</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feedingreen.com/login" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feedingreen.com/login" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feedingreen.com/login" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feedingreen.com/login" />
   </url>
 
 </urlset>

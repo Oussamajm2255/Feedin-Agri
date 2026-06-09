@@ -30,6 +30,7 @@ import { GlobalErrorHandler }   from './core/services/global-error-handler.servi
 import { AlertService }         from './core/services/alert.service';
 import { MatSnackBar }          from '@angular/material/snack-bar';
 import { AlertSnackBarAdapter } from './core/services/alert-snackbar-adapter.service';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 /**
  * ─── Interceptor Execution Order ─────────────────────────────────────────────
@@ -112,6 +113,6 @@ export const appConfig: ApplicationConfig = {
       useFactory: (alertService: AlertService) =>
         new AlertSnackBarAdapter(alertService) as any,
       deps: [AlertService],
-    },
+    }, provideClientHydration(withEventReplay()),
   ],
 };

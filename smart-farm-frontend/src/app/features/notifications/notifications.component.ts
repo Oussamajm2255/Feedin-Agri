@@ -675,7 +675,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   private lastRefreshTime = signal<Date | null>(null);
 
   // Search debouncing
-  private searchTimeout?: number;
+  private searchTimeout?: ReturnType<typeof setTimeout>;
 
   // Time update signal to prevent ExpressionChangedAfterItHasBeenCheckedError
   private currentTime = signal<Date>(new Date());
