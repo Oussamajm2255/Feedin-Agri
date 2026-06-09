@@ -58,12 +58,16 @@
       <div class="hero-right">
         <div class="hero-image-wrapper">
           <div class="hero-image-glow"></div>
-          <img 
-            src="assets/images/greenhouse.jpg" 
-            alt="Serres et Solutions Agricoles Feedin Green"
-            class="hero-premium-img"
-            fetchpriority="high"
-          >
+          <picture>
+            <source srcset="assets/images/greenhouse.webp" type="image/webp" />
+            <img 
+              src="assets/images/greenhouse.jpg" 
+              alt="Serres et Solutions Agricoles Feedin Green"
+              class="hero-premium-img"
+              fetchpriority="high"
+              decoding="async"
+            >
+          </picture>
           <div class="hero-image-overlay"></div>
         </div>
       </div>
@@ -131,6 +135,7 @@
                       [alt]="prod.name"
                       class="product-real-img"
                       loading="lazy"
+                      decoding="async"
                     >
                   </div>
                   

@@ -24,7 +24,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ThreeSceneService } from '../../3d/services/three-scene.service';
 import { ScrollAnimationService } from '../../animations/services/scroll-animation.service';
-import { ImmersiveHeroScene } from './hero-canvas-scene';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
@@ -1223,7 +1222,7 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
 
   theme = toSignal(this.themeService.theme$);
 
-  private heroScene: ImmersiveHeroScene | null = null;
+  private heroScene: any = null;
   private scrollUnsubscribe: (() => void) | null = null;
 
   // Stored handler references for proper cleanup
@@ -1347,8 +1346,9 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
     if (!initResult) return;
     const { scene } = initResult;
 
-    // Dynamically import THREE to pass to ImmersiveHeroScene
+    // Dynamically import THREE + ImmersiveHeroScene to keep main bundle lean
     const THREE = await import('three');
+    const { ImmersiveHeroScene } = await import('./hero-canvas-scene');
 
     // Initialize immersive scene with particles
     this.heroScene = new ImmersiveHeroScene(scene, THREE);

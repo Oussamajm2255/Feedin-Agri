@@ -8,12 +8,20 @@
     background: var(--light-bg);
 
     // Performance: skip rendering work for offscreen sections
-    // Note: content-visibility removed as it causes layout sizing bugs
-    // on viewport resize (mobile to desktop). Performance is handled by @defer.
+    // Uses content-visibility with intrinsic size to prevent layout shift.
     app-a-propos,
     app-valeur-agricole,
-    app-cta-final {
+    app-landing-news,
+    app-cta-final,
+    app-landing-footer {
         display: block;
+        content-visibility: auto;
+        contain-intrinsic-size: 600px; /* estimated height prevents CLS */
+        
+        /* Override intrinsic size for footer which is shorter */
+        &:last-child {
+            contain-intrinsic-size: 400px;
+        }
     }
 }
 

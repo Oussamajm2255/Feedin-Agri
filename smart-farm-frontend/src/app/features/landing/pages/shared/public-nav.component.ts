@@ -663,6 +663,13 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         background: rgba(0, 0, 0, 0.15);
       }
 
+      .mobile-panel {
+        will-change: transform, opacity;
+      }
+      .mob-link {
+        will-change: transform, opacity;
+      }
+
       @keyframes panelSlideIn {
         from {
           opacity: 0;
@@ -919,6 +926,16 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         }
       }
 
+      /* Mobile — reduced backdrop-filter for performance */
+      @media (max-width: 1023px) {
+        .nav-inner {
+          backdrop-filter: blur(8px);
+        }
+        .mobile-panel {
+          backdrop-filter: blur(12px);
+        }
+      }
+
       /* Small Mobile Tweaks (< 380px) */
       @media (max-width: 380px) {
         .brand-text {
@@ -985,10 +1002,18 @@ export class PublicNavComponent implements OnInit, OnDestroy {
     }
   };
 
+  private resizeRaf: number | null = null;
+
   private resizeHandler = () => {
-    if (window.innerWidth >= 1024 && this.mobileOpen()) {
-      this.ngZone.run(() => this.mobileOpen.set(false));
+    if (this.resizeRaf !== null) {
+      cancelAnimationFrame(this.resizeRaf);
     }
+    this.resizeRaf = requestAnimationFrame(() => {
+      if (window.innerWidth >= 1024 && this.mobileOpen()) {
+        this.ngZone.run(() => this.mobileOpen.set(false));
+      }
+      this.resizeRaf = null;
+    });
   };
 
   private previousTheme: any = null;

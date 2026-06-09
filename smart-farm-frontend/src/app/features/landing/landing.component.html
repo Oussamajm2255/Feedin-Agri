@@ -9,8 +9,10 @@
     <!-- 1. Hero -->
     <app-hero-section id="hero-section" />
 
-    <!-- Partner Trust Carousel — eagerly loaded trust element -->
+    <!-- Partner Trust Carousel — deferred until browser is idle -->
+    @defer (on idle) {
     <app-partner-carousel id="partner-section" />
+    }
 
     <!-- The Bento Grid Ecosystem Section (Eagerly loaded for zero-gap experience) -->
     <app-landing-bento-section id="bento-section"></app-landing-bento-section>

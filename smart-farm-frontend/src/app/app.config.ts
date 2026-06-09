@@ -7,10 +7,10 @@ import {
 import {
   provideRouter,
   withPreloading,
-  PreloadAllModules,
   withInMemoryScrolling,
   withComponentInputBinding,
 } from '@angular/router';
+import { SelectivePreloadStrategy } from './core/services/selective-preload.strategy';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
@@ -72,7 +72,7 @@ export const appConfig: ApplicationConfig = {
     // ✅ Router features
     provideRouter(
       routes,
-      withPreloading(PreloadAllModules),       // Pre-fetch lazy chunks after initial load
+      withPreloading(SelectivePreloadStrategy),  // Selective preload — landing pages first, admin deferred
       withInMemoryScrolling({
         scrollPositionRestoration: 'top',  // Always start at top on new navigation
         anchorScrolling: 'enabled',            // Support #anchor links
