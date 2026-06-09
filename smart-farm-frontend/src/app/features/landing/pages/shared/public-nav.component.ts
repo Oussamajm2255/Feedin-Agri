@@ -986,8 +986,8 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         }
       }
 
-      /* Small Mobile Tweaks (< 380px) */
-      @media (max-width: 380px) {
+      /* Small Mobile Tweaks (< 420px) */
+      @media (max-width: 420px) {
         .brand-text {
           display: none;
         }
