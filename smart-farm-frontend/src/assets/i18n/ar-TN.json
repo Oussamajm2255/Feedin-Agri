@@ -3975,249 +3975,249 @@
   },
   "store": {
     "HERO": {
-      "BADGE": "Boutique Agricole Feedin Green",
-      "TITLE": "Agriculture intelligente & <span class=\"accent-text\">systèmes innovants</span>",
-      "SUBTITLE": "Nous concevons et déployons des solutions agricoles avancées intégrant la culture hors sol, les systèmes verticaux et les technologies intelligentes pour optimiser la production.",
-      "BTN_QUOTE": "Demander un Devis",
-      "BTN_SOLUTIONS": "Découvrir nos Solutions",
-      "TRUST_1": "Matériel Garanti 2 Ans",
-      "TRUST_2": "Support Réactif 24/7",
-      "TRUST_3": "Installation Incluse"
+      "BADGE": "متجر فيدين غرين الزراعي",
+      "TITLE": "زراعة ذكية <span class=\"accent-text\">وأنظمة مبتكرة</span>",
+      "SUBTITLE": "نقوم بتصميم ونشر حلول زراعية متطورة تجمع بين الزراعة بدون تربة والأنظمة العمودية والتقنيات الذكية لتحسين الإنتاج.",
+      "BTN_QUOTE": "طلب عرض سعر",
+      "BTN_SOLUTIONS": "اكتشف حلولنا",
+      "TRUST_1": "معدات مضمونة لمدة سنتين",
+      "TRUST_2": "دعم فوري 24/7",
+      "TRUST_3": "التركيب مشمول"
     },
     "INTRO": {
-      "LABEL": "Conception Durable",
-      "TITLE": "Des Solutions Adaptées au Terrain Tunisien",
-      "SUBTITLE": "De la serre tunnel à l'ombrière, en passant par le plastique agricole et les équipements de fixation, nous fournissons tout le matériel nécessaire pour protéger et optimiser vos cultures dans les conditions climatiques locales."
+      "LABEL": "تصميم مستدام",
+      "TITLE": "حلول مناسبة للأراضي التونسية",
+      "SUBTITLE": "من البيوت البلاستيكية النفقية إلى المظلات، مروراً بالأغطية البلاستيكية الزراعية ومعدات التثبيت، نوفر كل المواد اللازمة لحماية وتحسين محاصيلكم في الظروف المناخية المحلية."
     },
     "CATEGORIES": {
-      "all": "Tous les produits",
-      "serres": "Serres & Structures",
-      "materiaux": "Matériaux de couverture",
-      "accessoires": "Équipements & Accessoires"
+      "all": "جميع المنتجات",
+      "serres": "البيوت البلاستيكية والهياكل",
+      "materiaux": "مواد التغطية",
+      "accessoires": "المعدات والملحقات"
     },
     "PRODUCTS": {
       "SERRE_MULTI_CHAPELLE": {
-        "NAME": "Serre Multi Chapelle",
-        "BADGE": "Structure Pro",
-        "DESC": "C'est une serre composée de plusieurs chapelles accolées. Grâce à sa structure robuste en acier galvanisé et à sa couverture en film plastique ou polycarbonate, elle garantit une excellente résistance aux conditions climatiques (vent, pluie, chaleur). Elle permet également de créer un environnement contrôlé, idéal pour maximiser le rendement agricole tout au long de l'année.",
+        "NAME": "بيت بلاستيكي متعدد الأقبية",
+        "BADGE": "هيكل احترافي",
+        "DESC": "هو بيت بلاستيكي يتكون من عدة أقبية ملتصقة. بفضل هيكله القوي من الفولاذ المجلفن وتغطيته بالفيلم البلاستيكي أو البولي كربونات، يضمن مقاومة ممتازة للظروف المناخية (الرياح، الأمطار، الحرارة). كما يتيح خلق بيئة محكومة، مثالية لتعظيم الإنتاج الزراعي على مدار السنة.",
         "SPECS": [
-          "Structure modulaire adaptable selon vos besoins",
-          "Ossature en acier galvanisé haute résistance",
-          "Largeurs disponibles : 4m à 12,8m (ou plus sur mesure)",
-          "Ventilation latérale et zénithale pour un climat optimal",
-          "Compatible avec systèmes d'irrigation et de fertigation",
-          "Couverture : plastique agricole, polycarbonate ou filet"
+          "هيكل معياري قابل للتكيف حسب احتياجاتك",
+          "هيكل من الفولاذ المجلفن عالي المقاومة",
+          "العرض المتاح : من 4م إلى 12.8م (أو أكثر حسب الطلب)",
+          "تهوية جانبية وعلوية لمناخ مثالي",
+          "متوافق مع أنظمة الري والتسميد",
+          "التغطية : بلاستيك زراعي، بولي كربونات أو شبك"
         ],
         "FEATURES": [
-          "Modulaire",
-          "Acier Galvanisé",
-          "Sur Mesure",
-          "Ventilation Optimale"
+          "معياري",
+          "فولاذ مجلفن",
+          "حسب الطلب",
+          "تهوية مثالية"
         ]
       },
       "SERRE_TUNNEL": {
-        "NAME": "Serre Tunnel",
-        "BADGE": "Économique",
-        "DESC": "La serre tunnel est une solution simple, économique et efficace pour protéger vos cultures tout au long de l'année. Sa structure en arceaux recouverts de film plastique permet de créer un microclimat favorable à la croissance des plantes. Facile à installer et à entretenir, elle est particulièrement adaptée aux exploitations agricoles de petite et moyenne taille.",
+        "NAME": "بيت بلاستيكي نفقي",
+        "BADGE": "اقتصادي",
+        "DESC": "البيت البلاستيكي النفقي هو حل بسيط واقتصادي وفعال لحماية محاصيلكم على مدار السنة. هيكله المقوس المغطى بالفيلم البلاستيكي يتيح خلق مناخ محلي مناسب لنمو النباتات. سهل التركيب والصيانة، وهو مناسب بشكل خاص للمزارع الصغيرة والمتوسطة.",
         "SPECS": [
-          "Structure en arceaux en acier galvanisé",
-          "Largeurs disponibles : 4m à 9m (ou sur mesure)",
-          "Hauteur variable selon les besoins",
-          "Couverture en film plastique agricole",
-          "Système de ventilation latérale (manuelle ou motorisée)",
-          "Montage simple et rapide"
+          "هيكل مقوس من الفولاذ المجلفن",
+          "العرض المتاح : من 4م إلى 9م (أو حسب الطلب)",
+          "ارتفاع متغير حسب الاحتياجات",
+          "تغطية بفيلم بلاستيكي زراعي",
+          "نظام تهوية جانبي (يدوي أو آلي)",
+          "تركيب بسيط وسريع"
         ],
         "FEATURES": [
-          "Économique",
-          "Rapide à Monter",
-          "Microclimat Optimal",
-          "PME Adaptée"
+          "اقتصادي",
+          "سريع التركيب",
+          "مناخ محلي مثالي",
+          "مناسب للصغار والمتوسطين"
         ]
       },
       "SERRE_JARDIN": {
-        "NAME": "Serre Jardin",
-        "BADGE": "Amateur & Pro",
-        "DESC": "La serre de jardin est idéale pour les amateurs de jardinage souhaitant cultiver leurs plantes dans des conditions optimales. Elle permet de protéger les cultures contre les intempéries, le froid et les variations climatiques tout en favorisant leur croissance. Compacte et esthétique, elle s'intègre facilement dans tout type de jardin.",
+        "NAME": "بيت بلاستيكي للحديقة",
+        "BADGE": "هواة ومحترفين",
+        "DESC": "البيت البلاستيكي للحديقة مثالي لهواة البستنة الراغبين في زراعة نباتاتهم في ظروف مثالية. يتيح حماية المحاصيل من العوامل الجوية والبرد وتقلبات المناخ مع تعزيز نموها. مدمج وجميل، يندمج بسهولة في أي نوع من الحدائق.",
         "SPECS": [
-          "Structure légère en aluminium ou acier galvanisé",
-          "Longueurs : de 2.3m à 10m",
-          "Hauteur de la serre : 2.20 à 2.50m",
-          "En polycarbonate ou film plastique",
-          "Dimensions adaptées aux petits espaces",
-          "Porte d'accès avec système de fermeture",
-          "Bonne transmission de la lumière",
-          "Montage simple et rapide"
+          "هيكل خفيف من الألومنيوم أو الفولاذ المجلفن",
+          "الأطوال : من 2.3م إلى 10م",
+          "ارتفاع البيت البلاستيكي : 2.20 إلى 2.50م",
+          "من البولي كربونات أو الفيلم البلاستيكي",
+          "مقاسات مناسبة للمساحات الصغيرة",
+          "باب دخول مع نظام إغلاق",
+          "نفاذية جيدة للضوء",
+          "تركيب بسيط وسريع"
         ],
         "FEATURES": [
-          "Compacte",
-          "Esthétique",
-          "Légère",
-          "Facile à Monter"
+          "مدمج",
+          "جميل",
+          "خفيف",
+          "سهل التركيب"
         ]
       },
       "STRUCTURE_OMBRIERE": {
-        "NAME": "Structure Ombrière",
-        "BADGE": "Protection UV",
-        "DESC": "La structure ombrière est conçue pour protéger les cultures contre l'excès d'ensoleillement et les fortes chaleurs. Équipée de filets d'ombrage, elle permet de réduire l'intensité lumineuse tout en assurant une bonne circulation de l'air. Idéale pour les pépinières, les cultures sensibles et les zones à climat chaud.",
+        "NAME": "هيكل مظلة",
+        "BADGE": "حماية من الأشعة فوق البنفسجية",
+        "DESC": "هيكل المظلة مصمم لحماية المحاصيل من أشعة الشمس الزائدة والحرارة الشديدة. مزود بشبكات تظليل، يتيح تقليل شدة الإضاءة مع ضمان دوران جيد للهواء. مثالي للمشاتل والمحاصيل الحساسة والمناطق ذات المناخ الحار.",
         "SPECS": [
-          "Structure en acier galvanisé résistante à la corrosion",
-          "Filets d'ombrage disponibles en différents taux (50%, 70%)",
-          "Hauteur et dimensions personnalisables (3-4m)",
-          "Longueur : multiple de 2m ou 3m",
-          "Largeur : multiple de 6m ou 9m",
-          "Installation fixe ou démontable",
-          "Bonne résistance au vent et aux conditions extérieures",
-          "Adaptée à différents types de cultures"
+          "هيكل من الفولاذ المجلفن مقاوم للتآكل",
+          "شبكات تظليل متوفرة بنسب مختلفة (50%، 70%)",
+          "ارتفاع ومقاسات قابلة للتخصيص (3-4م)",
+          "الطول : مضاعف 2م أو 3م",
+          "العرض : مضاعف 6م أو 9م",
+          "تركيب ثابت أو قابل للفك",
+          "مقاومة جيدة للرياح والظروف الخارجية",
+          "مناسبة لأنواع مختلفة من المحاصيل"
         ],
         "FEATURES": [
-          "Anti-UV",
-          "Personnalisable",
-          "Fixe ou Mobile",
-          "Résistante"
+          "مضاد للأشعة فوق البنفسجية",
+          "قابل للتخصيص",
+          "ثابت أو متحرك",
+          "مقاوم"
         ]
       },
       "EQUIPEMENTS_SERRES": {
-        "NAME": "Équipements des Serres",
-        "BADGE": "Accessoires Pro",
-        "DESC": "Nous proposons une gamme complète d'équipements pour serres agricoles. Conçus avec des matériaux résistants à la corrosion et aux conditions climatiques, nos produits assurent une installation fiable, durable et adaptée à tous types de structures, garantissant la stabilité et la performance optimale de votre serre.",
+        "NAME": "معدات البيوت البلاستيكية",
+        "BADGE": "ملحقات احترافية",
+        "DESC": "نقدم مجموعة كاملة من معدات البيوت البلاستيكية الزراعية. مصممة بمواد مقاومة للتآكل والظروف المناخية، تضمن منتجاتنا تركيباً موثوقاً ومتيناً ومناسباً لجميع أنواع الهياكل، مما يضمن ثبات وأداء مثالياً لبيتك البلاستيكي.",
         "SPECS": [
-          "Clips de fixation : maintien sécurisé du film plastique, résistance aux UV",
-          "Arceaux galvanisés : structure robuste, haute résistance à la corrosion",
-          "Colliers de serrage : assemblage solide et durable des éléments",
-          "Fil de tension (Nylstrong) : maintien optimal de la bâche, résistance à la traction",
-          "Visserie et boulonnerie : fixation fiable, longue durée de vie",
-          "Accessoires de montage : installation simple et rapide"
+          "مشابك تثبيت : تثبيت آمن للفيلم البلاستيكي، مقاومة للأشعة فوق البنفسجية",
+          "أقواس مجلفنة : هيكل قوي، مقاومة عالية للتآكل",
+          "مشابك ربط : تجميع متين ودائم للعناصر",
+          "سلك شد (Nylstrong) : تثبيت مثالي للغطاء، مقاومة للشد",
+          "مسامير وبراغي : تثبيت موثوق، عمر طويل",
+          "ملحقات التركيب : تركيب بسيط وسريع"
         ],
         "FEATURES": [
-          "Clips UV",
-          "Acier Galvanisé",
+          "مشابك مقاومة للأشعة فوق البنفسجية",
+          "فولاذ مجلفن",
           "Nylstrong",
-          "Visserie Pro"
+          "مسامير احترافية"
         ]
       },
       "PLASTIQUE_SERRE": {
-        "NAME": "Plastique de Serre",
-        "BADGE": "Indispensable",
-        "DESC": "Le plastique de serre est un élément indispensable pour protéger vos cultures et créer un environnement optimal pour leur développement. Il permet de maintenir la température, de protéger contre le vent et la pluie, tout en laissant passer la lumière nécessaire à la photosynthèse.",
+        "NAME": "بلاستيك البيوت البلاستيكية",
+        "BADGE": "أساسي",
+        "DESC": "بلاستيك البيت البلاستيكي عنصر أساسي لحماية محاصيلكم وخلق بيئة مثالية لنموها. يتيح الحفاظ على درجة الحرارة، والحماية من الرياح والأمطار، مع السماح بمرور الضوء اللازم لعملية التمثيل الضوئي.",
         "SPECS": [
-          "Matériaux : polyéthylène (PE), polycarbonate ou film UV stabilisé",
-          "Épaisseur : 180 à 200 microns",
-          "Protection UV pour prolonger la durée de vie",
-          "Transparent ou diffusant selon le type de culture",
-          "Compatible avec toutes les structures de serre",
-          "Résistant aux intempéries et aux variations de température"
+          "المواد : بولي إيثيلين (PE)، بولي كربونات أو فيلم مثبت ضد الأشعة فوق البنفسجية",
+          "السمك : 180 إلى 200 ميكرون",
+          "حماية من الأشعة فوق البنفسجية لإطالة العمر الافتراضي",
+          "شفاف أو ناشر حسب نوع المحصول",
+          "متوافق مع جميع هياكل البيوت البلاستيكية",
+          "مقاوم للعوامل الجوية وتغيرات درجات الحرارة"
         ],
         "FEATURES": [
-          "PE / Polycarbonate",
-          "UV Stabilisé",
-          "180-200 microns",
-          "Transparent/Diffusant"
+          "PE / بولي كربونات",
+          "مثبت ضد الأشعة فوق البنفسجية",
+          "180-200 ميكرون",
+          "شفاف/ناشر"
         ]
       },
       "SCOTCH_REPARATION": {
-        "NAME": "Scotch Réparation Plastique",
-        "BADGE": "Pratique",
-        "DESC": "Le scotch pour réparation de plastique de serre est un accessoire pratique et indispensable pour prolonger la durée de vie de vos films plastiques. Il permet de réparer rapidement les déchirures, fissures ou trous dans vos serres sans avoir à remplacer tout le film.",
+        "NAME": "شريط إصلاح البلاستيك",
+        "BADGE": "عملي",
+        "DESC": "شريط إصلاح بلاستيك البيت البلاستيكي هو ملحق عملي وأساسي لإطالة عمر الأفلام البلاستيكية. يتيح إصلاح التمزقات والشقوق والثقوب في البيوت البلاستيكية بسرعة دون الحاجة لاستبدال الفيلم بأكمله.",
         "SPECS": [
-          "Largeur : 7.5cm",
-          "Longueur : rouleau de 25m",
-          "Résistant aux UV et aux intempéries",
-          "Adhésif puissant compatible avec polyéthylène et polycarbonate",
-          "Transparent ou semi-transparent pour ne pas réduire la lumière",
-          "Facile à découper et à appliquer"
+          "العرض : 7.5سم",
+          "الطول : لفة 25م",
+          "مقاوم للأشعة فوق البنفسجية والعوامل الجوية",
+          "لاصق قوي متوافق مع البولي إيثيلين والبولي كربونات",
+          "شفاف أو نصف شفاف لعدم تقليل الضوء",
+          "سهل القص والتطبيق"
         ],
         "FEATURES": [
-          "7.5cm x 25m",
-          "Anti-UV",
-          "Adhésif Puissant",
-          "Transparent"
+          "7.5سم × 25م",
+          "مضاد للأشعة فوق البنفسجية",
+          "لاصق قوي",
+          "شفاف"
         ]
       },
       "TOILE_HORS_SOL": {
-        "NAME": "La Toile Hors Sol",
-        "BADGE": "Protection Sol",
-        "DESC": "La toile hors sol est un revêtement protecteur destiné à couvrir vos cultures, planches ou structures agricoles sans contact direct avec le sol. Elle offre une protection efficace contre le vent, le soleil et certains nuisibles, tout en favorisant le développement des plantes dans un environnement contrôlé.",
+        "NAME": "الغطاء الأرضي",
+        "BADGE": "حماية التربة",
+        "DESC": "الغطاء الأرضي عبارة عن طبقة واقية تُستخدم لتغطية المحاصيل أو الأحواض أو الهياكل الزراعية دون ملامسة مباشرة للتربة. يوفر حماية فعالة من الرياح والشمس وبعض الآفات، مع تعزيز نمو النباتات في بيئة محكومة.",
         "SPECS": [
-          "Réalisée avec du polypropylène stabilisé au UV",
-          "Différentes densités disponibles : 90g/m², 100g/m², 110g/m²",
-          "Résistant aux UV et aux intempéries",
-          "Disponible en rouleaux",
-          "Léger et facile à installer",
-          "Adapté aux cultures sur tables, bacs ou structures hors sol"
+          "مصنوع من مادة البولي بروبيلين المثبتة ضد الأشعة فوق البنفسجية",
+          "كثافات مختلفة متوفرة : 90غ/م²، 100غ/م²، 110غ/م²",
+          "مقاوم للأشعة فوق البنفسجية والعوامل الجوية",
+          "متوفر على شكل لفائف",
+          "خفيف وسهل التركيب",
+          "مناسب للزراعة على الطاولات والأحواض أو الهياكل خارج التربة"
         ],
         "FEATURES": [
-          "Polypropylène UV",
-          "90-110g/m²",
-          "Rouleaux",
-          "Léger"
+          "بولي بروبيلين مقاوم للأشعة فوق البنفسجية",
+          "90-110غ/م²",
+          "لفائف",
+          "خفيف"
         ]
       },
       "FILET_PROTECTION": {
-        "NAME": "Filet de Protection",
-        "BADGE": "Gamme Complète",
-        "DESC": "Optimisez vos performances agricoles avec notre gamme complète de filets techniques et toiles professionnelles. Nos filets ombrières, insect-proof et anti-grêle, ainsi que nos toiles hors sol, offrent une protection globale de vos cultures contre les agressions climatiques et biologiques.",
+        "NAME": "شباك الحماية",
+        "BADGE": "مجموعة كاملة",
+        "DESC": "حسّن أداءك الزراعي مع مجموعتنا الكاملة من الشبكات التقنية والأغطية المهنية. شبكات التظليل والحشرات ومكافحة البرد، بالإضافة إلى الأغطية الأرضية، توفر حماية شاملة لمحاصيلكم من العوامل المناخية والبيولوجية.",
         "SPECS": [
-          "Filets ombrières : régulation précise de l'ensoleillement et réduction de la chaleur",
-          "Filets insect-proof : barrière efficace contre les insectes nuisibles avec excellente ventilation",
-          "Filets anti-grêle : protection renforcée contre les impacts et intempéries",
-          "Toiles hors sol : contrôle optimal des adventices et gestion efficace de l'humidité"
+          "شبكات تظليل : تنظيم دقيق لأشعة الشمس وتقليل الحرارة",
+          "شبكات مانعة للحشرات : حاجز فعال ضد الحشرات الضارة مع تهوية ممتازة",
+          "شبكات مكافحة البرد : حماية معززة ضد الصدمات والعوامل الجوية",
+          "أغطية أرضية : تحكم مثالي في الأعشاب الضارة وإدارة فعالة للرطوبة"
         ],
         "FEATURES": [
-          "Ombrière",
-          "Insect-Proof",
-          "Anti-Grêle",
-          "Hors Sol"
+          "تظليل",
+          "مانع للحشرات",
+          "مكافحة البرد",
+          "غطاء أرضي"
         ]
       }
     },
     "CARD": {
-      "BTN_DETAILS": "Détails & Specs",
-      "BTN_BACK": "Retour",
-      "SPECS_TITLE": "Spécifications Techniques",
-      "BTN_QUOTE": "Demander Devis"
+      "BTN_DETAILS": "التفاصيل والمواصفات",
+      "BTN_BACK": "رجوع",
+      "SPECS_TITLE": "المواصفات الفنية",
+      "BTN_QUOTE": "طلب عرض سعر"
     },
     "INSTALLATION": {
-      "LABEL": "Installation & Support",
-      "TITLE": "Besoin d'une Installation Professionnelle ?",
-      "DESC": "Notre équipe technique tunisienne vous accompagne du choix des matériaux à l'installation sur votre exploitation. Nous assurons le montage des serres, la mise en place des systèmes de ventilation et le raccordement des équipements d'irrigation.",
-      "BTN": "Demander une Installation"
+      "LABEL": "التركيب والدعم",
+      "TITLE": "هل تحتاج إلى تركيب احترافي؟",
+      "DESC": "فريقنا الفني التونسي يرافقكم من اختيار المواد إلى التركيب في مزرعتكم. نضمن تركيب البيوت البلاستيكية، ووضع أنظمة التهوية وتوصيل معدات الري.",
+      "BTN": "طلب تركيب"
     },
     "PROCESS": {
-      "LABEL": "Mise en Service",
-      "TITLE": "Comment se Déroule Votre Projet ?",
-      "SUBTITLE": "Nous ne nous contentons pas de livrer du matériel. Feedin Green s'engage à assurer la réussite opérationnelle complète de vos investissements agritech.",
-      "STEP1_TITLE": "Choix du Produit",
-      "STEP1_DESC": "Sélectionnez la serre ou le matériel adapté à votre culture et surface.",
-      "STEP2_TITLE": "Devis Sur Mesure",
-      "STEP2_DESC": "Étude personnalisée avec dimensions, options et coût d'installation.",
-      "STEP3_TITLE": "Livraison & Montage",
-      "STEP3_DESC": "Livraison sur site et installation par nos équipes techniques qualifiées.",
-      "STEP4_TITLE": "Support Après-Vente",
-      "STEP4_DESC": "Assistance technique, pièces de rechange et maintenance disponibles.",
-      "BTN": "Planifier un Diagnostic Gratuit"
+      "LABEL": "مراحل التنفيذ",
+      "TITLE": "كيف يتم تنفيذ مشروعكم؟",
+      "SUBTITLE": "لا نكتفي بتسليم المعدات. فيدين غرين تلتزم بضمان النجاح التشغيلي الكامل لاستثماراتكم في التكنولوجيا الزراعية.",
+      "STEP1_TITLE": "اختيار المنتج",
+      "STEP1_DESC": "اختر البيت البلاستيكي أو المعدات المناسبة لمحصولك ومساحتك.",
+      "STEP2_TITLE": "عرض سعر مخصص",
+      "STEP2_DESC": "دراسة مخصصة مع المقاسات والخيارات وتكلفة التركيب.",
+      "STEP3_TITLE": "التسليم والتركيب",
+      "STEP3_DESC": "تسليم في الموقع وتركيب بواسطة فرقنا الفنية المؤهلة.",
+      "STEP4_TITLE": "دعم ما بعد البيع",
+      "STEP4_DESC": "مساعدة فنية وقطع غيار وصيانة متوفرة.",
+      "BTN": "جدولة تشخيص مجاني"
     },
     "DRAWER": {
-      "BADGE": "Étude Personnalisée",
-      "TITLE": "Demande de Devis",
-      "DESC": "Remplissez ce formulaire pour recevoir un devis détaillé sur nos serres, structures et équipements agricoles. Réponse sous 24h.",
-      "SELECTION_TITLE": "Votre Sélection de Produits",
-      "EMPTY_SELECTION": "Aucun produit sélectionné. Ajoutez-en un pour commencer.",
-      "QUICK_ADD": "Ajouter d'autres produits à votre devis :",
-      "FORM_TITLE": "Vos Informations",
-      "NAME": "Nom & Prénom",
-      "EMAIL": "Adresse E-mail",
-      "PHONE": "Numéro de Téléphone",
-      "FARM_SIZE": "Surface Agricole (ha)",
-      "CITY": "Ville & Gouvernorat",
-      "MESSAGE_LABEL": "Description de votre projet (Cultures, besoins spécifiques...)",
-      "MESSAGE_PLACEHOLDER": "Ex: Serre de tomates sous abri de 2 hectares, besoin de régulation automatisée et mesure d'humidité du sol.",
-      "ERR_NAME": "Le nom complet est obligatoire (min 3 caractères).",
-      "ERR_EMAIL": "Veuillez entrer une adresse e-mail valide.",
-      "ERR_PHONE": "Le numéro de téléphone est obligatoire.",
-      "ERR_SIZE": "Supérieur à 0.1 hectare.",
-      "ERR_CITY": "Ce champ est obligatoire.",
-      "ERR_MESSAGE": "La description doit contenir au moins 10 caractères.",
-      "BTN_SUBMIT": "Soumettre ma Demande"
+      "BADGE": "دراسة مخصصة",
+      "TITLE": "طلب عرض سعر",
+      "DESC": "املأ هذا النموذج للحصول على عرض سعر مفصل حول بيوتنا البلاستيكية وهياكلنا ومعداتنا الزراعية. الرد خلال 24 ساعة.",
+      "SELECTION_TITLE": "اختيارك من المنتجات",
+      "EMPTY_SELECTION": "لم يتم اختيار أي منتج. أضف منتجاً للبدء.",
+      "QUICK_ADD": "أضف منتجات أخرى إلى عرض السعر الخاص بك:",
+      "FORM_TITLE": "معلوماتك",
+      "NAME": "الاسم واللقب",
+      "EMAIL": "البريد الإلكتروني",
+      "PHONE": "رقم الهاتف",
+      "FARM_SIZE": "المساحة الزراعية (هكتار)",
+      "CITY": "المدينة والولاية",
+      "MESSAGE_LABEL": "وصف مشروعك (المحاصيل، الاحتياجات الخاصة...)",
+      "MESSAGE_PLACEHOLDER": "مثال: بيت بلاستيكي للطماطم على مساحة 2 هكتار، مع حاجة للتحكم الآلي وقياس رطوبة التربة.",
+      "ERR_NAME": "الاسم الكامل إلزامي (3 أحرف على الأقل).",
+      "ERR_EMAIL": "يرجى إدخال بريد إلكتروني صالح.",
+      "ERR_PHONE": "رقم الهاتف إلزامي.",
+      "ERR_SIZE": "أكبر من 0.1 هكتار.",
+      "ERR_CITY": "هذا الحقل إلزامي.",
+      "ERR_MESSAGE": "يجب أن يحتوي الوصف على 10 أحرف على الأقل.",
+      "BTN_SUBMIT": "إرسال طلبي"
     }
   }
 }
