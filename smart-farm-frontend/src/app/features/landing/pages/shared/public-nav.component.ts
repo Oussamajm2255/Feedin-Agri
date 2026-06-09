@@ -926,6 +926,56 @@ import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
         }
       }
 
+      /* ================================
+       COMPACT DESKTOP (1024px — 1200px)
+       Tighter spacing for medium screens.
+       ================================ */
+      @media (min-width: 1024px) and (max-width: 1200px) {
+        .nav-inner {
+          padding: 0.5rem 1rem;
+          gap: 0.35rem;
+        }
+        .nav-link {
+          padding: 0.35rem 0.5rem;
+          font-size: 0.8125rem;
+        }
+        .desktop-links {
+          gap: 0.15rem;
+        }
+        .brand-text {
+          font-size: 0.875rem;
+        }
+        .brand-icon {
+          width: 30px;
+          height: 30px;
+        }
+        .nav-actions {
+          gap: 0.3rem;
+        }
+        /* Hide button text, show icon only */
+        .nav-btn.secondary.nav-login-btn .desktop-content,
+        .nav-btn.primary.cta-expert .desktop-content {
+          display: none;
+        }
+        .nav-btn.secondary.nav-login-btn,
+        .nav-btn.primary.cta-expert {
+          padding: 0;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0;
+        }
+        .nav-btn.primary.cta-expert .cta-sparkle {
+          font-size: 1.125rem;
+        }
+        .nav-btn.primary.cta-expert .cta-arrow {
+          display: none;
+        }
+      }
+
       /* Mobile — reduced backdrop-filter for performance */
       @media (max-width: 1023px) {
         .nav-inner {
