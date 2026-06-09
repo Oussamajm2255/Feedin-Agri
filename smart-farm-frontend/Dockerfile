@@ -25,8 +25,8 @@ RUN npm run build:prod
 # =============================================================================
 FROM node:20-alpine
 
-# Install nginx
-RUN apk add --no-cache nginx
+# Install nginx + gettext (for envsubst to inject $PORT into nginx config)
+RUN apk add --no-cache nginx gettext
 
 # ── Copy built browser files (prerendered HTML + assets) ─────────────────
 COPY --from=builder /app/dist/smart-farm-frontend/browser /usr/share/nginx/html
