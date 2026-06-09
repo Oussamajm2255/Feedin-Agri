@@ -1,7 +1,8 @@
-# Use Node.js 20 LTS for building
+# =============================================================================
+# Stage 1: Build the Angular application with SSR
+# =============================================================================
 FROM node:20-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
 # Copy package files
@@ -16,24 +17,32 @@ RUN npm cache clean --force && \
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application with SSR prerendering
 RUN npm run build:prod
 
-# Production stage with nginx
-FROM nginx:alpine
+# =============================================================================
+# Stage 2: Production runtime — nginx + Node.js SSR server
+# =============================================================================
+FROM node:20-alpine
 
-# Copy built files from builder stage
+# Install nginx
+RUN apk add --no-cache nginx
+
+# ── Copy built browser files (prerendered HTML + assets) ─────────────────
 COPY --from=builder /app/dist/smart-farm-frontend/browser /usr/share/nginx/html
 
-# Copy nginx configuration with security headers
+# ── Copy SSR server files ────────────────────────────────────────────────
+COPY --from=builder /app/dist/smart-farm-frontend/server /app/server
+
+# ── Copy nginx configuration ─────────────────────────────────────────────
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy startup script
+# ── Copy startup script ──────────────────────────────────────────────────
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Expose port
-EXPOSE 80
+# Expose ports: 80 (nginx) and 4000 (SSR server)
+EXPOSE 80 4000
 
-# Start nginx
+# Start nginx + Node.js SSR server
 CMD ["/start.sh"]
