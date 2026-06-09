@@ -595,6 +595,18 @@ body.rtl .stats-grid {
     padding-top: 64px; // Mobile top bar (56px) + spacing (8px)
     padding-bottom: 80px; // Space for bottom navigation + FAB
   }
+
+  // Extra small screens (<480px)
+  @media (max-width: 480px) {
+    padding-top: 58px;
+    padding-bottom: 72px;
+  }
+
+  // Very small screens (<380px)
+  @media (max-width: 380px) {
+    padding-top: 54px;
+    padding-bottom: 64px;
+  }
 }
 
 // Scrollbar styles are defined in styles.scss (theme-aware version)
