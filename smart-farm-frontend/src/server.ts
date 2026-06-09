@@ -121,6 +121,19 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
+ * Intercept Railway health check requests before they reach Angular SSR.
+ * Railway sends health checks with Host: healthcheck.railway.app, which
+ * Angular's SSRF protection rejects as an unallowed host header.
+ */
+app.use((req, res, next): void => {
+  if (req.headers['host']?.includes('healthcheck')) {
+    res.status(200).send('healthy\n');
+    return;
+  }
+  next();
+});
+
+/**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
  *

@@ -21,28 +21,18 @@ COPY . .
 RUN npm run build:prod
 
 # =============================================================================
-# Stage 2: Production runtime — nginx + Node.js SSR server
+# Stage 2: Production runtime — Node.js SSR server only
+# Railway provides its own reverse proxy layer, so nginx is not needed.
 # =============================================================================
 FROM node:20-alpine
 
-# Install nginx + gettext (for envsubst to inject $PORT into nginx config)
-RUN apk add --no-cache nginx gettext
+WORKDIR /app
 
-# ── Copy built browser files (prerendered HTML + assets) ─────────────────
-COPY --from=builder /app/dist/smart-farm-frontend/browser /usr/share/nginx/html
+# Copy built application
+COPY --from=builder /app/dist ./dist
 
-# ── Copy SSR server files ────────────────────────────────────────────────
-COPY --from=builder /app/dist/smart-farm-frontend/server /app/server
+# Expose the port Railway assigns via $PORT
+EXPOSE ${PORT:-8080}
 
-# ── Copy nginx configuration ─────────────────────────────────────────────
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# ── Copy startup script ──────────────────────────────────────────────────
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-# Expose ports: 80 (nginx) and 4000 (SSR server)
-EXPOSE 80 4000
-
-# Start nginx + Node.js SSR server
-CMD ["/start.sh"]
+# Start the Angular SSR Express server
+CMD ["node", "dist/smart-farm-frontend/server/server.mjs"]
