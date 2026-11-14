@@ -75,7 +75,10 @@ export class ScrollAnimationService implements OnDestroy {
       }
     });
 
-    gsap.registerPlugin(ScrollTrigger);
+    // GSAP's ticker (requestAnimationFrame) and ScrollTrigger's scroll listeners
+    // must live outside Angular's zone; inside it, every GSAP frame and every
+    // scroll event triggered app-wide change detection.
+    this.ngZone.runOutsideAngular(() => gsap.registerPlugin(ScrollTrigger));
 
     // Defer scroll tracking until after the first render
     // to avoid blocking the main thread during initial page paint
@@ -91,6 +94,10 @@ export class ScrollAnimationService implements OnDestroy {
    * Creates a scroll-triggered reveal animation
    */
   createReveal(config: ScrollRevealConfig): ScrollTrigger | null {
+    return this.ngZone.runOutsideAngular(() => this.createRevealImpl(config));
+  }
+
+  private createRevealImpl(config: ScrollRevealConfig): ScrollTrigger | null {
     if (this._isReducedMotion()) {
       // Show element immediately without animation
       gsap.set(config.element, { opacity: 1, y: 0, x: 0, scale: 1 });
@@ -159,6 +166,10 @@ export class ScrollAnimationService implements OnDestroy {
    * Creates a GSAP timeline synced to scroll
    */
   createScrollTimeline(config: TimelineConfig): gsap.core.Timeline {
+    return this.ngZone.runOutsideAngular(() => this.createScrollTimelineImpl(config));
+  }
+
+  private createScrollTimelineImpl(config: TimelineConfig): gsap.core.Timeline {
     const {
       trigger,
       start = 'top top',
@@ -191,6 +202,13 @@ export class ScrollAnimationService implements OnDestroy {
    * Creates a text reveal animation tuned to reading speed
    */
   createTextReveal(
+    element: HTMLElement,
+    options: { wordsPerLine?: number; readingSpeed?: number } = {}
+  ): void {
+    this.ngZone.runOutsideAngular(() => this.createTextRevealImpl(element, options));
+  }
+
+  private createTextRevealImpl(
     element: HTMLElement,
     options: { wordsPerLine?: number; readingSpeed?: number } = {}
   ): void {
@@ -237,7 +255,7 @@ export class ScrollAnimationService implements OnDestroy {
    * Call after dynamic content loads
    */
   refresh(): void {
-    ScrollTrigger.refresh();
+    this.ngZone.runOutsideAngular(() => ScrollTrigger.refresh());
   }
 
   /**

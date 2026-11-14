@@ -1369,9 +1369,12 @@ export class HeroSectionComponent implements AfterViewInit, OnDestroy {
           this.heroScene.setScrollProgress(progress);
         }
 
-        this.ngZone.run(() => {
-          this.hasScrolled.set(progress > 0.03);
-        });
+        // Runs on every scrubbed scroll frame: only enter Angular's zone
+        // (and run change detection) when the flag actually flips.
+        const scrolled = progress > 0.03;
+        if (scrolled !== this.hasScrolled()) {
+          this.ngZone.run(() => this.hasScrolled.set(scrolled));
+        }
       },
     });
   }

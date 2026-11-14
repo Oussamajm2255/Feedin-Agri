@@ -3,22 +3,39 @@
    Pure CSS, zero dependencies
    ========================================= */
 
-/* Shimmer keyframes — directional gradient sweep */
-/* Shimmer keyframes — directional gradient sweep */
+/* Shimmer — a highlight that slides across the bar.
+   Animating background-position repainted every bar on every frame (56 bars
+   on the landing page kept the main thread ~30% busy). Moving a pseudo-element
+   with transform runs on the compositor instead: no repaint. */
 @keyframes shimmer {
-    100% { background-position: 100% 0; }
+    100% { transform: translateX(100%); }
 }
 
-/* Shared shimmer mixin via class */
 .shimmer {
-    background: linear-gradient(
-        90deg,
-        rgba(241, 245, 249, 1) 0%,
-        rgba(226, 232, 240, 1) 50%,
-        rgba(241, 245, 249, 1) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite linear;
+    position: relative;
+    overflow: hidden;
+    background: rgba(241, 245, 249, 1);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(226, 232, 240, 1) 50%,
+            transparent 100%
+        );
+        transform: translateX(-100%);
+        animation: shimmer 1.5s infinite linear;
+        will-change: transform;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shimmer::after {
+        animation: none;
+    }
 }
 
 /* Section container */
@@ -98,13 +115,16 @@
 
 :host-context(body.dark-theme) {
     .shimmer {
-        background: linear-gradient(
-            90deg,
-            rgba(30, 41, 59, 0.5) 0%,
-            rgba(51, 65, 85, 0.5) 50%,
-            rgba(30, 41, 59, 0.5) 100%
-        );
-        background-size: 200% 100%;
+        background: rgba(30, 41, 59, 0.5);
+
+        &::after {
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(51, 65, 85, 0.5) 50%,
+                transparent 100%
+            );
+        }
     }
     .skeleton-card {
         background: rgba(30, 41, 59, 0.5);
