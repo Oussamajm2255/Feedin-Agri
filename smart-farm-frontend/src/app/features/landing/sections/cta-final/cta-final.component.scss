@@ -30,9 +30,10 @@
         right: 0;
         z-index: 1;
         pointer-events: none;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        will-change: backdrop-filter, mask-image, -webkit-backdrop-filter;
+        // No backdrop-filter: blurring this large area on every scroll frame was the
+        // main cause of scroll jank on the landing page (measured ~28 -> ~47 fps
+        // with the merge-gate and bento blurs removed). The background is already
+        // nearly opaque, so the blur was barely visible.
 
         &.top {
             top: 0;

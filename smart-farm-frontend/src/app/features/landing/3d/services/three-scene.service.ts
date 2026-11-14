@@ -283,6 +283,15 @@ export class ThreeSceneService implements OnDestroy {
   // ============================================
 
   private animate = (): void => {
+    // Keep exactly one frame scheduled. start() is called both by the
+    // visibility observer and by the hero after setup; each call used to
+    // begin its own requestAnimationFrame chain, rendering the scene twice
+    // per frame. Cancelling the pending frame first collapses any duplicates.
+    if (this.animationId !== null) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+
     if (!this._isRendering() || !this.isVisible) return;
 
     this.animationId = requestAnimationFrame(this.animate);
