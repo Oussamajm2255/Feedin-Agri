@@ -22,6 +22,7 @@ import {
   HttpErrorResponse,
   HttpRequest,
   HttpHandlerFn,
+  HttpContextToken,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -37,6 +38,7 @@ import {
   take,
 } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { getCsrfToken, setCsrfToken } from '../security/csrf-token';
 
 // ---------------------------------------------------------------------------
 // Token-refresh queue
@@ -67,6 +69,20 @@ const PUBLIC_PATHS = [
   '/auth/csrf',
   '/users/register',
 ] as const;
+
+/**
+ * Endpoints the backend's CsrfMiddleware exempts. Everything else that changes
+ * state (including /auth/refresh) must carry X-CSRF-Token.
+ */
+const CSRF_EXEMPT_PATHS = [
+  '/auth/login',
+  '/auth/logout',
+  '/auth/csrf',
+  '/users/register',
+] as const;
+
+/** Marks a request already retried after a CSRF 403, so it isn't retried twice. */
+const CSRF_RETRIED = new HttpContextToken<boolean>(() => false);
 
 /** Domains considered external — never send credentials there. */
 const EXTERNAL_DOMAINS = [
@@ -105,17 +121,52 @@ function withCredentials(req: HttpRequest<unknown>): HttpRequest<unknown> {
   return req.clone({ withCredentials: true });
 }
 
-/** Echo the CSRF cookie as a request header for state-changing methods. */
-function withCsrfHeader(req: HttpRequest<unknown>): HttpRequest<unknown> {
+function isUnsafeMethod(req: HttpRequest<unknown>): boolean {
   const method = req.method.toUpperCase();
-  const isSafe = method === 'GET' || method === 'HEAD' || method === 'OPTIONS';
+  return !(method === 'GET' || method === 'HEAD' || method === 'OPTIONS');
+}
 
-  if (isSafe || isPublicEndpoint(req.url)) return req;
+/**
+ * Echo the CSRF token as a request header for state-changing methods.
+ * Prefer the readable cookie (same-site setups such as local dev); fall back
+ * to the copy kept from GET /auth/csrf, since in production the cookie lives
+ * on the API's domain and document.cookie can't see it.
+ */
+function withCsrfHeader(req: HttpRequest<unknown>): HttpRequest<unknown> {
+  if (!isUnsafeMethod(req) || CSRF_EXEMPT_PATHS.some((path) => req.url.includes(path))) {
+    return req;
+  }
 
-  const csrf = getCookie('sf_csrf');
+  const csrf = (typeof document !== 'undefined' ? getCookie('sf_csrf') : null) ?? getCsrfToken();
   return csrf
     ? req.clone({ setHeaders: { 'X-CSRF-Token': csrf } })
     : req;
+}
+
+function isCsrfRejection(error: HttpErrorResponse): boolean {
+  return error.status === 403 && /csrf/i.test(String(error.error?.message ?? ''));
+}
+
+/**
+ * The backend rejected our CSRF token (none yet, or the 1-day cookie was
+ * rotated). Fetch a fresh one and retry the request once.
+ */
+function refreshCsrfAndRetry(
+  http: HttpClient,
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+): Observable<any> {
+  return http
+    .get<{ csrfToken: string }>(`${environment.apiUrl}/auth/csrf`, { withCredentials: true })
+    .pipe(
+      switchMap(({ csrfToken }) => {
+        setCsrfToken(csrfToken);
+        const retryReq = withCsrfHeader(
+          withCredentials(req.clone({ context: req.context.set(CSRF_RETRIED, true) })),
+        );
+        return next(retryReq);
+      }),
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -178,7 +229,7 @@ function waitForRefreshAndRetry(
 /**
  * `authInterceptor` — functional HTTP interceptor (Angular 15+).
  *
- * Pipeline position: FIRST
+ * Pipeline position: SECOND (inside errorInterceptor)
  * Reason: credentials and CSRF tokens must be on the request before it
  * reaches the cache (which keys on the full request) or the network.
  */
@@ -196,6 +247,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authenticatedReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      // CSRF token missing or rotated: get a fresh one and retry once
+      if (isCsrfRejection(error) && isUnsafeMethod(req) && !req.context.get(CSRF_RETRIED)) {
+        return refreshCsrfAndRetry(http, req, next);
+      }
+
       // Only attempt refresh on 401 for non-auth endpoints
       const shouldRefresh =
         error.status === 401 &&

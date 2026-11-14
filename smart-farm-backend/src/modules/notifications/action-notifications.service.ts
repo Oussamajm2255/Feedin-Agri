@@ -18,81 +18,58 @@ export class ActionNotificationsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  @OnEvent('action.timeout')
-  async handleActionTimeout(data: any) {
-    this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Processing action timeout: ${data.actionId}`);
-    
-    try {
-      // Get device info to find the farm owner
-      const device = await this.deviceRepo.findOne({
-        where: { device_id: data.deviceId },
-        relations: ['farm']
-      });
-
-      if (!device || !device.farm) {
-        this.logger.warn(`🔔 [ACTION-NOTIFICATIONS] Device or farm not found for device: ${data.deviceId}`);
-        return;
-      }
-
-      const farmOwnerId = device.farm.owner_id;
-      this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Creating timeout notification for user: ${farmOwnerId}`);
-
-      // Create notification for the farm owner
-      await this.notificationsService.create({
-        user_id: farmOwnerId,
-        level: 'warning',
-        source: 'action',
-        title: 'Action Timeout',
-        message: `${data.actionCommand} action timed out on device ${data.deviceId}`,
-        context: {
-          actionId: data.actionId,
-          actionCommand: data.actionCommand,
-          deviceId: data.deviceId,
-          actionLogId: data.actionLogId,
-          type: 'timeout'
-        }
-      });
-
-      this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Timeout notification created successfully`);
-    } catch (error) {
-      this.logger.error(`🔔 [ACTION-NOTIFICATIONS] Error creating timeout notification:`, error);
-    }
+  /**
+   * Events carry the device id in different places: ActionDispatcher emits an
+   * ActionResult ({ action, success, context: { deviceId } }) while the ack and
+   * timeout paths put deviceId at the top level.
+   */
+  private deviceIdOf(data: any): string | undefined {
+    return data?.deviceId || data?.device_id || data?.context?.deviceId || undefined;
   }
+
+  /**
+   * Resolve the farm owner for a device. Returns null when the device id is
+   * missing: TypeORM treats `where: { device_id: undefined }` as "any device",
+   * which used to send these notifications to the first device's owner.
+   */
+  private async ownerOf(deviceId: string | undefined): Promise<string | null> {
+    if (!deviceId) return null;
+    const device = await this.deviceRepo.findOne({
+      where: { device_id: deviceId },
+      relations: ['farm'],
+    });
+    return device?.farm?.owner_id ?? null;
+  }
+
+  // Timeouts are reported to the farmer by ActionEffectivenessMonitor
+  // ("⏱️ Action Timeout — <device>"), which has the device name and guidance.
+  // Creating a second "Action Timeout" here duplicated every timeout.
 
   @OnEvent('action.executed')
   async handleActionExecuted(data: any) {
-    this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Processing action executed: ${data.action}`);
-    
+    const deviceId = this.deviceIdOf(data);
     try {
-      // Get device info to find the farm owner
-      const device = await this.deviceRepo.findOne({
-        where: { device_id: data.deviceId },
-        relations: ['farm']
-      });
-
-      if (!device || !device.farm) {
-        this.logger.warn(`🔔 [ACTION-NOTIFICATIONS] Device or farm not found for device: ${data.deviceId}`);
+      const ownerId = await this.ownerOf(deviceId);
+      if (!ownerId) {
+        this.logger.warn(`🔔 [ACTION-NOTIFICATIONS] No farm owner found for device: ${deviceId ?? '(none)'}`);
         return;
       }
 
-      const farmOwnerId = device.farm.owner_id;
-      this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Creating executed notification for user: ${farmOwnerId}`);
-
-      // Create notification for the farm owner
+      const succeeded = data?.success !== false;
       await this.notificationsService.create({
-        user_id: farmOwnerId,
-        level: 'success',
+        user_id: ownerId,
+        level: succeeded ? 'success' : 'critical',
         source: 'action',
-        title: 'Action Executed',
-        message: `${data.action} action executed successfully on device ${data.deviceId}`,
+        title: succeeded ? 'Action Executed' : 'Action Failed',
+        message: succeeded
+          ? `${data.action} sent to device ${deviceId}`
+          : `${data.action} could not be sent to device ${deviceId}`,
         context: {
           action: data.action,
-          deviceId: data.deviceId,
-          type: 'executed'
-        }
+          deviceId,
+          type: succeeded ? 'executed' : 'failed',
+        },
       });
-
-      this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Executed notification created successfully`);
     } catch (error) {
       this.logger.error(`🔔 [ACTION-NOTIFICATIONS] Error creating executed notification:`, error);
     }
@@ -100,40 +77,29 @@ export class ActionNotificationsService {
 
   @OnEvent('action.failed')
   async handleActionFailed(data: any) {
-    this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Processing action failed: ${data.actionId}`);
-    
+    const deviceId = this.deviceIdOf(data);
     try {
-      // Get device info to find the farm owner
-      const device = await this.deviceRepo.findOne({
-        where: { device_id: data.deviceId },
-        relations: ['farm']
-      });
-
-      if (!device || !device.farm) {
-        this.logger.warn(`🔔 [ACTION-NOTIFICATIONS] Device or farm not found for device: ${data.deviceId}`);
+      const ownerId = await this.ownerOf(deviceId);
+      if (!ownerId) {
+        this.logger.warn(`🔔 [ACTION-NOTIFICATIONS] No farm owner found for device: ${deviceId ?? '(none)'}`);
         return;
       }
 
-      const farmOwnerId = device.farm.owner_id;
-      this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Creating failed notification for user: ${farmOwnerId}`);
-
-      // Create notification for the farm owner
+      const command = data.actionCommand || data.action || 'Action';
       await this.notificationsService.create({
-        user_id: farmOwnerId,
+        user_id: ownerId,
         level: 'critical',
         source: 'action',
         title: 'Action Failed',
-        message: `${data.actionCommand || 'Action'} failed on device ${data.deviceId}`,
+        message: `${command} failed on device ${deviceId}`,
         context: {
           actionId: data.actionId,
-          actionCommand: data.actionCommand,
-          deviceId: data.deviceId,
+          actionCommand: command,
+          deviceId,
           error: data.error,
-          type: 'failed'
-        }
+          type: 'failed',
+        },
       });
-
-      this.logger.log(`🔔 [ACTION-NOTIFICATIONS] Failed notification created successfully`);
     } catch (error) {
       this.logger.error(`🔔 [ACTION-NOTIFICATIONS] Error creating failed notification:`, error);
     }

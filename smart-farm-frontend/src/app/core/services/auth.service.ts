@@ -23,6 +23,7 @@ import {
 } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 import { clearHttpCache } from '../interceptors/caching.interceptor';
+import { setCsrfToken } from '../security/csrf-token';
 
 @Injectable({
   providedIn: 'root',
@@ -71,11 +72,14 @@ export class AuthService {
       // Prime CSRF token first - timeout after 2s
       // This is non-critical, continue even if it fails
       try {
-        await firstValueFrom(
+        const { csrfToken } = await firstValueFrom(
           this.http
             .get<{ csrfToken: string }>(`${this.API_URL}/auth/csrf`, { withCredentials: true })
             .pipe(timeout(2000)),
         );
+        // Kept in memory: the sf_csrf cookie lives on the API's domain and
+        // isn't readable from this one.
+        setCsrfToken(csrfToken);
       } catch (csrfError) {
         console.warn('CSRF priming failed, continuing...', csrfError);
       }

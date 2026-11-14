@@ -149,7 +149,7 @@ function resolveErrorMessage(
 /**
  * `errorInterceptor` — functional HTTP interceptor (Angular 15+).
  *
- * Pipeline position: FOURTH / LAST
+ * Pipeline position: FIRST in withInterceptors (outermost)
  * Reason: Only intercepts errors that survive auth refresh attempts AND
  * all retry attempts. Provides a single, consistent UX for unrecoverable errors.
  */
@@ -200,6 +200,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       // ── 403 Forbidden ─────────────────────────────────────────────────────
       // Redirect to a dedicated forbidden page. The page itself explains why.
       if (error.status === 403) {
+        // A CSRF rejection that survived authInterceptor's fresh-token retry
+        // is not a permissions problem; usually the browser is blocking the
+        // API's cookies. Explain instead of showing the forbidden page.
+        if (/csrf/i.test(String(error.error?.message ?? ''))) {
+          alertService.error(
+            'Error',
+            'Security check failed. Please reload the page; if it keeps happening, allow cookies for this site.',
+          );
+          return throwError(() => error);
+        }
         router.navigate(['/forbidden']);
         return throwError(() => error);
       }

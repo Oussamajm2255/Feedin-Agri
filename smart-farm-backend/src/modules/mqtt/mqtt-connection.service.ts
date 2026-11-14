@@ -312,7 +312,9 @@ export class MqttConnectionService implements OnModuleInit {
       case 'critical':
         return {
           qos: 2, // Exactly once delivery
-          retain: true, // Retain for new subscribers
+          // Never retain commands: the broker would replay the last one (e.g.
+          // humidifier_on from hours ago) every time the device reconnects.
+          retain: false,
           timeout: 15000 // 15 second timeout
         };
       case 'important':

@@ -139,7 +139,7 @@ function pruneExpired(): void {
 /**
  * `cachingInterceptor` — functional HTTP interceptor (Angular 15+).
  *
- * Pipeline position: SECOND (after `authInterceptor`)
+ * Pipeline position: THIRD (after `authInterceptor`)
  * Reason: The cache key must include authenticated context. Sitting before
  * retry means cache hits short-circuit without triggering retry logic.
  */

@@ -84,11 +84,16 @@ export const appConfig: ApplicationConfig = {
     // ✅ HttpClient — Fetch API + ordered four-interceptor pipeline
     provideHttpClient(
       withFetch(),                             // Browser Fetch API (faster than XHR, supports streaming)
+      // Requests run through this list top to bottom; responses and errors
+      // come back bottom to top. errorInterceptor must be FIRST so it only
+      // sees errors that survived authInterceptor's token refresh / CSRF retry
+      // and retryInterceptor's retries. (Listed last, it logged users out on
+      // every 401 before the refresh could run.)
       withInterceptors([
-        authInterceptor,    // 1. Attach credentials & CSRF; handle 401 token refresh
-        cachingInterceptor, // 2. Serve cached GET responses; deduplicate in-flight calls
-        retryInterceptor,   // 3. Retry transient failures with exponential backoff + jitter
-        errorInterceptor,   // 4. Translate final errors to toasts, 403-redirect, session logout
+        errorInterceptor,   // 1. Translate final errors to toasts, 403-redirect, session logout
+        authInterceptor,    // 2. Attach credentials & CSRF; handle 401 refresh and CSRF retry
+        cachingInterceptor, // 3. Serve cached GET responses; deduplicate in-flight calls
+        retryInterceptor,   // 4. Retry transient failures with exponential backoff + jitter
       ]),
     ),
 
