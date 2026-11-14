@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -12,6 +13,8 @@ import { AdminNotification } from '../../entities/admin-notification.entity';
   },
 })
 export class AdminNotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private readonly logger = new Logger(AdminNotificationsGateway.name);
+
   @WebSocketServer()
   server: Server;
 
@@ -35,7 +38,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
       }
       
       if (!token) {
-        console.log('❌ [ADMIN-WS] Connection rejected - no token');
+        this.logger.warn('❌ [ADMIN-WS] Connection rejected - no token');
         client.disconnect();
         return;
       }
@@ -44,7 +47,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
       
       // Only allow admin/moderator roles
       if (!payload.role || !['admin', 'moderator'].includes(payload.role)) {
-        console.log('❌ [ADMIN-WS] Connection rejected - not admin/moderator');
+        this.logger.warn('❌ [ADMIN-WS] Connection rejected - not admin/moderator');
         client.disconnect();
         return;
       }
@@ -54,7 +57,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
       (client as any).userId = userId;
       (client as any).role = payload.role;
 
-      console.log(`✅ [ADMIN-WS] Admin connected: ${userId} (${payload.role})`);
+      this.logger.debug(`✅ [ADMIN-WS] Admin connected: ${userId} (${payload.role})`);
       
       // Send connection confirmation
       client.emit('connected', { 
@@ -63,7 +66,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
         role: payload.role,
       });
     } catch (error) {
-      console.log('❌ [ADMIN-WS] Connection rejected - invalid token:', error.message);
+      this.logger.warn(`❌ [ADMIN-WS] Connection rejected - invalid token: ${error.message}`);
       client.disconnect();
     }
   }
@@ -71,7 +74,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
   handleDisconnect(client: Socket) {
     const userId = (client as any).userId;
     this.connectedAdmins.delete(client.id);
-    console.log(`👋 [ADMIN-WS] Admin disconnected: ${userId || client.id}`);
+    this.logger.debug(`👋 [ADMIN-WS] Admin disconnected: ${userId || client.id}`);
   }
 
   /**
@@ -79,7 +82,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('admin.notification.created')
   handleNotificationCreated(notification: AdminNotification) {
-    console.log(`📢 [ADMIN-WS] Broadcasting new notification: ${notification.id}`);
+    this.logger.debug(`📢 [ADMIN-WS] Broadcasting new notification: ${notification.id}`);
     this.server.emit('notification:new', notification);
   }
 
@@ -88,7 +91,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('admin.notification.updated')
   handleNotificationUpdated(notification: AdminNotification) {
-    console.log(`📢 [ADMIN-WS] Broadcasting updated notification: ${notification.id}`);
+    this.logger.debug(`📢 [ADMIN-WS] Broadcasting updated notification: ${notification.id}`);
     this.server.emit('notification:updated', notification);
   }
 
@@ -97,7 +100,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('admin.notification.bulk-updated')
   handleBulkUpdate(data: { ids: string[]; action: string }) {
-    console.log(`📢 [ADMIN-WS] Broadcasting bulk update: ${data.action} for ${data.ids.length} notifications`);
+    this.logger.debug(`📢 [ADMIN-WS] Broadcasting bulk update: ${data.action} for ${data.ids.length} notifications`);
     this.server.emit('notification:bulk-updated', data);
   }
 
@@ -108,7 +111,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
   handleSubscribe(client: Socket, data: { severities?: string[]; domains?: string[] }) {
     // Store subscription preferences on the client
     (client as any).subscriptions = data;
-    console.log(`📝 [ADMIN-WS] Client ${client.id} subscribed to:`, data);
+    this.logger.debug(`📝 [ADMIN-WS] Client ${client.id} subscribed to:`, data);
     return { success: true, subscriptions: data };
   }
 
@@ -117,7 +120,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('access.approved')
   handleAccessApproved(data: { userId: string; email: string; firstName: string; lastName: string; approvedBy: string }) {
-    console.log(`✅ [ADMIN-WS] Access approved for user: ${data.userId}`);
+    this.logger.debug(`✅ [ADMIN-WS] Access approved for user: ${data.userId}`);
     this.server.emit('access:approved', data);
     // Also emit updated counts so all admin dashboards refresh
     this.server.emit('access:counts-updated', { action: 'approved' });
@@ -128,7 +131,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('access.rejected')
   handleAccessRejected(data: { userId: string; email: string; firstName: string; lastName: string; rejectedBy: string; reason: string }) {
-    console.log(`❌ [ADMIN-WS] Access rejected for user: ${data.userId}`);
+    this.logger.debug(`❌ [ADMIN-WS] Access rejected for user: ${data.userId}`);
     this.server.emit('access:rejected', data);
     // Also emit updated counts so all admin dashboards refresh
     this.server.emit('access:counts-updated', { action: 'rejected' });
@@ -140,7 +143,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
   @OnEvent('user.registered')
   handleUserRegistered(user: any) {
     if (user.status === 'pending') {
-      console.log(`🆕 [ADMIN-WS] New pending access request from: ${user.email}`);
+      this.logger.debug(`🆕 [ADMIN-WS] New pending access request from: ${user.email}`);
       this.server.emit('access:new-request', {
         userId: user.user_id,
         email: user.email,
@@ -159,7 +162,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('lead.created')
   handleLeadCreated(data: { type: 'contact' | 'training'; lead: any }) {
-    console.log(`📨 [ADMIN-WS] New ${data.type} lead from: ${data.lead.email}`);
+    this.logger.debug(`📨 [ADMIN-WS] New ${data.type} lead from: ${data.lead.email}`);
     this.server.emit('lead:new', {
       type: data.type,
       lead: data.lead,
@@ -171,7 +174,7 @@ export class AdminNotificationsGateway implements OnGatewayConnection, OnGateway
    */
   @OnEvent('lead.status-changed')
   handleLeadStatusChanged(data: { type: string; id: string; status: string }) {
-    console.log(`📝 [ADMIN-WS] Lead status changed: ${data.type} ${data.id} → ${data.status}`);
+    this.logger.debug(`📝 [ADMIN-WS] Lead status changed: ${data.type} ${data.id} → ${data.status}`);
     this.server.emit('lead:status-changed', data);
   }
 

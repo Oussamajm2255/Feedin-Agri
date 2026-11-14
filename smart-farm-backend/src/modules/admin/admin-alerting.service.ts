@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { AdminNotificationsService } from './admin-notifications.service';
 import { CreateAdminNotificationDto } from './dto/admin-notification.dto';
@@ -9,6 +9,8 @@ import { CreateAdminNotificationDto } from './dto/admin-notification.dto';
  */
 @Injectable()
 export class AdminAlertingService implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(AdminAlertingService.name);
+
   // Track recent alerts to prevent duplicates
   private recentAlerts: Map<string, number> = new Map();
   private readonly DEDUP_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -19,7 +21,7 @@ export class AdminAlertingService implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   onModuleInit() {
-    console.log('🚨 [ADMIN-ALERTING] Service initialized');
+    this.logger.debug('🚨 [ADMIN-ALERTING] Service initialized');
     // Start cleanup interval (every 10 minutes)
     this.cleanupInterval = setInterval(() => this.cleanupDedupMap(), 10 * 60 * 1000);
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Request, Logger } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
@@ -7,6 +7,8 @@ import { UserRole } from '../../entities/user.entity';
 
 @Controller('devices')
 export class DevicesController {
+  private readonly logger = new Logger(DevicesController.name);
+
   constructor(private readonly devicesService: DevicesService) {}
 
   @Post()
@@ -24,7 +26,7 @@ export class DevicesController {
     const userRole = user?.role;
     const userId = user?.user_id;
     
-    console.log('🔍 DevicesController.findAll - User info:', {
+    this.logger.debug('🔍 DevicesController.findAll - User info:', {
       user_id: userId,
       role: userRole,
       roleType: typeof userRole,
@@ -42,7 +44,7 @@ export class DevicesController {
     // For regular users, filter by their owner_id
     const ownerId = (isAdmin || isModerator) ? undefined : userId;
     
-    console.log('🔍 DevicesController.findAll - Filter decision:', {
+    this.logger.debug('🔍 DevicesController.findAll - Filter decision:', {
       roleString,
       isAdmin,
       isModerator,
@@ -51,11 +53,11 @@ export class DevicesController {
     });
     
     const devices = await this.devicesService.findAll(shouldIncludeSensors, ownerId);
-    console.log(`📤 DevicesController.findAll - Returning ${devices.length} devices`);
+    this.logger.debug(`📤 DevicesController.findAll - Returning ${devices.length} devices`);
     
     // Log first device if available
     if (devices.length > 0) {
-      console.log('📤 First device in response:', {
+      this.logger.debug('📤 First device in response:', {
         device_id: devices[0].device_id,
         name: devices[0].name,
         farm_id: devices[0].farm_id

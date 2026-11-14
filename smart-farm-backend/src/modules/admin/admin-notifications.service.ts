@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
   Repository,
@@ -25,6 +25,8 @@ import {
 
 @Injectable()
 export class AdminNotificationsService {
+  private readonly logger = new Logger(AdminNotificationsService.name);
+
   constructor(
     @InjectRepository(AdminNotification)
     private readonly repo: Repository<AdminNotification>,
@@ -169,7 +171,7 @@ export class AdminNotificationsService {
         notification.pinned_until_resolved = false;
         await this.repo.save(notification);
         this.events.emit("admin.notification.updated", notification);
-        console.log(
+        this.logger.debug(
           `✅ [ADMIN-NOTIFICATIONS] Auto-resolved registration notification ${notification.id} for user ${userId}`,
         );
       }
@@ -185,7 +187,7 @@ export class AdminNotificationsService {
    * Create a new admin notification
    */
   async create(dto: CreateAdminNotificationDto): Promise<AdminNotification> {
-    console.log(
+    this.logger.debug(
       "🔔 [ADMIN-NOTIFICATIONS] Creating notification:",
       dto.type,
       dto.severity,
@@ -202,7 +204,7 @@ export class AdminNotificationsService {
     });
 
     const saved = await this.repo.save(notification);
-    console.log("🔔 [ADMIN-NOTIFICATIONS] Notification created:", saved.id);
+    this.logger.debug("🔔 [ADMIN-NOTIFICATIONS] Notification created:", saved.id);
 
     // Emit event for WebSocket broadcast
     this.events.emit("admin.notification.created", saved);
@@ -353,7 +355,7 @@ export class AdminNotificationsService {
     const saved = await this.repo.save(notification);
     this.events.emit("admin.notification.updated", saved);
 
-    console.log("✅ [ADMIN-NOTIFICATIONS] Notification acknowledged:", id);
+    this.logger.debug("✅ [ADMIN-NOTIFICATIONS] Notification acknowledged:", id);
     return saved;
   }
 
@@ -371,7 +373,7 @@ export class AdminNotificationsService {
     const saved = await this.repo.save(notification);
     this.events.emit("admin.notification.updated", saved);
 
-    console.log("✅ [ADMIN-NOTIFICATIONS] Notification resolved:", id);
+    this.logger.debug("✅ [ADMIN-NOTIFICATIONS] Notification resolved:", id);
     return saved;
   }
 
@@ -469,7 +471,7 @@ export class AdminNotificationsService {
       .andWhere("resolved_at < :cutoff", { cutoff: cutoffDate })
       .execute();
 
-    console.log(
+    this.logger.debug(
       `🧹 [ADMIN-NOTIFICATIONS] Cleaned up ${result.affected} old notifications`,
     );
     return { deleted: result.affected ?? 0 };
