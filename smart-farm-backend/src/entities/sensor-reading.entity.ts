@@ -10,7 +10,11 @@ export class SensorReading {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Sensor, (sensor) => sensor.readings)
+  // sensors.sensor_id is not unique (one physical sensor such as XY-MD02 has a
+  // row per measured type), so Postgres cannot back this join with a foreign
+  // key. Keep the relation for queries but don't emit the constraint, or
+  // schema sync fails on an empty database.
+  @ManyToOne(() => Sensor, (sensor) => sensor.readings, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'sensor_id', referencedColumnName: 'sensor_id' })
   sensor: Sensor;
 
