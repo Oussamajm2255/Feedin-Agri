@@ -43,7 +43,7 @@ Open: https://securityheaders.com/?q=feedingreen.up.railway.app
 ```bash
 for i in {1..6}; do
   curl -s -o /dev/null -w "Request $i: Status %{http_code}\n" \
-    -X POST https://feedingreen.up.railway.app/api/v1/auth/login \
+    -X POST https://feedin-agri-production.up.railway.app/api/v1/auth/login \
     -H "Content-Type: application/json" \
     -d '{"email":"test@test.com","password":"wrong"}';
 done
@@ -53,20 +53,20 @@ done
 ### 7. Protected Route Without Token — Expect 401
 ```bash
 curl -s -w "Status: %{http_code}\n" \
-  https://feedingreen.up.railway.app/api/v1/farms
+  https://feedin-agri-production.up.railway.app/api/v1/farms
 ```
 **Expected:** `401 Unauthorized`
 
 ### 8. CORS with Bad Origin — Expect no allow header
 ```bash
 curl -H "Origin: https://evil.com" -I \
-  https://feedingreen.up.railway.app/api/v1/health
+  https://feedin-agri-production.up.railway.app/api/v1/health
 ```
 **Expected:** No `Access-Control-Allow-Origin` header in response
 
 ### 9. Health Endpoint
 ```bash
-curl https://feedingreen.up.railway.app/api/v1/health
+curl https://feedin-agri-production.up.railway.app/api/v1/health
 ```
 **Expected:**
 ```json
@@ -82,13 +82,13 @@ curl https://feedingreen.up.railway.app/api/v1/health
 ```bash
 # Login and capture cookies
 curl -c cookies.txt -X POST \
-  https://feedingreen.up.railway.app/api/v1/auth/login \
+  https://feedin-agri-production.up.railway.app/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"your@email.com","password":"yourpassword"}'
 
 # Refresh using cookie
 curl -b cookies.txt -X POST \
-  https://feedingreen.up.railway.app/api/v1/auth/refresh
+  https://feedin-agri-production.up.railway.app/api/v1/auth/refresh
 ```
 **Expected:** New access token cookie set, `{ "ok": true }`
 
@@ -107,7 +107,7 @@ Deploy, hit the app, check Railway logs.
 ### 12. Connection Pool Load Test
 ```bash
 npx autocannon -c 50 -d 10 \
-  https://feedingreen.up.railway.app/api/v1/health
+  https://feedin-agri-production.up.railway.app/api/v1/health
 ```
 **Expected:** No connection timeout errors, p99 latency < 500ms
 
