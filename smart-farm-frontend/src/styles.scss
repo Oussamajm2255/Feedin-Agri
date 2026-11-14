@@ -68,6 +68,20 @@ body {
   box-sizing: border-box;
 }
 
+// ===== NO FROSTED-GLASS BLUR ON IN-PAGE SURFACES =====
+// backdrop-filter re-blurs everything behind an element on every frame in
+// which anything behind it changes (scrolling, animations). With 20+ glass
+// cards and bars per page, scrolling fell to ~15-20 fps on /sensor-readings
+// and /actions (measured: 15-18 -> 41-42 fps on /actions without blur).
+// These surfaces are 70-100% opaque, so the blur was barely visible.
+// Kept where it is cheap: overlays (dialogs, menus, dropdowns live in the CDK
+// overlay container and are shown briefly), modal/backdrop layers, and the
+// public site's nav bar.
+body *:not(.cdk-overlay-container, .cdk-overlay-container *, [class*='backdrop'], [class*='overlay'], [class*='modal'], .nav-inner) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 // ===== MOBILE PERFORMANCE OPTIMIZATIONS =====
 html {
   // Prevent pull-to-refresh interference on mobile

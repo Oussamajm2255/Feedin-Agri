@@ -214,9 +214,9 @@ export interface FilterState {
         position: sticky;
         top: 0;
         z-index: 100;
-        background: var(--glass-bg, rgba(255, 255, 255, 0.8));
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        /* Sticky bar that readings scroll under: near-opaque instead of a
+           backdrop blur (blur re-renders on every scroll frame). */
+        background: rgba(255, 255, 255, 0.94);
         border-bottom: 1px solid var(--glass-border, rgba(16, 185, 129, 0.2));
         border-radius: 12px 12px 12px 12px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06),
@@ -721,7 +721,7 @@ export interface FilterState {
 
       /* Dark theme support */
       :host-context(body.dark-theme) .filter-header {
-        background: var(--glass-bg, rgba(30, 41, 59, 0.8));
+        background: rgba(30, 41, 59, 0.94);
         border-bottom-color: var(--glass-border, rgba(100, 116, 139, 0.3));
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
                     inset 0 1px 0 rgba(100, 116, 139, 0.2);
