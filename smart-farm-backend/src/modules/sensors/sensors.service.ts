@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Sensor } from '../../entities/sensor.entity';
@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class SensorsService {
+  private readonly logger = new Logger(SensorsService.name);
+
   constructor(
     @InjectRepository(Sensor)
     private readonly sensorsRepository: Repository<Sensor>,
@@ -54,7 +56,7 @@ export class SensorsService {
     includeReadings = false,
     ownerId?: string
   ): Promise<Sensor[]> {
-    console.log('SensorsService.findAll called with:', { includeDevice, includeFarm, includeReadings, ownerId });
+    this.logger.debug('SensorsService.findAll called with:', { includeDevice, includeFarm, includeReadings, ownerId });
     
     const relations = [];
     
@@ -75,12 +77,12 @@ export class SensorsService {
       order: { id: 'ASC' }
     });
     
-    console.log(`✅ Found ${sensors.length} sensors`, ownerId ? `for owner ${ownerId}` : '(all sensors)');
+    this.logger.debug(`✅ Found ${sensors.length} sensors`, ownerId ? `for owner ${ownerId}` : '(all sensors)');
     
     // If no sensors found with owner filter, check if there are any sensors at all
     if (sensors.length === 0 && ownerId) {
       const allSensorsCount = await this.sensorsRepository.count();
-      console.log(`⚠️ No sensors found for owner ${ownerId}, but there are ${allSensorsCount} total sensors in database`);
+      this.logger.debug(`⚠️ No sensors found for owner ${ownerId}, but there are ${allSensorsCount} total sensors in database`);
     }
     
     return sensors;

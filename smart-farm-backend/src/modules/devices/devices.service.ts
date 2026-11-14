@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Device } from '../../entities/device.entity';
@@ -8,6 +8,8 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 
 @Injectable()
 export class DevicesService {
+  private readonly logger = new Logger(DevicesService.name);
+
   constructor(
     @InjectRepository(Device)
     private readonly devicesRepository: Repository<Device>,
@@ -37,7 +39,7 @@ export class DevicesService {
   }
 
   async findAll(includeSensors = false, ownerId?: string): Promise<Device[]> {
-    console.log('🔍 DevicesService.findAll called with:', { includeSensors, ownerId, isAdmin: !ownerId });
+    this.logger.debug('🔍 DevicesService.findAll called with:', { includeSensors, ownerId, isAdmin: !ownerId });
     
     const relations = includeSensors ? ['sensors'] : [];
     relations.push('farm');
@@ -46,7 +48,7 @@ export class DevicesService {
     
     if (ownerId) {
       // Filter by owner (regular user case)
-      console.log('🔍 Filtering devices by owner:', ownerId);
+      this.logger.debug('🔍 Filtering devices by owner:', ownerId);
       devices = await this.devicesRepository.find({
         where: { farm: { owner_id: ownerId } },
         relations,
@@ -54,32 +56,32 @@ export class DevicesService {
       });
     } else {
       // Get all devices (admin/moderator case)
-      console.log('🔍 Getting ALL devices (admin/moderator access)');
+      this.logger.debug('🔍 Getting ALL devices (admin/moderator access)');
       
       // First, check total count
       const totalCount = await this.devicesRepository.count();
-      console.log(`🔍 Total devices in database: ${totalCount}`);
+      this.logger.debug(`🔍 Total devices in database: ${totalCount}`);
       
       if (totalCount === 0) {
-        console.log('⚠️ No devices in database');
+        this.logger.debug('⚠️ No devices in database');
         return [];
       }
       
       // Try simple find first (most reliable)
-      console.log('🔍 Trying simple find with relations...');
+      this.logger.debug('🔍 Trying simple find with relations...');
       devices = await this.devicesRepository.find({
         relations,
         order: { created_at: 'DESC' }
       });
-      console.log(`🔍 Simple find returned ${devices.length} devices`);
+      this.logger.debug(`🔍 Simple find returned ${devices.length} devices`);
       
       // If simple find returns empty but devices exist, try without relations
       if (devices.length === 0 && totalCount > 0) {
-        console.log('🔍 Simple find returned 0, trying without relations...');
+        this.logger.debug('🔍 Simple find returned 0, trying without relations...');
         const devicesNoRelations = await this.devicesRepository.find({
           order: { created_at: 'DESC' }
         });
-        console.log(`🔍 Found ${devicesNoRelations.length} devices without relations`);
+        this.logger.debug(`🔍 Found ${devicesNoRelations.length} devices without relations`);
         
         if (devicesNoRelations.length > 0) {
           // Batch-load all farms in ONE query instead of N+1
@@ -98,7 +100,7 @@ export class DevicesService {
       
       // If still empty, try query builder as last resort
       if (devices.length === 0 && totalCount > 0) {
-        console.log('🔍 Trying query builder as fallback...');
+        this.logger.debug('🔍 Trying query builder as fallback...');
         const queryBuilder = this.devicesRepository
           .createQueryBuilder('device')
           .leftJoinAndSelect('device.farm', 'farm')
@@ -109,15 +111,15 @@ export class DevicesService {
         }
         
         devices = await queryBuilder.getMany();
-        console.log(`🔍 Query builder returned ${devices.length} devices`);
+        this.logger.debug(`🔍 Query builder returned ${devices.length} devices`);
       }
     }
     
-    console.log(`✅ Found ${devices.length} devices`, ownerId ? `for owner ${ownerId}` : '(all devices - admin access)');
+    this.logger.debug(`✅ Found ${devices.length} devices`, ownerId ? `for owner ${ownerId}` : '(all devices - admin access)');
     
     // Log sample device data if we have devices
     if (devices.length > 0) {
-      console.log('🔍 Sample device data:', {
+      this.logger.debug('🔍 Sample device data:', {
         device_id: devices[0].device_id,
         name: devices[0].name,
         farm_id: devices[0].farm_id,
@@ -130,7 +132,7 @@ export class DevicesService {
     // Debug: Check total devices in database if none found
     if (devices.length === 0) {
       const allDevicesCount = await this.devicesRepository.count();
-      console.log(`⚠️ No devices found${ownerId ? ` for owner ${ownerId}` : ''}, but there are ${allDevicesCount} total devices in database`);
+      this.logger.debug(`⚠️ No devices found${ownerId ? ` for owner ${ownerId}` : ''}, but there are ${allDevicesCount} total devices in database`);
       
       if (allDevicesCount > 0) {
         // Try to get devices without relations to debug
@@ -138,9 +140,9 @@ export class DevicesService {
           take: 5,
           order: { created_at: 'DESC' }
         });
-        console.log(`🔍 Sample devices (first 5): ${devicesWithoutRelations.length}`);
+        this.logger.debug(`🔍 Sample devices (first 5): ${devicesWithoutRelations.length}`);
         if (devicesWithoutRelations.length > 0) {
-          console.log('🔍 Sample device (raw):', {
+          this.logger.debug('🔍 Sample device (raw):', {
             device_id: devicesWithoutRelations[0].device_id,
             name: devicesWithoutRelations[0].name,
             farm_id: devicesWithoutRelations[0].farm_id,
@@ -152,7 +154,7 @@ export class DevicesService {
     
     // Ensure we return a proper array
     const result = Array.isArray(devices) ? devices : [];
-    console.log(`📤 Returning ${result.length} devices to controller`);
+    this.logger.debug(`📤 Returning ${result.length} devices to controller`);
     return result;
   }
 

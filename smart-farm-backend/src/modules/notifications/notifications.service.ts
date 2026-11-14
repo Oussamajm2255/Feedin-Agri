@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
@@ -25,23 +25,25 @@ export interface QueryNotificationsDto {
 
 @Injectable()
 export class NotificationsService {
+  private readonly logger = new Logger(NotificationsService.name);
+
   constructor(
     @InjectRepository(Notification) private readonly repo: Repository<Notification>,
     private readonly events: EventEmitter2,
   ) {}
 
   async create(dto: CreateNotificationDto): Promise<Notification> {
-    console.log('🔔 [NOTIFICATIONS] Creating notification:', dto);
+    this.logger.debug('🔔 [NOTIFICATIONS] Creating notification:', dto);
     const n = this.repo.create({ ...dto, is_read: false });
     const saved = await this.repo.save(n);
-    console.log('🔔 [NOTIFICATIONS] Notification created:', saved.id);
+    this.logger.debug('🔔 [NOTIFICATIONS] Notification created:', saved.id);
     // Emit event for websockets
     this.events.emit('notification.created', saved);
     return saved;
   }
 
   async list(user_id: string, q: QueryNotificationsDto) {
-    console.log('📡 [NOTIFICATIONS] Listing notifications for user:', user_id, 'with query:', q);
+    this.logger.debug('📡 [NOTIFICATIONS] Listing notifications for user:', user_id, 'with query:', q);
     const where: FindOptionsWhere<Notification> = { user_id };
     if (q.is_read !== undefined) (where as any).is_read = q.is_read === '1' ? 1 : 0;
     if (q.level) (where as any).level = q.level;
@@ -54,7 +56,7 @@ export class NotificationsService {
     qb.skip(q.offset ?? 0);
     qb.take(Math.min(q.limit ?? 50, 200));
     const [items, total] = await qb.getManyAndCount();
-    console.log('📡 [NOTIFICATIONS] Found notifications:', items.length, 'total:', total);
+    this.logger.debug('📡 [NOTIFICATIONS] Found notifications:', items.length, 'total:', total);
     return { items, total };
   }
 

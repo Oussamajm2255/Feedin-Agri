@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Farm } from './farm.entity';
@@ -9,6 +9,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class FarmsService {
+  private readonly logger = new Logger(FarmsService.name);
+
   constructor(
     @InjectRepository(Farm)
     private readonly farmRepository: Repository<Farm>,
@@ -31,7 +33,7 @@ export class FarmsService {
   async findAll(includeDevices = false, ownerId?: string): Promise<Farm[]> {
     // Reduced logging - only log in development mode or for errors
     if (process.env.NODE_ENV === 'development') {
-      console.log('FarmsService.findAll called with:', { includeDevices, ownerId });
+      this.logger.debug('FarmsService.findAll called with:', { includeDevices, ownerId });
     }
     
     const relations = [];
