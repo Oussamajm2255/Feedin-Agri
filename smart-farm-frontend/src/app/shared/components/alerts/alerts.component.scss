@@ -43,9 +43,8 @@
   overflow: hidden;
   
   /* Glassmorphic base styles */
-  background: rgba(255, 255, 255, 0.85);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  /* Floats over page content: near-opaque rather than backdrop blur. */
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
