@@ -32,56 +32,11 @@ export class SensorDataService implements OnModuleInit, OnModuleDestroy {
       this.handleMqttMessage.bind(this)
     );
 
-    // Wait for MQTT connection and then subscribe
-    this.subscribeWhenConnected();
-  }
-
-  /**
-   * Subscribe to topics when MQTT connection is established
-   */
-  private async subscribeWhenConnected() {
-    try {
-      // Wait for MQTT connection with timeout
-      await this.waitForMqttConnection(30000); // 30 second timeout
-      
-      // Subscribe to all sensor topics: smartfarm/sensors/{sensorId}
-      await this.mqttConnectionService.subscribe('smartfarm/sensors/+');
-      this.logger.log('📡 Successfully subscribed to sensor topics (smartfarm/sensors/{sensorId})');
-      
-    } catch (error) {
+    // Register the sensor topic (smartfarm/sensors/{sensorId}). The
+    // connection service subscribes on every (re)connect, so no polling or
+    // retry loop is needed here.
+    this.mqttConnectionService.subscribe('smartfarm/sensors/+').catch((error) => {
       this.logger.error('❌ Failed to subscribe to sensor topics:', error);
-      
-      // Retry subscription after a delay
-      setTimeout(() => {
-        this.logger.log('🔄 Retrying subscription to sensor topics...');
-        this.subscribeWhenConnected();
-      }, 10000); // Retry after 10 seconds
-    }
-  }
-
-  /**
-   * Wait for MQTT connection to be established
-   */
-  private async waitForMqttConnection(timeoutMs: number = 30000): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('Timeout waiting for MQTT connection'));
-      }, timeoutMs);
-
-      const checkConnection = () => {
-        const status = this.mqttConnectionService.getConnectionStatus();
-        
-        if (status.connected) {
-          clearTimeout(timeout);
-          this.logger.log('✅ MQTT connection established, proceeding with subscription');
-          resolve();
-        } else {
-          this.logger.debug(`🔍 Waiting for MQTT connection... Current status:`, status);
-          setTimeout(checkConnection, 1000);
-        }
-      };
-
-      checkConnection();
     });
   }
 

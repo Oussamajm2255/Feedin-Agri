@@ -11,6 +11,19 @@ export class MqttConnectionService implements OnModuleInit {
   private connectionAttempts = 0;
   private maxReconnectAttempts = 10;
   private reconnectInterval = 5000; // 5 seconds
+  // After maxReconnectAttempts quick retries, keep retrying at this slower
+  // pace instead of giving up, so sensors recover on their own once the
+  // broker is back.
+  private slowReconnectInterval = 60000;
+  private slowRetryMode = false;
+  private brokerUrl = '';
+  private monitorTimer?: NodeJS.Timeout;
+  // Topics are (re)subscribed on every connect, so subscriptions survive
+  // reconnects and client re-creation.
+  private readonly topics = new Set<string>([
+    'smartfarm/devices/+/ack',
+    'smartfarm/devices/+/status',
+  ]);
   private isConnected = false;
   private wasConnectedBefore = false;
   private messageHandlers: Map<string, (topic: string, payload: Buffer) => void> = new Map();
@@ -21,38 +34,62 @@ export class MqttConnectionService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    // Use WebSocket over TLS for port 8084 - FIXED URL
-    const MQTT_BROKER = process.env.MQTT_BROKER || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt';
-    const MQTT_USERNAME = process.env.MQTT_USERNAME || 'oussama2255';
-    const MQTT_PASSWORD = process.env.MQTT_PASSWORD || 'Oussama2255';
-    
-    this.logger.log(`🔄 Attempting to connect to MQTT broker: ${MQTT_BROKER}`);
-    this.logger.log(`👤 Username: ${MQTT_USERNAME || 'anonymous'}`);
-    this.logger.log(`📋 Connection options: keepalive=60s, reconnectPeriod=${this.reconnectInterval}ms, maxReconnectAttempts=${this.maxReconnectAttempts}`);
-    
+    // Broker and credentials come only from the environment (no committed
+    // defaults). Protocol (wss/mqtts/mqtt) is taken from the URL.
+    this.brokerUrl = process.env.MQTT_BROKER || process.env.MQTT_BROKER_URL || '';
+    if (!this.brokerUrl) {
+      this.logger.warn('⚠️ MQTT_BROKER is not set — MQTT is disabled (no sensor data or device actions).');
+      return;
+    }
+
+    this.logger.log(`🔄 Attempting to connect to MQTT broker: ${this.brokerUrl}`);
+    this.logger.log(`👤 Username: ${process.env.MQTT_USERNAME || 'anonymous'}`);
+    this.logger.log(`📋 Connection options: keepalive=60s, reconnectPeriod=${this.reconnectInterval}ms, then every ${this.slowReconnectInterval / 1000}s after ${this.maxReconnectAttempts} failed attempts`);
+
+    this.createClient(this.reconnectInterval);
+    this.startConnectionMonitoring();
+  }
+
+  private createClient(reconnectPeriod: number) {
     const connectOptions: mqtt.IClientOptions = {
       clientId: `mqttjs_${Math.random().toString(16).substr(2, 8)}`,
-      username: MQTT_USERNAME,
-      password: MQTT_PASSWORD,
+      username: process.env.MQTT_USERNAME || undefined,
+      password: process.env.MQTT_PASSWORD || undefined,
       keepalive: 60,
-      reconnectPeriod: this.reconnectInterval,
+      reconnectPeriod,
       connectTimeout: 30000, // 30 seconds - increased timeout
       clean: true,
       rejectUnauthorized: false, // For self-signed certificates
-      protocol: 'wss', // WebSocket Secure protocol
     };
 
-    this.client = mqtt.connect(MQTT_BROKER, connectOptions);
+    this.client = mqtt.connect(this.brokerUrl, connectOptions);
     this.setupEventHandlers();
+  }
+
+  /**
+   * Replace the client with one that retries every slowReconnectInterval,
+   * forever. mqtt.js fixes the retry interval for the whole outage, so the
+   * only way to slow it down is a fresh client.
+   */
+  private enterSlowRetryMode() {
+    this.slowRetryMode = true;
+    const old = this.client;
+    old.removeAllListeners();
+    old.on('error', () => undefined); // late errors from the discarded client
+    old.end(true);
+    this.createClient(this.slowReconnectInterval);
   }
 
   private setupEventHandlers() {
     // Connection successful
     this.client.on('connect', () => {
-      const wasReconnection = this.wasConnectedBefore;
+      const wasReconnection = this.wasConnectedBefore || this.slowRetryMode;
       this.connectionAttempts = 0;
       this.isConnected = true;
       this.wasConnectedBefore = true;
+      // Back to quick retries for the next outage (read when it starts).
+      this.slowRetryMode = false;
+      this.client.options.reconnectPeriod = this.reconnectInterval;
       this.logger.log(`✅ Successfully connected to MQTT broker`);
       this.logger.log(`📡 Client ID: ${this.client.options.clientId || 'auto-generated'}`);
       this.logger.log(`🔗 Connection state: ${this.client.connected ? 'CONNECTED' : 'DISCONNECTED'}`);
@@ -60,19 +97,21 @@ export class MqttConnectionService implements OnModuleInit {
       // Emit reconnection event for admin alerting (only on reconnection, not first connect)
       if (wasReconnection) {
         this.eventEmitter.emit('mqtt.reconnected', {
-          broker: this.configService.get('MQTT_BROKER') || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt',
+          broker: this.brokerUrl,
         });
       }
-      
-      // Subscribe to device acknowledgment topics
-      this.subscribe('smartfarm/devices/+/ack').catch(err => {
-        this.logger.error('❌ Failed to subscribe to device ack topics:', err);
-      });
 
-      // Subscribe to device status topics
-      this.subscribe('smartfarm/devices/+/status').catch(err => {
-        this.logger.error('❌ Failed to subscribe to device status topics:', err);
-      });
+      // (Re)subscribe to every registered topic: device ack/status plus
+      // whatever other services registered (e.g. smartfarm/sensors/+).
+      for (const topic of this.topics) {
+        this.client.subscribe(topic, (err) => {
+          if (err) {
+            this.logger.error(`❌ Failed to subscribe to ${topic}`, err);
+          } else {
+            this.logger.log(`📡 Successfully subscribed to ${topic}`);
+          }
+        });
+      }
     });
 
     // Connection attempt failed
@@ -110,7 +149,7 @@ export class MqttConnectionService implements OnModuleInit {
       // Only emit disconnect if we were previously connected (not on initial failure)
       if (wasConnected) {
         this.eventEmitter.emit('mqtt.disconnected', {
-          broker: this.configService.get('MQTT_BROKER') || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt',
+          broker: this.brokerUrl,
           error: 'Connection closed unexpectedly',
         });
       }
@@ -119,19 +158,28 @@ export class MqttConnectionService implements OnModuleInit {
     // Reconnection attempt
     this.client.on('reconnect', () => {
       this.connectionAttempts++;
+
+      if (this.slowRetryMode) {
+        this.logger.log(`🔄 Reconnecting to MQTT broker (attempt ${this.connectionAttempts}, retrying every ${this.slowReconnectInterval / 1000}s)`);
+        return;
+      }
+
       this.logger.log(`🔄 Reconnecting to MQTT broker (attempt ${this.connectionAttempts}/${this.maxReconnectAttempts})`);
-      
-      // Stop reconnecting if max attempts reached
+
+      // Quick retries exhausted: alert once, then keep retrying slowly
+      // (never give up — the broker may come back hours later).
       if (this.connectionAttempts >= this.maxReconnectAttempts) {
-        this.logger.error(`🚨 Max reconnection attempts (${this.maxReconnectAttempts}) reached. Stopping reconnection.`);
-        this.client.end(true);
+        this.logger.error(`🚨 ${this.maxReconnectAttempts} reconnection attempts failed. Retrying every ${this.slowReconnectInterval / 1000}s until the broker is reachable.`);
         this.suggestTroubleshooting();
 
-        // Emit critical disconnect — broker is truly unreachable
+        // Emit critical disconnect — broker is unreachable
         this.eventEmitter.emit('mqtt.disconnected', {
-          broker: this.configService.get('MQTT_BROKER') || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt',
-          error: `Max reconnection attempts (${this.maxReconnectAttempts}) reached. Broker unreachable.`,
+          broker: this.brokerUrl,
+          error: `${this.maxReconnectAttempts} reconnection attempts failed. Broker unreachable; retrying every ${this.slowReconnectInterval / 1000}s.`,
         });
+
+        // Defer: mqtt.js calls connect() right after emitting 'reconnect'.
+        setImmediate(() => this.enterSlowRetryMode());
       }
     });
 
@@ -155,9 +203,6 @@ export class MqttConnectionService implements OnModuleInit {
         }
       });
     });
-
-    // Log connection status periodically
-    this.startConnectionMonitoring();
   }
 
   /**
@@ -179,10 +224,17 @@ export class MqttConnectionService implements OnModuleInit {
   /**
    * Subscribe to MQTT topic
    */
+  /**
+   * Subscribe to a topic. The topic is remembered and re-subscribed on every
+   * (re)connect; if the client is offline now, it resolves immediately and
+   * the subscription happens on the next connect.
+   */
   public subscribe(topic: string): Promise<void> {
+    this.topics.add(topic);
     return new Promise((resolve, reject) => {
       if (!this.client || !this.client.connected) {
-        reject(new Error('MQTT client not connected'));
+        this.logger.log(`📝 ${topic} registered; will subscribe when MQTT connects`);
+        resolve();
         return;
       }
 
@@ -283,7 +335,7 @@ export class MqttConnectionService implements OnModuleInit {
    * Start periodic connection monitoring
    */
   private startConnectionMonitoring() {
-    setInterval(() => {
+    this.monitorTimer = setInterval(() => {
       const status = this.getConnectionStatus();
       this.logger.debug(`🔍 Connection health check: ${JSON.stringify(status)}`);
       
@@ -303,8 +355,9 @@ export class MqttConnectionService implements OnModuleInit {
       isConnected: this.isConnected,
       connectionAttempts: this.connectionAttempts,
       reconnecting: this.client?.reconnecting || false,
+      retryMode: this.slowRetryMode ? 'slow' : 'fast',
       clientId: this.client?.options?.clientId || null,
-      brokerUrl: this.configService.get('MQTT_BROKER') || this.configService.get('MQTT_URL') || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt'
+      brokerUrl: this.brokerUrl || null,
     };
   }
 
@@ -312,7 +365,7 @@ export class MqttConnectionService implements OnModuleInit {
    * Manual connection test method with detailed diagnostics
    */
   public async testConnection(): Promise<boolean> {
-    const brokerUrl = this.configService.get('MQTT_BROKER') || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt';
+    const brokerUrl = this.brokerUrl;
     const username = this.configService.get('MQTT_USERNAME');
     
     this.logger.log(`🧪 Testing MQTT connection to: ${brokerUrl}`);
@@ -340,7 +393,16 @@ export class MqttConnectionService implements OnModuleInit {
    * Provide troubleshooting suggestions
    */
   private suggestTroubleshooting() {
-    const brokerUrl = this.configService.get('MQTT_BROKER') || 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt';
+    const brokerUrl = this.brokerUrl;
+    let brokerHost = brokerUrl;
+    let brokerPort = '';
+    try {
+      const parsed = new URL(brokerUrl);
+      brokerHost = parsed.hostname;
+      brokerPort = parsed.port;
+    } catch {
+      // keep raw value
+    }
     const username = this.configService.get('MQTT_USERNAME');
     
     this.logger.error(`\n🔧 TROUBLESHOOTING MQTT CONNECTION:`);
@@ -356,8 +418,8 @@ export class MqttConnectionService implements OnModuleInit {
     this.logger.error(`   6. 📱 Try connecting with MQTT Explorer using WebSocket`);
     this.logger.error(`\n🧪 Test with MQTT Explorer:`);
     this.logger.error(`   - Protocol: ws://wss://`);
-    this.logger.error(`   - Host: i37c1733.ala.us-east-1.emqxsl.com`);
-    this.logger.error(`   - Port: 8084`);
+    this.logger.error(`   - Host: ${brokerHost}`);
+    this.logger.error(`   - Port: ${brokerPort || '(default)'}`);
     this.logger.error(`   - Path: /mqtt`);
     
     if (username) {
@@ -370,6 +432,9 @@ export class MqttConnectionService implements OnModuleInit {
 
   onModuleDestroy() {
     this.logger.log(`🔌 Disconnecting from MQTT broker...`);
+    if (this.monitorTimer) {
+      clearInterval(this.monitorTimer);
+    }
     if (this.client) {
       this.client.end(true);
       this.logger.log(`✅ MQTT client disconnected`);

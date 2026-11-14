@@ -5,6 +5,7 @@ Fetches real actions from the database and simulates device behavior accordingly
 """
 
 import json
+import os
 import time
 import random
 import threading
@@ -33,9 +34,9 @@ class DynamicSmartFarmDeviceSimulator:
     
     def __init__(self, device_id: str, broker_url: str = None, username: str = None, password: str = None, backend_url: str = None):
         self.device_id = device_id
-        self.broker_url = broker_url or "wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt"
-        self.username = username or "oussama2255"
-        self.password = password or "Oussama2255"
+        self.broker_url = broker_url or os.environ.get("MQTT_BROKER", "")
+        self.username = username or os.environ.get("MQTT_USERNAME", "")
+        self.password = password or os.environ.get("MQTT_PASSWORD", "")
         self.backend_url = backend_url or "http://localhost:3000/api"
         
         # Parse broker URL
@@ -510,14 +511,14 @@ def main():
     parser.add_argument('--device-id', '-d', default='dht11h', 
                        help='Device ID (default: dht11h)')
     parser.add_argument('--broker-url', '-b', 
-                       default='wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt',
-                       help='MQTT broker URL (default: EMQX Cloud WSS)')
+                       default=os.environ.get('MQTT_BROKER'),
+                       help='MQTT broker URL (default: $MQTT_BROKER)')
     parser.add_argument('--backend-url', '-u', default='http://localhost:3000/api',
                        help='Backend API URL (default: http://localhost:3000/api)')
-    parser.add_argument('--username', '-n', default='oussama2255',
-                       help='MQTT username (default: oussama2255)')
-    parser.add_argument('--password', '-p', default='Oussama2255',
-                       help='MQTT password (default: Oussama2255)')
+    parser.add_argument('--username', '-n', default=os.environ.get('MQTT_USERNAME'),
+                       help='MQTT username (default: $MQTT_USERNAME)')
+    parser.add_argument('--password', '-p', default=os.environ.get('MQTT_PASSWORD'),
+                       help='MQTT password (default: $MQTT_PASSWORD)')
     parser.add_argument('--success-rate', '-s', type=float, default=0.85,
                        help='Action success rate 0.0-1.0 (default: 0.85)')
     parser.add_argument('--verbose', '-v', action='store_true',

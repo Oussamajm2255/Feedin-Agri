@@ -8,7 +8,7 @@ export const productionConfig = {
     database: process.env.DATABASE_NAME || 'smartfarm_db',
   },
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production',
+    secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '24h',
   },
   cors: {
