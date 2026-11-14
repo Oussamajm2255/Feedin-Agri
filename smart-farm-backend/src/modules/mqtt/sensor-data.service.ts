@@ -62,21 +62,33 @@ export class SensorDataService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      // Device incident reports, e.g.
+      // {"device_id":"dht11H","error":"XY-MD02: Sensor not responding after 3 attempts"}
+      if (sensorId === 'incident') {
+        await this.handleIncident(message);
+        return;
+      }
+
       // Step 2: Find all sensors with this sensor_id (could be multiple for composite sensors)
       const sensors = await this.findAllSensorsByIds(sensorId);
-      
+
       if (sensors.length === 0) {
         this.logger.warn(`⚠️ No sensors found with sensor_id: ${sensorId}`);
         return;
       }
 
+      // Devices publish JSON such as {"device_id":"dht11H","soil_moisture_percent":100,"ts":...}.
+      // Read fields by sensor type; the text parsers below would otherwise pick
+      // up stray digits (e.g. the "11" in "dht11H").
+      const json = this.tryParseJson(message);
+
       if (sensors.length === 1) {
         // Single sensor - use original logic
         this.logger.debug(`🔍 Single sensor found: ${sensors[0].sensor_id} (${sensors[0].type}, ${sensors[0].unit})`);
-        
-        const value = this.parseMessageValue(message);
+
+        const value = json ? this.jsonValueForSensor(json, sensors[0]) : this.parseMessageValue(message);
         if (value === null) {
-          this.logger.warn(`⚠️ Invalid message format: ${message}. Expected numeric value.`);
+          this.logger.warn(`⚠️ Invalid message format: ${message}. Expected a value for ${sensors[0].type}.`);
           return;
         }
 
@@ -84,7 +96,7 @@ export class SensorDataService implements OnModuleInit, OnModuleDestroy {
       } else {
         // Multiple sensors - handle composite message
         this.logger.log(`🔄 Composite sensor detected: ${sensors.length} sensors found for ID '${sensorId}'`);
-        await this.handleCompositeSensorMessage(sensors, message);
+        await this.handleCompositeSensorMessage(sensors, message, json);
       }
 
     } catch (error) {
@@ -116,29 +128,34 @@ export class SensorDataService implements OnModuleInit, OnModuleDestroy {
    * Handle composite sensor message with dynamic separator detection
    * Supports various formats: "25.5°C,60%", "26.0°C;48.0%", "25.5°C|60%", "25.5°C 60%", etc.
    */
-  private async handleCompositeSensorMessage(sensors: Sensor[], message: string): Promise<void> {
+  private async handleCompositeSensorMessage(sensors: Sensor[], message: string, json: Record<string, unknown> | null = null): Promise<void> {
     try {
-      // Parse composite message into individual values
-      const parsedValues = this.parseCompositeMessage(message);
-      
-      if (parsedValues.length === 0) {
-        this.logger.warn(`⚠️ Could not parse any values from composite message: ${message}`);
-        return;
+      // Resolve each sensor's value: JSON fields by sensor type, otherwise the
+      // text formats ("25.5°C,60%", "24.6°C;61.5%", ...).
+      let valueFor: (sensor: Sensor) => number | null;
+      if (json) {
+        valueFor = (sensor) => this.jsonValueForSensor(json, sensor);
+      } else {
+        const parsedValues = this.parseCompositeMessage(message);
+        if (parsedValues.length === 0) {
+          this.logger.warn(`⚠️ Could not parse any values from composite message: ${message}`);
+          return;
+        }
+        this.logger.log(`📊 Parsed ${parsedValues.length} values from composite message: ${parsedValues.map(v => v.originalText).join(', ')}`);
+        valueFor = (sensor) => this.findMatchingValueForSensor(sensor, parsedValues);
       }
 
-      this.logger.log(`📊 Parsed ${parsedValues.length} values from composite message: ${parsedValues.map(v => v.originalText).join(', ')}`);
+      const matches = sensors.map((sensor) => ({ sensor, value: valueFor(sensor) }));
 
-      // Derive composite values by unit (temperature -> value1, humidity -> value2)
-      let temperatureValue: number | null = null;
-      let humidityValue: number | null = null;
+      // Composite row: temperature -> value1, humidity -> value2 (by sensor type)
+      const temperatureValue = matches.find((m) => m.sensor.type.toLowerCase().includes('temp'))?.value ?? null;
+      const humidityValue = matches.find((m) => m.sensor.type.toLowerCase().includes('hum'))?.value ?? null;
 
-      for (const pv of parsedValues) {
-        const unit = (pv.extractedUnit || '').toLowerCase();
-        if (temperatureValue === null && (unit.includes('°') || unit.includes('c'))) {
-          temperatureValue = pv.value;
-        } else if (humidityValue === null && unit.includes('%')) {
-          humidityValue = pv.value;
-        }
+      // When the sensor doesn't respond, the device still publishes
+      // temperature 0.0 / humidity 0.0. Don't store it or act on it.
+      if (temperatureValue === 0 && humidityValue === 0) {
+        this.logger.warn(`⚠️ Ignoring failed reading from ${sensors[0].sensor_id}: temperature and humidity are both 0`);
+        return;
       }
 
       // Save a single combined reading row for this sensor_id to avoid ambiguity in the frontend
@@ -148,8 +165,7 @@ export class SensorDataService implements OnModuleInit, OnModuleDestroy {
       }
 
       // Still run threshold checks and actions individually per sensor (without double-saving)
-      for (const sensor of sensors) {
-        const matched = this.findMatchingValueForSensor(sensor, parsedValues);
+      for (const { sensor, value: matched } of matches) {
         if (matched !== null) {
           const thresholdResult = this.thresholdMonitor.checkThresholds(sensor, matched);
           if (thresholdResult.violations.length > 0) {
@@ -176,6 +192,99 @@ export class SensorDataService implements OnModuleInit, OnModuleDestroy {
 
     } catch (error) {
       this.logger.error(`❌ Error handling composite sensor message:`, error);
+    }
+  }
+
+  /**
+   * Parse a JSON object payload; null for anything else.
+   */
+  private tryParseJson(message: string): Record<string, unknown> | null {
+    const trimmed = message.trim();
+    if (!trimmed.startsWith('{')) return null;
+    try {
+      const parsed = JSON.parse(trimmed);
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /** JSON field names accepted for each sensor type (besides the type itself). */
+  private static readonly JSON_FIELD_ALIASES: Record<string, string[]> = {
+    temperature: ['temp', 'temperature_c', 'temp_c'],
+    humidity: ['hum', 'rh', 'humidity_percent'],
+    soil_moisture: ['soil_moisture_percent', 'moisture', 'soil'],
+    light: ['lux', 'light_lux', 'illuminance'],
+  };
+
+  /**
+   * Pick the value for a sensor from a JSON payload: a generic value field,
+   * then a field named after the sensor type or one of its aliases, then a
+   * field starting with the type (e.g. soil_moisture_percent). Metadata such
+   * as ts/uptime_ms is never matched.
+   */
+  private jsonValueForSensor(json: Record<string, unknown>, sensor: Sensor): number | null {
+    const numeric = Object.entries(json)
+      .filter(([, v]) => typeof v === 'number' && Number.isFinite(v))
+      .map(([k, v]) => [k.toLowerCase(), v as number] as const);
+
+    for (const generic of ['value', 'reading', 'data']) {
+      const hit = numeric.find(([k]) => k === generic);
+      if (hit) return hit[1];
+    }
+
+    const type = (sensor.type || '').toLowerCase();
+    if (!type) return null;
+    for (const name of [type, ...(SensorDataService.JSON_FIELD_ALIASES[type] || [])]) {
+      const hit = numeric.find(([k]) => k === name);
+      if (hit) return hit[1];
+    }
+    const prefixed = numeric.find(([k]) => k.startsWith(type));
+    return prefixed ? prefixed[1] : null;
+  }
+
+  /**
+   * Handle smartfarm/sensors/incident: the device reports a hardware problem
+   * (e.g. "XY-MD02: Sensor not responding after 3 attempts"). Notify the farm
+   * owner; NotificationsService suppresses repeats within its dedup window.
+   */
+  private async handleIncident(message: string): Promise<void> {
+    const json = this.tryParseJson(message);
+    const deviceId = (json?.device_id ?? json?.deviceId) as string | undefined;
+    const error = String(json?.error ?? json?.message ?? message);
+    const sensorName = error.includes(':') ? error.split(':')[0].trim() : undefined;
+
+    this.logger.warn(`🚑 Incident from device ${deviceId ?? 'unknown'}: ${error}`);
+
+    try {
+      let sensor: Sensor | null = null;
+      if (sensorName) {
+        sensor = await this.sensorRepository.findOne({ where: { sensor_id: sensorName } });
+      }
+      if (!sensor && deviceId) {
+        sensor = await this.sensorRepository.findOne({ where: { device_id: deviceId } });
+      }
+      if (!sensor) return;
+
+      const farm = await this.farmRepository.findOne({ where: { farm_id: sensor.farm_id } });
+      const ownerId = (farm as any)?.owner_id;
+      if (!ownerId) return;
+
+      await this.notificationsService.create({
+        user_id: ownerId,
+        level: 'warning' as any,
+        source: 'sensor' as any,
+        title: 'Sensor not responding',
+        message: `${sensorName ?? sensor.sensor_id} on device ${deviceId ?? sensor.device_id}: ${error}`,
+        context: {
+          deviceId: deviceId ?? sensor.device_id,
+          sensor_id: sensorName ?? sensor.sensor_id,
+          error,
+          type: 'sensor_incident',
+        },
+      });
+    } catch (err) {
+      this.logger.error('❌ Failed to record sensor incident:', err);
     }
   }
 

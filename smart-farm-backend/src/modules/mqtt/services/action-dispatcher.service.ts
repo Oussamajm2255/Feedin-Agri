@@ -31,6 +31,10 @@ export interface ActionResult {
 @Injectable()
 export class ActionDispatcherService {
   private readonly logger = new Logger(ActionDispatcherService.name);
+  // Minimum gap between identical automatic (threshold-triggered) commands to
+  // the same device. Manual commands from the dashboard are not throttled.
+  private readonly autoActionCooldownMs = Number(process.env.AUTO_ACTION_COOLDOWN_MS) || 5 * 60 * 1000;
+  private readonly lastAutoAction = new Map<string, number>();
 
   constructor(
     private eventEmitter: EventEmitter2,
@@ -63,43 +67,13 @@ export class ActionDispatcherService {
       // Emit action execution event
       this.eventEmitter.emit('action.executed', result);
       
+      // The farmer notification for this result is created by
+      // ActionNotificationsService (listens to 'action.executed'); creating
+      // one here as well produced two notifications per command.
       if (success) {
         this.logger.log(`✅ Action executed successfully: ${action}`);
-        // Resolve user_id via device -> farm -> owner
-        try {
-          let userId: string | undefined;
-          const device = await this.deviceRepo.findOne({ where: { device_id: context.deviceId } });
-          if (device) {
-            const farm = await this.farmRepo.findOne({ where: { farm_id: (device as any).farm_id } });
-            userId = (farm as any)?.owner_id;
-          }
-          await this.notificationsService.create({
-            user_id: userId || context.deviceId,
-            level: 'success',
-            source: 'action',
-            title: 'Action executed',
-            message: `${context.deviceId} • ${action}`,
-            context: { action, context },
-          } as any);
-        } catch {}
       } else {
         this.logger.warn(`⚠️ Action execution failed: ${action}`);
-        try {
-          let userId: string | undefined;
-          const device = await this.deviceRepo.findOne({ where: { device_id: context.deviceId } });
-          if (device) {
-            const farm = await this.farmRepo.findOne({ where: { farm_id: (device as any).farm_id } });
-            userId = (farm as any)?.owner_id;
-          }
-          await this.notificationsService.create({
-            user_id: userId || context.deviceId,
-            level: 'critical',
-            source: 'action',
-            title: 'Action failed',
-            message: `${context.deviceId} • ${action}`,
-            context: { action, context },
-          } as any);
-        } catch {}
       }
 
     } catch (error) {
@@ -115,28 +89,30 @@ export class ActionDispatcherService {
    * Process different types of actions
    */
   private async processAction(action: string, context: ActionContext): Promise<boolean> {
-    const actionParts = action.toLowerCase().split(':');
-    const actionType = actionParts[0];
-    const actionParam = actionParts[1];
+    // Only the scheme is case-insensitive. MQTT topics are case-sensitive:
+    // lowercasing the whole URI turned smartfarm/actuators/dht11H/... into
+    // .../dht11h/..., which the device (id "dht11H") never receives.
+    const { scheme: actionType, param: actionParam } = this.splitActionUri(action);
+    const lowerParam = actionParam?.toLowerCase();
 
     switch (actionType) {
       case 'alert':
-        return this.sendAlert(actionParam || 'general', context);
-      
+        return this.sendAlert(lowerParam || 'general', context);
+
       case 'email':
         return this.sendEmail(actionParam, context);
-      
+
       case 'sms':
         return this.sendSMS(actionParam, context);
-      
+
       case 'actuator':
-        return this.controlActuator(actionParam, context);
-      
+        return this.controlActuator(lowerParam, context);
+
       case 'webhook':
         return this.callWebhook(actionParam, context);
-      
+
       case 'log':
-        return this.logAction(actionParam || 'info', context);
+        return this.logAction(lowerParam || 'info', context);
       
       case 'mqtt':
         // Handle multiple topics separated by commas
@@ -154,6 +130,15 @@ export class ActionDispatcherService {
         this.logger.warn(`Unknown action type: ${actionType}`);
         return false;
     }
+  }
+
+  /**
+   * Split "scheme:param" keeping the param's case (topics, URLs, emails).
+   */
+  private splitActionUri(uri: string): { scheme: string; param: string | undefined } {
+    const sep = uri.indexOf(':');
+    if (sep === -1) return { scheme: uri.trim().toLowerCase(), param: undefined };
+    return { scheme: uri.slice(0, sep).trim().toLowerCase(), param: uri.slice(sep + 1).trim() };
   }
 
   /**
@@ -280,7 +265,9 @@ export class ActionDispatcherService {
       this.logger.log(`📡 Publishing MQTT message to: ${topic} (Type: ${actionType})`);
       
       // Extract the actual action command from the topic
-      const actionCommand = topic.split('/').pop(); // Gets "fan_on" from "smartfarm/actuators/dht11h/fan_on"
+      // Gets "fan_on" from "smartfarm/actuators/dht11H/fan_on". Commands are
+      // matched lowercase; only the topic itself keeps its case.
+      const actionCommand = (topic.split('/').pop() || '').toLowerCase();
       
       // Use frontend action ID if provided, otherwise generate one
       const actionId = frontendActionId || `action_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -428,8 +415,10 @@ export class ActionDispatcherService {
   /**
    * Get retain flag based on action type
    */
-  private getRetainFlag(actionType: 'critical' | 'important' | 'normal'): boolean {
-    return actionType === 'critical'; // Only retain critical actions
+  private getRetainFlag(_actionType: 'critical' | 'important' | 'normal'): boolean {
+    // Commands are never retained (see MqttConnectionService.getActionPublishOptions);
+    // this value is only recorded in action_logs.
+    return false;
   }
 
   /**
@@ -483,12 +472,13 @@ export class ActionDispatcherService {
    */
   async executeManual(actionUri: string, context: ActionContext, actionType: 'critical' | 'important' | 'normal' = 'normal', frontendActionId?: string): Promise<boolean> {
     // Expecting actionUri like 'mqtt:smartfarm/actuators/<device>/<action>' or 'mqtt:topic1,topic2,topic3'
-    const parts = actionUri.toLowerCase().split(':');
-    if (parts[0] !== 'mqtt') {
+    const { scheme, param } = this.splitActionUri(actionUri);
+    if (scheme !== 'mqtt') {
       // Fallback to generic executor (non-MQTT action types)
       return (await this.executeAction(actionUri, context)).success;
     }
-    const topicString = parts.slice(1).join(':');
+    // Keep the topic's case (MQTT topics are case-sensitive).
+    const topicString = param ?? '';
     
     // Handle multiple topics separated by commas
     const topics = topicString.split(',').map(topic => topic.trim());
@@ -608,6 +598,18 @@ export class ActionDispatcherService {
   @OnEvent('threshold.violation')
   async handleThresholdViolation(violation: ThresholdViolation) {
     if (violation.action) {
+      // A sensor that stays past a threshold violates it on every reading
+      // (every ~15s). Re-send the same automatic command to the same device
+      // at most once per cooldown window.
+      const key = `${violation.sensor.device_id}|${violation.action}`;
+      const now = Date.now();
+      const last = this.lastAutoAction.get(key);
+      if (last !== undefined && now - last < this.autoActionCooldownMs) {
+        this.logger.debug(`⏸️ Skipping ${violation.action} for ${violation.sensor.device_id}: sent ${Math.round((now - last) / 1000)}s ago (cooldown ${this.autoActionCooldownMs / 1000}s)`);
+        return;
+      }
+      this.lastAutoAction.set(key, now);
+
       const context: ActionContext = {
         sensorId: violation.sensor.sensor_id,
         sensorType: violation.sensor.type,

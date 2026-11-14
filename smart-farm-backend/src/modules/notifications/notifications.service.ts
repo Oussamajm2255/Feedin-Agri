@@ -32,7 +32,44 @@ export class NotificationsService {
     private readonly events: EventEmitter2,
   ) {}
 
-  async create(dto: CreateNotificationDto): Promise<Notification> {
+  // Identical notifications (same user, source, title and device/sensor) are
+  // created at most once per window. A sensor stuck past a threshold, or a
+  // device that never acks, otherwise produces one notification per reading
+  // or per command (hundreds per hour).
+  private readonly dedupWindowMs = Number(process.env.NOTIFICATION_DEDUP_WINDOW_MS) || 15 * 60 * 1000;
+  private readonly recent = new Map<string, number>();
+
+  private dedupKey(dto: CreateNotificationDto): string {
+    const ctx: any = (dto as any).context || {};
+    const subject = ctx.deviceId || ctx.device_id || ctx.sensor_id || ctx.sensorId || '';
+    return [dto.user_id, dto.source, dto.level, dto.title, subject].join('|');
+  }
+
+  private isDuplicate(dto: CreateNotificationDto): boolean {
+    const now = Date.now();
+    const key = this.dedupKey(dto);
+    const last = this.recent.get(key);
+    if (last !== undefined && now - last < this.dedupWindowMs) {
+      return true;
+    }
+    this.recent.set(key, now);
+    if (this.recent.size > 5000) {
+      for (const [k, t] of this.recent) {
+        if (now - t >= this.dedupWindowMs) this.recent.delete(k);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Create a notification. Returns null when an identical notification was
+   * already created within the dedup window.
+   */
+  async create(dto: CreateNotificationDto): Promise<Notification | null> {
+    if (this.isDuplicate(dto)) {
+      this.logger.debug(`🔕 [NOTIFICATIONS] Suppressed duplicate: ${dto.title} for ${dto.user_id}`);
+      return null;
+    }
     this.logger.debug('🔔 [NOTIFICATIONS] Creating notification:', dto);
     const n = this.repo.create({ ...dto, is_read: false });
     const saved = await this.repo.save(n);
