@@ -6,9 +6,9 @@
 
 const mqtt = require('mqtt');
 
-const MQTT_BROKER = 'wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt';
-const MQTT_USERNAME = 'oussama2255';
-const MQTT_PASSWORD = 'Oussama2255';
+const MQTT_BROKER = process.env.MQTT_BROKER;
+const MQTT_USERNAME = process.env.MQTT_USERNAME;
+const MQTT_PASSWORD = process.env.MQTT_PASSWORD;
 
 console.log('🧪 Testing MQTT Connection...');
 console.log(`📡 Broker: ${MQTT_BROKER}`);

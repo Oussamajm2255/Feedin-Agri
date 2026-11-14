@@ -51,9 +51,9 @@ python device_simulator.py --verbose
 | Option | Short | Default | Description |
 |--------|-------|---------|-------------|
 | `--device-id` | `-d` | `dht11h` | Device identifier |
-| `--broker-url` | `-b` | `wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt` | MQTT broker URL |
-| `--username` | `-u` | `oussama2255` | MQTT username |
-| `--password` | `-p` | `Oussama2255` | MQTT password |
+| `--broker-url` | `-b` | `$MQTT_BROKER` | MQTT broker URL |
+| `--username` | `-u` | `$MQTT_USERNAME` | MQTT username |
+| `--password` | `-p` | `$MQTT_PASSWORD` | MQTT password |
 | `--success-rate` | `-s` | `0.85` | Action success rate (0.0-1.0) |
 | `--verbose` | `-v` | `false` | Enable debug logging |
 
@@ -121,13 +121,13 @@ device_state = {
 ```
 🚀 Starting Smart Farm Device Simulator
 📱 Device ID: dht11h
-🌐 Broker: wss://i37c1733.ala.us-east-1.emqxsl.com:8084/mqtt
-👤 Username: oussama2255
+🌐 Broker: wss://<your-emqx-host>:8084/mqtt
+👤 Username: <your-mqtt-username>
 📊 Success Rate: 85%
-🔗 Parsed broker: i37c1733.ala.us-east-1.emqxsl.com:8084 (SSL: True)
+🔗 Parsed broker: <your-emqx-host>:8084 (SSL: True)
 🔐 Authentication configured
 🔒 SSL/TLS configured for secure connection
-🔌 Connecting to i37c1733.ala.us-east-1.emqxsl.com:8084...
+🔌 Connecting to <your-emqx-host>:8084...
 🔗 Device dht11h connected to MQTT broker
 🎯 Subscribed to: smartfarm/actuators/dht11h/fan_on
 🎯 Subscribed to: smartfarm/actuators/dht11h/fan_off

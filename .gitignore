@@ -52,3 +52,6 @@ certs/
 
 # Misc
 package-lock.json
+
+# Local env backups (contain secrets)
+.env.backup
