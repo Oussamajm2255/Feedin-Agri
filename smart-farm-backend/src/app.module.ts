@@ -72,16 +72,19 @@ import configuration from "./config/configuration";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // Apply CSRF middleware
+    // Apply CSRF middleware.
+    // Paths are relative to the global prefix (api/v1), which Nest prepends;
+    // spelling it out produced "/api/v1/api/v1/..." and the excludes never
+    // matched. Wildcards use the path-to-regexp v8 syntax ({*splat}).
     consumer
       .apply(CsrfMiddleware)
       .exclude(
-        { path: "api/v1/auth/csrf", method: RequestMethod.GET },
-        { path: "api/v1/auth/login", method: RequestMethod.POST },
-        { path: "api/v1/auth/me", method: RequestMethod.GET },
-        { path: "api/v1/auth/register", method: RequestMethod.POST },
-        { path: "api/v1/leads/(.*)", method: RequestMethod.POST },
+        { path: "auth/csrf", method: RequestMethod.GET },
+        { path: "auth/login", method: RequestMethod.POST },
+        { path: "auth/me", method: RequestMethod.GET },
+        { path: "auth/register", method: RequestMethod.POST },
+        { path: "leads/{*splat}", method: RequestMethod.POST },
       )
-      .forRoutes("*");
+      .forRoutes("{*splat}");
   }
 }

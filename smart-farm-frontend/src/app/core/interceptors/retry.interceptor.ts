@@ -76,7 +76,7 @@ function getBackoffDelayMs(attempt: number): number {
 /**
  * `retryInterceptor` — functional HTTP interceptor (Angular 15+).
  *
- * Pipeline position: THIRD (after `authInterceptor` and `cachingInterceptor`)
+ * Pipeline position: FOURTH / innermost (after `authInterceptor` and `cachingInterceptor`)
  *
  * Retry policy:
  *  - 3 attempts maximum
