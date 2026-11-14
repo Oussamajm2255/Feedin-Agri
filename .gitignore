@@ -55,3 +55,7 @@ package-lock.json
 
 # Local env backups (contain secrets)
 .env.backup
+
+# Python bytecode
+__pycache__/
+*.pyc
